@@ -371,6 +371,35 @@ Unlike H1/S3, A5 has trivial abelianization; the implementation explicitly check
 
 This removes one known shortcut but does not imply hardness.
 
-Attack H-H01 is an exact CSP with arc consistency and MRV. Any satisfying equivalent frame assignment counts as attacker success.
+Attack H-H01 began as exact CSP with arc consistency and MRV, then expanded into a deliberately heterogeneous public attack stack.
 
-Disposition awaits CI measurement.
+Fixed-seed measured baseline:
+
+~~~text
+spectral:             49 violations
+belief propagation:   17
+min-conflicts:          3
+weighted breakout:      1
+pair repair:             1
+tree-coordinate:         1
+
+exact Hamming radius 0..6:
+  no witness, search exhausted below per-radius cap
+
+frozen neighborhood:
+  radius 2 = all 24 vertices
+  5000-node cap, no witness
+
+exact CSP:
+  1000-node cap
+  300 singleton probes, 0 values removed
+  no witness
+~~~
+
+A lighter deterministic four-instance generated-distribution sweep also found no accepted equivalent witness; best residual violations were 4, 3, 2, and 3.
+
+**H2-H is unresolved, not rejected and not accepted as a security candidate.**
+
+This is the first repository model where the implemented bounded public attacks fail to construct an accepted witness. The result is intentionally narrow: one strong fixed baseline plus four lighter samples.
+
+Next work must attack the same relation with industrial SAT/SMT/CP-SAT, subgroup/coset projections, representation-theoretic methods, automorphism/canonicalization attacks, and broader generated-instance sampling. Parameter inflation is explicitly not the next step.
