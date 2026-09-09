@@ -11,6 +11,7 @@ from morph_kem.hyperbolic import (
     recover_a5_belief_propagation,
     recover_a5_breakout,
     recover_a5_min_conflicts,
+    recover_a5_hamming_repair,
     recover_a5_neighborhood_repair,
     recover_a5_pair_repair,
     recover_a5_spectral,
@@ -98,6 +99,18 @@ def main() -> int:
         else breakout.frames
     )
 
+    hamming_started = time.perf_counter()
+    hamming = recover_a5_hamming_repair(
+        public,
+        preferred,
+        max_changes=6,
+        max_nodes_per_radius=5_000,
+    )
+    hamming_elapsed = time.perf_counter() - hamming_started
+
+    if hamming.accepted and hamming.frames is not None:
+        preferred = hamming.frames
+
     neighborhood_started = time.perf_counter()
     neighborhood = recover_a5_neighborhood_repair(
         public,
@@ -147,6 +160,10 @@ def main() -> int:
     print(f"pair-repair iterations/tests: {pair.iterations if pair is not None else 0}/{pair.pair_assignments_tested if pair is not None else 0}")
     print(f"pair-repair best violations: {pair.best_violations if pair is not None else local.best_violations}")
     print(f"pair-repair elapsed seconds: {pair_elapsed:.6f}")
+    print(f"hamming-repair accepted: {hamming.accepted}")
+    print(f"hamming-repair changes/radius: {hamming.changes}/{hamming.radius_tested}")
+    print(f"hamming-repair nodes/backtracks/arcs: {hamming.nodes}/{hamming.backtracks}/{hamming.arc_revisions}")
+    print(f"hamming-repair elapsed seconds: {hamming_elapsed:.6f}")
     print(f"neighborhood-repair accepted: {neighborhood.accepted}")
     print(f"neighborhood-repair radius/mutable: {neighborhood.radius_used}/{neighborhood.mutable_vertices}")
     print(f"neighborhood-repair nodes/backtracks/arcs: {neighborhood.nodes}/{neighborhood.backtracks}/{neighborhood.arc_revisions}")
