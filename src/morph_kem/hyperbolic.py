@@ -149,6 +149,17 @@ class A5LocalSearchResult:
 
 
 @dataclass(frozen=True, slots=True)
+class A5BreakoutResult:
+    accepted: bool
+    frames: tuple[int, ...]
+    sweeps: int
+    moves: int
+    weight_updates: int
+    best_violations: int
+    max_edge_weight: int
+
+
+@dataclass(frozen=True, slots=True)
 class A5PairRepairResult:
     accepted: bool
     frames: tuple[int, ...]
@@ -986,6 +997,201 @@ def recover_a5_min_conflicts(
         total_sweeps,
         total_moves,
         best_violations,
+    )
+
+
+def recover_a5_breakout(
+    public: A5PublicInstance,
+    start_frames: tuple[int, ...],
+    max_sweeps: int = 400,
+    attack_seed: bytes = b"H2-A5-breakout",
+) -> A5BreakoutResult:
+    """Weighted breakout local search for the public A5 CSP.
+
+    At a one-variable local minimum, violated edge weights are increased.
+    This changes the objective without changing the public acceptance
+    relation and is a standard way to escape persistent local minima.
+    """
+    if len(start_frames) != len(public.scaffold.vertices):
+        raise HyperbolicExperimentError("breakout frame count does not match vertices")
+    if any(value < 0 or value >= len(A5_ELEMENTS) for value in start_frames):
+        raise HyperbolicExperimentError("breakout frame outside A5")
+    if max_sweeps <= 0 or max_sweeps > 100_000:
+        raise HyperbolicExperimentError("max_sweeps must be in [1, 100000]")
+    if not attack_seed:
+        raise HyperbolicExperimentError("breakout attack seed must be non-empty")
+
+    rng = _DeterministicRng(
+        hashlib.sha256(
+            b"MORPH-KEM H2 A5 breakout v1\x00" + attack_seed
+        ).digest()
+    )
+
+    root_inverse = _a5_inv(start_frames[0])
+    frames = [
+        _a5_mul(root_inverse, value)
+        for value in start_frames
+    ]
+    frames[0] = A5_IDENTITY
+
+    incident: list[list[int]] = [[] for _ in public.scaffold.vertices]
+    for index, edge in enumerate(public.scaffold.edges):
+        left, right = edge
+        incident[left].append(index)
+        incident[right].append(index)
+
+    compatibility_cache: dict[tuple[int, int], int] = {}
+
+    def right_mask(label: int, left_value: int) -> int:
+        key = (label, left_value)
+        cached = compatibility_cache.get(key)
+        if cached is None:
+            mask = 0
+            for value in _allowed_right_values(
+                label,
+                left_value,
+                public.conjugacy_class,
+            ):
+                mask |= 1 << value
+            cached = mask
+            compatibility_cache[key] = cached
+        return cached
+
+    def edge_valid(index: int) -> bool:
+        left, right = public.scaffold.edges[index]
+        label = public.edge_labels[index]
+        return bool((right_mask(label, frames[left]) >> frames[right]) & 1)
+
+    weights = [1] * len(public.scaffold.edges)
+    best_frames = tuple(frames)
+    best_violations = sum(not edge_valid(i) for i in range(len(weights)))
+    moves = 0
+    weight_updates = 0
+
+    for sweep in range(1, max_sweeps + 1):
+        violated = [
+            index
+            for index in range(len(weights))
+            if not edge_valid(index)
+        ]
+        if not violated:
+            candidate = tuple(frames)
+            return A5BreakoutResult(
+                validate_a5_frames(public, candidate).accepted,
+                candidate,
+                sweep - 1,
+                moves,
+                weight_updates,
+                0,
+                max(weights),
+            )
+
+        if len(violated) < best_violations:
+            best_violations = len(violated)
+            best_frames = tuple(frames)
+
+        order = list(range(1, len(frames)))
+        for index in range(len(order) - 1, 0, -1):
+            other = rng.randbelow(index + 1)
+            order[index], order[other] = order[other], order[index]
+
+        improved = False
+
+        for vertex in order:
+            current_value = frames[vertex]
+            current_cost = sum(
+                weights[edge_index]
+                for edge_index in incident[vertex]
+                if not edge_valid(edge_index)
+            )
+
+            best_cost = current_cost
+            best_values = [current_value]
+
+            for candidate in range(len(A5_ELEMENTS)):
+                if candidate == current_value:
+                    continue
+                frames[vertex] = candidate
+                cost = sum(
+                    weights[edge_index]
+                    for edge_index in incident[vertex]
+                    if not edge_valid(edge_index)
+                )
+                if cost < best_cost:
+                    best_cost = cost
+                    best_values = [candidate]
+                elif cost == best_cost:
+                    best_values.append(candidate)
+
+            frames[vertex] = current_value
+
+            if best_cost < current_cost:
+                chosen = best_values[rng.randbelow(len(best_values))]
+                frames[vertex] = chosen
+                moves += int(chosen != current_value)
+                improved = True
+
+                new_violations = sum(
+                    not edge_valid(i)
+                    for i in range(len(weights))
+                )
+                if new_violations < best_violations:
+                    best_violations = new_violations
+                    best_frames = tuple(frames)
+                if new_violations == 0:
+                    candidate_frames = tuple(frames)
+                    return A5BreakoutResult(
+                        validate_a5_frames(public, candidate_frames).accepted,
+                        candidate_frames,
+                        sweep,
+                        moves,
+                        weight_updates,
+                        0,
+                        max(weights),
+                    )
+
+        if not improved:
+            violated = [
+                index
+                for index in range(len(weights))
+                if not edge_valid(index)
+            ]
+            for edge_index in violated:
+                weights[edge_index] += 1
+            weight_updates += 1
+
+            # Deterministic sideways move among one endpoint of a heaviest
+            # currently violated edge to avoid a perfectly symmetric plateau.
+            if violated:
+                max_weight = max(weights[index] for index in violated)
+                heavy = [
+                    index for index in violated
+                    if weights[index] == max_weight
+                ]
+                edge_index = heavy[rng.randbelow(len(heavy))]
+                left, right = public.scaffold.edges[edge_index]
+                choices = [vertex for vertex in (left, right) if vertex != 0]
+                if choices:
+                    vertex = choices[rng.randbelow(len(choices))]
+                    frames[vertex] = rng.randbelow(len(A5_ELEMENTS))
+                    moves += 1
+
+    final_violations = sum(
+        not edge_valid(i)
+        for i in range(len(weights))
+    )
+    if final_violations < best_violations:
+        best_violations = final_violations
+        best_frames = tuple(frames)
+
+    return A5BreakoutResult(
+        best_violations == 0 and validate_a5_frames(public, best_frames).accepted,
+        best_frames,
+        max_sweeps,
+        moves,
+        weight_updates,
+        best_violations,
+        max(weights),
     )
 
 
