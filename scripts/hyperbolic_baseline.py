@@ -9,6 +9,7 @@ from morph_kem.hyperbolic import (
     generate_a5_instance,
     generate_klein_quartic,
     recover_a5_belief_propagation,
+    recover_a5_breakout,
     recover_a5_min_conflicts,
     recover_a5_pair_repair,
     recover_a5_spectral,
@@ -63,22 +64,37 @@ def main() -> int:
     )
     local_elapsed = time.perf_counter() - local_started
 
+    breakout_started = time.perf_counter()
+    breakout = recover_a5_breakout(
+        public,
+        local.frames,
+        max_sweeps=400,
+        attack_seed=b"H2-fixed-breakout",
+    )
+    breakout_elapsed = time.perf_counter() - breakout_started
+
+    pair_seed = (
+        breakout.frames
+        if breakout.best_violations <= local.best_violations
+        else local.frames
+    )
+
     pair_started = time.perf_counter()
     pair = (
         recover_a5_pair_repair(
             public,
-            local.frames,
+            pair_seed,
             max_iterations=8,
         )
-        if local.frames is not None
+        if pair_seed is not None
         else None
     )
     pair_elapsed = time.perf_counter() - pair_started
 
     preferred = (
         pair.frames
-        if pair is not None and pair.best_violations <= local.best_violations
-        else local.frames
+        if pair is not None and pair.best_violations <= breakout.best_violations
+        else breakout.frames
     )
 
     started = time.perf_counter()
@@ -110,6 +126,10 @@ def main() -> int:
     print(f"local-search restarts/sweeps/moves: {local.restarts_used}/{local.sweeps_used}/{local.moves}")
     print(f"local-search best violations: {local.best_violations}")
     print(f"local-search elapsed seconds: {local_elapsed:.6f}")
+    print(f"breakout accepted: {breakout.accepted}")
+    print(f"breakout sweeps/moves/weight-updates: {breakout.sweeps}/{breakout.moves}/{breakout.weight_updates}")
+    print(f"breakout best violations/max-edge-weight: {breakout.best_violations}/{breakout.max_edge_weight}")
+    print(f"breakout elapsed seconds: {breakout_elapsed:.6f}")
     print(f"pair-repair accepted: {pair.accepted if pair is not None else False}")
     print(f"pair-repair iterations/tests: {pair.iterations if pair is not None else 0}/{pair.pair_assignments_tested if pair is not None else 0}")
     print(f"pair-repair best violations: {pair.best_violations if pair is not None else local.best_violations}")
