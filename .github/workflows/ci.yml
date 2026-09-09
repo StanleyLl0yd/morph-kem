@@ -46,3 +46,7 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/maze_core_sweep.py --max-nodes 2000000
+      - name: M3 equivalent-witness baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/morse_baseline.py --params morse-6 --collapse-trials 16 --greedy-trials 4
