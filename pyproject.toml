@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "morph-kem-research"
+version = "0.0.0"
+description = "Research-only experimental code for MORPH-KEM"
+requires-python = ">=3.11"
+license = {text = "Proprietary - research repository currently has no granted license"}
+authors = [{name = "Stanley Lloyd"}]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Programming Language :: Python :: 3",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
