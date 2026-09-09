@@ -277,4 +277,22 @@ A global sheet relabeling is an equivalent covering representation, not a useful
 
 Complexity is linear in the public base graph size times the sheet permutation size.
 
-**Assessment:** algebraically fatal to "secret fiber labels" as H3-E trapdoor. Executable calibration implemented; fixed-seed CI measurement pending.
+**Result:** fatal to hidden fiber labels as an H3-E trapdoor.
+
+Fixed-seed Python 3.12 CI baseline:
+
+~~~text
+parameter: lift-12x5
+base V/E/cycle rank: 12/18/7
+sheets: 5
+tree transitions normalized: 11/11
+public chord monodromies retained: 7
+point-operation estimate: 380
+equal to hidden canonical cover up to one global conjugation: yes
+path-lift equivariance preserved: yes
+residual root relabelings: 120 = 5!
+~~~
+
+The 120 residual choices are a single global relabeling of the five sheets. They describe equivalent coverings and therefore do not constitute a trapdoor.
+
+**H3-E0 rejected.**

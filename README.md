@@ -80,9 +80,9 @@ See:
 
 **H2-E3:** naive all-charts variant rejected before code. Once written as one hidden global state observed by many overlapping bounded-local predicates, it is essentially Goldreich random local functions / planted CSP, an established and actively studied cryptographic family.
 
-**H3-E0:** active calibration. Tests whether hidden fiber labels / a hidden cover can survive when enough permutation-voltage transition data is public for an untrusted sender to lift paths. A public spanning-tree gauge-normalization attack is implemented.
+**H3-E0:** implemented and rejected. If permutation-voltage transitions are public enough for an untrusted sender to lift paths, a public spanning-tree gauge attack recovers the hidden canonical cover up to one global sheet relabeling. If those transitions are hidden, the sender cannot evaluate the proposed forward operation.
 
-**H3-E:** may proceed beyond E0 only if a cover-based public evaluator retains a meaningful secret after quotienting equivalent covers.
+**H3-E:** may proceed only with a construction where the cover/decomposition is not merely gauge and the public evaluator does not expose an equivalent inversion structure.
 
 **H2-H (#17):** parallel hyperbolic/Klein-quartic branch remains open.
 

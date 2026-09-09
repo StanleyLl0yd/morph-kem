@@ -294,3 +294,62 @@ No such H3-E1 construction is currently defined.
 ## 12. Security status
 
 No one-wayness, post-quantum, IND-CPA, IND-CCA, or concrete-security claim exists.
+
+
+## 13. Measured H3-E0 result
+
+Fixed-seed Python 3.12 CI baseline:
+
+~~~text
+parameter: lift-12x5
+base vertices/edges/cycle rank: 12/18/7
+sheets: 5
+
+public attack:
+  tree transitions normalized to identity: 11/11
+  public chord monodromies retained: 7
+  estimated permutation point operations: 380
+
+reference-only evaluation:
+  normalized representation equals hidden canonical cover
+  up to one global conjugation: yes
+
+path behavior:
+  lift equivariance before/after normalization: yes
+
+residual global root relabelings:
+  120 = 5!
+~~~
+
+The attack is deterministic and uses no secret data.
+
+The secret/reference comparison is present only to prove experimentally that the public normal form is exactly the planted canonical cover modulo one global sheet relabeling.
+
+## 14. H3-E0 disposition
+
+**H3-E0 is rejected.**
+
+The conclusion is structural rather than parameter-dependent:
+
+[
+	ext{public path lifting}
+Longrightarrow
+	ext{public transition data}
+Longrightarrow
+	ext{public tree gauge fixing}
+Longrightarrow
+	ext{equivalent cover recovery}.
+]
+
+Increasing:
+
+- base graph size;
+- sheet count;
+- hyperbolic complexity;
+- cover degree;
+
+does not fix this exact gauge collapse.
+
+The next construction must change what the secret is.
+
+A potentially different direction would need a hidden **factorization/decomposition of a public cover**, rather than hidden sheet labels, and must explain how that factorization helps inversion without being publicly reconstructible.

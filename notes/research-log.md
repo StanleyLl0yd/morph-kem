@@ -278,4 +278,24 @@ An executable calibration now checks:
 - equality to the hidden canonical cover up to one global conjugation;
 - path-lift equivariance before/after the attack.
 
-Disposition will be finalized after CI, but the algebraic result is stronger than parameter measurements.
+Fixed-seed CI confirmed the exact algebraic prediction:
+
+~~~text
+lift-12x5
+  base V/E/cycle rank = 12/18/7
+  sheets = 5
+  tree transitions normalized = 11/11
+  chord monodromies retained = 7
+  point-operation estimate = 380
+  canonical-cover equivalence up to root conjugation = yes
+  path-lift equivariance = yes
+  residual global sheet relabelings = 120 = 5!
+~~~
+
+**H3-E0 rejected.**
+
+The secret per-fiber coordinate system is pure gauge. Once public transitions allow path lifting, the attacker obtains the same cover behavior in a public canonical gauge.
+
+The only remaining ambiguity is one global sheet name permutation, which is irrelevant under equivalent-cover semantics.
+
+A successor cannot use "hidden sheet labels" as the trapdoor.
