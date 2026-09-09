@@ -35,15 +35,6 @@ All M0 sets are broken by A-000.
 | path-20 | 20 | 28 | 75% |
 | path-24 | 24 | 32 | 75% |
 
-Balanced A-008 meet-in-the-middle state counts:
-
-| Set | Exhaustive paths | Forward half | Reverse half |
-|---|---:|---:|---:|
-| path-12 | 4096 | 64 | 64 |
-| path-16 | 65536 | 256 | 256 |
-| path-20 | 1048576 | 1024 | 1024 |
-| path-24 | 16777216 | 4096 | 4096 |
-
 All M1 sets are structurally subject to A-008.
 
 ## M2 collapse-maze ladder
@@ -57,57 +48,73 @@ All M1 sets are structurally subject to A-008.
 | maze-12 | 16 | 12 | 3-regular spanning graph |
 | maze-16 | 20 | 16 | 3-regular spanning graph |
 
-Every M2 expansion adds one missing edge and one filled triangle. A final secret vertex permutation hides the generator's original labels, and only a digest of the hidden core is public.
+All M2 sets share the fatal A-014 generator invariant.
 
-This does **not** hide the generator family.
+## M3 equivalent-witness ladder
 
-### A-014 fixed-seed results
+| Set | Vertices | Extra graph edges | 2D expansions | Public critical target |
+|---|---:|---:|---:|---|
+| morse-6 | 12 | 4 | 6 | (1,5,0) |
+| morse-8 | 14 | 5 | 8 | (1,6,0) |
+| morse-10 | 16 | 6 | 10 | (1,7,0) |
+| morse-12 | 18 | 7 | 12 | (1,8,0) |
+| morse-16 | 22 | 9 | 16 | (1,10,0) |
 
-| Set | Recovery nodes | Digest-tested candidates | Forced zero-triangle edges |
-|---|---:|---:|---:|
-| maze-4 | 13 | 1 | 7 |
-| maze-6 | 59 | 4 | 6 |
-| maze-8 | 520 | 14 | 2 |
-| maze-10 | 51 | 1 | 5 |
-| maze-12 | 441 | 5 | 2 |
+The hidden M3 core is a connected variable-degree graph and the public relation contains no core digest.
 
-The values are reproducible observations for the repository's fixed experiment seed. They are not complexity estimates.
+This removes A-014's exact 3-regular reconstruction target but exposes the more fundamental A-016 equivalent-witness attack.
 
-All M2 sets share the same fatal structural invariant: the hidden core is 3-regular and non-core edges necessarily have positive filled-triangle incidence.
+### A-016 fixed-seed results
+
+| Set | Lex accepted | Reverse accepted | Random accepted | Unique graph residuals |
+|---|---:|---:|---:|---:|
+| morse-6 | yes | yes | 32/32 | 32 |
+| morse-8 | yes | yes | 32/32 | 32 |
+| morse-10 | yes | yes | 32/32 | 32 |
+| morse-12 | yes | yes | 32/32 | 32 |
+| morse-16 | yes | yes | 32/32 | 32 |
+
+### A-017 fixed-seed results
+
+| Set | Target hits | Best total critical cells |
+|---|---:|---:|
+| morse-6 | 8/8 | 6 |
+| morse-8 | 5/8 | 7 |
+| morse-10 | 3/8 | 8 |
+| morse-12 | 3/8 | 9 |
+| morse-16 | 4/8 | 11 |
+
+The best critical-cell total equals the public target total in every tested set.
+
+These are reproducible fixed-seed observations, not asymptotic complexity estimates.
 
 ## Security interpretation
 
 Parameter inflation is never a response to a structural break.
 
-A model is allowed to scale only after:
+A model may scale only after its distribution is precise, equivalent-witness semantics are explicit, easy homotopy reductions are excluded, cheapest classical attacks have measured growth, and the quantum attack model is at least formulated.
 
-1. its generated distribution is precisely specified;
-2. obvious generator invariants have dedicated attacks;
-3. equivalent-witness semantics are defined;
-4. the cheapest known classical attacks have measured growth;
-5. the quantum attack model has at least been formulated.
-
-M0, M1, and M2 all fail before this gate.
+M0, M1, M2, and M3 all fail before this gate.
 
 ## Future dimensions
 
-A successor to M2 should avoid a single low-complexity core family and should measure at least:
+A successor to M3 should measure:
 
-- ambient complex dimension;
-- hidden core distribution entropy;
-- dimension-dependent incidence histograms;
-- reduction/expansion depth;
-- number of admissible local reductions;
-- overlap between candidate reductions;
-- predecessor branching;
+- ambient dimension;
+- target critical vector;
+- natural versus planted distribution distinguishability;
+- local incidence histograms by cell role;
+- Hasse-graph degree distribution;
+- matching overlap and dependency depth;
 - automorphism/canonicalization profile;
 - separator/treewidth profile;
+- greedy-matching success;
+- SAT/CSP attack cost;
 - public description size;
-- trapdoor size;
-- ciphertext size.
+- witness/trapdoor size.
 
 ## Acceptance criterion for scaling
 
-Do not scale until the generated distribution survives its own cheapest structural-recovery attacks.
+Do not scale until the generated distribution survives its cheapest structural and constructive equivalent-witness attacks.
 
 "Brute force is expensive" is not a parameter-selection argument.

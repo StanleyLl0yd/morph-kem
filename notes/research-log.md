@@ -18,97 +18,92 @@ Implemented canonical finite simplicial complexes, deterministic toy generation,
 
 A-000 directly recovers every M0 seed from public coordinate-local triangle recipes.
 
-**Result:** M0 rejected as a security candidate.
+**Result:** M0 rejected.
 
 ## 2026-09-09 — M1 non-local branching path
 
-Replaced local M0 markers with globally supported public vertex permutations on one shared 2D scaffold.
+Replaced local M0 markers with globally supported public vertex permutations.
 
-A-008 meet-in-the-middle recovery joins forward prefix states and inverse suffix states in roughly 2^(ell/2) state enumeration.
+A-008 meet-in-the-middle recovers the hidden branch path in roughly 2^(ell/2) state enumeration.
 
-M1 also preserves the complete simplicial isomorphism class because every step is only a relabeling.
-
-**Result:** M1 rejected as a security candidate.
+**Result:** M1 rejected.
 
 **Lesson:** global support is not inversion asymmetry.
 
 ## 2026-09-09 — M2 collapse maze
 
-### Construction
+Implemented genuine elementary expansion/collapse branching around a hidden 3-regular graph core.
 
-Implemented:
+A-013 bounded collapse DFS recovers the small fixed-seed core, but A-014 is stronger: zero-triangle-incidence edges plus the public 3-regular generator invariant recover the hidden core directly.
 
-- generic elementary expansion as the exact inverse of collapse;
-- deterministic hidden connected 3-regular 1D core;
-- overlapping edge/triangle elementary expansions;
-- secret final vertex relabeling;
-- public target + domain-separated core digest;
-- trapdoor core + exact reverse-collapse certificate;
-- greedy reduction attacks;
-- deterministic random-greedy surveys;
-- bounded public collapse DFS;
-- structural 3-regular core recovery;
-- fixed-seed attack scaling sweep.
-
-### Branching result
-
-Deterministic maze-6:
+Fixed-seed A-014 nodes:
 
 ~~~text
-target simplices:        42
-core simplices:          30
-planted steps:            6
-initial free pairs:      18
-mean free pairs on planted path: 10.50
+maze-4:  13
+maze-6:  59
+maze-8:  520
+maze-10: 51
+maze-12: 441
 ~~~
 
-Lexicographic and reverse greedy both reach 30-simplex residuals that are not the planted core.
+A-015 also shows many same-sized irreducible residuals.
 
-Sixteen deterministic random-greedy trials produce sixteen distinct 30-simplex residuals and zero planted-core hits.
+**Result:** M2 rejected.
 
-This confirms genuine path dependence.
+**Lesson:** the generator can leak an easier reconstruction problem than the nominal reduction maze, and the planted residual is not automatically the right security witness.
 
-### A-013 collapse search
+## 2026-09-09 — M3 equivalent-witness Morse relation
 
-Bounded DFS recovers the exact maze-6 core in 1095 explored nodes.
+### Relation correction
 
-### A-014 structural core recovery
+M3 removes the planted-core digest from the success relation.
 
-The stronger attack uses a generator invariant:
+The public instance contains only the 2D simplicial complex and a target critical vector.
 
-- every non-core edge is added together with a filled triangle;
-- zero-triangle-incidence target edges are therefore forced hidden-core edges;
-- the hidden core is publicly known to be 3-regular.
+Any simplex-disjoint acyclic Hasse matching with that critical vector is accepted.
 
-Backtracking over only compatible 3-regular spanning subgraphs plus public digest verification recovers the fixed-seed baseline:
+The exact validator checks incidence, disjointness, directed-Hasse acyclicity, and critical counts.
+
+### Generator
+
+M3 replaces M2's 3-regular graph with a variable-degree connected graph, applies edge/triangle expansions, and relabels vertices.
+
+The planted witness combines expansion edge/triangle pairs with a spanning-tree vertex/edge matching on the graph core.
+
+### A-016 constructive equivalent witness
+
+The attacker collapses public free edge/triangle pairs until any graph residual is reached, then builds a spanning-tree matching on that residual.
+
+Fixed-seed sweep:
 
 ~~~text
-maze-4:  nodes 13
-maze-6:  nodes 59
-maze-8:  nodes 520
-maze-10: nodes 51
-maze-12: nodes 441
+morse-6:  lex yes, reverse yes, random 32/32
+morse-8:  lex yes, reverse yes, random 32/32
+morse-10: lex yes, reverse yes, random 32/32
+morse-12: lex yes, reverse yes, random 32/32
+morse-16: lex yes, reverse yes, random 32/32
 ~~~
 
-All five tested cores are recovered.
+Every set produced 32 distinct residuals in 32 random trials, and every residual yielded an accepted equivalent witness.
 
-**Result:** M2 rejected as a security candidate.
+### A-017 generic greedy matching
+
+Eight randomized greedy acyclic-Hasse trials per set hit the exact target:
+
+~~~text
+morse-6:  8/8
+morse-8:  5/8
+morse-10: 3/8
+morse-12: 3/8
+morse-16: 4/8
+~~~
+
+### Result
+
+**M3 rejected.**
 
 ### Main lesson
 
-A difficult-looking reduction maze is irrelevant if the **generator leaks an easier reconstruction problem**.
+Equivalent-witness semantics are the correct security discipline, but "graph + collapsible 2D decoration" has an elementary public witness construction.
 
-Secret vertex relabeling does not hide degree/incidence semantics.
-
-### Next milestone
-
-Do not scale M2.
-
-Design the next generated distribution around these constraints:
-
-- no fixed low-complexity regular core family;
-- incidence-balanced core/non-core cells;
-- no obvious graph-factor/matching recovery formulation;
-- explicit equivalent-witness semantics;
-- structural-recovery attacks implemented before parameter scaling;
-- no KEM wrapper until a primitive survives those attacks.
+The next model must have a genuinely higher-dimensional useful witness structure and must be tested against generic Hasse-matching and solver attacks before scaling.
