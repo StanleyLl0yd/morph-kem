@@ -6,6 +6,7 @@ from morph_kem.hyperbolic import (
     audit_a5,
     generate_a5_instance,
     generate_klein_quartic,
+    recover_a5_hamming_repair,
     recover_a5_neighborhood_repair,
     gl32_group,
     klein_triangle_generators,
@@ -84,6 +85,19 @@ class A5Tests(unittest.TestCase):
             max_nodes_per_radius=16,
         )
         self.assertTrue(result.accepted)
+        self.assertIsNotNone(result.frames)
+        self.assertTrue(validate_a5_frames(public, result.frames).accepted)
+
+    def test_hamming_repair_accepts_reference_gauge_orbit(self) -> None:
+        public, reference = generate_a5_instance(MASTER_SEED)
+        result = recover_a5_hamming_repair(
+            public,
+            reference.frames,
+            max_changes=0,
+            max_nodes_per_radius=16,
+        )
+        self.assertTrue(result.accepted)
+        self.assertEqual(result.changes, 0)
         self.assertIsNotNone(result.frames)
         self.assertTrue(validate_a5_frames(public, result.frames).accepted)
 
