@@ -337,3 +337,40 @@ w'       <- TrapdoorRecover(td, pk, H)
 with exact correctness and a public attack target.
 
 Until TrapdoorRecover exists, there is no cover-based primitive to benchmark.
+
+
+### H2-H — exact Klein quartic + A5 started
+
+Returned to issue #17 after completing the Escher/covering frontier reviews.
+
+This experiment finally uses an exact finite hyperbolic surface combinatorics rather than a cycle-rich graph surrogate.
+
+Scaffold construction:
+
+~~~text
+GL(3,2) ~= PSL(2,7), order 168
+(2,3,7) generators
+vertex cosets: order-7 subgroup -> 24
+edge cosets:   order-2 subgroup -> 84
+face cosets:   order-3 subgroup -> 56
+~~~
+
+Required surface checks:
+- 24 vertices;
+- 84 edges;
+- 56 triangular faces;
+- degree 7 at every vertex;
+- two faces at every edge;
+- Euler characteristic -4;
+- orientable genus 3;
+- zero free collapse pairs.
+
+The local state group is A5, order 60. The public accepted normalized edge subset is the 20-element conjugacy class of 3-cycles.
+
+Unlike H1/S3, A5 has trivial abelianization; the implementation explicitly checks that the commutator subgroup is all 60 elements and that the 3-cycle class generates all A5.
+
+This removes one known shortcut but does not imply hardness.
+
+Attack H-H01 is an exact CSP with arc consistency and MRV. Any satisfying equivalent frame assignment counts as attacker success.
+
+Disposition awaits CI measurement.

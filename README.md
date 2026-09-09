@@ -66,6 +66,7 @@ See:
 - docs/18-h2e3-frontier.md — Goldreich/local-OWF frontier and H3-E novelty gate
 - docs/19-h3e-lifted-atlas.md — graph-cover prior art and public gauge-normalization calibration
 - docs/20-h3e-composite-cover-frontier.md — public-key adaptation/interface gate
+- docs/21-h2-klein-quartic-a5.md — exact hyperbolic Klein-quartic/A5 experiment
 - notes/research-log.md — chronological record
 - spec/morph-kem-v0.1.md — future-spec skeleton
 
@@ -87,7 +88,7 @@ See:
 
 **H3-E:** may proceed only after defining a trapdoor positive cover distribution with a concrete efficient secret recovery algorithm.
 
-**H2-H (#17):** parallel hyperbolic/Klein-quartic branch remains open.
+**H2-H (#17):** active. Uses the exact {3,7} Klein-quartic map (24 vertices, 84 edges, 56 faces, genus 3) built from the (2,3,7) quotient PSL(2,7) ~= GL(3,2), with an A5 perfect-group frame relation and exact CSP attack.
 
 No security or post-quantum claim exists.
 

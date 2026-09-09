@@ -99,3 +99,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/lifted_atlas_baseline.py --params lift-12x5
+      - name: H2 Klein-quartic A5 baseline
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/hyperbolic_baseline.py --solution-cap 8 --max-nodes 2000000

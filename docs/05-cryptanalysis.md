@@ -314,3 +314,29 @@ Four variants were checked:
 This is an interface failure, not a proof that every cover-based public-key primitive is impossible.
 
 Mandatory successor gate: define an efficient TrapdoorRecover algorithm on an exact generated positive cover distribution before claiming a cover-based one-way relation.
+
+
+### H-H01 — exact A5 frame CSP on Klein quartic
+
+Target: H2-H exact {3,7} Klein-quartic scaffold.
+
+The public surface is not a graph-only hyperbolic analogy. It is built combinatorially from the order-168 (2,3,7) quotient using cosets of the cyclic subgroups of orders 7, 2, and 3.
+
+The transition group is A5. Its 3-cycle conjugacy class has 20 elements and A5 is perfect, so H1's cheap abelian sign quotient is absent.
+
+The public relation remains pairwise:
+
+~~~text
+x_v * T_uv * x_u^-1 in C3(A5)
+~~~
+
+for every public edge.
+
+Attack H-H01 uses exact finite-domain CSP with:
+- one global gauge representative fixed;
+- exact edge compatibility tables;
+- repeated arc consistency;
+- MRV + public incidence degree tie-breaking;
+- equivalent-witness enumeration.
+
+**Assessment:** implemented; fixed-seed CI measurement pending.
