@@ -180,6 +180,17 @@ class A5NeighborhoodRepairResult:
 
 
 @dataclass(frozen=True, slots=True)
+class A5HammingRepairResult:
+    accepted: bool
+    frames: tuple[int, ...] | None
+    changes: int | None
+    radius_tested: int
+    nodes: int
+    backtracks: int
+    arc_revisions: int
+
+
+@dataclass(frozen=True, slots=True)
 class A5CspResult:
     accepted: bool
     first_solution: tuple[int, ...] | None
@@ -1391,6 +1402,7 @@ def solve_a5_csp(
     max_nodes: int = 2_000_000,
     preferred_frames: tuple[int, ...] | None = None,
     fixed_frames: dict[int, int] | None = None,
+    max_hamming_changes: int | None = None,
 ) -> A5CspResult:
     if solution_cap <= 0 or solution_cap > 10_000:
         raise HyperbolicExperimentError("solution_cap must be in [1, 10000]")
@@ -1404,6 +1416,11 @@ def solve_a5_csp(
             raise HyperbolicExperimentError("preferred frame count does not match vertices")
         if any(value < 0 or value >= group_size for value in preferred_frames):
             raise HyperbolicExperimentError("preferred frame outside A5")
+    if max_hamming_changes is not None:
+        if preferred_frames is None:
+            raise HyperbolicExperimentError("Hamming bound requires preferred_frames")
+        if max_hamming_changes < 0 or max_hamming_changes > vertex_count:
+            raise HyperbolicExperimentError("max_hamming_changes outside valid range")
     full_mask = (1 << group_size) - 1
     domains: list[int] = [full_mask] * vertex_count
     domains[0] = 1 << A5_IDENTITY
@@ -1518,6 +1535,15 @@ def solve_a5_csp(
             backtracks += 1
             return
 
+        if max_hamming_changes is not None and preferred_frames is not None:
+            forced_changes = sum(
+                not (mask & (1 << preferred_frames[vertex]))
+                for vertex, mask in enumerate(current)
+            )
+            if forced_changes > max_hamming_changes:
+                backtracks += 1
+                return
+
         unresolved = [
             vertex
             for vertex, mask in enumerate(current)
@@ -1589,6 +1615,88 @@ def solve_a5_csp(
         initial_mean_domain=initial_mean,
         final_first_solution=accepted,
         hit_solution_cap=hit_cap,
+    )
+
+
+def recover_a5_hamming_repair(
+    public: A5PublicInstance,
+    start_frames: tuple[int, ...],
+    max_changes: int = 6,
+    max_nodes_per_radius: int = 5_000,
+) -> A5HammingRepairResult:
+    """Search exact solutions in increasing Hamming balls around a near-solution.
+
+    This is a public attack: the supplied start assignment is produced by
+    public heuristics. The exact solver prefers that assignment and prunes any
+    branch whose current domains force more than the allowed number of vertex
+    changes.
+    """
+    vertex_count = len(public.scaffold.vertices)
+    if len(start_frames) != vertex_count:
+        raise HyperbolicExperimentError("Hamming-repair frame count does not match vertices")
+    if any(value < 0 or value >= len(A5_ELEMENTS) for value in start_frames):
+        raise HyperbolicExperimentError("Hamming-repair frame outside A5")
+    if max_changes < 0 or max_changes > vertex_count:
+        raise HyperbolicExperimentError("max_changes outside valid range")
+    if max_nodes_per_radius <= 0 or max_nodes_per_radius > 50_000_000:
+        raise HyperbolicExperimentError("max_nodes_per_radius outside valid range")
+
+    root_inverse = _a5_inv(start_frames[0])
+    preferred = tuple(
+        A5_IDENTITY if vertex == 0 else _a5_mul(root_inverse, value)
+        for vertex, value in enumerate(start_frames)
+    )
+
+    if validate_a5_frames(public, preferred).accepted:
+        return A5HammingRepairResult(
+            True,
+            preferred,
+            0,
+            0,
+            0,
+            0,
+            0,
+        )
+
+    total_nodes = 0
+    total_backtracks = 0
+    total_arc_revisions = 0
+
+    for radius in range(max_changes + 1):
+        result = solve_a5_csp(
+            public,
+            solution_cap=1,
+            max_nodes=max_nodes_per_radius,
+            preferred_frames=preferred,
+            max_hamming_changes=radius,
+        )
+        total_nodes += result.nodes
+        total_backtracks += result.backtracks
+        total_arc_revisions += result.arc_revisions
+
+        if result.accepted and result.first_solution is not None:
+            changes = sum(
+                left != right
+                for left, right in zip(preferred, result.first_solution)
+            )
+            return A5HammingRepairResult(
+                True,
+                result.first_solution,
+                changes,
+                radius,
+                total_nodes,
+                total_backtracks,
+                total_arc_revisions,
+            )
+
+    return A5HammingRepairResult(
+        False,
+        None,
+        None,
+        max_changes,
+        total_nodes,
+        total_backtracks,
+        total_arc_revisions,
     )
 
 
