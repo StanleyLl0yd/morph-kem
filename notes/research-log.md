@@ -403,3 +403,29 @@ A lighter deterministic four-instance generated-distribution sweep also found no
 This is the first repository model where the implemented bounded public attacks fail to construct an accepted witness. The result is intentionally narrow: one strong fixed baseline plus four lighter samples.
 
 Next work must attack the same relation with industrial SAT/SMT/CP-SAT, subgroup/coset projections, representation-theoretic methods, automorphism/canonicalization attacks, and broader generated-instance sampling. Parameter inflation is explicitly not the next step.
+
+
+### H2.1 — industrial SAT break
+
+The unresolved H2-H Klein-quartic/A5 relation was encoded exactly as CNF and attacked with MiniSat.
+
+Fixed generated instance:
+
+~~~text
+variables = 1,440
+clauses = 47,545
+MiniSat result = SAT
+decoded exact verifier = accepted
+conflicts = 2,810,606
+decisions = 6,909,361
+propagations = 172,452,978
+CPU time = 115.099 s
+~~~
+
+The solver used no planted reference witness. Any accepted equivalent A5 frame assignment counts as attacker success.
+
+**H2-H rejected on the fixed generated instance.**
+
+This is not an asymptotic hardness result; it is a concrete falsification of the current generated instance. The earlier bounded Python baseline was therefore attack-limited, not evidence of one-wayness.
+
+Next H-series work must change the relation rather than inflate the Klein-quartic genus or the local finite group.

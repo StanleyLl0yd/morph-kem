@@ -292,19 +292,37 @@ These four samples are only a regression/evidence baseline. They are far too few
 
 ## 11. Current disposition
 
-**H2-H is not broken by the repository's current bounded baseline, but it is not a security candidate.**
+The bounded Python baseline was initially unresolved: several public attacks stopped at one violated edge and exact bounded search did not recover a witness.
 
-This is the first MORPH/H-series experiment in which the implemented public attacks do not immediately construct an accepted equivalent witness.
+H2.1 then encoded the same public relation exactly as SAT and recovered an accepted equivalent witness with MiniSat.
 
-What has *not* been established:
+Therefore **H2-H is rejected on the fixed generated instance**. The earlier unresolved result is preserved as an attack-comparison baseline, not reinterpreted as evidence of hardness.
 
-- average-case hardness;
-- asymptotic exponential growth;
-- resistance to industrial SAT/SMT/CP-SAT solvers;
-- resistance to subgroup/coset projection attacks;
-- resistance to representation-theoretic or tensor relaxations;
-- resistance to Klein-quartic automorphism/canonicalization attacks;
-- resistance to quantum algorithms;
-- any trapdoor or public-key asymmetry.
+## 12. H2.1 exact MiniSat break
 
-The next research milestone must attack the same relation more strongly. It must not increase genus, group size, or parameters merely because the current Python baselines stopped short of a witness.
+The CNF uses:
+
+~~~text
+24 vertices x 60 A5 values = 1,440 Boolean variables
+47,545 clauses
+root gauge fixed to A5 identity
+exactly one frame per vertex
+exact edge compatibility constraints
+~~~
+
+Fixed Python 3.12 CI measurement:
+
+~~~text
+MiniSat result:                SAT
+decoded exact verifier:       accepted
+conflicts:                 2,810,606
+decisions:                 6,909,361
+propagations:            172,452,978
+CPU time:                    115.099 s
+~~~
+
+The planted reference frames are not supplied to MiniSat. The returned model is decoded and independently checked by `validate_a5_frames`.
+
+This is enough to reject the present generated instance as a cryptographic hardness candidate. It is **not** a claim that the search problem is polynomial-time or that all parameter families are easy.
+
+The next H-series construction must change the verifier/generator relation. Merely increasing genus, choosing a larger finite simple group, or increasing the local domain would only scale a relation already broken at its first exact generated instance.

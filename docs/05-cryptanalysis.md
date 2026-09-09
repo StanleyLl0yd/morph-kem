@@ -8,7 +8,7 @@ This file preserves attacks including successful breaks.
 | A-001 | Greedy Morse reduction/matching | Persistent risk | Implemented |
 | A-002 | Shared hidden-structure recovery | Critical risk | Pending generic attack |
 | A-003 | Canonical labeling/isomorphism | High risk | M1 weakness documented |
-| A-004 | SAT reconstruction | High risk | Pending |
+| A-004 | Exact SAT/CNF reconstruction | **Fatal to H2-H fixed generated instance** | Implemented (MiniSat) |
 | A-005 | MILP reconstruction | High risk | Pending |
 | A-006 | Treewidth/separator methods | High risk | Pending |
 | A-007 | Statistical/invariant distinguisher | High risk | Pending |
@@ -401,3 +401,35 @@ Each mini-sweep CSP is capped at 250 search nodes and 50 singleton probes. No si
 **Assessment:** H2-H remains unresolved rather than broken. Four samples and bounded Python attacks are far below the evidence required for a cryptographic assumption.
 
 Next mandatory attacks include industrial SAT/SMT/CP-SAT, subgroup/coset projections, representation-theoretic relaxations, automorphism/canonicalization exploitation, and substantially larger generated-distribution studies.
+
+
+### H-H02 — exact MiniSat recovery
+
+Target: the H2-H Klein-quartic/A5 generated relation.
+
+The exact public relation was encoded to CNF with one Boolean variable for every vertex/A5-frame value. One global gauge representative is fixed at the root. Exactly-one constraints enforce one frame per vertex, and edge clauses encode the exact A5 3-cycle compatibility relation. The decoded solver model is checked again with the repository's exact verifier, so a SAT result is not accepted merely on the CNF encoder's word.
+
+Fixed generated instance:
+
+~~~text
+Klein vertices / edges / faces: 24 / 84 / 56
+A5 domain size:                 60
+SAT variables:                 1,440
+SAT clauses:                  47,545
+
+MiniSat:
+  result:                       SAT
+  decoded accepted witness:     yes
+  conflicts:              2,810,606
+  decisions:              6,909,361
+  propagations:         172,452,978
+  CPU time:                 115.099 s
+~~~
+
+The attack uses only public instance data. Any accepted equivalent frame assignment is attacker success; the planted reference frames are not used by the solver.
+
+**Result:** H2-H is rejected for this generated relation/instance. The previous bounded Python attacks stopping at one violated edge were only a limitation of those attack implementations.
+
+This does not prove a polynomial-time attack or characterize asymptotic complexity. It is nevertheless enough to falsify the current generated instance as a cryptographic hardness candidate under the repository's attack-first rules.
+
+**Lesson:** removing abelianization and moving to an exact hyperbolic surface can make naive search much harder without creating a usable one-way relation. Industrial exact solvers must be part of the gate before interpreting bounded heuristic failure.
