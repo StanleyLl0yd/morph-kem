@@ -75,3 +75,49 @@ The first H1 ladder will deliberately begin with:
 2. S3 non-abelian frame holonomy — attacked by gauge fixing, abelianization, cycle basis, exact CSP, canonicalization, and local statistics.
 
 No H-series security claim exists.
+
+
+### H1 — signed holonomy calibration
+
+Implemented Z2 and S3 vertex-frame/edge-transition experiments on deterministic cycle-rich graph scaffolds.
+
+H1-Z2 behaves as expected: a public spanning tree fixes a gauge representative and exposes the fundamental-cycle bits with linear work.
+
+H1-S3 failed even more strongly than expected.
+
+The verifier accepts an edge exactly when its normalized S3 element is a transposition. Since the three transpositions are exactly the odd elements of S3, this condition is equivalent to one sign/parity equation per edge.
+
+Thus the whole S3 relation factors through:
+
+~~~text
+S3 --sign--> Z2
+~~~
+
+and a public Z2 solution can be lifted using arbitrary fixed even/odd S3 representatives.
+
+The direct attack `recover_s3_via_abelianization` therefore constructs an accepted equivalent witness in linear graph work.
+
+**H1 rejected.**
+
+Lesson: non-commutativity is irrelevant when the verifier accepts an entire fiber of a simple quotient homomorphism.
+
+
+H1 measured baseline (fixed seed):
+
+~~~text
+h1-12:
+  V/E/cycle rank = 12/18/7
+  Z2 spanning-tree recovery = accepted
+  S3 direct sign-lift recovery = accepted
+  S3 direct edge checks = 54
+  CSP cap 64: 64 solutions, 104 nodes, 0 backtracks
+
+sweep:
+  h1-8  -> direct accepted, 36 checks
+  h1-10 -> direct accepted, 45 checks
+  h1-12 -> direct accepted, 54 checks
+  h1-16 -> direct accepted, 72 checks
+  h1-20 -> direct accepted, 90 checks
+~~~
+
+The algebraic proof is stronger than the measurements: H1-S3's verifier is exactly its Z2 sign quotient.
