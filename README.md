@@ -71,9 +71,11 @@ See:
 
 **H1:** implemented and rejected. Z2 collapses by spanning-tree/cycle-space recovery; the S3 verifier also collapses exactly to Z2 because "normalized transition is a transposition" is equivalent to odd permutation parity.
 
-**H2-E:** active Escher/Penrose branch. It models locally valid relative-height constraints with global cycle frustration and accepts any bounded seam repair. The first implementation is intentionally attacked as a gain-graph balancing problem.
+**H2-E1:** implemented and rejected. The Escher/Penrose relative-height atlas is genuinely locally satisfiable and globally frustrated, but its obstruction is exactly ordinary cycle-gain data and minimum equivalent seam repairs are found cheaply by unbalanced-cycle branching.
 
-**H2-H (#17):** parallel hyperbolic/Klein-quartic branch, currently deferred while H2-E is tested.
+**H2-E2:** next Escher step, if pursued, must use higher-order overlapping charts rather than one edge gain per adjacency.
+
+**H2-H (#17):** parallel hyperbolic/Klein-quartic branch remains open.
 
 No security or post-quantum claim exists.
 

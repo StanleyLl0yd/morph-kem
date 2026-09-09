@@ -152,7 +152,9 @@ H2-E1 assigns a relative height increment in Z/7Z to every public edge. Fixing a
 
 For the abelian height model, these cycle gains are a complete test for global consistency: the atlas is balanced iff all fundamental-cycle syndromes vanish.
 
-**Assessment:** expected structural reduction; implemented.
+**Result:** exact structural reduction confirmed.
+
+Fixed-seed H2-E1 shows non-zero fundamental-cycle syndromes immediately expose the complete no-seam obstruction.
 
 ### H-E02 — unbalanced-cycle seam branching
 
@@ -167,4 +169,20 @@ The exact public attack repeatedly:
 
 This is equivalent in spirit to balancing-set / Group Feedback Edge Set attacks on gain/group-labelled graphs.
 
-**Assessment:** implemented; final disposition waits for fixed-seed CI measurements.
+**Result:** fatal to H2-E1 as a new hardness direction.
+
+Fixed-seed Python 3.12 CI sweep:
+
+| Set | V | E | Cycle rank | Budget | Non-zero syndromes | Minimum seams | Search nodes | Backtracks |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| escher-8 | 8 | 12 | 5 | 1 | 4 | 1 | 4 | 2 |
+| escher-10 | 10 | 15 | 6 | 2 | 2 | 2 | 27 | 24 |
+| escher-12 | 12 | 18 | 7 | 2 | 5 | 2 | 27 | 24 |
+| escher-16 | 16 | 24 | 9 | 3 | 6 | 3 | 43 | 39 |
+| escher-20 | 20 | 30 | 11 | 4 | 4 | 3 | 164 | 160 |
+
+The escher-20 attack found an accepted equivalent repair using only 3 seams even though the generator planted 4. This reinforces the repository rule that attacker success is any accepted witness, not recovery of generation history.
+
+For escher-12 the exact attack required 27 search nodes, 24 backtracks and 469 public edge checks.
+
+H2-E1 is therefore rejected. The relation is an instance of known gain/group-labelled graph balancing/cycle-hitting structure; increasing graph size does not repair the conceptual issue.

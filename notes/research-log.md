@@ -143,4 +143,20 @@ Implemented attacks:
 - fundamental-cycle syndrome extraction;
 - exact unbalanced-cycle branching for any equivalent seam repair.
 
-Disposition awaits CI measurements.
+Measured fixed-seed CI results confirm the expected break.
+
+~~~text
+escher-8:  min repair 1, nodes 4
+escher-10: min repair 2, nodes 27
+escher-12: min repair 2, nodes 27
+escher-16: min repair 3, nodes 43
+escher-20: min repair 3, nodes 164
+~~~
+
+For escher-20 the solver found a smaller equivalent repair than the planted four-edge seam set.
+
+**H2-E1 rejected.**
+
+The Escher intuition itself remains useful, but edge-relative height data is too low-order: its obstruction is completely captured by cycle gains/cohomology and seam repair is a known gain-graph balancing problem.
+
+Next Escher experiment, if continued: overlapping multi-variable charts/higher-order constraints that cannot be flattened to one group label per graph edge.

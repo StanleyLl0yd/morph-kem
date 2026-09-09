@@ -223,3 +223,72 @@ A successor H2-E2 must then change the mathematical level:
 ## 9. Security status
 
 No one-wayness, post-quantum, IND-CPA, IND-CCA, or concrete-security claim exists.
+
+
+## 10. Measured H2-E1 result
+
+Fixed seed on the Python 3.12 CI runner:
+
+### Baseline escher-12
+
+~~~text
+V/E/cycle rank: 12/18/7
+degree histogram: ((2,4), (3,5), (4,2), (5,1))
+modulus: 7
+planted seam budget: 2
+planted witness valid: yes
+non-zero fundamental syndromes: 5/7
+
+exact equivalent-repair attack:
+  found: yes
+  witness valid: yes
+  minimum seams: 2
+  nodes: 27
+  backtracks: 24
+  max branch: 6
+  edge checks: 469
+~~~
+
+### Scaling sweep
+
+| Set | V | E | Cycle rank | Planted budget | Non-zero syndromes | Found | Minimum seams | Nodes | Backtracks |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| escher-8 | 8 | 12 | 5 | 1 | 4 | yes | 1 | 4 | 2 |
+| escher-10 | 10 | 15 | 6 | 2 | 2 | yes | 2 | 27 | 24 |
+| escher-12 | 12 | 18 | 7 | 2 | 5 | yes | 2 | 27 | 24 |
+| escher-16 | 16 | 24 | 9 | 3 | 6 | yes | 3 | 43 | 39 |
+| escher-20 | 20 | 30 | 11 | 4 | 4 | yes | 3 | 164 | 160 |
+
+The escher-20 result is especially important: the attacker did not recover the planted four seams. It found a different accepted repair with only three seams.
+
+This is correct attacker success under the equivalent-witness relation.
+
+## 11. H2-E1 disposition
+
+**H2-E1 is rejected as a new hardness direction.**
+
+The mathematical Escher phenomenon is real: every edge is locally satisfiable while closed loops can be globally inconsistent.
+
+But this first encoding is too simple:
+
+1. the obstruction is exactly a one-dimensional gain/cocycle;
+2. a spanning tree compresses all no-seam inconsistency into fundamental-cycle gains;
+3. bounded seam repair becomes a standard unbalanced-cycle hitting / gain-graph balancing problem;
+4. toy instances are solved with very small exact search trees.
+
+Increasing q, V, or E would not address that structural reduction.
+
+## 12. H2-E2 gate
+
+A successor may proceed only by changing the relation to genuinely higher-order local data.
+
+Candidate H2-E2 requirements:
+
+- charts contain several local variables, not one scalar height;
+- overlaps involve three or more charts/variables where possible;
+- pairwise edge labels are insufficient to reconstruct the verifier;
+- local consistency can hold to radius >1 while a global section still fails;
+- equivalent witnesses remain accepted;
+- mandatory attacks include cohomological relaxation, k-consistency, exact CSP, treewidth/separator analysis, and canonicalization.
+
+This is closer to the full "Escher" idea: not merely a contradictory loop of heights, but overlapping locally convincing coordinate systems whose conflict appears only when many patches are glued together.
