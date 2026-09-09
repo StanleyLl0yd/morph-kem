@@ -110,3 +110,44 @@ K1 must therefore add structure that survives the orientation-character and orie
 ## 6. Security status
 
 No one-wayness, average-case hardness, post-quantum, IND-CPA, IND-CCA, KEM, or production-security claim exists.
+
+
+## 7. Measured result
+
+Fixed master seed `30124490aabbccddeeff1029384756ab`.
+
+Baseline `klein-bottle-5x4`:
+
+~~~text
+V/E/F:                                  20/60/40
+Euler characteristic:                   0
+dual V/E/cycle rank:                    40/60/21
+orientable:                             false
+non-zero fundamental syndromes:         7/21
+public normalization = canonical:       true
+hidden gauge recovery consistent:       true
+hidden face gauges recovered up to root:true
+public edge checks:                     60
+residual global gauge choices:          2
+~~~
+
+Deterministic sweep:
+
+| Set | V/E/F | Dual cycle rank | Non-zero syndromes | Gauge recovery |
+|---|---|---:|---:|---:|
+| klein-bottle-4x4 | 16/48/32 | 17 | 6 | yes |
+| klein-bottle-5x4 | 20/60/40 | 21 | 7 | yes |
+| klein-bottle-6x4 | 24/72/48 | 25 | 8 | yes |
+
+The work grows linearly with the public dual-edge count in this implementation.
+
+## 8. Disposition
+
+**K0 is rejected exactly as intended.**
+
+The experiment separates two facts that must not be conflated:
+
+1. the surface really is non-orientable, and the cycle obstruction is genuinely global;
+2. the hidden face labels are nevertheless just a Z2 gauge and are publicly reconstructible up to one global bit.
+
+K1 must therefore attack something beyond the orientation character itself. Passing to a larger Klein-bottle mesh would add size but no asymmetry.

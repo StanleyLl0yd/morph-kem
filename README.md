@@ -91,7 +91,7 @@ See:
 
 **H2-H / H2.1:** rejected on the fixed generated instance by an exact industrial SAT attack. The exact {3,7} Klein-quartic/A5 relation encodes to 1,440 Boolean variables and 47,545 CNF clauses after fixing the global gauge. MiniSat returned SAT and the decoded assignment passed the repository's exact A5 verifier. On the recorded CI run it used 2,810,606 conflicts, 6,909,361 decisions, 172,452,978 propagations and about 115 CPU seconds. This is a concrete generated-instance break, not an asymptotic theorem; increasing genus or group size is not an acceptable repair.
 
-**K0:** active non-orientable control. It uses an exact finite Klein-bottle triangulation and deliberately tests whether hidden local orientation labels are anything more than a Z2 gauge. The expected public attack is spanning-tree XOR normalization and recovery up to one global bit.
+**K0:** implemented and rejected as designed. The exact finite Klein-bottle triangulation is genuinely non-orientable, but public spanning-tree XOR normalization removes the hidden local orientation gauge completely up to one global bit. On the baseline klein-bottle-5x4 instance, all 40 face-gauge bits are recovered up to that global bit with 60 public edge checks; the remaining 7/21 non-zero fundamental syndromes are public orientation-obstruction data, not a trapdoor.
 
 No security or post-quantum claim exists.
 

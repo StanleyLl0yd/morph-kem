@@ -447,3 +447,27 @@ Generation disguises the canonical transition bits with one reference gauge bit 
 The mandatory attack is public spanning-tree XOR normalization. It should recover every hidden face gauge up to one global bit and leave only the gauge-invariant fundamental-cycle orientation syndromes.
 
 K0 is expected to fail. The purpose is to prove in executable form that genuine non-orientability can still reduce to cheap linear gauge data.
+
+
+K0 measured result:
+
+~~~text
+klein-bottle-5x4:
+  V/E/F = 20/60/40
+  chi = 0
+  dual cycle rank = 21
+  orientable = no
+  non-zero fundamental orientation syndromes = 7/21
+  public normalization = canonical normalization
+  hidden face gauges recovered up to one global bit = yes
+  public edge checks = 60
+
+sweep:
+  4x4 -> 6/17 non-zero syndromes, gauge recovered in 48 checks
+  5x4 -> 7/21 non-zero syndromes, gauge recovered in 60 checks
+  6x4 -> 8/25 non-zero syndromes, gauge recovered in 72 checks
+~~~
+
+**K0 rejected as designed.**
+
+The non-orientable obstruction is real but public; hiding local orientation labels adds only gauge. This confirms that the K-series must not treat the orientation character itself as a trapdoor.

@@ -458,3 +458,18 @@ The non-tree normalized bits are the fundamental-cycle orientation syndromes. Th
 **Expected result:** fatal to K0 by construction.
 
 K0 exists to verify that non-orientability and Möbius/Klein-bottle intuition do not become cryptographic hardness when the protected quantity is only an orientation character or face gauge.
+
+
+Fixed-seed K0 CI sweep:
+
+| Set | V | E | F | Dual cycle rank | Non-zero syndromes | Gauge recovered | Edge checks |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| klein-bottle-4x4 | 16 | 48 | 32 | 17 | 6 | yes | 48 |
+| klein-bottle-5x4 | 20 | 60 | 40 | 21 | 7 | yes | 60 |
+| klein-bottle-6x4 | 24 | 72 | 48 | 25 | 8 | yes | 72 |
+
+For the baseline klein-bottle-5x4 instance, public normalization exactly equals canonical normalization and every hidden face gauge is recovered relative to the root face. The only ambiguity is the expected common global XOR bit.
+
+**Result:** K0 rejected exactly as designed.
+
+**Lesson:** a genuine non-orientable surface and non-zero global orientation obstruction do not imply cryptographic hardness. If the hidden information is only local orientation gauge, the public relation is linear Z2 synchronization.
