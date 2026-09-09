@@ -11,6 +11,7 @@ from morph_kem.hyperbolic import (
     recover_a5_belief_propagation,
     recover_a5_breakout,
     recover_a5_min_conflicts,
+    recover_a5_neighborhood_repair,
     recover_a5_pair_repair,
     recover_a5_spectral,
     solve_a5_csp,
@@ -97,6 +98,18 @@ def main() -> int:
         else breakout.frames
     )
 
+    neighborhood_started = time.perf_counter()
+    neighborhood = recover_a5_neighborhood_repair(
+        public,
+        preferred,
+        max_radius=2,
+        max_nodes_per_radius=5_000,
+    )
+    neighborhood_elapsed = time.perf_counter() - neighborhood_started
+
+    if neighborhood.accepted and neighborhood.frames is not None:
+        preferred = neighborhood.frames
+
     started = time.perf_counter()
     result = solve_a5_csp(
         public,
@@ -134,6 +147,10 @@ def main() -> int:
     print(f"pair-repair iterations/tests: {pair.iterations if pair is not None else 0}/{pair.pair_assignments_tested if pair is not None else 0}")
     print(f"pair-repair best violations: {pair.best_violations if pair is not None else local.best_violations}")
     print(f"pair-repair elapsed seconds: {pair_elapsed:.6f}")
+    print(f"neighborhood-repair accepted: {neighborhood.accepted}")
+    print(f"neighborhood-repair radius/mutable: {neighborhood.radius_used}/{neighborhood.mutable_vertices}")
+    print(f"neighborhood-repair nodes/backtracks/arcs: {neighborhood.nodes}/{neighborhood.backtracks}/{neighborhood.arc_revisions}")
+    print(f"neighborhood-repair elapsed seconds: {neighborhood_elapsed:.6f}")
     print(f"CSP accepted: {result.accepted}")
     print(f"CSP solutions found: {result.solutions_found}")
     print(f"CSP nodes/backtracks: {result.nodes}/{result.backtracks}")
