@@ -314,3 +314,90 @@ Four variants were checked:
 This is an interface failure, not a proof that every cover-based public-key primitive is impossible.
 
 Mandatory successor gate: define an efficient TrapdoorRecover algorithm on an exact generated positive cover distribution before claiming a cover-based one-way relation.
+
+
+### H-H01 — exact A5 frame CSP on Klein quartic
+
+Target: H2-H exact {3,7} Klein-quartic scaffold.
+
+The public surface is not a graph-only hyperbolic analogy. It is built combinatorially from the order-168 (2,3,7) quotient using cosets of the cyclic subgroups of orders 7, 2, and 3.
+
+The transition group is A5. Its 3-cycle conjugacy class has 20 elements and A5 is perfect, so H1's cheap abelian sign quotient is absent.
+
+The public relation remains pairwise:
+
+~~~text
+x_v * T_uv * x_u^-1 in C3(A5)
+~~~
+
+for every public edge.
+
+Attack H-H01 uses exact finite-domain CSP with:
+- one global gauge representative fixed;
+- exact edge compatibility tables;
+- repeated arc consistency;
+- MRV + public incidence degree tie-breaking;
+- equivalent-witness enumeration.
+
+**Assessment:** implemented; the bounded exact baseline does not recover a witness on the fixed instance.
+
+Fixed-seed result with the full current attack pipeline:
+
+~~~text
+spectral violations:             49
+belief-propagation violations:   17
+min-conflicts best:               3
+weighted breakout best:           1
+pair repair best:                 1
+tree-coordinate best:             1
+
+Hamming repair radius 0..6:
+  accepted: no
+  nodes/backtracks: 1767/1774
+
+neighborhood repair:
+  radius 2 mutable vertices: 24/24
+  5000-node cap, no witness
+
+exact CSP:
+  1000 nodes / 996 backtracks
+  300 singleton probes
+  0 singleton values removed
+  no witness
+~~~
+
+The Hamming-ball searches through radius 6 exhausted below their per-radius node cap. Therefore no accepted solution exists in those tested Hamming balls around the one-violation public heuristic assignment, assuming correctness of the exact validator/search implementation.
+
+This is a bounded exact result on one generated instance, not a hardness proof.
+
+### H-H02 — coordinated heuristic synchronization attacks
+
+To avoid mistaking weakness of one solver for hardness, H2-H also includes several structurally different public attacks:
+
+- natural 5-point spectral synchronization;
+- sum-product belief propagation;
+- min-conflicts over A5 vertex frames;
+- weighted breakout on violated edges;
+- exhaustive two-vertex repair near violated edges;
+- spanning-tree transition coordinates where 23 tree constraints are satisfied by construction and only 61 chord constraints remain.
+
+The strongest fixed-seed heuristic reaches one violated edge but does not cross the final barrier.
+
+**Assessment:** no accepted witness under the measured bounded settings.
+
+### H-H03 — generated-instance mini-sweep
+
+A deterministic four-instance sweep uses lighter attack budgets to test whether the fixed baseline is anomalously difficult.
+
+| Instance | BP | Local | Breakout | Tree-coordinate | Hamming hit | CSP hit | Best violations |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 0 | 17 | 4 | 4 | 4 | no | no | 4 |
+| 1 | 23 | 3 | 3 | 3 | no | no | 3 |
+| 2 | 30 | 3 | 2 | 2 | no | no | 2 |
+| 3 | 16 | 3 | 3 | 3 | no | no | 3 |
+
+Each mini-sweep CSP is capped at 250 search nodes and 50 singleton probes. No singleton probe removes a value on these four instances.
+
+**Assessment:** H2-H remains unresolved rather than broken. Four samples and bounded Python attacks are far below the evidence required for a cryptographic assumption.
+
+Next mandatory attacks include industrial SAT/SMT/CP-SAT, subgroup/coset projections, representation-theoretic relaxations, automorphism/canonicalization exploitation, and substantially larger generated-distribution studies.

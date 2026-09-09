@@ -337,3 +337,69 @@ w'       <- TrapdoorRecover(td, pk, H)
 with exact correctness and a public attack target.
 
 Until TrapdoorRecover exists, there is no cover-based primitive to benchmark.
+
+
+### H2-H — exact Klein quartic + A5 started
+
+Returned to issue #17 after completing the Escher/covering frontier reviews.
+
+This experiment finally uses an exact finite hyperbolic surface combinatorics rather than a cycle-rich graph surrogate.
+
+Scaffold construction:
+
+~~~text
+GL(3,2) ~= PSL(2,7), order 168
+(2,3,7) generators
+vertex cosets: order-7 subgroup -> 24
+edge cosets:   order-2 subgroup -> 84
+face cosets:   order-3 subgroup -> 56
+~~~
+
+Required surface checks:
+- 24 vertices;
+- 84 edges;
+- 56 triangular faces;
+- degree 7 at every vertex;
+- two faces at every edge;
+- Euler characteristic -4;
+- orientable genus 3;
+- zero free collapse pairs.
+
+The local state group is A5, order 60. The public accepted normalized edge subset is the 20-element conjugacy class of 3-cycles.
+
+Unlike H1/S3, A5 has trivial abelianization; the implementation explicitly checks that the commutator subgroup is all 60 elements and that the 3-cycle class generates all A5.
+
+This removes one known shortcut but does not imply hardness.
+
+Attack H-H01 began as exact CSP with arc consistency and MRV, then expanded into a deliberately heterogeneous public attack stack.
+
+Fixed-seed measured baseline:
+
+~~~text
+spectral:             49 violations
+belief propagation:   17
+min-conflicts:          3
+weighted breakout:      1
+pair repair:             1
+tree-coordinate:         1
+
+exact Hamming radius 0..6:
+  no witness, search exhausted below per-radius cap
+
+frozen neighborhood:
+  radius 2 = all 24 vertices
+  5000-node cap, no witness
+
+exact CSP:
+  1000-node cap
+  300 singleton probes, 0 values removed
+  no witness
+~~~
+
+A lighter deterministic four-instance generated-distribution sweep also found no accepted equivalent witness; best residual violations were 4, 3, 2, and 3.
+
+**H2-H is unresolved, not rejected and not accepted as a security candidate.**
+
+This is the first repository model where the implemented bounded public attacks fail to construct an accepted witness. The result is intentionally narrow: one strong fixed baseline plus four lighter samples.
+
+Next work must attack the same relation with industrial SAT/SMT/CP-SAT, subgroup/coset projections, representation-theoretic methods, automorphism/canonicalization attacks, and broader generated-instance sampling. Parameter inflation is explicitly not the next step.

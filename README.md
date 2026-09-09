@@ -66,6 +66,7 @@ See:
 - docs/18-h2e3-frontier.md — Goldreich/local-OWF frontier and H3-E novelty gate
 - docs/19-h3e-lifted-atlas.md — graph-cover prior art and public gauge-normalization calibration
 - docs/20-h3e-composite-cover-frontier.md — public-key adaptation/interface gate
+- docs/21-h2-klein-quartic-a5.md — exact hyperbolic Klein-quartic/A5 experiment
 - notes/research-log.md — chronological record
 - spec/morph-kem-v0.1.md — future-spec skeleton
 
@@ -87,7 +88,7 @@ See:
 
 **H3-E:** may proceed only after defining a trapdoor positive cover distribution with a concrete efficient secret recovery algorithm.
 
-**H2-H (#17):** parallel hyperbolic/Klein-quartic branch remains open.
+**H2-H (#17):** current unresolved experiment. Uses the exact {3,7} Klein-quartic map (24 vertices, 84 edges, 56 faces, genus 3) with an A5 perfect-group frame relation. On the fixed baseline, spectral/BP/local search reduce to 49/17/3 violated edges, weighted breakout reaches one violation, but pair repair, spanning-tree coordinate search, exact Hamming radius 0..6, frozen-boundary repair, singleton probing, and a bounded exact CSP still do not construct an accepted witness. A four-instance lighter sweep also produced no accepted witness. This is evidence for further cryptanalysis only, not evidence of security.
 
 No security or post-quantum claim exists.
 
