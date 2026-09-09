@@ -123,6 +123,14 @@ class A5GroupAudit:
 
 
 @dataclass(frozen=True, slots=True)
+class A5SpectralResult:
+    frames: tuple[int, ...]
+    violations: int
+    iterations: int
+    rounding_error: float
+
+
+@dataclass(frozen=True, slots=True)
 class A5LocalSearchResult:
     accepted: bool
     frames: tuple[int, ...] | None
@@ -503,11 +511,179 @@ def a5_violation_count(
     return violations
 
 
+def recover_a5_spectral(
+    public: A5PublicInstance,
+    iterations: int = 80,
+) -> A5SpectralResult:
+    """Spectral initializer using the natural 5-point representation of A5.
+
+    For a public edge T = x_v^-1 c x_u with c a uniformly sampled 3-cycle,
+    the centered permutation representation has non-zero expectation on the
+    four-dimensional standard subspace. Orthogonal iteration estimates the
+    synchronized row frames, then each vertex block is rounded to the nearest
+    relative A5 row permutation of the root block.
+    """
+    if iterations <= 0 or iterations > 10_000:
+        raise HyperbolicExperimentError("spectral iterations must be in [1, 10000]")
+
+    vertex_count = len(public.scaffold.vertices)
+    points = 5
+    rank = 4
+    rows = vertex_count * points
+
+    def project_block_means(matrix: list[list[float]]) -> None:
+        for vertex in range(vertex_count):
+            base = vertex * points
+            means = [
+                sum(matrix[base + row][column] for row in range(points)) / points
+                for column in range(rank)
+            ]
+            for row in range(points):
+                target = matrix[base + row]
+                for column in range(rank):
+                    target[column] -= means[column]
+
+    def orthonormalize(matrix: list[list[float]]) -> None:
+        for column in range(rank):
+            for earlier in range(column):
+                dot = sum(
+                    matrix[row][column] * matrix[row][earlier]
+                    for row in range(rows)
+                )
+                for row in range(rows):
+                    matrix[row][column] -= dot * matrix[row][earlier]
+            norm2 = sum(matrix[row][column] ** 2 for row in range(rows))
+            if norm2 <= 1e-20:
+                # Deterministic fallback direction.
+                for row in range(rows):
+                    matrix[row][column] = (
+                        1.0 if row == column else 0.0
+                    )
+                project_block_means(matrix)
+                norm2 = sum(matrix[row][column] ** 2 for row in range(rows))
+            norm = norm2 ** 0.5
+            for row in range(rows):
+                matrix[row][column] /= norm
+
+    # Deterministic dense start, independent of planted/reference data.
+    matrix: list[list[float]] = []
+    for row in range(rows):
+        values: list[float] = []
+        for column in range(rank):
+            digest = hashlib.sha256(
+                b"MORPH-KEM H2 A5 spectral start v1\x00"
+                + row.to_bytes(4, "big")
+                + column.to_bytes(2, "big")
+            ).digest()
+            raw = int.from_bytes(digest[:8], "big")
+            values.append((raw / ((1 << 64) - 1)) - 0.5)
+        matrix.append(values)
+    project_block_means(matrix)
+    orthonormalize(matrix)
+
+    def centered_permute_rows(
+        block: list[list[float]],
+        permutation: Permutation,
+        transpose: bool,
+    ) -> list[list[float]]:
+        means = [
+            sum(block[row][column] for row in range(points)) / points
+            for column in range(rank)
+        ]
+        centered = [
+            [
+                block[row][column] - means[column]
+                for column in range(rank)
+            ]
+            for row in range(points)
+        ]
+        result = [[0.0] * rank for _ in range(points)]
+        if not transpose:
+            for source in range(points):
+                result[permutation[source]] = centered[source][:]
+        else:
+            for source in range(points):
+                result[source] = centered[permutation[source]][:]
+        return result
+
+    # Shift by degree 7 so ordinary orthogonal iteration selects the largest
+    # algebraic signal eigenspace rather than a possible negative-noise mode.
+    shift = 7.0
+
+    for _ in range(iterations):
+        updated = [
+            [shift * value for value in matrix[row]]
+            for row in range(rows)
+        ]
+
+        for edge, label in zip(public.scaffold.edges, public.edge_labels):
+            left, right = edge
+            permutation = A5_ELEMENTS[label]
+            left_base = left * points
+            right_base = right * points
+            left_block = matrix[left_base:left_base + points]
+            right_block = matrix[right_base:right_base + points]
+
+            to_right = centered_permute_rows(
+                left_block,
+                permutation,
+                transpose=False,
+            )
+            to_left = centered_permute_rows(
+                right_block,
+                permutation,
+                transpose=True,
+            )
+            for row in range(points):
+                for column in range(rank):
+                    updated[right_base + row][column] += to_right[row][column]
+                    updated[left_base + row][column] += to_left[row][column]
+
+        project_block_means(updated)
+        orthonormalize(updated)
+        matrix = updated
+
+    root_block = [row[:] for row in matrix[:points]]
+    frames: list[int] = [A5_IDENTITY]
+    total_error = 0.0
+
+    # If block_v ~= P(r_v) block_root, then r_v = y_v^-1 and the
+    # gauge-fixed frame is y_v = r_v^-1.
+    for vertex in range(1, vertex_count):
+        base = vertex * points
+        block = matrix[base:base + points]
+        best_index = A5_IDENTITY
+        best_error = float("inf")
+
+        for index, permutation in enumerate(A5_ELEMENTS):
+            error = 0.0
+            for source in range(points):
+                target = permutation[source]
+                for column in range(rank):
+                    delta = block[target][column] - root_block[source][column]
+                    error += delta * delta
+            if error < best_error:
+                best_error = error
+                best_index = index
+
+        frames.append(_a5_inv(best_index))
+        total_error += best_error
+
+    candidate = tuple(frames)
+    return A5SpectralResult(
+        candidate,
+        a5_violation_count(public, candidate),
+        iterations,
+        total_error,
+    )
+
+
 def recover_a5_min_conflicts(
     public: A5PublicInstance,
     restarts: int = 32,
     max_sweeps: int = 200,
     attack_seed: bytes = b"H2-A5-min-conflicts",
+    initial_frames: tuple[int, ...] | None = None,
 ) -> A5LocalSearchResult:
     if restarts <= 0 or restarts > 10_000:
         raise HyperbolicExperimentError("restarts must be in [1, 10000]")
@@ -515,6 +691,11 @@ def recover_a5_min_conflicts(
         raise HyperbolicExperimentError("max_sweeps must be in [1, 100000]")
     if not attack_seed:
         raise HyperbolicExperimentError("attack_seed must be non-empty bytes")
+    if initial_frames is not None:
+        if len(initial_frames) != len(public.scaffold.vertices):
+            raise HyperbolicExperimentError("initial frame count does not match vertices")
+        if any(value < 0 or value >= len(A5_ELEMENTS) for value in initial_frames):
+            raise HyperbolicExperimentError("initial frame outside A5")
 
     rng = _DeterministicRng(
         hashlib.sha256(
@@ -566,7 +747,14 @@ def recover_a5_min_conflicts(
         return cost
 
     for restart in range(1, restarts + 1):
-        if restart == 1:
+        if restart == 1 and initial_frames is not None:
+            root_inverse = _a5_inv(initial_frames[0])
+            frames = [
+                _a5_mul(root_inverse, value)
+                for value in initial_frames
+            ]
+            frames[0] = A5_IDENTITY
+        elif restart == 1:
             frames = [A5_IDENTITY] * len(public.scaffold.vertices)
         else:
             frames = [A5_IDENTITY] + [
