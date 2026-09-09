@@ -160,6 +160,19 @@ class A5BreakoutResult:
 
 
 @dataclass(frozen=True, slots=True)
+class A5TreeCoordinateResult:
+    accepted: bool
+    frames: tuple[int, ...]
+    tree_edges: int
+    chord_edges: int
+    sweeps: int
+    moves: int
+    weight_updates: int
+    best_violations: int
+    max_chord_weight: int
+
+
+@dataclass(frozen=True, slots=True)
 class A5PairRepairResult:
     accepted: bool
     frames: tuple[int, ...]
@@ -1214,6 +1227,347 @@ def recover_a5_breakout(
         weight_updates,
         best_violations,
         max(weights),
+    )
+
+
+def recover_a5_tree_coordinates(
+    public: A5PublicInstance,
+    start_frames: tuple[int, ...],
+    max_sweeps: int = 120,
+    attack_seed: bytes = b"H2-A5-tree-coordinates",
+) -> A5TreeCoordinateResult:
+    """Weighted breakout search in spanning-tree transition coordinates.
+
+    A public spanning tree is chosen from edges already satisfied by the
+    supplied near-solution whenever possible. One 3-cycle choice per tree edge
+    then determines every vertex frame from the root. Tree constraints remain
+    satisfied by construction, while weighted local search attacks only the
+    non-tree chord constraints. A single coordinate move can change an entire
+    subtree of vertex frames, escaping minima that defeat one- or two-vertex
+    repair.
+    """
+    vertex_count = len(public.scaffold.vertices)
+    if len(start_frames) != vertex_count:
+        raise HyperbolicExperimentError("tree-coordinate frame count does not match vertices")
+    if any(value < 0 or value >= len(A5_ELEMENTS) for value in start_frames):
+        raise HyperbolicExperimentError("tree-coordinate frame outside A5")
+    if max_sweeps <= 0 or max_sweeps > 100_000:
+        raise HyperbolicExperimentError("max_sweeps must be in [1, 100000]")
+    if not attack_seed:
+        raise HyperbolicExperimentError("tree-coordinate attack seed must be non-empty")
+
+    root_inverse = _a5_inv(start_frames[0])
+    seed_frames = tuple(
+        A5_IDENTITY if vertex == 0 else _a5_mul(root_inverse, value)
+        for vertex, value in enumerate(start_frames)
+    )
+
+    edge_count = len(public.scaffold.edges)
+    allowed = set(public.conjugacy_class)
+    incident: list[list[int]] = [[] for _ in range(vertex_count)]
+    for index, (left, right) in enumerate(public.scaffold.edges):
+        incident[left].append(index)
+        incident[right].append(index)
+    for values in incident:
+        values.sort()
+
+    def seed_edge_valid(index: int) -> bool:
+        left, right = public.scaffold.edges[index]
+        return (
+            _normalized_a5(
+                seed_frames[left],
+                public.edge_labels[index],
+                seed_frames[right],
+            )
+            in allowed
+        )
+
+    # Prefer a spanning tree consisting entirely of edges already satisfied by
+    # the public near-solution. With one residual violation this normally
+    # preserves the complete seed assignment exactly.
+    parent = [-1] * vertex_count
+    parent_edge = [-1] * vertex_count
+    order = [0]
+    parent[0] = 0
+    cursor = 0
+    while cursor < len(order):
+        vertex = order[cursor]
+        cursor += 1
+        for edge_index in incident[vertex]:
+            if not seed_edge_valid(edge_index):
+                continue
+            left, right = public.scaffold.edges[edge_index]
+            other = right if vertex == left else left
+            if parent[other] != -1:
+                continue
+            parent[other] = vertex
+            parent_edge[other] = edge_index
+            order.append(other)
+
+    # If satisfied edges were disconnected, complete the tree publicly with
+    # arbitrary remaining edges. Those added coordinates start from a fixed
+    # canonical 3-cycle rather than pretending the seed satisfied them.
+    cursor = 0
+    while len(order) < vertex_count and cursor < len(order):
+        vertex = order[cursor]
+        cursor += 1
+        for edge_index in incident[vertex]:
+            left, right = public.scaffold.edges[edge_index]
+            other = right if vertex == left else left
+            if parent[other] != -1:
+                continue
+            parent[other] = vertex
+            parent_edge[other] = edge_index
+            order.append(other)
+
+    if len(order) != vertex_count:
+        raise HyperbolicExperimentError("Klein scaffold unexpectedly disconnected")
+
+    tree_edge_set = {parent_edge[vertex] for vertex in range(1, vertex_count)}
+    chord_indices = tuple(
+        index for index in range(edge_count)
+        if index not in tree_edge_set
+    )
+
+    choices = [public.conjugacy_class[0]] * vertex_count
+    for vertex in range(1, vertex_count):
+        edge_index = parent_edge[vertex]
+        left, right = public.scaffold.edges[edge_index]
+        normalized = _normalized_a5(
+            seed_frames[left],
+            public.edge_labels[edge_index],
+            seed_frames[right],
+        )
+        if normalized in allowed:
+            choices[vertex] = normalized
+
+    def reconstruct() -> tuple[int, ...]:
+        frames = [A5_IDENTITY] * vertex_count
+        for vertex in order[1:]:
+            upstream = parent[vertex]
+            edge_index = parent_edge[vertex]
+            left, right = public.scaffold.edges[edge_index]
+            label = public.edge_labels[edge_index]
+            canonical = choices[vertex]
+            if upstream == left and vertex == right:
+                frames[vertex] = _a5_mul(
+                    canonical,
+                    _a5_mul(frames[upstream], _a5_inv(label)),
+                )
+            elif upstream == right and vertex == left:
+                frames[vertex] = _a5_mul(
+                    _a5_inv(canonical),
+                    _a5_mul(frames[upstream], label),
+                )
+            else:
+                raise HyperbolicExperimentError("tree orientation inconsistency")
+        return tuple(frames)
+
+    def chord_valid(frames: tuple[int, ...], edge_index: int) -> bool:
+        left, right = public.scaffold.edges[edge_index]
+        return (
+            _normalized_a5(
+                frames[left],
+                public.edge_labels[edge_index],
+                frames[right],
+            )
+            in allowed
+        )
+
+    def path_coordinates(left: int, right: int) -> tuple[int, ...]:
+        left_chain: list[int] = []
+        cursor = left
+        while cursor != 0:
+            left_chain.append(cursor)
+            cursor = parent[cursor]
+        right_chain: list[int] = []
+        cursor = right
+        while cursor != 0:
+            right_chain.append(cursor)
+            cursor = parent[cursor]
+
+        left_ancestors = {0}
+        cursor = left
+        while cursor != 0:
+            left_ancestors.add(cursor)
+            cursor = parent[cursor]
+
+        cursor = right
+        while cursor not in left_ancestors:
+            cursor = parent[cursor]
+        lca = cursor
+
+        result: list[int] = []
+        cursor = left
+        while cursor != lca:
+            result.append(cursor)
+            cursor = parent[cursor]
+        cursor = right
+        while cursor != lca:
+            result.append(cursor)
+            cursor = parent[cursor]
+        return tuple(result)
+
+    rng = _DeterministicRng(
+        hashlib.sha256(
+            b"MORPH-KEM H2 A5 tree-coordinate v1\x00" + attack_seed
+        ).digest()
+    )
+    weights = {index: 1 for index in chord_indices}
+    frames = reconstruct()
+    violations = [
+        index for index in chord_indices
+        if not chord_valid(frames, index)
+    ]
+    best_frames = frames
+    best_violations = len(violations)
+    moves = 0
+    weight_updates = 0
+
+    if best_violations == 0:
+        return A5TreeCoordinateResult(
+            validate_a5_frames(public, frames).accepted,
+            frames,
+            len(tree_edge_set),
+            len(chord_indices),
+            0,
+            0,
+            0,
+            0,
+            1,
+        )
+
+    for sweep in range(1, max_sweeps + 1):
+        frames = reconstruct()
+        violations = [
+            index for index in chord_indices
+            if not chord_valid(frames, index)
+        ]
+        if len(violations) < best_violations:
+            best_violations = len(violations)
+            best_frames = frames
+        if not violations:
+            return A5TreeCoordinateResult(
+                validate_a5_frames(public, frames).accepted,
+                frames,
+                len(tree_edge_set),
+                len(chord_indices),
+                sweep - 1,
+                moves,
+                weight_updates,
+                0,
+                max(weights.values(), default=1),
+            )
+
+        variable_order = list(range(1, vertex_count))
+        for index in range(len(variable_order) - 1, 0, -1):
+            other = rng.randbelow(index + 1)
+            variable_order[index], variable_order[other] = (
+                variable_order[other],
+                variable_order[index],
+            )
+
+        current_cost = sum(weights[index] for index in violations)
+        improved = False
+
+        for vertex in variable_order:
+            current_choice = choices[vertex]
+            best_cost = current_cost
+            best_choices = [current_choice]
+
+            for candidate in public.conjugacy_class:
+                if candidate == current_choice:
+                    continue
+                choices[vertex] = candidate
+                candidate_frames = reconstruct()
+                candidate_cost = sum(
+                    weights[index]
+                    for index in chord_indices
+                    if not chord_valid(candidate_frames, index)
+                )
+                if candidate_cost < best_cost:
+                    best_cost = candidate_cost
+                    best_choices = [candidate]
+                elif candidate_cost == best_cost:
+                    best_choices.append(candidate)
+
+            choices[vertex] = current_choice
+            if best_cost < current_cost:
+                chosen = best_choices[rng.randbelow(len(best_choices))]
+                choices[vertex] = chosen
+                moves += int(chosen != current_choice)
+                current_cost = best_cost
+                improved = True
+
+                frames = reconstruct()
+                new_violations = [
+                    index for index in chord_indices
+                    if not chord_valid(frames, index)
+                ]
+                if len(new_violations) < best_violations:
+                    best_violations = len(new_violations)
+                    best_frames = frames
+                if not new_violations:
+                    return A5TreeCoordinateResult(
+                        validate_a5_frames(public, frames).accepted,
+                        frames,
+                        len(tree_edge_set),
+                        len(chord_indices),
+                        sweep,
+                        moves,
+                        weight_updates,
+                        0,
+                        max(weights.values(), default=1),
+                    )
+
+        if not improved:
+            frames = reconstruct()
+            violations = [
+                index for index in chord_indices
+                if not chord_valid(frames, index)
+            ]
+            for edge_index in violations:
+                weights[edge_index] += 1
+            weight_updates += 1
+
+            if violations:
+                max_weight = max(weights[index] for index in violations)
+                heavy = [
+                    index for index in violations
+                    if weights[index] == max_weight
+                ]
+                edge_index = heavy[rng.randbelow(len(heavy))]
+                left, right = public.scaffold.edges[edge_index]
+                coordinates = list(path_coordinates(left, right))
+                if coordinates:
+                    vertex = coordinates[rng.randbelow(len(coordinates))]
+                    current_choice = choices[vertex]
+                    alternatives = [
+                        value for value in public.conjugacy_class
+                        if value != current_choice
+                    ]
+                    choices[vertex] = alternatives[rng.randbelow(len(alternatives))]
+                    moves += 1
+
+    frames = reconstruct()
+    final_violations = sum(
+        not chord_valid(frames, index)
+        for index in chord_indices
+    )
+    if final_violations < best_violations:
+        best_violations = final_violations
+        best_frames = frames
+
+    return A5TreeCoordinateResult(
+        best_violations == 0 and validate_a5_frames(public, best_frames).accepted,
+        best_frames,
+        len(tree_edge_set),
+        len(chord_indices),
+        max_sweeps,
+        moves,
+        weight_updates,
+        best_violations,
+        max(weights.values(), default=1),
     )
 
 
