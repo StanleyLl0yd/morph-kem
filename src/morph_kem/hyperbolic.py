@@ -214,6 +214,8 @@ class A5CspResult:
     initial_mean_domain: float
     final_first_solution: bool
     hit_solution_cap: bool
+    singleton_probes: int = 0
+    singleton_removed: int = 0
 
 
 class _DeterministicRng:
@@ -1757,11 +1759,18 @@ def solve_a5_csp(
     preferred_frames: tuple[int, ...] | None = None,
     fixed_frames: dict[int, int] | None = None,
     max_hamming_changes: int | None = None,
+    singleton_passes: int = 0,
+    singleton_probe_cap: int = 0,
 ) -> A5CspResult:
     if solution_cap <= 0 or solution_cap > 10_000:
         raise HyperbolicExperimentError("solution_cap must be in [1, 10000]")
     if max_nodes <= 0 or max_nodes > 50_000_000:
         raise HyperbolicExperimentError("max_nodes must be in [1, 50000000]")
+
+    if singleton_passes < 0 or singleton_passes > 100:
+        raise HyperbolicExperimentError("singleton_passes must be in [0, 100]")
+    if singleton_probe_cap < 0 or singleton_probe_cap > 1_000_000:
+        raise HyperbolicExperimentError("singleton_probe_cap must be in [0, 1000000]")
 
     vertex_count = len(public.scaffold.vertices)
     group_size = len(A5_ELEMENTS)
@@ -1877,6 +1886,71 @@ def solve_a5_csp(
                     arc_revisions += 1
         return True
 
+    singleton_probes = 0
+    singleton_removed = 0
+    working_domains = domains.copy()
+
+    if not prune(working_domains):
+        return A5CspResult(
+            accepted=False,
+            first_solution=None,
+            solutions_found=0,
+            nodes=0,
+            backtracks=1,
+            arc_revisions=arc_revisions,
+            initial_mean_domain=initial_mean,
+            final_first_solution=False,
+            hit_solution_cap=False,
+            singleton_probes=0,
+            singleton_removed=0,
+        )
+
+    if singleton_passes:
+        stop_probing = False
+        for _ in range(singleton_passes):
+            removed_this_pass = 0
+            vertices = sorted(
+                range(vertex_count),
+                key=lambda vertex: (
+                    working_domains[vertex].bit_count(),
+                    -len(incident[vertex]),
+                    vertex,
+                ),
+            )
+            for vertex in vertices:
+                if working_domains[vertex].bit_count() <= 1:
+                    continue
+                for value, bit in tuple(values(working_domains[vertex])):
+                    if singleton_probe_cap and singleton_probes >= singleton_probe_cap:
+                        stop_probing = True
+                        break
+                    singleton_probes += 1
+                    trial = working_domains.copy()
+                    trial[vertex] = bit
+                    if prune(trial):
+                        continue
+                    working_domains[vertex] &= ~bit
+                    singleton_removed += 1
+                    removed_this_pass += 1
+                    if working_domains[vertex] == 0 or not prune(working_domains):
+                        return A5CspResult(
+                            accepted=False,
+                            first_solution=None,
+                            solutions_found=0,
+                            nodes=0,
+                            backtracks=1,
+                            arc_revisions=arc_revisions,
+                            initial_mean_domain=initial_mean,
+                            final_first_solution=False,
+                            hit_solution_cap=False,
+                            singleton_probes=singleton_probes,
+                            singleton_removed=singleton_removed,
+                        )
+                if stop_probing:
+                    break
+            if stop_probing or removed_this_pass == 0:
+                break
+
     def search(current: list[int]) -> None:
         nonlocal nodes, backtracks, hit_cap
         if len(solutions) >= solution_cap:
@@ -1956,7 +2030,7 @@ def solve_a5_csp(
         if len(solutions) == before:
             backtracks += 1
 
-    search(domains.copy())
+    search(working_domains)
     first = solutions[0] if solutions else None
     accepted = first is not None and validate_a5_frames(public, first).accepted
     return A5CspResult(
@@ -1969,6 +2043,8 @@ def solve_a5_csp(
         initial_mean_domain=initial_mean,
         final_first_solution=accepted,
         hit_solution_cap=hit_cap,
+        singleton_probes=singleton_probes,
+        singleton_removed=singleton_removed,
     )
 
 
