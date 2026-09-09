@@ -64,6 +64,7 @@ See:
 - docs/16-h2e-escher-atlas.md — H2-E1 edge-gain Escher result
 - docs/17-h2e2-higher-atlas.md — H2-E2 higher-order chart experiment
 - docs/18-h2e3-frontier.md — Goldreich/local-OWF frontier and H3-E novelty gate
+- docs/19-h3e-lifted-atlas.md — graph-cover prior art and public gauge-normalization calibration
 - notes/research-log.md — chronological record
 - spec/morph-kem-v0.1.md — future-spec skeleton
 
@@ -79,7 +80,9 @@ See:
 
 **H2-E3:** naive all-charts variant rejected before code. Once written as one hidden global state observed by many overlapping bounded-local predicates, it is essentially Goldreich random local functions / planted CSP, an established and actively studied cryptographic family.
 
-**H3-E:** proposed frontier: a Lifted Atlas where hidden covering/lifting structure changes the computational relation itself rather than merely choosing a structured local-predicate hypergraph.
+**H3-E0:** active calibration. Tests whether hidden fiber labels / a hidden cover can survive when enough permutation-voltage transition data is public for an untrusted sender to lift paths. A public spanning-tree gauge-normalization attack is implemented.
+
+**H3-E:** may proceed beyond E0 only if a cover-based public evaluator retains a meaningful secret after quotienting equivalent covers.
 
 **H2-H (#17):** parallel hyperbolic/Klein-quartic branch remains open.
 

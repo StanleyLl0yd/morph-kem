@@ -94,3 +94,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/higher_atlas_sweep.py --max-nodes 2000000
+      - name: H3-E0 lifted-atlas gauge baseline
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/lifted_atlas_baseline.py --params lift-12x5

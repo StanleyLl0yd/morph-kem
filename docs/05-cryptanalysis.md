@@ -248,3 +248,33 @@ The proposed "all charts remain" construction maps directly to Goldreich's local
 **Disposition:** naive H2-E3 rejected before code.
 
 Mandatory successor gate: any H3-E construction must demonstrate a public operation/witness relation that cannot be flattened to independent bounded-local predicates of one hidden vector.
+
+
+### H-E05 — public spanning-tree gauge normalization
+
+Target: H3-E0 lifted-atlas calibration.
+
+Suppose a k-sheet cover over a connected public base graph is described by public edge permutations T_uv in S_k. A secret fiber relabeling is a vertex gauge phi_v.
+
+If enough T_uv are public for an untrusted sender to lift arbitrary public paths, an attacker can choose any public spanning tree and compute vertex gauges h_v so every tree transition becomes identity.
+
+For a tree-normalized hidden cover rho and public disguise:
+
+~~~text
+T_uv = phi_v * rho_uv * phi_u^-1
+~~~
+
+the public normalization gives:
+
+~~~text
+T'_uv = h_v * T_uv * h_u^-1
+      = phi_root * rho_uv * phi_root^-1.
+~~~
+
+Thus the entire hidden per-vertex gauge collapses to one global sheet conjugation.
+
+A global sheet relabeling is an equivalent covering representation, not a useful trapdoor under equivalent-witness semantics.
+
+Complexity is linear in the public base graph size times the sheet permutation size.
+
+**Assessment:** algebraically fatal to "secret fiber labels" as H3-E trapdoor. Executable calibration implemented; fixed-seed CI measurement pending.
