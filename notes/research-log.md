@@ -121,3 +121,26 @@ sweep:
 ~~~
 
 The algebraic proof is stronger than the measurements: H1-S3's verifier is exactly its Z2 sign quotient.
+
+
+### H2-E — Escher frustrated atlas started
+
+Opened a separate Escher/Penrose branch rather than replacing the pending hyperbolic Klein-quartic branch.
+
+The first H2-E1 calibration models relative height as edge increments in Z/7Z:
+
+- every individual edge is locally satisfiable;
+- contradictions appear only around cycles;
+- the generator injects a bounded set of hidden defect/seam edges;
+- the public verifier accepts any seam set within budget and any compatible height assignment.
+
+This directly implements the "locally plausible, globally impossible" staircase intuition.
+
+Prior-art review shows the local-to-global obstruction viewpoint is already formalized through sheaves/cohomology, network torsors, impossible-object geometry processing, and gain/group-labelled graphs. H2-E therefore makes no novelty claim for the intuition itself.
+
+Implemented attacks:
+
+- fundamental-cycle syndrome extraction;
+- exact unbalanced-cycle branching for any equivalent seam repair.
+
+Disposition awaits CI measurements.

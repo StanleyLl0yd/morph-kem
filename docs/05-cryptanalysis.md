@@ -144,3 +144,27 @@ Wall-clock time is environment-dependent and is not a complexity claim.
 **Result:** H1-S3 structurally broken.
 
 **Lesson:** choosing a non-commutative group does not help when the verifier accepts an entire fiber of a cheap quotient homomorphism.
+
+
+### H-E01 — fundamental-cycle obstruction extraction
+
+H2-E1 assigns a relative height increment in Z/7Z to every public edge. Fixing a public spanning tree determines vertex potentials. Every non-tree edge then exposes one fundamental-cycle syndrome.
+
+For the abelian height model, these cycle gains are a complete test for global consistency: the atlas is balanced iff all fundamental-cycle syndromes vanish.
+
+**Assessment:** expected structural reduction; implemented.
+
+### H-E02 — unbalanced-cycle seam branching
+
+H2-E1 accepts any seam set of size at most the public budget whose removal leaves a globally integrable height atlas.
+
+The exact public attack repeatedly:
+
+1. propagates vertex potentials on the current non-seam graph;
+2. extracts one inconsistent cycle when propagation conflicts;
+3. observes that every valid repair must remove at least one edge of that cycle;
+4. branches on those cycle edges and memoizes deleted-edge sets.
+
+This is equivalent in spirit to balancing-set / Group Feedback Edge Set attacks on gain/group-labelled graphs.
+
+**Assessment:** implemented; final disposition waits for fixed-seed CI measurements.
