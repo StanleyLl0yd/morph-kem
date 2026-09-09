@@ -2,65 +2,63 @@
 
 ## Mathematical
 
-- What class of complexes gives controllable trapdoor reductions without a cheaply recognizable planted core?
-- Should the construction move from simplicial complexes to regular CW complexes?
-- Can a useful hidden reduction certificate be compact while equivalent certificates remain difficult to find?
-- Can generated instances be sampled from a distribution close to a natural public ensemble rather than "easy object + visible decoration"?
-- Can core and non-core cells be made locally incidence-indistinguishable?
-- What invariants necessarily survive elementary expansion/collapse and therefore cannot carry secret information?
-- Is there a family where a planted global Morse matching is useful but no simpler graph-factor, matching, canonicalization, or CSP reconstruction problem is exposed?
+- What genuinely 2-dimensional family admits a compact planted Morse witness without making equivalent witnesses easy?
+- Should the project continue with simplicial complexes or move to regular CW complexes?
+- Can a generated distribution avoid being "easy lower-dimensional object + removable decoration"?
+- Can planted and non-planted Hasse incidences be locally statistically indistinguishable?
+- Can useful critical vectors live in a natural public ensemble rather than be encoded through a low-complexity core?
+- Is there a family where finding any matching at the target vector remains difficult on average?
 
 ## Complexity
 
-- What is the right average-case problem after M0/M1/M2?
-- Is any credible worst-case-to-average-case connection available?
-- Which graph-width or Hasse-diagram width parameters make matching/reduction easy?
-- Can hidden-Morse recovery be reformulated as matching, f-factor, CSP, SAT, tensor, or isomorphism on the generated family?
-- What is the best attack when many terminal residuals are equivalent or same-sized?
-- Can reverse/predecessor branching be made large without introducing a simpler planted-substructure problem?
+- What is the right average-case equivalent-witness problem after M3?
+- Can it reduce to matching, matroid, graph-factor, CSP, SAT, tensor, or isomorphism on the generated family?
+- Which Hasse-diagram width parameters make acyclic matching easy?
+- How strong are greedy/local-search approximations on candidate distributions?
+- Can a natural 2-complex ensemble be conditioned on a planted good matching without making the planting recognizable?
+- What attack cost remains after quotienting out all equivalent witnesses?
 
-## Generator design after A-014
+## Generator design after M3
 
-M2 demonstrates that hiding labels is insufficient when the generator preserves a simple semantic invariant.
+A successor must answer before scaling:
 
-A successor must answer:
-
-1. What public property characterizes the hidden core family?
-2. Can an attacker search that family directly without following collapse paths?
-3. Which cells are provably core/non-core from local incidence?
-4. Does the public verifier reduce core recovery to a standard constrained-subgraph problem?
-5. Are generated instances statistically distinguishable from suitable control complexes?
-
-These questions must be attacked **before** increasing dimension or parameter size.
+1. Can the target be solved by collapsing into an easy lower-dimensional class?
+2. Does a standard spanning-tree, forest, or graph-matching construction meet the target?
+3. Is the target critical vector implied by an easily exposed homotopy type?
+4. Does a greedy acyclic Hasse matcher frequently hit the target?
+5. Can SAT/CSP express the witness relation compactly enough to solve experimental sizes immediately?
+6. Does the planted generator create role-dependent incidence statistics?
 
 ## Cryptographic
 
-- What is the actual one-way relation: recover the original trapdoor, any valid reduction certificate, a canonical residual, or only a derived secret?
-- How are equivalent witnesses handled in the security game?
-- Can public verification avoid privileging an arbitrary planted residual without opening a direct reconstruction oracle?
-- Can forward evaluation be public without revealing the decomposition used for inversion?
-- Is there a natural key-indistinguishability game at all for this mathematical direction?
-- If a KEM wrapper is eventually attempted, can decapsulation validation be deterministic, non-malleable, and oracle-safe?
+- What secret value would a future public-key primitive actually protect if many valid Morse witnesses exist?
+- Can a derived secret be invariant across equivalent witnesses without becoming publicly computable?
+- Can forward evaluation be public without publishing an easy witness-construction recipe?
+- Is there a natural one-way relation rather than a verifier-selected planted object?
+- Can future decapsulation avoid arbitrary witness privilege and oracle leakage?
 
 ## Quantum
 
-- Can quantum walks exploit the free-collapse or predecessor graph?
-- Can amplitude amplification accelerate constrained core/certificate recovery?
-- Does a reformulation expose hidden-shift/subgroup structure?
-- What is the correct quantum query model for public evaluation and public verification?
+- Can quantum walks exploit the Hasse matching state graph?
+- Can amplitude amplification materially accelerate witness construction?
+- Does a future formulation expose hidden-shift/subgroup structure?
+- What is the right quantum query model for a public equivalent-witness relation?
 
 ## Engineering
 
-- The standard-library simplicial representation is intentionally simple, not optimized. When does it become the attack bottleneck?
-- Which canonical-labeling and graph/CSP libraries should be introduced for research attacks?
-- How should experiment manifests record generator seed, attack seed, node budget, interpreter, and hardware?
-- Which attack metrics should become CI regression baselines?
+- When does the simple standard-library representation become the attack bottleneck?
+- Which SAT/CSP and canonical-labeling libraries should be introduced first?
+- How should experiment manifests record generator seed, attack seed, solver version, node budget, interpreter, and hardware?
+- Which fixed attack baselines should become CI regressions?
 
 ## Lessons established
 
 - **M0:** independent public coordinate recipes are fatal.
-- **M1:** global but publicly invertible transformations are still vulnerable to generic bidirectional search.
-- **M2:** genuine non-invertible branching is not enough when the planted generator exposes a simpler structural reconstruction problem.
-- **M2/A-015:** many same-sized irreducible residuals exist, so "the planted core" is not automatically a mathematically privileged witness.
+- **M1:** global but publicly invertible transformations remain vulnerable to bidirectional search.
+- **M2:** non-invertible branching is irrelevant if the generator exposes a simpler planted-substructure recovery problem.
+- **M2/A-015:** a planted residual is not automatically a privileged mathematical witness.
+- **M3:** equivalent-witness semantics are mandatory.
+- **M3/A-016:** 2D expansions of a graph remain easy when public collapses recover any graph residual and a spanning tree completes the target matching.
+- **M3/A-017:** generic greedy acyclic Hasse matching already reaches the target on a substantial fraction of tested instances.
 
-The next model must improve the **generated distribution**, not merely make the collapse maze larger.
+The next model must be genuinely higher-dimensional in its useful witness structure, not just in its surface representation.

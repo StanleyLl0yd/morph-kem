@@ -2,44 +2,67 @@
 
 The names in this document are provisional research labels, not established complexity assumptions.
 
-## HMCP — Hidden Morse Coordinate Problem
+## Historical labels
 
-Let (mathcal D_lambda) generate a public description (pk), a trapdoor (td), and a family of public forward maps. A seed (s) selects a path through hidden binary coordinates, producing a public object (C).
+### HMCP — Hidden Morse Coordinate Problem
 
-**Search form:** given ((pk,C)), recover (s) or an equivalent preimage accepted by the decapsulation relation.
+Given a generated public object, recover a hidden coordinate or equivalent preimage accepted by the public relation.
 
-The relevant hardness target is average-case hardness over
+M0 showed that a coordinate-based realization can leak those coordinates directly.
 
-[
-(pk,td)leftarrowoperatorname{KeyGen}(1^lambda),quad
-sleftarrow{0,1}^ell.
-]
+### HMRP — Hidden Morse Reduction Path Problem
 
-## HMRP — Hidden Morse Reduction Path Problem
+Given a generated complex, find a useful reduction path or discrete-Morse witness satisfying the public relation.
 
-Given a generated public object (X), find a reduction path or acyclic Morse matching that reaches the designated canonical core while satisfying the acceptance relation.
+M2 showed that insisting on the generator's particular planted residual can create artificial verifier hardness.
 
-This problem matters because an attacker need not recover the original trapdoor if any equivalent reduction certificate is enough.
+### HMCR — Hidden Morse Conjugacy Recovery
 
-## HMCR — Hidden Morse Conjugacy Recovery
+Recover a hidden representation or equivalent structural decomposition from related public transforms.
 
-The provisional public construction exposes several transformations derived from one hidden representation. HMCR asks whether the shared hidden representation, coordinate system, or an equivalent structural decomposition can be recovered from the family of public transformations.
+M1 remains a warning that common hidden structure can create easier algebraic or isomorphism attacks.
 
-This is currently considered the most dangerous structural attack class.
+## EMWP — Equivalent Morse Witness Problem
+
+M3 introduces the more honest current research form.
+
+**Input:**
+
+- finite simplicial complex X;
+- target critical vector c.
+
+**Search output:**
+
+any acyclic matching M on codimension-one Hasse incidences such that unmatched simplex counts equal c.
+
+The attacker is not required to recover a planted matching, planted core, planted reduction order, or secret relabeling.
+
+Any accepted matching is a success.
+
+## M3 generated-family result
+
+The general EMWP is not claimed easy or hard here.
+
+The specific M3 distribution is easy because its instances are elementary 2D expansions of connected graphs.
+
+A-016 constructs a witness by public edge/triangle collapses to any graph residual followed by a public spanning-tree matching.
+
+Therefore M3 rejects its generated distribution, not the equivalent-witness security principle.
 
 ## Required future definitions
 
-Each problem must eventually specify:
+Any successor hard problem must specify:
 
 - exact input encoding;
-- generated distribution;
-- success relation;
-- search vs decision variants;
-- parameter scaling;
+- exact generated distribution;
+- exact success relation;
+- all accepted equivalent witnesses;
+- search versus decision form;
 - classical cost model;
 - quantum cost model;
-- whether equivalent witnesses are accepted.
+- parameter scaling;
+- distributional, not merely worst-case, hardness evidence.
 
 ## Explicit non-claim
 
-Known hardness results for discrete-Morse optimization or collapsibility do not by themselves establish HMCP, HMRP, or HMCR as cryptographic assumptions.
+Known worst-case hardness results for discrete-Morse optimization or collapsibility do not establish average-case cryptographic hardness for any MORPH-KEM generated distribution.
