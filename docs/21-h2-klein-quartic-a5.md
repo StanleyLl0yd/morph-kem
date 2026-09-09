@@ -223,3 +223,88 @@ A successor must change the verifier relation, likely by coupling face-level/hig
 ## 9. Security status
 
 No post-quantum, one-wayness, IND-CPA, IND-CCA, or concrete-security claim exists.
+
+
+## 10. Measured bounded attack baseline
+
+Fixed master seed `26457513110645905905016157536392`, Python 3.12 CI runner.
+
+The attack pipeline is entirely public and does not use the planted reference frames:
+
+~~~text
+spectral initializer:
+  violations = 49
+
+belief propagation:
+  violations = 17
+
+min-conflicts:
+  best violations = 3
+
+weighted breakout:
+  best violations = 1
+  accepted = no
+
+two-vertex pair repair:
+  tested assignments = 75,600
+  best violations = 1
+  accepted = no
+
+spanning-tree coordinate breakout:
+  tree/chord edges = 23/61
+  best violations = 1
+  accepted = no
+
+exact Hamming-ball repair:
+  radii 0..6 exhausted
+  nodes/backtracks = 1,767/1,774
+  accepted = no
+
+frozen-boundary neighborhood repair:
+  radius 2 already contains all 24 vertices
+  nodes = 5,000 cap
+  accepted = no
+
+exact CSP:
+  nodes/backtracks = 1,000/996
+  singleton probes/removed = 300/0
+  accepted = no
+~~~
+
+Because the Hamming search used fewer than the per-radius node cap in total, the tested Hamming balls through radius 6 were exhausted rather than merely truncated.
+
+The one-violation weighted-breakout assignment is therefore not a trivially repairable planted witness. This is an exact bounded statement about one generated instance, not an asymptotic hardness claim.
+
+### Small generated-instance sweep
+
+A separate deterministic four-instance sweep uses intentionally lighter public attacks so that distribution checks remain inexpensive in CI.
+
+| Instance | BP violations | Local | Breakout | Tree-coordinate | Hamming hit | CSP hit | Best |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 0 | 17 | 4 | 4 | 4 | no | no | 4 |
+| 1 | 23 | 3 | 3 | 3 | no | no | 3 |
+| 2 | 30 | 3 | 2 | 2 | no | no | 2 |
+| 3 | 16 | 3 | 3 | 3 | no | no | 3 |
+
+Each sweep CSP was capped at 250 nodes with 50 singleton probes; singleton probing removed zero values on all four instances.
+
+These four samples are only a regression/evidence baseline. They are far too few to support an average-case assumption.
+
+## 11. Current disposition
+
+**H2-H is not broken by the repository's current bounded baseline, but it is not a security candidate.**
+
+This is the first MORPH/H-series experiment in which the implemented public attacks do not immediately construct an accepted equivalent witness.
+
+What has *not* been established:
+
+- average-case hardness;
+- asymptotic exponential growth;
+- resistance to industrial SAT/SMT/CP-SAT solvers;
+- resistance to subgroup/coset projection attacks;
+- resistance to representation-theoretic or tensor relaxations;
+- resistance to Klein-quartic automorphism/canonicalization attacks;
+- resistance to quantum algorithms;
+- any trapdoor or public-key asymmetry.
+
+The next research milestone must attack the same relation more strongly. It must not increase genus, group size, or parameters merely because the current Python baselines stopped short of a witness.
