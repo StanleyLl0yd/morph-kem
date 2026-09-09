@@ -98,6 +98,15 @@ from .holonomy import (
     validate_s3_frames,
     validate_z2_frames,
 )
+from .hyperbolic_sat import (
+    A5SatEncoding,
+    A5SatModel,
+    decode_a5_sat_model,
+    encode_a5_sat,
+    frames_to_sat_literals,
+    gauge_fix_a5_frames,
+    sat_encoding_accepts_frames,
+)
 from .lifted_atlas import (
     LIFTED_ATLAS_PARAMETER_SETS,
     GaugeNormalization,
@@ -203,6 +212,8 @@ from .toy import (
 
 __all__ = [
     "AbelianizationLeak",
+    "A5SatEncoding",
+    "A5SatModel",
     "A5BeliefResult",
     "A5BreakoutResult",
     "A5CspResult",
@@ -313,11 +324,15 @@ __all__ = [
     "compare_to_reference",
     "collapse_to_graph_witness",
     "collapse_witness_survey",
+    "decode_a5_sat_model",
     "direct_public_recover",
+    "encode_a5_sat",
     "exhaustive_path_recover",
     "exhaustive_recover",
     "escher_scaling_sweep",
     "forward",
+    "frames_to_sat_literals",
+    "gauge_fix_a5_frames",
     "fundamental_cycle_syndrome",
     "generate_escher_instance",
     "generate_a5_instance",
@@ -363,6 +378,7 @@ __all__ = [
     "recover_three_regular_core",
     "recover_z2_spanning_tree",
     "solve_a5_csp",
+    "sat_encoding_accepts_frames",
     "solve_escher_repair",
     "solve_higher_atlas_repair",
     "solve_s3_csp",
