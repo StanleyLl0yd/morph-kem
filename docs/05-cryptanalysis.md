@@ -225,3 +225,26 @@ Two independent failures are visible:
 **H2-E2 rejected.**
 
 Worst-case NAE-3SAT hardness does not rescue a generated distribution that is both solver-friendly and statistically role-leaking.
+
+
+### H-E04 — local-function flattening
+
+Target: any proposed all-charts Escher construction.
+
+Test whether the public evaluator can be written as:
+
+[
+y_j=P_j(x|_{S_j})
+]
+
+with bounded (|S_j|) and one hidden global state (x).
+
+If yes, the proposal is classified as a structured random/local function and planted CSP rather than a new MORPH hardness family.
+
+**Result for naive H2-E3:** complete flattening.
+
+The proposed "all charts remain" construction maps directly to Goldreich's local-function skeleton. Geometry changes the neighborhood distribution, but not the inversion relation.
+
+**Disposition:** naive H2-E3 rejected before code.
+
+Mandatory successor gate: any H3-E construction must demonstrate a public operation/witness relation that cannot be flattened to independent bounded-local predicates of one hidden vector.
