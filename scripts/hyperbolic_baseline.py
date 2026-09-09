@@ -8,6 +8,7 @@ from morph_kem.hyperbolic import (
     audit_a5,
     generate_a5_instance,
     generate_klein_quartic,
+    recover_a5_belief_propagation,
     recover_a5_min_conflicts,
     recover_a5_pair_repair,
     recover_a5_spectral,
@@ -38,13 +39,27 @@ def main() -> int:
     )
     spectral_elapsed = time.perf_counter() - spectral_started
 
+    bp_started = time.perf_counter()
+    belief = recover_a5_belief_propagation(
+        public,
+        iterations=60,
+        damping=0.35,
+    )
+    bp_elapsed = time.perf_counter() - bp_started
+
+    initializer = (
+        belief.frames
+        if belief.violations <= spectral.violations
+        else spectral.frames
+    )
+
     local_started = time.perf_counter()
     local = recover_a5_min_conflicts(
         public,
         restarts=8,
         max_sweeps=80,
         attack_seed=b"H2-fixed-baseline",
-        initial_frames=spectral.frames,
+        initial_frames=initializer,
     )
     local_elapsed = time.perf_counter() - local_started
 
@@ -88,6 +103,9 @@ def main() -> int:
     print(f"spectral violations: {spectral.violations}")
     print(f"spectral rounding error: {spectral.rounding_error:.6f}")
     print(f"spectral elapsed seconds: {spectral_elapsed:.6f}")
+    print(f"belief-propagation violations: {belief.violations}")
+    print(f"belief-propagation mean confidence gap: {belief.mean_confidence_gap:.8f}")
+    print(f"belief-propagation elapsed seconds: {bp_elapsed:.6f}")
     print(f"local-search accepted: {local.accepted}")
     print(f"local-search restarts/sweeps/moves: {local.restarts_used}/{local.sweeps_used}/{local.moves}")
     print(f"local-search best violations: {local.best_violations}")
