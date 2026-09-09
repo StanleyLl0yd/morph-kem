@@ -8,6 +8,7 @@ from morph_kem.hyperbolic import (
     audit_a5,
     generate_a5_instance,
     generate_klein_quartic,
+    recover_a5_min_conflicts,
     solve_a5_csp,
     validate_a5_frames,
 )
@@ -28,6 +29,15 @@ def main() -> int:
     audit = audit_a5()
     public, reference = generate_a5_instance(bytes.fromhex(args.master_seed))
 
+    local_started = time.perf_counter()
+    local = recover_a5_min_conflicts(
+        public,
+        restarts=24,
+        max_sweeps=160,
+        attack_seed=b"H2-fixed-baseline",
+    )
+    local_elapsed = time.perf_counter() - local_started
+
     started = time.perf_counter()
     result = solve_a5_csp(public, solution_cap=args.solution_cap, max_nodes=args.max_nodes)
     elapsed = time.perf_counter() - started
@@ -42,6 +52,10 @@ def main() -> int:
     print(f"A5 order/class-size/class-order: {audit.order}/{audit.conjugacy_class_size}/{audit.conjugacy_class_order}")
     print(f"A5 commutator/generated-by-class size: {audit.commutator_subgroup_size}/{audit.generated_by_class_size}")
     print(f"reference accepted: {validate_a5_frames(public, reference.frames).accepted}")
+    print(f"local-search accepted: {local.accepted}")
+    print(f"local-search restarts/sweeps/moves: {local.restarts_used}/{local.sweeps_used}/{local.moves}")
+    print(f"local-search best violations: {local.best_violations}")
+    print(f"local-search elapsed seconds: {local_elapsed:.6f}")
     print(f"CSP accepted: {result.accepted}")
     print(f"CSP solutions found: {result.solutions_found}")
     print(f"CSP nodes/backtracks: {result.nodes}/{result.backtracks}")
