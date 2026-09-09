@@ -42,6 +42,7 @@ from .higher_atlas import (
 )
 from .hyperbolic import (
     A5CspResult,
+    A5LocalSearchResult,
     A5GroupAudit,
     A5PublicInstance,
     A5Reference,
@@ -53,6 +54,7 @@ from .hyperbolic import (
     audit_a5,
     generate_a5_instance,
     generate_klein_quartic,
+    recover_a5_min_conflicts,
     gl32_group,
     klein_triangle_generators,
     solve_a5_csp,
@@ -188,6 +190,7 @@ from .toy import (
 __all__ = [
     "AbelianizationLeak",
     "A5CspResult",
+    "A5LocalSearchResult",
     "A5GroupAudit",
     "A5PublicInstance",
     "A5Reference",
@@ -326,6 +329,7 @@ __all__ = [
     "planted_reduction_metrics",
     "random_greedy_survey",
     "residual_root_relabelings",
+    "recover_a5_min_conflicts",
     "recover_s3_abelianization",
     "recover_s3_via_abelianization",
     "recover_three_regular_core",
