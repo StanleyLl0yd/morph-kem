@@ -212,3 +212,100 @@ Even if toy exact solving becomes expensive, worst-case NP-completeness is not e
 ## 11. Security status
 
 No one-wayness, post-quantum, IND-CPA, IND-CCA, or concrete-security claim exists.
+
+
+## 12. Measured H2-E2 result
+
+Fixed seed on the Python 3.12 CI runner.
+
+### atlas-12 baseline
+
+~~~text
+variables/charts/budget: 12/30/2
+pairwise chart compatibility: 435/435
+reference witness valid: yes
+
+exact attack:
+  found: yes
+  witness valid: yes
+  minimum seams: 1
+  nodes: 37
+  backtracks: 18
+  best updates: 1
+  proven minimum: yes
+  node cap exhausted: no
+
+simple planted-role signature:
+  seam signatures also seen among normal charts: 0/2
+  unique seam signatures: 2
+~~~
+
+So every pair of local charts is compatible, yet one public chart deletion suffices to produce a global section.
+
+That is a mathematically valid local/global paradox, but it does not give the desired asymmetry.
+
+### Scaling sweep
+
+| Set | Variables | Charts | Planted budget | All pairs compatible | Minimum seams | Nodes | Backtracks | Seam signatures seen among normal |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| atlas-8 | 8 | 18 | 1 | yes | 1 | 43 | 21 | 1/1 |
+| atlas-10 | 10 | 24 | 1 | yes | 1 | 41 | 20 | 0/1 |
+| atlas-12 | 12 | 30 | 2 | yes | 1 | 37 | 18 | 0/2 |
+| atlas-14 | 14 | 36 | 2 | yes | 1 | 73 | 36 | 0/2 |
+| atlas-16 | 16 | 42 | 3 | yes | 1 | 281 | 138 | 1/3 |
+
+The attack proves the minimum in every tested set.
+
+## 13. Why H2-E2 fails
+
+### Failure A: equivalent repair is easier than planted repair
+
+The generator plants up to three seam charts, but every tested public instance admits a one-chart repair.
+
+This is not an implementation bug: equivalent-witness semantics intentionally count that as attacker success.
+
+### Failure B: planted distribution leaks public role signatures
+
+The baseline signature uses only:
+
+- number of negated literals in a chart;
+- incidence degrees of its three public variables.
+
+Despite being extremely weak, it uniquely identifies every planted seam signature in atlas-10, atlas-12 and atlas-14.
+
+Thus the planted and normal chart distributions are not sufficiently role-indistinguishable.
+
+### Failure C: the relation is a standard deletion-CSP
+
+Even if the two empirical failures above were repaired, signed NAE-3 constraints plus "delete a few violated charts" remain a standard Max/deletion-CSP family.
+
+Worst-case NP-completeness cannot serve as evidence that this planted average-case distribution is cryptographically hard.
+
+## 14. H2-E2 disposition
+
+**H2-E2 is rejected.**
+
+Do not repair it by:
+
+- increasing variable count;
+- adding more NAE charts;
+- increasing seam budget;
+- replacing the exact solver with a slower implementation.
+
+Those changes do not address the structural problem.
+
+## 15. H2-E3 gate
+
+A third Escher experiment, if pursued, should remove "small deletion set" from the witness semantics entirely.
+
+A more interesting target would be:
+
+- all public charts remain present;
+- each chart has multiple local coordinate systems;
+- overlaps require selecting compatible transition maps;
+- every radius-r neighborhood has an extension for a chosen r;
+- the global witness is a coherent choice of chart states/transitions, not a set of discarded constraints;
+- generation does not mark a small exceptional subset;
+- exact k-consistency, cohomological relaxation, treewidth, and CSP attacks are mandatory.
+
+This would test the stronger Escher idea: **the same visible pieces must all remain, but choosing locally plausible interpretations everywhere becomes globally difficult.**

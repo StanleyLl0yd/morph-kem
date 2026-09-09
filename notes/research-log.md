@@ -181,4 +181,32 @@ The primary attack is exact minimum-violation NAE-CSP branch-and-bound.
 
 No novelty/security claim is made. NAE-3SAT is a standard Boolean CSP family and the local/global-section viewpoint is established prior art.
 
-Disposition awaits CI measurements.
+Fixed-seed CI measurements:
+
+~~~text
+atlas-8:  min seam 1, nodes 43,  backtracks 21
+atlas-10: min seam 1, nodes 41,  backtracks 20
+atlas-12: min seam 1, nodes 37,  backtracks 18
+atlas-14: min seam 1, nodes 73,  backtracks 36
+atlas-16: min seam 1, nodes 281, backtracks 138
+~~~
+
+All tested chart pairs were locally compatible.
+
+For atlas-12:
+
+~~~text
+pairwise compatibility: 435/435
+planted budget: 2
+minimum equivalent repair: 1
+proven minimum: yes
+nodes/backtracks: 37/18
+~~~
+
+The public role-signature audit also exposed planted roles: no planted seam signature occurred among normal charts in atlas-10, atlas-12, or atlas-14.
+
+**H2-E2 rejected.**
+
+This is a stronger lesson than "SAT is easy at small n." The generated distribution itself has a one-seam escape and visible planted-role correlations. Scaling would only hide the defect rather than fix it.
+
+A future H2-E3 must change the verifier relation and generator, not increase NAE instance size.

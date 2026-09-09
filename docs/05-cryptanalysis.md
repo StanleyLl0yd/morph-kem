@@ -203,4 +203,25 @@ Attack H-E03 minimizes the number of violated charts over global assignments usi
 
 This is a standard CSP/Max-CSP style attack, not a novel cryptanalytic algorithm.
 
-**Assessment:** implemented; final disposition waits for fixed-seed CI measurements.
+**Result:** fatal to H2-E2 as a candidate direction.
+
+Fixed-seed Python 3.12 CI sweep:
+
+| Set | Variables | Charts | Budget | Pairwise compatible | Minimum seams | Nodes | Backtracks | Planted seam signatures also seen among normal |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| atlas-8 | 8 | 18 | 1 | yes | 1 | 43 | 21 | 1/1 |
+| atlas-10 | 10 | 24 | 1 | yes | 1 | 41 | 20 | 0/1 |
+| atlas-12 | 12 | 30 | 2 | yes | 1 | 37 | 18 | 0/2 |
+| atlas-14 | 14 | 36 | 2 | yes | 1 | 73 | 36 | 0/2 |
+| atlas-16 | 16 | 42 | 3 | yes | 1 | 281 | 138 | 1/3 |
+
+For atlas-12 all 435 chart pairs are jointly satisfiable, but an accepted equivalent global repair needs only one seam chart and is proven minimum in 37 search nodes.
+
+Two independent failures are visible:
+
+1. the equivalent-witness optimization is extremely easy on this planted distribution;
+2. the simple public signature (negation count + variable incidence degrees) uniquely separates every planted seam in atlas-10, atlas-12 and atlas-14.
+
+**H2-E2 rejected.**
+
+Worst-case NAE-3SAT hardness does not rescue a generated distribution that is both solver-friendly and statistically role-leaking.
