@@ -43,17 +43,65 @@ The project begins with no security claim. Negative results, distinguishers, and
 
 A-000 directly recovers every M0 seed because the public key exposes the two coordinate-local candidate triangles. The attack is linear in the number of coordinates and is implemented intentionally.
 
-This is a successful falsification of M0 as a security candidate, but M0 was designed only as an executable harness. It establishes the baseline requirement that the next model must not leave selected hidden coordinates locally recognizable from public recipes.
+M0 is therefore not a security candidate.
 
-### Local verification
+### Verification
 
-On the initial implementation:
-
-- Python byte-compilation passed;
-- 15 unit tests passed;
+- Python 3.11/3.12/3.13 CI passed;
 - all 256 toy-8 seeds passed forward/trapdoor/direct-attack checks;
-- exhaustive recovery of a toy-8 sample succeeded.
+- exhaustive toy-8 recovery is part of CI.
+
+## 2026-09-09 — M1 non-local branching-path experiment
+
+### Question
+
+Does replacing coordinate-local public markers with globally supported transformations make the hidden path plausibly difficult to recover?
+
+### Implemented
+
+- one shared 2D simplicial scaffold;
+- deterministic two-way public branching program;
+- both branches at each layer are global vertex permutations;
+- minimum support threshold for each branch and for the relative branch transform;
+- exact public path-forward relation;
+- exhaustive small-path recovery;
+- meet-in-the-middle path recovery;
+- collision profiling;
+- path-12, path-16, path-20, path-24 experiment presets.
+
+### Cryptanalytic result
+
+A-000 no longer applies directly because a selected bit is not represented by an independent public triangle.
+
+However, A-008 recovers the branch path generically by meeting forward prefix states with reverse suffix states.
+
+For ell layers, balanced recovery enumerates approximately:
+
+~~~text
+2^(ell/2) forward states
++
+2^(ell/2) reverse states
+~~~
+
+rather than 2^ell complete paths.
+
+This works because every public branch is efficiently invertible and both inverse choices remain valid at every reverse layer.
+
+### Initial development observations
+
+- path-16 target 0xB6D3 recovered from 256 forward + 256 reverse states;
+- path-20 target 0xB6D3A recovered from 1024 forward + 1024 reverse states;
+- tested path-12 instance: 4096 seeds, 4096 unique outputs, no output collision;
+- branch and relative supports remained high in the tested instances, so the result is not explained by branch locality.
+
+### Interpretation
+
+M1 is not a security candidate.
+
+The negative result is useful: **global support is not inversion asymmetry**. A future construction cannot be only a secret word in public efficiently invertible transformations.
 
 ### Next milestone
 
-Design M1 around overlapping/non-local public transformations and define the first generated distribution for which direct coordinate inspection is unavailable. Then attack that distribution before adding any KEM wrapper.
+M2 should test a genuinely asymmetric state transition, preferably tied back to discrete Morse reductions: public forward generation should remain efficient while naive reverse search encounters many admissible predecessors, and a hidden global reduction certificate should select a useful path.
+
+M2 must be attacked before any KEM wrapper is added.
