@@ -41,3 +41,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/maze_baseline.py --params maze-6 --trials 16 --search-nodes 10000
+      - name: M2 structural core recovery sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/maze_core_sweep.py --max-nodes 2000000
