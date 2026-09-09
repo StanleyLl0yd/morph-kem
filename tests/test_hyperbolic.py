@@ -6,6 +6,7 @@ from morph_kem.hyperbolic import (
     audit_a5,
     generate_a5_instance,
     generate_klein_quartic,
+    recover_a5_neighborhood_repair,
     gl32_group,
     klein_triangle_generators,
     solve_a5_csp,
@@ -73,6 +74,18 @@ class A5Tests(unittest.TestCase):
         self.assertLessEqual(result.nodes, 32)
         if result.first_solution is not None:
             self.assertTrue(validate_a5_frames(public, result.first_solution).accepted)
+
+    def test_neighborhood_repair_accepts_reference_gauge_orbit(self) -> None:
+        public, reference = generate_a5_instance(MASTER_SEED)
+        result = recover_a5_neighborhood_repair(
+            public,
+            reference.frames,
+            max_radius=0,
+            max_nodes_per_radius=16,
+        )
+        self.assertTrue(result.accepted)
+        self.assertIsNotNone(result.frames)
+        self.assertTrue(validate_a5_frames(public, result.frames).accepted)
 
 
 if __name__ == "__main__":
