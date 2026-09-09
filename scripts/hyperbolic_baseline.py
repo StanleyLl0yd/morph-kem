@@ -39,7 +39,12 @@ def main() -> int:
     local_elapsed = time.perf_counter() - local_started
 
     started = time.perf_counter()
-    result = solve_a5_csp(public, solution_cap=args.solution_cap, max_nodes=args.max_nodes)
+    result = solve_a5_csp(
+        public,
+        solution_cap=args.solution_cap,
+        max_nodes=args.max_nodes,
+        preferred_frames=local.frames,
+    )
     elapsed = time.perf_counter() - started
 
     print(f"Klein V/E/F: {len(klein.vertices)}/{len(klein.edges)}/{len(klein.faces)}")
