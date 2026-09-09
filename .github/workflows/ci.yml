@@ -112,6 +112,7 @@ jobs:
       - name: Install MiniSat for H2.1 research attack
         if: matrix.python-version == '3.12'
         run: |
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends minisat
       - name: H2.1 exact MiniSat attack
