@@ -52,3 +52,26 @@ Main lesson: genuine 2D structure and absence of free collapses do not create ha
 ### Next
 
 M5: irregular non-manifold 2-complexes with planted acyclic matching; add exact/solver attacks before scaling.
+
+
+### H0 — Hyperbolic / non-orientable side track
+
+Opened a separate H-series for the Möbius / Escher / Lobachevsky direction.
+
+Working label: **Hyperbolic Frustrated MORPH (HFM)**.
+
+Literature scan immediately rules out several naive hardness stories:
+
+- ordinary word/conjugacy problems in standard hyperbolic groups are often algorithmically efficient;
+- hyperbolic tessellations and finite quotients are established mathematical machinery;
+- non-orientability by itself is a simple topological invariant;
+- canonical/Delaunay tiling machinery creates a direct normalization/canonicalization attack surface.
+
+H0 therefore separates geometry, topology, transition/holonomy, and witness layers.
+
+The first H1 ladder will deliberately begin with:
+
+1. Z2 orientation holonomy — expected to collapse to GF(2) linear algebra;
+2. S3 non-abelian frame holonomy — attacked by gauge fixing, abelianization, cycle basis, exact CSP, canonicalization, and local statistics.
+
+No H-series security claim exists.

@@ -1,6 +1,6 @@
 # MORPH-KEM
 
-**MORPH-KEM** is exploratory post-quantum public-key cryptography research based on discrete Morse theory and combinatorial topology.
+**MORPH-KEM** is exploratory post-quantum public-key cryptography research based on discrete Morse theory, combinatorial topology, and attack-first mathematical experimentation.
 
 > **Research only. Not for production use. Not a security claim.**
 >
@@ -16,17 +16,31 @@
 - **M3** — honest equivalent-witness relation; broken by A-016 collapse plus spanning-tree construction.
 - **M4** — closed triangulated tori with zero free collapses; broken by A-018 public primal/dual tree-cotree construction.
 
-M4 matters because it removes the obvious M3 shortcut. Every tested edge has two incident triangles and every tested target has zero free collapse pairs, yet a label-invariant global algorithm still constructs an accepted (1,2,1) witness.
+M5 remains the next M-series experiment: irregular non-manifold 2-complexes with exact equivalent-witness search.
 
-Fixed-seed M4 sweep:
+## H-series side track
 
-~~~text
-torus-3x3: free 0, deterministic accepted, random 32/32
-torus-4x4: free 0, deterministic accepted, random 32/32
-torus-5x5: free 0, deterministic accepted, random 32/32
-torus-6x6: free 0, deterministic accepted, random 32/32
-torus-7x7: free 0, deterministic accepted, random 32/32
-~~~
+A separate **H-series** now studies the user's Möbius / Escher / Lobachevsky direction without changing the M-series conclusions.
+
+Working research label:
+
+**Hyperbolic Frustrated MORPH (HFM)**
+
+The H-series investigates finite hyperbolic-like quotients and cell complexes with:
+
+- negative-curvature combinatorics;
+- orientation-preserving and orientation-reversing gluings;
+- overlapping cycle holonomy;
+- non-manifold junctions where useful;
+- locally similar patches but globally coupled consistency constraints;
+- equivalent-witness verification rather than recovery of one planted path.
+
+**H0 is literature/threat-model work first.** Hyperbolic geometry, non-orientability, and holonomy are not assumed hard. In particular, the project explicitly rejects schemes whose secret reduces to ordinary orientability, first homology/cohomology, a simple surface-group word/conjugacy problem, or recoverable canonical quotient data.
+
+See:
+
+- docs/14-h-series-hyperbolic-charter.md
+- docs/15-h1-holonomy-experiment.md
 
 ## Research discipline
 
@@ -36,6 +50,7 @@ torus-7x7: free 0, deterministic accepted, random 32/32
 - Negative results are preserved.
 - Structural breaks are redesigned, not repaired by larger parameters.
 - No KEM wrapper until a primitive survives dedicated attacks.
+- "Hyperbolic", "non-orientable", or "Escher-like" are geometric descriptions, never security arguments.
 
 ## Key files
 
@@ -44,12 +59,16 @@ torus-7x7: free 0, deterministic accepted, random 32/32
 - scripts/ — deterministic baselines and sweeps
 - docs/05-cryptanalysis.md — attack ledger
 - docs/13-m4-closed-surface.md — M4 result
+- docs/14-h-series-hyperbolic-charter.md — H-series prior-art/threat charter
+- docs/15-h1-holonomy-experiment.md — first H-series executable experiment specification
 - notes/research-log.md — chronological record
 - spec/morph-kem-v0.1.md — future-spec skeleton
 
-## Next direction
+## Next directions
 
-**M5:** irregular non-manifold 2-complexes generated around a planted acyclic Hasse matching, with greedy, branch-and-bound, SAT/CSP, incidence-statistical, canonicalization, and width attacks before scaling.
+**M5:** irregular non-manifold 2-complexes, exact witness search, CSP/SAT-style attacks, and incidence/canonicalization analysis.
+
+**H1:** a finite signed polygonal-complex holonomy experiment that tests whether overlapping local transition constraints remain nontrivial after linear-algebra, cycle-basis, canonicalization, and solver attacks.
 
 No security or post-quantum claim exists.
 
