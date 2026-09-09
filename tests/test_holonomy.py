@@ -7,6 +7,7 @@ from morph_kem.holonomy import (
     generate_s3_instance,
     generate_z2_instance,
     recover_s3_abelianization,
+    recover_s3_via_abelianization,
     recover_z2_spanning_tree,
     solve_s3_csp,
     validate_s3_frames,
@@ -65,6 +66,14 @@ class S3HolonomyTests(unittest.TestCase):
         self.assertTrue(leak.consistent)
         self.assertEqual(leak.recovered_vertices, public.graph.vertices)
         self.assertGreaterEqual(leak.edge_checks, public.graph.vertices - 1)
+
+    def test_direct_abelianization_break_recovers_all_toy_sets(self) -> None:
+        for name, params in HOLONOMY_PARAMETER_SETS.items():
+            with self.subTest(name=name):
+                public, _ = generate_s3_instance(params, MASTER_SEED)
+                result = recover_s3_via_abelianization(public)
+                self.assertTrue(result.accepted)
+                self.assertTrue(validate_s3_frames(public, result.frames).accepted)
 
     def test_exact_csp_finds_equivalent_witness(self) -> None:
         public, _ = generate_s3_instance(

@@ -9,6 +9,7 @@ from morph_kem.holonomy import (
     generate_s3_instance,
     generate_z2_instance,
     recover_s3_abelianization,
+    recover_s3_via_abelianization,
     recover_z2_spanning_tree,
     solve_s3_csp,
     validate_s3_frames,
@@ -35,6 +36,7 @@ def main() -> int:
 
     s3, s3_reference = generate_s3_instance(params, master_seed)
     leak = recover_s3_abelianization(s3)
+    direct = recover_s3_via_abelianization(s3)
 
     started = time.perf_counter()
     csp = solve_s3_csp(s3, solution_cap=args.solution_cap)
@@ -49,13 +51,15 @@ def main() -> int:
     print(f"S3 reference accepted: {validate_s3_frames(s3, s3_reference.frames).accepted}")
     print(f"S3 abelianization consistent: {leak.consistent}")
     print(f"S3 parity vertices recovered: {leak.recovered_vertices}")
+    print(f"S3 direct abelianization recovery accepted: {direct.accepted}")
+    print(f"S3 direct recovery edge checks: {direct.edge_checks}")
     print(f"S3 CSP accepted: {csp.accepted}")
     print(f"S3 CSP solutions found: {csp.solutions_found}")
     print(f"S3 CSP nodes/backtracks: {csp.nodes}/{csp.backtracks}")
     print(f"S3 post-abelianization mean domain: {csp.parity_pruned_domain_mean:.2f}")
     print(f"S3 hit solution cap: {csp.hit_solution_cap}")
     print(f"S3 CSP elapsed seconds: {elapsed:.6f}")
-    return 0 if z2_recovery.accepted and csp.accepted else 1
+    return 0 if z2_recovery.accepted and direct.accepted and csp.accepted else 1
 
 
 if __name__ == "__main__":

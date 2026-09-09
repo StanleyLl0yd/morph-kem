@@ -68,7 +68,9 @@ See:
 
 **M5:** irregular non-manifold 2-complexes, exact witness search, CSP/SAT-style attacks, and incidence/canonicalization analysis.
 
-**H1:** a finite signed polygonal-complex holonomy experiment that tests whether overlapping local transition constraints remain nontrivial after linear-algebra, cycle-basis, canonicalization, and solver attacks.
+**H1:** implemented and rejected. Z2 collapses by spanning-tree/cycle-space recovery; the S3 verifier also collapses exactly to Z2 because "normalized transition is a transposition" is equivalent to odd permutation parity.
+
+**H2:** must change the holonomy relation so it does not factor through a cheap quotient homomorphism; a larger group alone is not an acceptable repair.
 
 No security or post-quantum claim exists.
 

@@ -205,3 +205,67 @@ If rejected, H2 must change the **relation**, not merely use a larger finite gro
 ## Security status
 
 No one-wayness, post-quantum, IND-CPA, IND-CCA, or concrete-security claim exists.
+
+
+## H1 result: S3 also collapses completely
+
+The first implementation produced a stronger result than merely "the CSP is small."
+
+The public allowed normalized set is the set of all transpositions in (S_3). But the odd elements of (S_3) are **exactly** those three transpositions.
+
+Therefore, for every edge,
+
+[
+x_v T_{uv} x_u^{-1}in {	ext{transpositions}}
+]
+
+is equivalent to the single parity equation
+
+[
+operatorname{sgn}(x_v)
+oplus
+operatorname{sgn}(T_{uv})
+oplus
+operatorname{sgn}(x_u)
+=1.
+]
+
+There is no hidden residual non-abelian condition.
+
+Once the public Z2 system is solved, choose any fixed even representative for parity 0 and any fixed transposition for parity 1. That lifted (S_3) assignment satisfies the original verifier.
+
+The repository implements this direct attack as:
+
+`recover_s3_via_abelianization`
+
+Its work is linear graph propagation plus public edge verification.
+
+### H-A03 result
+
+**Fatal to H1-S3.**
+
+H1-S3 is mathematically equivalent, for this verifier, to its Z2 abelianization.
+
+The exact CSP implementation remains in the repository as a calibration harness, but it is no longer the best attack.
+
+### Lesson
+
+Using a non-commutative group is not sufficient if the accepted subset is an entire fiber of a cheap quotient homomorphism.
+
+A successor must test the verifier relation against:
+
+- abelianization;
+- quotient groups;
+- normal subgroups;
+- conjugacy-class collapse;
+- double-coset simplification;
+
+**before** interpreting non-commutativity as useful complexity.
+
+## H1 disposition
+
+H1-Z2: **rejected as designed**.
+
+H1-S3: **rejected by exact reduction to Z2**.
+
+The next H-series milestone must change the accepted relation, not merely increase graph size.
