@@ -8,6 +8,7 @@ from morph_kem.hyperbolic import (
     generate_klein_quartic,
     recover_a5_hamming_repair,
     recover_a5_neighborhood_repair,
+    recover_a5_tree_coordinates,
     gl32_group,
     klein_triangle_generators,
     solve_a5_csp,
@@ -100,6 +101,19 @@ class A5Tests(unittest.TestCase):
         self.assertEqual(result.changes, 0)
         self.assertIsNotNone(result.frames)
         self.assertTrue(validate_a5_frames(public, result.frames).accepted)
+
+    def test_tree_coordinate_attack_preserves_valid_reference(self) -> None:
+        public, reference = generate_a5_instance(MASTER_SEED)
+        result = recover_a5_tree_coordinates(
+            public,
+            reference.frames,
+            max_sweeps=1,
+            attack_seed=b"test-tree-coordinates",
+        )
+        self.assertTrue(result.accepted)
+        self.assertEqual(result.best_violations, 0)
+        self.assertEqual(result.tree_edges, 23)
+        self.assertEqual(result.chord_edges, 61)
 
 
 if __name__ == "__main__":
