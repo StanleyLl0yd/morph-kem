@@ -248,3 +248,51 @@ The proposed "all charts remain" construction maps directly to Goldreich's local
 **Disposition:** naive H2-E3 rejected before code.
 
 Mandatory successor gate: any H3-E construction must demonstrate a public operation/witness relation that cannot be flattened to independent bounded-local predicates of one hidden vector.
+
+
+### H-E05 — public spanning-tree gauge normalization
+
+Target: H3-E0 lifted-atlas calibration.
+
+Suppose a k-sheet cover over a connected public base graph is described by public edge permutations T_uv in S_k. A secret fiber relabeling is a vertex gauge phi_v.
+
+If enough T_uv are public for an untrusted sender to lift arbitrary public paths, an attacker can choose any public spanning tree and compute vertex gauges h_v so every tree transition becomes identity.
+
+For a tree-normalized hidden cover rho and public disguise:
+
+~~~text
+T_uv = phi_v * rho_uv * phi_u^-1
+~~~
+
+the public normalization gives:
+
+~~~text
+T'_uv = h_v * T_uv * h_u^-1
+      = phi_root * rho_uv * phi_root^-1.
+~~~
+
+Thus the entire hidden per-vertex gauge collapses to one global sheet conjugation.
+
+A global sheet relabeling is an equivalent covering representation, not a useful trapdoor under equivalent-witness semantics.
+
+Complexity is linear in the public base graph size times the sheet permutation size.
+
+**Result:** fatal to hidden fiber labels as an H3-E trapdoor.
+
+Fixed-seed Python 3.12 CI baseline:
+
+~~~text
+parameter: lift-12x5
+base V/E/cycle rank: 12/18/7
+sheets: 5
+tree transitions normalized: 11/11
+public chord monodromies retained: 7
+point-operation estimate: 380
+equal to hidden canonical cover up to one global conjugation: yes
+path-lift equivariance preserved: yes
+residual root relabelings: 120 = 5!
+~~~
+
+The 120 residual choices are a single global relabeling of the five sheets. They describe equivalent coverings and therefore do not constitute a trapdoor.
+
+**H3-E0 rejected.**

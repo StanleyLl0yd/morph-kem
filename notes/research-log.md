@@ -243,3 +243,59 @@ Key prior-art findings:
 Changing visualization, using a hyperbolic tiling, larger finite alphabet, non-abelian local state, or another constant-arity predicate would not by itself create a new mathematical cryptosystem.
 
 Proposed next frontier: H3-E Lifted Atlas, but only if hidden covering/lifting data changes the computational relation itself and survives canonicalization, graph-cover, monodromy, fundamental-group, homology, group-action, and local-function-flattening attacks.
+
+
+### H3-E0 — lifted-atlas public-evaluation calibration started
+
+The H2-E3 frontier suggested that a meaningful successor must change the computational relation, not merely the local predicate.
+
+The first candidate is a hidden k-sheet graph cover.
+
+Prior-art review found a direct cryptographic precedent:
+
+- Seiya Negami, *Composite coverings of graphs and cryptography*, Yokohama Mathematical Journal 70 (2024; repository publication 2025), proposes a prototype **common-key** cryptosystem based on composite graph coverings.
+
+This does not provide the public-key asymmetry MORPH needs, but it means "graph covering as cryptography" is itself established prior art.
+
+H3-E0 formalizes a stronger public-key question.
+
+A hidden canonical cover uses permutation voltages rho_e. Secret per-fiber labels phi_v disguise them as public transitions:
+
+~~~text
+T_uv = phi_v * rho_uv * phi_u^-1.
+~~~
+
+These public transitions are sufficient for anyone to lift a public path.
+
+Attack H-E05 chooses a public spanning tree and gauge-fixes every tree transition to identity. Algebraically the resulting public normal form equals the hidden canonical cover up to a **single global conjugation by phi_root**.
+
+Therefore the per-vertex fiber labels are not a trapdoor; they are gauge.
+
+An executable calibration now checks:
+
+- deterministic connected cover generation;
+- full public tree normalization;
+- equality to the hidden canonical cover up to one global conjugation;
+- path-lift equivariance before/after the attack.
+
+Fixed-seed CI confirmed the exact algebraic prediction:
+
+~~~text
+lift-12x5
+  base V/E/cycle rank = 12/18/7
+  sheets = 5
+  tree transitions normalized = 11/11
+  chord monodromies retained = 7
+  point-operation estimate = 380
+  canonical-cover equivalence up to root conjugation = yes
+  path-lift equivariance = yes
+  residual global sheet relabelings = 120 = 5!
+~~~
+
+**H3-E0 rejected.**
+
+The secret per-fiber coordinate system is pure gauge. Once public transitions allow path lifting, the attacker obtains the same cover behavior in a public canonical gauge.
+
+The only remaining ambiguity is one global sheet name permutation, which is irrelevant under equivalent-cover semantics.
+
+A successor cannot use "hidden sheet labels" as the trapdoor.
