@@ -65,6 +65,7 @@ See:
 - docs/17-h2e2-higher-atlas.md — H2-E2 higher-order chart experiment
 - docs/18-h2e3-frontier.md — Goldreich/local-OWF frontier and H3-E novelty gate
 - docs/19-h3e-lifted-atlas.md — graph-cover prior art and public gauge-normalization calibration
+- docs/20-h3e-composite-cover-frontier.md — public-key adaptation/interface gate
 - notes/research-log.md — chronological record
 - spec/morph-kem-v0.1.md — future-spec skeleton
 
@@ -82,7 +83,9 @@ See:
 
 **H3-E0:** implemented and rejected. If permutation-voltage transitions are public enough for an untrusted sender to lift paths, a public spanning-tree gauge attack recovers the hidden canonical cover up to one global sheet relabeling. If those transitions are hidden, the sender cannot evaluate the proposed forward operation.
 
-**H3-E:** may proceed only with a construction where the cover/decomposition is not merely gauge and the public evaluator does not expose an equivalent inversion structure.
+**H3-E1:** naive attempt to adapt composite graph-cover cryptography to a public-key interface is rejected before code. Publishing the common-key base reveals decoding structure; hiding it prevents public encoding; sending only an unlabeled outer cover leaves an undefined public cover-projection search problem with no demonstrated trapdoor algorithm.
+
+**H3-E:** may proceed only after defining a trapdoor positive cover distribution with a concrete efficient secret recovery algorithm.
 
 **H2-H (#17):** parallel hyperbolic/Klein-quartic branch remains open.
 
