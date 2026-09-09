@@ -104,3 +104,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/hyperbolic_baseline.py --solution-cap 2 --max-nodes 1000
+      - name: H2 Klein-quartic generated-instance sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/hyperbolic_sweep.py --count 4 --tree-sweeps 40 --csp-nodes 250
