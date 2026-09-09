@@ -169,6 +169,17 @@ class A5PairRepairResult:
 
 
 @dataclass(frozen=True, slots=True)
+class A5NeighborhoodRepairResult:
+    accepted: bool
+    frames: tuple[int, ...] | None
+    radius_used: int
+    mutable_vertices: int
+    nodes: int
+    backtracks: int
+    arc_revisions: int
+
+
+@dataclass(frozen=True, slots=True)
 class A5CspResult:
     accepted: bool
     first_solution: tuple[int, ...] | None
@@ -1379,6 +1390,7 @@ def solve_a5_csp(
     solution_cap: int = 16,
     max_nodes: int = 2_000_000,
     preferred_frames: tuple[int, ...] | None = None,
+    fixed_frames: dict[int, int] | None = None,
 ) -> A5CspResult:
     if solution_cap <= 0 or solution_cap > 10_000:
         raise HyperbolicExperimentError("solution_cap must be in [1, 10000]")
@@ -1395,6 +1407,16 @@ def solve_a5_csp(
     full_mask = (1 << group_size) - 1
     domains: list[int] = [full_mask] * vertex_count
     domains[0] = 1 << A5_IDENTITY
+
+    if fixed_frames is not None:
+        for vertex, value in fixed_frames.items():
+            if vertex < 0 or vertex >= vertex_count:
+                raise HyperbolicExperimentError("fixed-frame vertex outside scaffold")
+            if value < 0 or value >= group_size:
+                raise HyperbolicExperimentError("fixed frame outside A5")
+            if vertex == 0 and value != A5_IDENTITY:
+                raise HyperbolicExperimentError("fixed root frame must be A5 identity")
+            domains[vertex] = 1 << value
 
     edge_labels = {
         edge: label
@@ -1567,4 +1589,105 @@ def solve_a5_csp(
         initial_mean_domain=initial_mean,
         final_first_solution=accepted,
         hit_solution_cap=hit_cap,
+    )
+
+
+def recover_a5_neighborhood_repair(
+    public: A5PublicInstance,
+    start_frames: tuple[int, ...],
+    max_radius: int = 2,
+    max_nodes_per_radius: int = 5_000,
+) -> A5NeighborhoodRepairResult:
+    """Exact frozen-boundary repair around the currently violated edges.
+
+    All vertices outside an expanding public graph neighborhood are frozen to
+    the supplied attack assignment. Vertices inside the neighborhood receive
+    full A5 domains and are solved by the same exact public CSP engine. This
+    tests whether a near-solution can be repaired by a coordinated move that
+    one- and two-vertex local search cannot discover.
+    """
+    vertex_count = len(public.scaffold.vertices)
+    if len(start_frames) != vertex_count:
+        raise HyperbolicExperimentError("neighborhood-repair frame count does not match vertices")
+    if any(value < 0 or value >= len(A5_ELEMENTS) for value in start_frames):
+        raise HyperbolicExperimentError("neighborhood-repair frame outside A5")
+    if max_radius < 0 or max_radius > vertex_count:
+        raise HyperbolicExperimentError("max_radius outside valid range")
+    if max_nodes_per_radius <= 0 or max_nodes_per_radius > 50_000_000:
+        raise HyperbolicExperimentError("max_nodes_per_radius outside valid range")
+
+    root_inverse = _a5_inv(start_frames[0])
+    frames = tuple(
+        A5_IDENTITY if vertex == 0 else _a5_mul(root_inverse, value)
+        for vertex, value in enumerate(start_frames)
+    )
+
+    if validate_a5_frames(public, frames).accepted:
+        return A5NeighborhoodRepairResult(
+            True,
+            frames,
+            0,
+            0,
+            0,
+            0,
+            0,
+        )
+
+    neighbors: list[set[int]] = [set() for _ in range(vertex_count)]
+    violated_vertices: set[int] = set()
+    for edge, label in zip(public.scaffold.edges, public.edge_labels):
+        left, right = edge
+        neighbors[left].add(right)
+        neighbors[right].add(left)
+        if _normalized_a5(frames[left], label, frames[right]) not in public.conjugacy_class:
+            violated_vertices.update(edge)
+
+    mutable = set(violated_vertices)
+    total_nodes = 0
+    total_backtracks = 0
+    total_arc_revisions = 0
+    last_mutable = len(mutable)
+
+    for radius in range(max_radius + 1):
+        fixed = {
+            vertex: frames[vertex]
+            for vertex in range(vertex_count)
+            if vertex not in mutable
+        }
+        result = solve_a5_csp(
+            public,
+            solution_cap=1,
+            max_nodes=max_nodes_per_radius,
+            preferred_frames=frames,
+            fixed_frames=fixed,
+        )
+        total_nodes += result.nodes
+        total_backtracks += result.backtracks
+        total_arc_revisions += result.arc_revisions
+        last_mutable = len(mutable)
+
+        if result.accepted and result.first_solution is not None:
+            return A5NeighborhoodRepairResult(
+                True,
+                result.first_solution,
+                radius,
+                len(mutable),
+                total_nodes,
+                total_backtracks,
+                total_arc_revisions,
+            )
+
+        expanded = set(mutable)
+        for vertex in tuple(mutable):
+            expanded.update(neighbors[vertex])
+        mutable = expanded
+
+    return A5NeighborhoodRepairResult(
+        False,
+        None,
+        max_radius,
+        last_mutable,
+        total_nodes,
+        total_backtracks,
+        total_arc_revisions,
     )
