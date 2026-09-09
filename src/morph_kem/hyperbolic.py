@@ -540,6 +540,7 @@ def recover_a5_min_conflicts(
         return cached
 
     best_violations = len(public.scaffold.edges)
+    best_frames: tuple[int, ...] | None = None
     total_moves = 0
     total_sweeps = 0
 
@@ -567,7 +568,9 @@ def recover_a5_min_conflicts(
         for sweep in range(1, max_sweeps + 1):
             total_sweeps += 1
             current_violations = a5_violation_count(public, frames)
-            best_violations = min(best_violations, current_violations)
+            if current_violations < best_violations:
+                best_violations = current_violations
+                best_frames = tuple(frames)
             if current_violations == 0:
                 candidate = tuple(frames)
                 return A5LocalSearchResult(
@@ -607,7 +610,9 @@ def recover_a5_min_conflicts(
                 total_moves += 1
 
         final_violations = a5_violation_count(public, frames)
-        best_violations = min(best_violations, final_violations)
+        if final_violations < best_violations:
+            best_violations = final_violations
+            best_frames = tuple(frames)
         if final_violations == 0:
             candidate = tuple(frames)
             return A5LocalSearchResult(
@@ -621,7 +626,7 @@ def recover_a5_min_conflicts(
 
     return A5LocalSearchResult(
         False,
-        None,
+        best_frames,
         restarts,
         total_sweeps,
         total_moves,
@@ -633,6 +638,7 @@ def solve_a5_csp(
     public: A5PublicInstance,
     solution_cap: int = 16,
     max_nodes: int = 2_000_000,
+    preferred_frames: tuple[int, ...] | None = None,
 ) -> A5CspResult:
     if solution_cap <= 0 or solution_cap > 10_000:
         raise HyperbolicExperimentError("solution_cap must be in [1, 10000]")
@@ -641,6 +647,11 @@ def solve_a5_csp(
 
     vertex_count = len(public.scaffold.vertices)
     group_size = len(A5_ELEMENTS)
+    if preferred_frames is not None:
+        if len(preferred_frames) != vertex_count:
+            raise HyperbolicExperimentError("preferred frame count does not match vertices")
+        if any(value < 0 or value >= group_size for value in preferred_frames):
+            raise HyperbolicExperimentError("preferred frame outside A5")
     full_mask = (1 << group_size) - 1
     domains: list[int] = [full_mask] * vertex_count
     domains[0] = 1 << A5_IDENTITY
@@ -656,6 +667,7 @@ def solve_a5_csp(
         incident[right].append(edge)
 
     compatibility_cache: dict[tuple[int, int], int] = {}
+    reverse_compatibility_cache: dict[tuple[int, int], int] = {}
 
     def compatible_mask(label: int, left_value: int) -> int:
         key = (label, left_value)
@@ -670,6 +682,18 @@ def solve_a5_csp(
                 mask |= 1 << value
             cached = mask
             compatibility_cache[key] = cached
+        return cached
+
+    def reverse_compatible_mask(label: int, right_value: int) -> int:
+        key = (label, right_value)
+        cached = reverse_compatibility_cache.get(key)
+        if cached is None:
+            mask = 0
+            for left_value in range(group_size):
+                if compatible_mask(label, left_value) & (1 << right_value):
+                    mask |= 1 << left_value
+            cached = mask
+            reverse_compatibility_cache[key] = cached
         return cached
 
     def values(mask: int):
@@ -756,8 +780,27 @@ def solve_a5_csp(
                 item,
             ),
         )
+        scored_values: list[tuple[int, int, int]] = []
+        preferred = preferred_frames[vertex] if preferred_frames is not None else None
+        for value, bit in values(current[vertex]):
+            support = 0
+            for edge in incident[vertex]:
+                left, right = edge
+                label = edge_labels[edge]
+                if vertex == left:
+                    support += (
+                        compatible_mask(label, value) & current[right]
+                    ).bit_count()
+                else:
+                    support += (
+                        reverse_compatible_mask(label, value) & current[left]
+                    ).bit_count()
+            preferred_rank = 0 if preferred is not None and value == preferred else 1
+            scored_values.append((preferred_rank, -support, bit))
+
+        scored_values.sort()
         before = len(solutions)
-        for _, bit in values(current[vertex]):
+        for _, _, bit in scored_values:
             if len(solutions) >= solution_cap:
                 hit_cap = True
                 return
