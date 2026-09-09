@@ -60,7 +60,8 @@ See:
 - docs/05-cryptanalysis.md — attack ledger
 - docs/13-m4-closed-surface.md — M4 result
 - docs/14-h-series-hyperbolic-charter.md — H-series prior-art/threat charter
-- docs/15-h1-holonomy-experiment.md — first H-series executable experiment specification
+- docs/15-h1-holonomy-experiment.md — H1 signed-holonomy result
+- docs/16-h2e-escher-atlas.md — Escher local-to-global frustration experiment
 - notes/research-log.md — chronological record
 - spec/morph-kem-v0.1.md — future-spec skeleton
 
@@ -70,7 +71,11 @@ See:
 
 **H1:** implemented and rejected. Z2 collapses by spanning-tree/cycle-space recovery; the S3 verifier also collapses exactly to Z2 because "normalized transition is a transposition" is equivalent to odd permutation parity.
 
-**H2:** must change the holonomy relation so it does not factor through a cheap quotient homomorphism; a larger group alone is not an acceptable repair.
+**H2-E1:** implemented and rejected. The Escher/Penrose relative-height atlas is genuinely locally satisfiable and globally frustrated, but its obstruction is exactly ordinary cycle-gain data and minimum equivalent seam repairs are found cheaply by unbalanced-cycle branching.
+
+**H2-E2:** next Escher step, if pursued, must use higher-order overlapping charts rather than one edge gain per adjacency.
+
+**H2-H (#17):** parallel hyperbolic/Klein-quartic branch remains open.
 
 No security or post-quantum claim exists.
 

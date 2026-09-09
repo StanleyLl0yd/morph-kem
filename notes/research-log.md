@@ -121,3 +121,42 @@ sweep:
 ~~~
 
 The algebraic proof is stronger than the measurements: H1-S3's verifier is exactly its Z2 sign quotient.
+
+
+### H2-E — Escher frustrated atlas started
+
+Opened a separate Escher/Penrose branch rather than replacing the pending hyperbolic Klein-quartic branch.
+
+The first H2-E1 calibration models relative height as edge increments in Z/7Z:
+
+- every individual edge is locally satisfiable;
+- contradictions appear only around cycles;
+- the generator injects a bounded set of hidden defect/seam edges;
+- the public verifier accepts any seam set within budget and any compatible height assignment.
+
+This directly implements the "locally plausible, globally impossible" staircase intuition.
+
+Prior-art review shows the local-to-global obstruction viewpoint is already formalized through sheaves/cohomology, network torsors, impossible-object geometry processing, and gain/group-labelled graphs. H2-E therefore makes no novelty claim for the intuition itself.
+
+Implemented attacks:
+
+- fundamental-cycle syndrome extraction;
+- exact unbalanced-cycle branching for any equivalent seam repair.
+
+Measured fixed-seed CI results confirm the expected break.
+
+~~~text
+escher-8:  min repair 1, nodes 4
+escher-10: min repair 2, nodes 27
+escher-12: min repair 2, nodes 27
+escher-16: min repair 3, nodes 43
+escher-20: min repair 3, nodes 164
+~~~
+
+For escher-20 the solver found a smaller equivalent repair than the planted four-edge seam set.
+
+**H2-E1 rejected.**
+
+The Escher intuition itself remains useful, but edge-relative height data is too low-order: its obstruction is completely captured by cycle gains/cohomology and seam repair is a known gain-graph balancing problem.
+
+Next Escher experiment, if continued: overlapping multi-variable charts/higher-order constraints that cannot be flattened to one group label per graph edge.
