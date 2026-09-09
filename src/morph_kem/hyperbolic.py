@@ -133,6 +133,15 @@ class A5LocalSearchResult:
 
 
 @dataclass(frozen=True, slots=True)
+class A5PairRepairResult:
+    accepted: bool
+    frames: tuple[int, ...]
+    iterations: int
+    pair_assignments_tested: int
+    best_violations: int
+
+
+@dataclass(frozen=True, slots=True)
 class A5CspResult:
     accepted: bool
     first_solution: tuple[int, ...] | None
@@ -631,6 +640,185 @@ def recover_a5_min_conflicts(
         total_sweeps,
         total_moves,
         best_violations,
+    )
+
+
+def recover_a5_pair_repair(
+    public: A5PublicInstance,
+    start_frames: tuple[int, ...],
+    max_iterations: int = 8,
+) -> A5PairRepairResult:
+    if len(start_frames) != len(public.scaffold.vertices):
+        raise HyperbolicExperimentError("pair-repair frame count does not match vertices")
+    if any(value < 0 or value >= len(A5_ELEMENTS) for value in start_frames):
+        raise HyperbolicExperimentError("pair-repair frame outside A5")
+    if max_iterations <= 0 or max_iterations > 1000:
+        raise HyperbolicExperimentError("max_iterations must be in [1, 1000]")
+
+    # Quotient the same global left gauge used by the exact solver.
+    root_inverse = _a5_inv(start_frames[0])
+    frames = [
+        _a5_mul(root_inverse, value)
+        for value in start_frames
+    ]
+    frames[0] = A5_IDENTITY
+
+    incident: list[list[int]] = [[] for _ in public.scaffold.vertices]
+    neighbors: list[set[int]] = [set() for _ in public.scaffold.vertices]
+    for index, edge in enumerate(public.scaffold.edges):
+        left, right = edge
+        incident[left].append(index)
+        incident[right].append(index)
+        neighbors[left].add(right)
+        neighbors[right].add(left)
+
+    compatibility_cache: dict[tuple[int, int], int] = {}
+
+    def right_mask(label: int, left_value: int) -> int:
+        key = (label, left_value)
+        cached = compatibility_cache.get(key)
+        if cached is None:
+            mask = 0
+            for value in _allowed_right_values(
+                label,
+                left_value,
+                public.conjugacy_class,
+            ):
+                mask |= 1 << value
+            cached = mask
+            compatibility_cache[key] = cached
+        return cached
+
+    def edge_valid(index: int) -> bool:
+        left, right = public.scaffold.edges[index]
+        label = public.edge_labels[index]
+        return bool((right_mask(label, frames[left]) >> frames[right]) & 1)
+
+    def violation_indices() -> list[int]:
+        return [
+            index
+            for index in range(len(public.scaffold.edges))
+            if not edge_valid(index)
+        ]
+
+    tested = 0
+    best_global = len(violation_indices())
+
+    for iteration in range(1, max_iterations + 1):
+        violated = violation_indices()
+        current_global = len(violated)
+        best_global = min(best_global, current_global)
+        if current_global == 0:
+            candidate = tuple(frames)
+            return A5PairRepairResult(
+                True,
+                candidate,
+                iteration - 1,
+                tested,
+                0,
+            )
+
+        bad_vertices: set[int] = set()
+        for index in violated:
+            bad_vertices.update(public.scaffold.edges[index])
+
+        frontier = set(bad_vertices)
+        for vertex in tuple(bad_vertices):
+            frontier.update(neighbors[vertex])
+
+        candidate_pairs: set[tuple[int, int]] = set()
+        for left in bad_vertices:
+            for right in frontier:
+                if left == right:
+                    continue
+                pair = (left, right) if left < right else (right, left)
+                candidate_pairs.add(pair)
+
+        best_move: tuple[int, int, int, int] | None = None
+        best_after = current_global
+
+        for left_vertex, right_vertex in sorted(candidate_pairs):
+            affected = set(incident[left_vertex]) | set(incident[right_vertex])
+            current_affected = sum(not edge_valid(index) for index in affected)
+
+            left_values = (
+                (A5_IDENTITY,)
+                if left_vertex == 0
+                else range(len(A5_ELEMENTS))
+            )
+            right_values = (
+                (A5_IDENTITY,)
+                if right_vertex == 0
+                else range(len(A5_ELEMENTS))
+            )
+
+            old_left = frames[left_vertex]
+            old_right = frames[right_vertex]
+
+            for left_value in left_values:
+                frames[left_vertex] = left_value
+                for right_value in right_values:
+                    frames[right_vertex] = right_value
+                    tested += 1
+                    new_affected = sum(
+                        not edge_valid(index)
+                        for index in affected
+                    )
+                    new_global = (
+                        current_global
+                        - current_affected
+                        + new_affected
+                    )
+                    if new_global < best_after:
+                        best_after = new_global
+                        best_move = (
+                            left_vertex,
+                            left_value,
+                            right_vertex,
+                            right_value,
+                        )
+                        if best_after == 0:
+                            break
+                if best_after == 0:
+                    break
+
+            frames[left_vertex] = old_left
+            frames[right_vertex] = old_right
+            if best_after == 0:
+                break
+
+        if best_move is None:
+            return A5PairRepairResult(
+                False,
+                tuple(frames),
+                iteration - 1,
+                tested,
+                best_global,
+            )
+
+        left_vertex, left_value, right_vertex, right_value = best_move
+        frames[left_vertex] = left_value
+        frames[right_vertex] = right_value
+        best_global = min(best_global, best_after)
+
+        if best_after == 0:
+            candidate = tuple(frames)
+            return A5PairRepairResult(
+                validate_a5_frames(public, candidate).accepted,
+                candidate,
+                iteration,
+                tested,
+                0,
+            )
+
+    candidate = tuple(frames)
+    final_violations = a5_violation_count(public, candidate)
+    return A5PairRepairResult(
+        final_violations == 0 and validate_a5_frames(public, candidate).accepted,
+        candidate,
+        max_iterations,
+        tested,
+        min(best_global, final_violations),
     )
 
 
