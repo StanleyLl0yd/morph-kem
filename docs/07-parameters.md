@@ -1,14 +1,16 @@
 # 07 — Parameters
 
-No security parameter set exists yet.
+No security parameter set exists.
+
+All current names describe experiment sizes only.
 
 ## Labels
 
-Parameter sets must use only these maturity labels:
+Allowed maturity labels:
 
-- **toy** — designed for exhaustive analysis and debugging;
-- **experimental** — designed for empirical cryptanalysis;
-- **candidate** — considered only after substantial evidence and review.
+- **toy** — exhaustive analysis/debugging;
+- **experimental** — empirical cryptanalysis;
+- **candidate** — only after substantial evidence and review.
 
 Do not label a parameter set "secure."
 
@@ -16,17 +18,15 @@ Do not label a parameter set "secure."
 
 | Set | Seed bits | Purpose |
 |---|---:|---|
-| toy-8 | 8 | exhaustive enumeration, full round-trip tests, CI baseline |
+| toy-8 | 8 | exhaustive CI baseline |
 | toy-12 | 12 | attack-harness scaling |
-| toy-16 | 16 | canonicalization / solver experiments |
-| toy-24 | 24 | structured-attack scaling only |
-| toy-32 | 32 | upper M0 API bound; never intended for exhaustive CI |
+| toy-16 | 16 | solver experiments |
+| toy-24 | 24 | structured-attack scaling |
+| toy-32 | 32 | upper M0 API bound |
 
-M0 uses exactly five hidden vertices per coordinate before relabeling.
+All M0 sets are broken by A-000.
 
-All M0 sets are broken by A-000 and have no security meaning.
-
-## M1 experimental path ladder
+## M1 path ladder
 
 | Set | Layers | Vertices | Minimum branch/relative support |
 |---|---:|---:|---:|
@@ -35,49 +35,79 @@ All M0 sets are broken by A-000 and have no security meaning.
 | path-20 | 20 | 28 | 75% |
 | path-24 | 24 | 32 | 75% |
 
-M1 uses one common 2D simplicial scaffold and two global public vertex permutations per layer.
+Balanced A-008 meet-in-the-middle state counts:
 
-These are **experiment-size labels only**.
-
-For balanced meet-in-the-middle recovery, the generic state counts are approximately:
-
-| Set | Exhaustive paths | MITM forward states | MITM reverse states |
+| Set | Exhaustive paths | Forward half | Reverse half |
 |---|---:|---:|---:|
 | path-12 | 4096 | 64 | 64 |
 | path-16 | 65536 | 256 | 256 |
 | path-20 | 1048576 | 1024 | 1024 |
 | path-24 | 16777216 | 4096 | 4096 |
 
-Representation costs are omitted from this table.
+All M1 sets are structurally subject to A-008.
 
-A-008 therefore breaks the intended path-hiding idea independently of the configured 75% global support.
+## M2 collapse-maze ladder
+
+| Set | Vertices | Planted expansions | Hidden core |
+|---|---:|---:|---|
+| maze-4 | 10 | 4 | 3-regular spanning graph |
+| maze-6 | 12 | 6 | 3-regular spanning graph |
+| maze-8 | 12 | 8 | 3-regular spanning graph |
+| maze-10 | 16 | 10 | 3-regular spanning graph |
+| maze-12 | 16 | 12 | 3-regular spanning graph |
+| maze-16 | 20 | 16 | 3-regular spanning graph |
+
+Every M2 expansion adds one missing edge and one filled triangle. A final secret vertex permutation hides the generator's original labels, and only a digest of the hidden core is public.
+
+This does **not** hide the generator family.
+
+### A-014 fixed-seed results
+
+| Set | Recovery nodes | Digest-tested candidates | Forced zero-triangle edges |
+|---|---:|---:|---:|
+| maze-4 | 13 | 1 | 7 |
+| maze-6 | 59 | 4 | 6 |
+| maze-8 | 520 | 14 | 2 |
+| maze-10 | 51 | 1 | 5 |
+| maze-12 | 441 | 5 | 2 |
+
+The values are reproducible observations for the repository's fixed experiment seed. They are not complexity estimates.
+
+All M2 sets share the same fatal structural invariant: the hidden core is 3-regular and non-core edges necessarily have positive filled-triangle incidence.
 
 ## Security interpretation
 
-Neither M0 nor M1 defines a security level.
+Parameter inflation is never a response to a structural break.
 
-Increasing seed/path length is not evidence of security when a structural attack changes the effective exponent.
+A model is allowed to scale only after:
 
-Parameter growth must follow attack measurements, not precede them.
+1. its generated distribution is precisely specified;
+2. obvious generator invariants have dedicated attacks;
+3. equivalent-witness semantics are defined;
+4. the cheapest known classical attacks have measured growth;
+5. the quantum attack model has at least been formulated.
+
+M0, M1, and M2 all fail before this gate.
 
 ## Future dimensions
 
-A post-M1 generated distribution will likely need independent parameters for:
+A successor to M2 should avoid a single low-complexity core family and should measure at least:
 
-- complex dimension;
-- base/core size;
+- ambient complex dimension;
+- hidden core distribution entropy;
+- dimension-dependent incidence histograms;
 - reduction/expansion depth;
 - number of admissible local reductions;
 - overlap between candidate reductions;
-- decoy density;
 - predecessor branching;
-- separator/treewidth targets;
+- automorphism/canonicalization profile;
+- separator/treewidth profile;
 - public description size;
 - trapdoor size;
 - ciphertext size.
 
 ## Acceptance criterion for scaling
 
-Do not scale merely until exhaustive search becomes expensive.
+Do not scale until the generated distribution survives its own cheapest structural-recovery attacks.
 
-A model should be scaled only after the cheapest known structural attacks have been implemented and their growth is understood.
+"Brute force is expensive" is not a parameter-selection argument.

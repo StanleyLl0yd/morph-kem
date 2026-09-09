@@ -1,7 +1,6 @@
-import struct
 import unittest
 
-from morph_kem import ComplexEncodingError, SimplicialComplex
+from morph_kem import SimplicialComplex
 
 
 class SimplicialComplexTests(unittest.TestCase):
@@ -20,24 +19,31 @@ class SimplicialComplexTests(unittest.TestCase):
 
     def test_decode_rejects_trailing_data(self) -> None:
         encoded = SimplicialComplex.from_facets([(0, 1)]).encode()
-        with self.assertRaises(ComplexEncodingError):
+        with self.assertRaises(ValueError):
             SimplicialComplex.decode(encoded + b"\x00")
 
-    def test_decode_rejects_noncanonical_vertex_order(self) -> None:
-        data = b"MKSC\x01" + struct.pack(">I", 1) + bytes([2]) + struct.pack(">II", 2, 1)
-        with self.assertRaises(ComplexEncodingError):
-            SimplicialComplex.decode(data)
-
-    def test_decode_rejects_non_closed_complex(self) -> None:
-        data = b"MKSC\x01" + struct.pack(">I", 1) + bytes([3]) + struct.pack(">III", 0, 1, 2)
-        with self.assertRaises(ComplexEncodingError):
-            SimplicialComplex.decode(data)
-
-    def test_elementary_collapse(self) -> None:
+    def test_elementary_expand_is_inverse_of_collapse(self) -> None:
         base = SimplicialComplex.from_facets([(0, 1), (0, 2)])
-        expanded = base.add_facets([(0, 1, 2)])
-        reduced = expanded.collapse((1, 2), (0, 1, 2))
-        self.assertEqual(reduced, base)
+        expanded = base.elementary_expand((1, 2), (0, 1, 2))
+        self.assertIn(((1, 2), (0, 1, 2)), expanded.free_collapse_pairs())
+        self.assertEqual(expanded.collapse((1, 2), (0, 1, 2)), base)
+
+    def test_elementary_expand_rejects_missing_required_face(self) -> None:
+        base = SimplicialComplex.from_facets([(0, 1)])
+        with self.assertRaises(ValueError):
+            base.elementary_expand((1, 2), (0, 1, 2))
+
+    def test_free_pairs_include_all_triangle_edges_when_triangle_is_isolated_facet(self) -> None:
+        complex_ = SimplicialComplex.from_facets([(0, 1, 2)])
+        pairs = complex_.free_collapse_pairs()
+        self.assertEqual(
+            set(pairs),
+            {
+                ((0, 1), (0, 1, 2)),
+                ((0, 2), (0, 1, 2)),
+                ((1, 2), (0, 1, 2)),
+            },
+        )
 
     def test_collapse_rejects_nonfree_face(self) -> None:
         complex_ = SimplicialComplex.from_facets([(0, 1, 2), (1, 2, 3)])

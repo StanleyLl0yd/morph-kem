@@ -108,8 +108,9 @@ class SimplicialComplex:
         simplex_set = set(self.simplices)
         facets: list[Simplex] = []
         for simplex in self.simplices:
+            simplex_vertices = set(simplex)
             if not any(
-                len(other) > len(simplex) and set(simplex).issubset(other)
+                len(other) > len(simplex) and simplex_vertices.issubset(other)
                 for other in simplex_set
             ):
                 facets.append(simplex)
@@ -129,6 +130,53 @@ class SimplicialComplex:
         relabeled = [tuple(sorted(lookup(v) for v in simplex)) for simplex in self.simplices]
         return SimplicialComplex.from_simplices(relabeled)
 
+    def free_collapse_pairs(self) -> tuple[tuple[Simplex, Simplex], ...]:
+        """Return all deterministic elementary-collapse pairs (free face, facet)."""
+        facets = self.facets
+        result: list[tuple[Simplex, Simplex]] = []
+        for tau in facets:
+            if len(tau) < 2:
+                continue
+            for sigma in combinations(tau, len(tau) - 1):
+                sigma_vertices = set(sigma)
+                containing_maximal = [
+                    candidate
+                    for candidate in facets
+                    if sigma_vertices.issubset(candidate)
+                ]
+                if containing_maximal == [tau]:
+                    result.append((sigma, tau))
+        result.sort(key=lambda pair: (len(pair[1]), pair[1], pair[0]))
+        return tuple(result)
+
+    def elementary_expand(
+        self,
+        free_face: Iterable[int],
+        coface: Iterable[int],
+    ) -> "SimplicialComplex":
+        """Apply the inverse of one elementary collapse.
+
+        The supplied free_face and coface must both be absent. Every proper
+        non-empty face of coface other than free_face must already be present.
+        The method then adds exactly those two simplices.
+        """
+        sigma = _normalize_simplex(free_face)
+        tau = _normalize_simplex(coface)
+        simplex_set = set(self.simplices)
+
+        if sigma in simplex_set or tau in simplex_set:
+            raise ValueError("expansion pair must be absent")
+        if len(tau) != len(sigma) + 1 or not set(sigma).issubset(tau):
+            raise ValueError("expansion face must be a codimension-one face of coface")
+
+        required = _faces(tau) - {sigma, tau}
+        missing = required - simplex_set
+        if missing:
+            raise ValueError("all other proper faces of coface must already be present")
+
+        expanded = simplex_set | {sigma, tau}
+        return SimplicialComplex(tuple(sorted(expanded, key=_simplex_sort_key)))
+
     def collapse(self, free_face: Iterable[int], coface: Iterable[int]) -> "SimplicialComplex":
         sigma = _normalize_simplex(free_face)
         tau = _normalize_simplex(coface)
@@ -140,8 +188,9 @@ class SimplicialComplex:
             raise ValueError("free face must be a codimension-one face of coface")
 
         containing_maximal = []
+        sigma_vertices = set(sigma)
         for candidate in self.facets:
-            if set(sigma).issubset(candidate):
+            if sigma_vertices.issubset(candidate):
                 containing_maximal.append(candidate)
         if containing_maximal != [tau]:
             raise ValueError("face is not free with the requested unique maximal coface")

@@ -2,106 +2,113 @@
 
 ## 2026-09-09 — project initialization
 
-### Goal
+Selected combinatorial topology and discrete Morse reductions as the initial research family.
 
-Explore a new mathematical direction for post-quantum public-key cryptography without inventing new symmetric primitives.
-
-### Initial direction
-
-Selected combinatorial topology and discrete Morse reductions as the first research family.
-
-The proposed trapdoor is a hidden globally consistent reduction certificate / acyclic Morse flow. The intended asymmetry is efficient inversion with the certificate versus difficult recovery of an equivalent useful reduction structure from public generated instances.
-
-### Provisional problem names
+Provisional research labels:
 
 - HMCP — Hidden Morse Coordinate Problem
 - HMRP — Hidden Morse Reduction Path Problem
 - HMCR — Hidden Morse Conjugacy Recovery
 
-### Primary concern
-
-The public forward transformations may share enough hidden structure to recover the secret representation. This is treated as the highest-priority attack, not as a secondary optimization.
-
-### Research discipline
-
-The project begins with no security claim. Negative results, distinguishers, and successful breaks are first-class outcomes.
+The project starts with no security claim. Negative results and successful breaks are first-class outputs.
 
 ## 2026-09-09 — M0 executable relation
 
-### Implemented
+Implemented canonical finite simplicial complexes, deterministic toy generation, planted elementary-collapse certificates, exact forward/accept/invert functions, and exhaustive baselines.
 
-- canonical finite simplicial-complex representation and binary encoding;
-- deterministic toy KeyGen with a planted vertex permutation;
-- one elementary-collapse gadget per hidden bit;
-- public Forward and exact Accept relation;
-- trapdoor inversion with collapse-to-base and exact re-encapsulation validation;
-- toy-8 through toy-32 experiment presets;
-- exhaustive seed-recovery baseline;
-- malformed-input/canonicalization tests.
+A-000 directly recovers every M0 seed from public coordinate-local triangle recipes.
 
-### Immediate cryptanalytic result
+**Result:** M0 rejected as a security candidate.
 
-A-000 directly recovers every M0 seed because the public key exposes the two coordinate-local candidate triangles. The attack is linear in the number of coordinates and is implemented intentionally.
+## 2026-09-09 — M1 non-local branching path
 
-M0 is therefore not a security candidate.
+Replaced local M0 markers with globally supported public vertex permutations on one shared 2D scaffold.
 
-### Verification
+A-008 meet-in-the-middle recovery joins forward prefix states and inverse suffix states in roughly 2^(ell/2) state enumeration.
 
-- Python 3.11/3.12/3.13 CI passed;
-- all 256 toy-8 seeds passed forward/trapdoor/direct-attack checks;
-- exhaustive toy-8 recovery is part of CI.
+M1 also preserves the complete simplicial isomorphism class because every step is only a relabeling.
 
-## 2026-09-09 — M1 non-local branching-path experiment
+**Result:** M1 rejected as a security candidate.
 
-### Question
+**Lesson:** global support is not inversion asymmetry.
 
-Does replacing coordinate-local public markers with globally supported transformations make the hidden path plausibly difficult to recover?
+## 2026-09-09 — M2 collapse maze
 
-### Implemented
+### Construction
 
-- one shared 2D simplicial scaffold;
-- deterministic two-way public branching program;
-- both branches at each layer are global vertex permutations;
-- minimum support threshold for each branch and for the relative branch transform;
-- exact public path-forward relation;
-- exhaustive small-path recovery;
-- meet-in-the-middle path recovery;
-- collision profiling;
-- path-12, path-16, path-20, path-24 experiment presets.
+Implemented:
 
-### Cryptanalytic result
+- generic elementary expansion as the exact inverse of collapse;
+- deterministic hidden connected 3-regular 1D core;
+- overlapping edge/triangle elementary expansions;
+- secret final vertex relabeling;
+- public target + domain-separated core digest;
+- trapdoor core + exact reverse-collapse certificate;
+- greedy reduction attacks;
+- deterministic random-greedy surveys;
+- bounded public collapse DFS;
+- structural 3-regular core recovery;
+- fixed-seed attack scaling sweep.
 
-A-000 no longer applies directly because a selected bit is not represented by an independent public triangle.
+### Branching result
 
-However, A-008 recovers the branch path generically by meeting forward prefix states with reverse suffix states.
-
-For ell layers, balanced recovery enumerates approximately:
+Deterministic maze-6:
 
 ~~~text
-2^(ell/2) forward states
-+
-2^(ell/2) reverse states
+target simplices:        42
+core simplices:          30
+planted steps:            6
+initial free pairs:      18
+mean free pairs on planted path: 10.50
 ~~~
 
-rather than 2^ell complete paths.
+Lexicographic and reverse greedy both reach 30-simplex residuals that are not the planted core.
 
-This works because every public branch is efficiently invertible and both inverse choices remain valid at every reverse layer.
+Sixteen deterministic random-greedy trials produce sixteen distinct 30-simplex residuals and zero planted-core hits.
 
-### Initial development observations
+This confirms genuine path dependence.
 
-- path-16 target 0xB6D3 recovered from 256 forward + 256 reverse states;
-- path-20 target 0xB6D3A recovered from 1024 forward + 1024 reverse states;
-- tested path-12 instance: 4096 seeds, 4096 unique outputs, no output collision;
-- branch and relative supports remained high in the tested instances, so the result is not explained by branch locality.
+### A-013 collapse search
 
-### Interpretation
+Bounded DFS recovers the exact maze-6 core in 1095 explored nodes.
 
-M1 is not a security candidate.
+### A-014 structural core recovery
 
-The negative result is useful: **global support is not inversion asymmetry**. A future construction cannot be only a secret word in public efficiently invertible transformations.
+The stronger attack uses a generator invariant:
+
+- every non-core edge is added together with a filled triangle;
+- zero-triangle-incidence target edges are therefore forced hidden-core edges;
+- the hidden core is publicly known to be 3-regular.
+
+Backtracking over only compatible 3-regular spanning subgraphs plus public digest verification recovers the fixed-seed baseline:
+
+~~~text
+maze-4:  nodes 13
+maze-6:  nodes 59
+maze-8:  nodes 520
+maze-10: nodes 51
+maze-12: nodes 441
+~~~
+
+All five tested cores are recovered.
+
+**Result:** M2 rejected as a security candidate.
+
+### Main lesson
+
+A difficult-looking reduction maze is irrelevant if the **generator leaks an easier reconstruction problem**.
+
+Secret vertex relabeling does not hide degree/incidence semantics.
 
 ### Next milestone
 
-M2 should test a genuinely asymmetric state transition, preferably tied back to discrete Morse reductions: public forward generation should remain efficient while naive reverse search encounters many admissible predecessors, and a hidden global reduction certificate should select a useful path.
+Do not scale M2.
 
-M2 must be attacked before any KEM wrapper is added.
+Design the next generated distribution around these constraints:
+
+- no fixed low-complexity regular core family;
+- incidence-balanced core/non-core cells;
+- no obvious graph-factor/matching recovery formulation;
+- explicit equivalent-witness semantics;
+- structural-recovery attacks implemented before parameter scaling;
+- no KEM wrapper until a primitive survives those attacks.

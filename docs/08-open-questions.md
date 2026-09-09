@@ -2,51 +2,65 @@
 
 ## Mathematical
 
-- What exact class of complexes gives controllable trapdoor reductions without cheap canonical recovery?
-- Should the construction use simplicial complexes or regular CW complexes?
-- Can the hidden reduction certificate be represented compactly?
-- Can equivalent witnesses be characterized cleanly?
-- Can generated instances be sampled without obvious planted structure?
-- What invariants remain after masking transformations?
-- Can a family be constructed where a secret global Morse matching gives efficient reduction but arbitrary predecessor search has high branching?
+- What class of complexes gives controllable trapdoor reductions without a cheaply recognizable planted core?
+- Should the construction move from simplicial complexes to regular CW complexes?
+- Can a useful hidden reduction certificate be compact while equivalent certificates remain difficult to find?
+- Can generated instances be sampled from a distribution close to a natural public ensemble rather than "easy object + visible decoration"?
+- Can core and non-core cells be made locally incidence-indistinguishable?
+- What invariants necessarily survive elementary expansion/collapse and therefore cannot carry secret information?
+- Is there a family where a planted global Morse matching is useful but no simpler graph-factor, matching, canonicalization, or CSP reconstruction problem is exposed?
 
 ## Complexity
 
-- What is the right average-case assumption?
-- Is there any credible worst-case-to-average-case connection?
-- Which graph-width parameters make the problem easy?
-- What is the best known exact/parameterized algorithm on the generated family?
-- Does HMCR reduce to a known isomorphism, conjugacy, CSP, or tensor problem?
-- What reverse-search complexity can be established for a non-invertible reduction system?
-- Can meet-in-the-middle or bidirectional search be prevented by construction rather than by parameter inflation?
+- What is the right average-case problem after M0/M1/M2?
+- Is any credible worst-case-to-average-case connection available?
+- Which graph-width or Hasse-diagram width parameters make matching/reduction easy?
+- Can hidden-Morse recovery be reformulated as matching, f-factor, CSP, SAT, tensor, or isomorphism on the generated family?
+- What is the best attack when many terminal residuals are equivalent or same-sized?
+- Can reverse/predecessor branching be made large without introducing a simpler planted-substructure problem?
+
+## Generator design after A-014
+
+M2 demonstrates that hiding labels is insufficient when the generator preserves a simple semantic invariant.
+
+A successor must answer:
+
+1. What public property characterizes the hidden core family?
+2. Can an attacker search that family directly without following collapse paths?
+3. Which cells are provably core/non-core from local incidence?
+4. Does the public verifier reduce core recovery to a standard constrained-subgraph problem?
+5. Are generated instances statistically distinguishable from suitable control complexes?
+
+These questions must be attacked **before** increasing dimension or parameter size.
 
 ## Cryptographic
 
-- Can forward evaluation be public without leaking inversion structure?
-- What source of **asymmetry** remains after ruling out M0 local leakage and M1 reversible-path hiding?
-- Is the primitive one-way on its generated distribution?
-- Can a key-indistinguishability game be defined naturally?
-- Is an FO-style transform applicable without circular assumptions?
-- Can decapsulation validation be deterministic and non-malleable?
-- How large are public keys and ciphertexts?
+- What is the actual one-way relation: recover the original trapdoor, any valid reduction certificate, a canonical residual, or only a derived secret?
+- How are equivalent witnesses handled in the security game?
+- Can public verification avoid privileging an arbitrary planted residual without opening a direct reconstruction oracle?
+- Can forward evaluation be public without revealing the decomposition used for inversion?
+- Is there a natural key-indistinguishability game at all for this mathematical direction?
+- If a KEM wrapper is eventually attempted, can decapsulation validation be deterministic, non-malleable, and oracle-safe?
 
 ## Quantum
 
-- Is there hidden algebraic structure exploitable by quantum algorithms?
-- Can quantum walks exploit the reduction/predecessor graph?
-- What is the correct quantum query model for public evaluation?
-- Would a high-branching predecessor graph still admit a useful quantum-walk speedup?
+- Can quantum walks exploit the free-collapse or predecessor graph?
+- Can amplitude amplification accelerate constrained core/certificate recovery?
+- Does a reformulation expose hidden-shift/subgroup structure?
+- What is the correct quantum query model for public evaluation and public verification?
 
 ## Engineering
 
-- Can canonical complex operations be made fast enough for large attack sweeps?
-- Which exact libraries should represent complexes once the standard-library model becomes a bottleneck?
-- How will experiment manifests guarantee reproducibility?
-- Which attack metrics should CI enforce as invariant research baselines?
+- The standard-library simplicial representation is intentionally simple, not optimized. When does it become the attack bottleneck?
+- Which canonical-labeling and graph/CSP libraries should be introduced for research attacks?
+- How should experiment manifests record generator seed, attack seed, node budget, interpreter, and hardware?
+- Which attack metrics should become CI regression baselines?
 
-## Lessons already established
+## Lessons established
 
 - **M0:** independent public coordinate recipes are fatal.
-- **M1:** replacing local recipes with globally supported but publicly invertible branch transforms is still fatal to path hiding because of generic meet-in-the-middle recovery.
+- **M1:** global but publicly invertible transformations are still vulnerable to generic bidirectional search.
+- **M2:** genuine non-invertible branching is not enough when the planted generator exposes a simpler structural reconstruction problem.
+- **M2/A-015:** many same-sized irreducible residuals exist, so "the planted core" is not automatically a mathematically privileged witness.
 
-The next model must add a qualitatively different source of inversion asymmetry.
+The next model must improve the **generated distribution**, not merely make the collapse maze larger.

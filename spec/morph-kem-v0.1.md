@@ -4,13 +4,19 @@
 
 ## 1. Purpose
 
-This document is the evolving specification skeleton for MORPH-KEM. It must not be treated as a deployable cryptographic standard.
+This is the specification skeleton for a possible future MORPH-KEM construction. It is not a deployable cryptographic standard.
 
-The executable M0 relation is specified separately in docs/09-toy-model.md. M0 is deliberately broken and is not the cryptographic construction described by future versions of this document.
+The repository currently contains three **rejected attack experiments**:
+
+- M0 — coordinate-local toy relation, broken by A-000;
+- M1 — reversible global branching path, broken by A-008;
+- M2 — non-invertible collapse maze, broken by A-014 structural core recovery.
+
+None of those experiments is the future KEM described by this skeleton.
 
 ## 2. Algorithms
 
-A future version will define exactly:
+A future version would have to define exactly:
 
 ~~~text
 (pk, sk) <- KeyGen(1^lambda)
@@ -18,52 +24,61 @@ A future version will define exactly:
 K' <- Decaps(sk, ct)
 ~~~
 
-and the valid-ciphertext relation.
+and the complete valid-ciphertext/equivalent-witness relation.
 
 ## 3. Domain separation
 
-Every hash/KDF invocation will use fixed ASCII domain-separation labels containing the protocol name and major version.
+Every hash/KDF invocation must use fixed domain-separation labels containing the protocol name and major version.
 
-No concrete hash or XOF is selected by this draft yet.
-
-M0 uses domain-separated SHA-256 only for deterministic research generation and key binding; that choice is not a future KEM-suite decision.
+SHA-256 used inside M0/M1/M2 deterministic experiment generation or public experiment digests is not a future KEM-suite decision.
 
 ## 4. Encoding
 
-The final specification must define a canonical byte encoding for every public object and reject:
+The existing research code defines canonical bytes for finite simplicial complexes.
 
-- duplicate simplices;
-- non-canonical vertex order;
-- out-of-range dimensions;
-- inconsistent face closure;
-- integer overflow;
-- trailing data;
-- ambiguous alternate encodings.
+Any future specification must additionally define canonical encodings for public keys, trapdoor/certificate objects, ciphertexts, parameter identifiers, and extension fields.
 
-M0 has an executable canonical complex encoding with magic/version MKSC || 0x01; see docs/09-toy-model.md.
+Malformed, duplicate, non-closed, overflowing, trailing, or alternate encodings must be rejected.
 
-## 5. Key generation
+## 5. Generated distribution
 
-TBD after formal definition of a generated instance distribution that does not have M0's trivial public-coordinate leakage.
+TBD.
 
-## 6. Encapsulation
+This section is now a hard gate after A-014. It must specify not merely how to create an easy planted instance, but why the resulting public distribution does not expose a simpler reconstruction problem through:
 
-TBD after formal definition of public forward evaluation.
+- degree/incidence profiles;
+- graph factors or matchings;
+- canonicalization;
+- low-width decomposition;
+- local gadget recognition;
+- simple planted-substructure tests.
 
-## 7. Decapsulation
+## 6. Forward evaluation
 
-TBD after formal definition of trapdoor inversion and a constant-shape invalid-ciphertext strategy.
+TBD.
+
+A future public forward operation must not reproduce M0's local recognizable choices, M1's publicly reversible low-branching path, or M2's easily recognizable planted core family.
+
+## 7. Trapdoor inversion
+
+TBD.
+
+The exact role of a hidden discrete-Morse certificate and the treatment of equivalent certificates/residuals must be formalized before any KEM wrapper.
 
 ## 8. Correctness
 
-No correctness theorem is stated for the future KEM.
+No correctness theorem is stated for a future KEM.
 
-The separate M0 executable relation has deterministic round-trip tests for all toy-8 seeds.
+M0/M1/M2 only provide correctness results for their respective rejected research models.
 
 ## 9. Security
 
-No IND-CPA, IND-CCA, post-quantum, or concrete-bit-security claim is stated by this draft.
+No one-wayness, IND-CPA, IND-CCA, post-quantum, or concrete-bit-security claim exists.
 
-## 10. Parameter sets
+The next acceptable milestone is a generated primitive that survives repository-local structural cryptanalysis, not a larger parameter set.
 
-Only toy parameter sets are permitted at this stage.
+## 10. Parameters
+
+No security parameter sets exist.
+
+Only toy/experimental parameter names may be used until an explicit security model, generated distribution, and attack analysis justify candidate parameters.
