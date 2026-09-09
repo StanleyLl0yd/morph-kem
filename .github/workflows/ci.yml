@@ -64,3 +64,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/surface_sweep.py --trials 32
+      - name: H1 signed-holonomy baseline
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/holonomy_baseline.py --params h1-12 --solution-cap 64
