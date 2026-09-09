@@ -143,6 +143,8 @@ def main() -> int:
         solution_cap=args.solution_cap,
         max_nodes=args.max_nodes,
         preferred_frames=preferred,
+        singleton_passes=1,
+        singleton_probe_cap=300,
     )
     elapsed = time.perf_counter() - started
 
@@ -191,6 +193,7 @@ def main() -> int:
     print(f"CSP solutions found: {result.solutions_found}")
     print(f"CSP nodes/backtracks: {result.nodes}/{result.backtracks}")
     print(f"CSP arc revisions: {result.arc_revisions}")
+    print(f"CSP singleton probes/removed: {result.singleton_probes}/{result.singleton_removed}")
     print(f"CSP hit solution cap: {result.hit_solution_cap}")
     print(f"CSP node cap reached without witness: {not result.accepted and result.nodes >= args.max_nodes}")
     print(f"CSP elapsed seconds: {elapsed:.6f}")
