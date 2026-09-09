@@ -296,3 +296,21 @@ residual root relabelings: 120 = 5!
 The 120 residual choices are a single global relabeling of the five sheets. They describe equivalent coverings and therefore do not constitute a trapdoor.
 
 **H3-E0 rejected.**
+
+
+### H-E06 — composite-cover public-key interface collapse
+
+Target: naive adaptation of Negami-style composite graph-cover cryptography.
+
+Four variants were checked:
+
+1. publish the base/tree used for common-key decoding -> attacker receives the same decoding structure;
+2. keep base/tree secret -> original sender algorithm is no longer public;
+3. include the planted outer covering projection in ciphertext -> attacker receives sender recovery data;
+4. omit the projection -> receiver and attacker face the public search relation "find any H -> G covering projection", and no trapdoor recovery algorithm from a hidden lower factorization has been defined.
+
+**Result:** naive H3-E1 rejected before code.
+
+This is an interface failure, not a proof that every cover-based public-key primitive is impossible.
+
+Mandatory successor gate: define an efficient TrapdoorRecover algorithm on an exact generated positive cover distribution before claiming a cover-based one-way relation.

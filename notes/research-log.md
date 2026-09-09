@@ -299,3 +299,41 @@ The secret per-fiber coordinate system is pure gauge. Once public transitions al
 The only remaining ambiguity is one global sheet name permutation, which is irrelevant under equivalent-cover semantics.
 
 A successor cannot use "hidden sheet labels" as the trapdoor.
+
+
+### H3-E1 — composite-cover public-key adaptation frontier
+
+Reviewed whether Negami-style composite graph-cover cryptography can be converted from a common-key mechanism into a public-key relation.
+
+The obvious variants fail the public interface:
+
+~~~text
+publish common base/tree
+    -> attacker gets decoder structure
+
+hide common base/tree
+    -> sender cannot run the original encoding
+
+include H->G projection/voltage in ct
+    -> attacker gets planted cover data
+
+omit H->G projection
+    -> both receiver and attacker face public cover-projection search
+       and no secret-factorization trapdoor algorithm has been defined
+~~~
+
+Worst-case H-Cover NP-completeness does not fill this gap because cryptographic instances are generated positive instances and the required task is search, not arbitrary worst-case decision.
+
+**H3-E1 rejected before code.**
+
+Future cover-based work must begin with a complete trapdoor positive-distribution interface:
+
+~~~text
+(pk, td) <- CoverTrapdoorGen
+(H, w)   <- SamplePositive(pk)
+w'       <- TrapdoorRecover(td, pk, H)
+~~~
+
+with exact correctness and a public attack target.
+
+Until TrapdoorRecover exists, there is no cover-based primitive to benchmark.
