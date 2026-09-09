@@ -108,6 +108,25 @@ memory:                 O(2^(ell/2))
 
 up to the cost of state relabeling, canonical encoding, hash-table operations, and collision multiplicity.
 
+## Additional structural weakness: topology never changes
+
+Every M1 step is only a vertex relabeling. Therefore every intermediate and final state is simplicially isomorphic to the public base:
+
+~~~text
+X_i ~= X_0
+~~~
+
+M1 does not create or remove topological structure at all. It only changes the public labeling.
+
+Consequences:
+
+- homology and every relabeling-invariant topological quantity are constant across all paths;
+- canonical-labeling or graph/simplicial-isomorphism techniques may recover the net relabeling independently of the original branch word;
+- if the scaffold has few automorphisms, recovering a base-to-target isomorphism may expose nearly all of the net permutation;
+- path recovery can then be viewed as a public permutation-factorization problem rather than a hidden-topology problem.
+
+This makes A-003 canonical labeling/isomorphism analysis an immediate companion attack to A-008. The current MITM result is already fatal, so M1 does not need to survive A-003 before being rejected.
+
 ## Why the attack is structurally important
 
 The failure is not caused by a weak choice of permutation size.
@@ -190,6 +209,7 @@ M1 establishes a second negative design result:
 - A-000 can be removed by making public effects non-local;
 - high branch support does not by itself create inversion hardness;
 - a public sequence of efficiently reversible low-branching transforms admits generic bidirectional search;
+- pure relabeling preserves the entire topological object up to isomorphism and exposes another structural attack surface;
 - a future construction must obtain asymmetry from something stronger than a hidden word in public invertible transformations.
 
 ## Consequence for M2
