@@ -482,34 +482,52 @@ def solve_a5_csp(
         raise HyperbolicExperimentError("max_nodes must be in [1, 50000000]")
 
     vertex_count = len(public.scaffold.vertices)
-    domains: list[set[int]] = [set(range(len(A5_ELEMENTS))) for _ in range(vertex_count)]
-    domains[0] = {A5_IDENTITY}
+    group_size = len(A5_ELEMENTS)
+    full_mask = (1 << group_size) - 1
+    domains: list[int] = [full_mask] * vertex_count
+    domains[0] = 1 << A5_IDENTITY
 
-    edge_labels = {edge: label for edge, label in zip(public.scaffold.edges, public.edge_labels)}
+    edge_labels = {
+        edge: label
+        for edge, label in zip(public.scaffold.edges, public.edge_labels)
+    }
     incident: list[list[Edge]] = [[] for _ in range(vertex_count)]
     for edge in public.scaffold.edges:
         left, right = edge
         incident[left].append(edge)
         incident[right].append(edge)
 
-    compatibility_cache: dict[tuple[int, int], frozenset[int]] = {}
+    compatibility_cache: dict[tuple[int, int], int] = {}
 
-    def compatible_right(label: int, left_value: int) -> frozenset[int]:
+    def compatible_mask(label: int, left_value: int) -> int:
         key = (label, left_value)
         cached = compatibility_cache.get(key)
         if cached is None:
-            cached = _allowed_right_values(label, left_value, public.conjugacy_class)
+            mask = 0
+            for value in _allowed_right_values(
+                label,
+                left_value,
+                public.conjugacy_class,
+            ):
+                mask |= 1 << value
+            cached = mask
             compatibility_cache[key] = cached
         return cached
+
+    def values(mask: int):
+        while mask:
+            bit = mask & -mask
+            yield bit.bit_length() - 1, bit
+            mask ^= bit
 
     nodes = 0
     backtracks = 0
     arc_revisions = 0
     solutions: list[tuple[int, ...]] = []
     hit_cap = False
-    initial_mean = mean(len(domain) for domain in domains)
+    initial_mean = mean(mask.bit_count() for mask in domains)
 
-    def prune(current: list[set[int]]) -> bool:
+    def prune(current: list[int]) -> bool:
         nonlocal arc_revisions
         changed = True
         while changed:
@@ -517,35 +535,34 @@ def solve_a5_csp(
             for edge in public.scaffold.edges:
                 left, right = edge
                 label = edge_labels[edge]
-                left_domain = current[left]
-                right_domain = current[right]
+                left_mask = current[left]
+                right_mask = current[right]
 
-                allowed_left = {
-                    left_value
-                    for left_value in left_domain
-                    if compatible_right(label, left_value) & right_domain
-                }
-                if not allowed_left:
+                allowed_left = 0
+                for left_value, left_bit in values(left_mask):
+                    if compatible_mask(label, left_value) & right_mask:
+                        allowed_left |= left_bit
+                if allowed_left == 0:
                     return False
-                if allowed_left != left_domain:
+                if allowed_left != left_mask:
                     current[left] = allowed_left
-                    left_domain = allowed_left
+                    left_mask = allowed_left
                     changed = True
                     arc_revisions += 1
 
-                allowed_right_union: set[int] = set()
-                for left_value in left_domain:
-                    allowed_right_union.update(compatible_right(label, left_value))
-                allowed_right = right_domain & allowed_right_union
-                if not allowed_right:
+                allowed_right_union = 0
+                for left_value, _ in values(left_mask):
+                    allowed_right_union |= compatible_mask(label, left_value)
+                allowed_right = right_mask & allowed_right_union
+                if allowed_right == 0:
                     return False
-                if allowed_right != right_domain:
+                if allowed_right != right_mask:
                     current[right] = allowed_right
                     changed = True
                     arc_revisions += 1
         return True
 
-    def search(current: list[set[int]]) -> None:
+    def search(current: list[int]) -> None:
         nonlocal nodes, backtracks, hit_cap
         if len(solutions) >= solution_cap:
             hit_cap = True
@@ -557,9 +574,16 @@ def solve_a5_csp(
             backtracks += 1
             return
 
-        unresolved = [vertex for vertex, domain in enumerate(current) if len(domain) > 1]
+        unresolved = [
+            vertex
+            for vertex, mask in enumerate(current)
+            if mask.bit_count() > 1
+        ]
         if not unresolved:
-            candidate = tuple(next(iter(domain)) for domain in current)
+            candidate = tuple(
+                (mask & -mask).bit_length() - 1
+                for mask in current
+            )
             if validate_a5_frames(public, candidate).accepted:
                 solutions.append(candidate)
             else:
@@ -568,24 +592,28 @@ def solve_a5_csp(
 
         vertex = min(
             unresolved,
-            key=lambda item: (len(current[item]), -len(incident[item]), item),
+            key=lambda item: (
+                current[item].bit_count(),
+                -len(incident[item]),
+                item,
+            ),
         )
         before = len(solutions)
-        for value in sorted(current[vertex]):
+        for _, bit in values(current[vertex]):
             if len(solutions) >= solution_cap:
                 hit_cap = True
                 return
             if nodes >= max_nodes:
                 return
             nodes += 1
-            child = [set(domain) for domain in current]
-            child[vertex] = {value}
+            child = current.copy()
+            child[vertex] = bit
             search(child)
 
         if len(solutions) == before:
             backtracks += 1
 
-    search([set(domain) for domain in domains])
+    search(domains.copy())
     first = solutions[0] if solutions else None
     accepted = first is not None and validate_a5_frames(public, first).accepted
     return A5CspResult(
