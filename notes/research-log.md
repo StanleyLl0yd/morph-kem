@@ -100,3 +100,24 @@ The direct attack `recover_s3_via_abelianization` therefore constructs an accept
 **H1 rejected.**
 
 Lesson: non-commutativity is irrelevant when the verifier accepts an entire fiber of a simple quotient homomorphism.
+
+
+H1 measured baseline (fixed seed):
+
+~~~text
+h1-12:
+  V/E/cycle rank = 12/18/7
+  Z2 spanning-tree recovery = accepted
+  S3 direct sign-lift recovery = accepted
+  S3 direct edge checks = 54
+  CSP cap 64: 64 solutions, 104 nodes, 0 backtracks
+
+sweep:
+  h1-8  -> direct accepted, 36 checks
+  h1-10 -> direct accepted, 45 checks
+  h1-12 -> direct accepted, 54 checks
+  h1-16 -> direct accepted, 72 checks
+  h1-20 -> direct accepted, 90 checks
+~~~
+
+The algebraic proof is stronger than the measurements: H1-S3's verifier is exactly its Z2 sign quotient.

@@ -269,3 +269,48 @@ H1-Z2: **rejected as designed**.
 H1-S3: **rejected by exact reduction to Z2**.
 
 The next H-series milestone must change the accepted relation, not merely increase graph size.
+
+
+## Measured CI baseline
+
+Fixed seed, Python 3.12 CI runner:
+
+~~~text
+parameters: h1-12
+vertices/edges/cycle-rank: 12/18/7
+degree histogram: ((2, 3), (3, 6), (4, 3))
+
+Z2 tree recovery accepted: True
+Z2 edge checks: 18
+
+S3 parity vertices recovered: 12
+S3 direct abelianization recovery accepted: True
+S3 direct recovery edge checks: 54
+
+S3 CSP accepted: True
+S3 CSP solutions found: 64
+S3 CSP nodes/backtracks: 104/0
+S3 CSP elapsed seconds: ~0.017
+~~~
+
+The direct attack is the meaningful result; CSP timing is only diagnostic.
+
+Scaling sweep with CSP solution cap 8:
+
+| Set | V | E | Cycle rank | Direct S3 | Direct edge checks | CSP nodes | Backtracks |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| h1-8 | 8 | 12 | 5 | accepted | 36 | 16 | 0 |
+| h1-10 | 10 | 15 | 6 | accepted | 45 | 18 | 0 |
+| h1-12 | 12 | 18 | 7 | accepted | 54 | 20 | 0 |
+| h1-16 | 16 | 24 | 9 | accepted | 72 | 24 | 0 |
+| h1-20 | 20 | 30 | 11 | accepted | 90 | 28 | 0 |
+
+This is empirical confirmation of the exact algebraic reduction, not evidence for an asymptotic conjecture.
+
+## Final H1 conclusion
+
+**H1 is rejected.**
+
+The Möbius/Escher intuition is not disproved in general. What is disproved is this particular pairwise edge-transition relation.
+
+The next experiment must not be ordinary finite-group synchronization with a verifier subset that is a fiber/union of fibers of an easy quotient.
