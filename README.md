@@ -88,7 +88,7 @@ See:
 
 **H3-E:** may proceed only after defining a trapdoor positive cover distribution with a concrete efficient secret recovery algorithm.
 
-**H2-H (#17):** active. Uses the exact {3,7} Klein-quartic map (24 vertices, 84 edges, 56 faces, genus 3) built from the (2,3,7) quotient PSL(2,7) ~= GL(3,2), with an A5 perfect-group frame relation and exact CSP attack.
+**H2-H (#17):** current unresolved experiment. Uses the exact {3,7} Klein-quartic map (24 vertices, 84 edges, 56 faces, genus 3) with an A5 perfect-group frame relation. On the fixed baseline, spectral/BP/local search reduce to 49/17/3 violated edges, weighted breakout reaches one violation, but pair repair, spanning-tree coordinate search, exact Hamming radius 0..6, frozen-boundary repair, singleton probing, and a bounded exact CSP still do not construct an accepted witness. A four-instance lighter sweep also produced no accepted witness. This is evidence for further cryptanalysis only, not evidence of security.
 
 No security or post-quantum claim exists.
 
