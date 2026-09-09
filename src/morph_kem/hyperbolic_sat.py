@@ -8,6 +8,8 @@ from .hyperbolic import (
     A5_IDENTITY,
     A5PublicInstance,
     HyperbolicExperimentError,
+    _a5_inv,
+    _a5_mul,
     _allowed_right_values,
     validate_a5_frames,
 )
@@ -40,6 +42,18 @@ class A5SatEncoding:
 class A5SatModel:
     frames: tuple[int, ...]
     accepted: bool
+
+
+def gauge_fix_a5_frames(frames: tuple[int, ...]) -> tuple[int, ...]:
+    if not frames:
+        raise HyperbolicExperimentError("cannot gauge-fix an empty frame assignment")
+    if any(value < 0 or value >= len(A5_ELEMENTS) for value in frames):
+        raise HyperbolicExperimentError("frame outside A5")
+    root_inverse = _a5_inv(frames[0])
+    return tuple(
+        A5_IDENTITY if vertex == 0 else _a5_mul(root_inverse, value)
+        for vertex, value in enumerate(frames)
+    )
 
 
 def encode_a5_sat(public: A5PublicInstance) -> A5SatEncoding:
