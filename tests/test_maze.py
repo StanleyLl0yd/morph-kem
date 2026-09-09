@@ -9,6 +9,7 @@ from morph_kem.maze import (
     planted_reduce,
     planted_reduction_metrics,
     random_greedy_survey,
+    recover_three_regular_core,
     verify_core,
 )
 
@@ -61,6 +62,16 @@ class MazeExperimentTests(unittest.TestCase):
         result = bounded_core_search(public, max_nodes=10_000)
         self.assertTrue(result.found)
         self.assertEqual(len(result.certificate), params.expansions)
+
+    def test_degree_core_recovery_breaks_maze6(self) -> None:
+        public, trapdoor = generate_maze(
+            MAZE_PARAMETER_SETS["maze-6"],
+            MASTER_SEED,
+        )
+        result = recover_three_regular_core(public, max_nodes=500_000)
+        self.assertTrue(result.found)
+        self.assertEqual(result.core, trapdoor.core)
+        self.assertGreater(result.forced_edges, 0)
 
     def test_trapdoor_binding_rejects_other_public_instance(self) -> None:
         params = MAZE_PARAMETER_SETS["maze-4"]
