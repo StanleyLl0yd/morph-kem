@@ -123,6 +123,16 @@ class A5GroupAudit:
 
 
 @dataclass(frozen=True, slots=True)
+class A5LocalSearchResult:
+    accepted: bool
+    frames: tuple[int, ...] | None
+    restarts_used: int
+    sweeps_used: int
+    moves: int
+    best_violations: int
+
+
+@dataclass(frozen=True, slots=True)
 class A5CspResult:
     accepted: bool
     first_solution: tuple[int, ...] | None
@@ -468,6 +478,141 @@ def _allowed_right_values(label: int, left_frame: int, conjugacy_class: tuple[in
     return frozenset(
         _a5_mul(canonical, _a5_mul(left_frame, label_inverse))
         for canonical in conjugacy_class
+    )
+
+
+def a5_violation_count(
+    public: A5PublicInstance,
+    frames: tuple[int, ...] | list[int],
+) -> int:
+    allowed = set(public.conjugacy_class)
+    violations = 0
+    for edge, label in zip(public.scaffold.edges, public.edge_labels):
+        left, right = edge
+        if _normalized_a5(frames[left], label, frames[right]) not in allowed:
+            violations += 1
+    return violations
+
+
+def recover_a5_min_conflicts(
+    public: A5PublicInstance,
+    restarts: int = 32,
+    max_sweeps: int = 200,
+    attack_seed: bytes = b"H2-A5-min-conflicts",
+) -> A5LocalSearchResult:
+    if restarts <= 0 or restarts > 10_000:
+        raise HyperbolicExperimentError("restarts must be in [1, 10000]")
+    if max_sweeps <= 0 or max_sweeps > 100_000:
+        raise HyperbolicExperimentError("max_sweeps must be in [1, 100000]")
+    if not attack_seed:
+        raise HyperbolicExperimentError("attack_seed must be non-empty bytes")
+
+    rng = _DeterministicRng(
+        hashlib.sha256(
+            b"MORPH-KEM H2 A5 min-conflicts v1\x00" + attack_seed
+        ).digest()
+    )
+    incident: list[list[tuple[int, Edge, int]]] = [
+        [] for _ in public.scaffold.vertices
+    ]
+    for index, (edge, label) in enumerate(
+        zip(public.scaffold.edges, public.edge_labels)
+    ):
+        left, right = edge
+        incident[left].append((index, edge, label))
+        incident[right].append((index, edge, label))
+
+    allowed = set(public.conjugacy_class)
+    best_violations = len(public.scaffold.edges)
+    total_moves = 0
+    total_sweeps = 0
+
+    def local_cost(vertex: int, candidate: int, frames: list[int]) -> int:
+        old = frames[vertex]
+        frames[vertex] = candidate
+        cost = 0
+        for _, edge, label in incident[vertex]:
+            left, right = edge
+            if _normalized_a5(
+                frames[left],
+                label,
+                frames[right],
+            ) not in allowed:
+                cost += 1
+        frames[vertex] = old
+        return cost
+
+    for restart in range(1, restarts + 1):
+        if restart == 1:
+            frames = [A5_IDENTITY] * len(public.scaffold.vertices)
+        else:
+            frames = [A5_IDENTITY] + [
+                rng.randbelow(len(A5_ELEMENTS))
+                for _ in range(len(public.scaffold.vertices) - 1)
+            ]
+
+        for sweep in range(1, max_sweeps + 1):
+            total_sweeps += 1
+            current_violations = a5_violation_count(public, frames)
+            best_violations = min(best_violations, current_violations)
+            if current_violations == 0:
+                candidate = tuple(frames)
+                return A5LocalSearchResult(
+                    True,
+                    candidate,
+                    restart,
+                    total_sweeps,
+                    total_moves,
+                    0,
+                )
+
+            order = list(range(1, len(frames)))
+            for index in range(len(order) - 1, 0, -1):
+                other = rng.randbelow(index + 1)
+                order[index], order[other] = order[other], order[index]
+
+            for vertex in order:
+                scored: list[tuple[int, int]] = []
+                best_local = len(incident[vertex]) + 1
+                for value in range(len(A5_ELEMENTS)):
+                    cost = local_cost(vertex, value, frames)
+                    if cost < best_local:
+                        best_local = cost
+                        scored = [(cost, value)]
+                    elif cost == best_local:
+                        scored.append((cost, value))
+
+                chosen = scored[rng.randbelow(len(scored))][1]
+                if chosen != frames[vertex]:
+                    frames[vertex] = chosen
+                    total_moves += 1
+
+            # Deterministic small kick to escape plateaus.
+            if sweep % 16 == 0:
+                vertex = 1 + rng.randbelow(len(frames) - 1)
+                frames[vertex] = rng.randbelow(len(A5_ELEMENTS))
+                total_moves += 1
+
+        final_violations = a5_violation_count(public, frames)
+        best_violations = min(best_violations, final_violations)
+        if final_violations == 0:
+            candidate = tuple(frames)
+            return A5LocalSearchResult(
+                True,
+                candidate,
+                restart,
+                total_sweeps,
+                total_moves,
+                0,
+            )
+
+    return A5LocalSearchResult(
+        False,
+        None,
+        restarts,
+        total_sweeps,
+        total_moves,
+        best_violations,
     )
 
 
