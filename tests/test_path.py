@@ -6,6 +6,7 @@ from morph_kem.path import (
     exhaustive_path_recover,
     generate_path_instance,
     mitm_path_recover,
+    path_collision_profile,
     path_forward,
     support_metrics,
 )
@@ -31,8 +32,10 @@ class PathExperimentTests(unittest.TestCase):
     def test_small_instance_has_distinct_outputs(self) -> None:
         params = PathParameters("test-path-8", layers=8, vertices=16)
         instance = generate_path_instance(params, MASTER_SEED)
-        outputs = {path_forward(instance, seed).encode() for seed in range(1 << 8)}
-        self.assertEqual(len(outputs), 1 << 8)
+        profile = path_collision_profile(instance)
+        self.assertEqual(profile.unique_outputs, 1 << 8)
+        self.assertEqual(profile.colliding_outputs, 0)
+        self.assertEqual(profile.max_multiplicity, 1)
 
     def test_exhaustive_recovers_small_path(self) -> None:
         params = PathParameters("test-path-8", layers=8, vertices=16)

@@ -6,6 +6,7 @@ Research only. This package does not provide production cryptography.
 from .complex import ComplexEncodingError, SimplicialComplex
 from .path import (
     PATH_PARAMETER_SETS,
+    CollisionProfile,
     MitmResult,
     PathExperimentError,
     PathInstance,
@@ -15,6 +16,7 @@ from .path import (
     generate_path_instance,
     mitm_path_recover,
     path_accept,
+    path_collision_profile,
     path_forward,
     support_metrics,
 )
@@ -36,6 +38,7 @@ from .toy import (
 
 __all__ = [
     "AmbiguousPreimageError",
+    "CollisionProfile",
     "ComplexEncodingError",
     "MitmResult",
     "NoPreimageError",
@@ -60,6 +63,7 @@ __all__ = [
     "keygen",
     "mitm_path_recover",
     "path_accept",
+    "path_collision_profile",
     "path_forward",
     "support_metrics",
 ]

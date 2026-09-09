@@ -90,6 +90,14 @@ class MitmResult:
     candidate_matches: int
 
 
+@dataclass(frozen=True, slots=True)
+class CollisionProfile:
+    total_seeds: int
+    unique_outputs: int
+    colliding_outputs: int
+    max_multiplicity: int
+
+
 def _validate_permutation(permutation: Permutation, size: int) -> None:
     if len(permutation) != size or set(permutation) != set(range(size)):
         raise PathExperimentError("invalid permutation")
@@ -254,13 +262,16 @@ def mitm_path_recover(
         forward_table.setdefault(state.encode(), []).append(prefix)
 
     suffix_layers = layers - split
+    inverse_branches = tuple(
+        (_inverse(pair[0]), _inverse(pair[1])) for pair in instance.branches
+    )
     recovered: set[int] = set()
     candidate_matches = 0
     for suffix in range(1 << suffix_layers):
         state = target
         for layer in range(layers - 1, split - 1, -1):
             bit = (suffix >> (layer - split)) & 1
-            state = state.relabel(_inverse(instance.branches[layer][bit]))
+            state = state.relabel(inverse_branches[layer][bit])
         prefixes = forward_table.get(state.encode(), ())
         candidate_matches += len(prefixes)
         for prefix in prefixes:
@@ -274,4 +285,27 @@ def mitm_path_recover(
         forward_states=1 << split,
         reverse_states=1 << suffix_layers,
         candidate_matches=candidate_matches,
+    )
+
+
+def path_collision_profile(
+    instance: PathInstance,
+    max_states: int = 1 << 16,
+) -> CollisionProfile:
+    total = 1 << instance.parameters.layers
+    if total > max_states:
+        raise PathExperimentError(
+            f"collision scan requires {total} states, above limit {max_states}"
+        )
+
+    multiplicities: dict[bytes, int] = {}
+    for seed in range(total):
+        encoded = path_forward(instance, seed).encode()
+        multiplicities[encoded] = multiplicities.get(encoded, 0) + 1
+
+    return CollisionProfile(
+        total_seeds=total,
+        unique_outputs=len(multiplicities),
+        colliding_outputs=sum(count > 1 for count in multiplicities.values()),
+        max_multiplicity=max(multiplicities.values(), default=0),
     )
