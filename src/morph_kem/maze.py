@@ -159,6 +159,17 @@ class SearchResult:
     exhausted: bool
 
 
+@dataclass(frozen=True, slots=True)
+class CoreRecoveryResult:
+    found: bool
+    core: SimplicialComplex | None
+    nodes: int
+    degree_candidates: int
+    forced_edges: int
+    optional_edges: int
+    exhausted: bool
+
+
 class _DeterministicRng:
     def __init__(self, seed: bytes):
         self._seed = seed
@@ -555,4 +566,126 @@ def bounded_core_search(
         max_frontier=max_frontier,
         min_simplices_seen=min_simplices_seen,
         exhausted=not stack,
+    )
+
+
+def recover_three_regular_core(
+    public: MazePublicInstance,
+    max_nodes: int = 1_000_000,
+) -> CoreRecoveryResult:
+    """Recover the M2 hidden core from its public generator invariant.
+
+    Every non-core edge is introduced together with a filled triangle.
+    Therefore any target edge that belongs to no 2-simplex is forced to be a
+    core edge. The remaining search enumerates 3-regular spanning subgraphs of
+    the public 1-skeleton and uses the public core digest as an exact verifier.
+    """
+    if max_nodes <= 0 or max_nodes > 20_000_000:
+        raise MazeExperimentError(
+            "M2 degree-core search max_nodes must be in [1, 20000000]"
+        )
+
+    vertices = public.parameters.vertices
+    all_edges = tuple(
+        simplex for simplex in public.target.simplices if len(simplex) == 2
+    )
+    triangles = tuple(
+        simplex for simplex in public.target.simplices if len(simplex) == 3
+    )
+    triangle_edges: set[Simplex] = set()
+    for triangle in triangles:
+        triangle_edges.update(combinations(triangle, 2))
+
+    forced = tuple(sorted(edge for edge in all_edges if edge not in triangle_edges))
+    optional = list(sorted(edge for edge in all_edges if edge in triangle_edges))
+
+    degrees = [0] * vertices
+    chosen: list[Simplex] = []
+    for left, right in forced:
+        degrees[left] += 1
+        degrees[right] += 1
+        chosen.append((left, right))
+    if any(degree > 3 for degree in degrees):
+        return CoreRecoveryResult(
+            found=False,
+            core=None,
+            nodes=0,
+            degree_candidates=0,
+            forced_edges=len(forced),
+            optional_edges=len(optional),
+            exhausted=True,
+        )
+
+    target_degrees = [0] * vertices
+    for left, right in all_edges:
+        target_degrees[left] += 1
+        target_degrees[right] += 1
+    optional.sort(
+        key=lambda edge: (
+            target_degrees[edge[0]] + target_degrees[edge[1]],
+            edge,
+        )
+    )
+
+    suffix_incidence = [[0] * vertices for _ in range(len(optional) + 1)]
+    for index in range(len(optional) - 1, -1, -1):
+        suffix_incidence[index] = suffix_incidence[index + 1].copy()
+        left, right = optional[index]
+        suffix_incidence[index][left] += 1
+        suffix_incidence[index][right] += 1
+
+    required_edges = 3 * vertices // 2
+    nodes = 0
+    degree_candidates = 0
+    found_core: SimplicialComplex | None = None
+
+    def search(index: int) -> None:
+        nonlocal nodes, degree_candidates, found_core
+        if found_core is not None or nodes >= max_nodes:
+            return
+        nodes += 1
+
+        if len(chosen) > required_edges:
+            return
+        if len(chosen) + (len(optional) - index) < required_edges:
+            return
+        for vertex in range(vertices):
+            if degrees[vertex] > 3:
+                return
+            if degrees[vertex] + suffix_incidence[index][vertex] < 3:
+                return
+
+        if index == len(optional):
+            if len(chosen) != required_edges or any(
+                degree != 3 for degree in degrees
+            ):
+                return
+            degree_candidates += 1
+            candidate = SimplicialComplex.from_facets(chosen)
+            if verify_core(public, candidate):
+                found_core = candidate
+            return
+
+        left, right = optional[index]
+
+        if degrees[left] < 3 and degrees[right] < 3:
+            chosen.append((left, right))
+            degrees[left] += 1
+            degrees[right] += 1
+            search(index + 1)
+            degrees[left] -= 1
+            degrees[right] -= 1
+            chosen.pop()
+
+        search(index + 1)
+
+    search(0)
+    return CoreRecoveryResult(
+        found=found_core is not None,
+        core=found_core,
+        nodes=nodes,
+        degree_candidates=degree_candidates,
+        forced_edges=len(forced),
+        optional_edges=len(optional),
+        exhausted=found_core is None and nodes < max_nodes,
     )
