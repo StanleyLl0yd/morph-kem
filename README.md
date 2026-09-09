@@ -61,7 +61,8 @@ See:
 - docs/13-m4-closed-surface.md — M4 result
 - docs/14-h-series-hyperbolic-charter.md — H-series prior-art/threat charter
 - docs/15-h1-holonomy-experiment.md — H1 signed-holonomy result
-- docs/16-h2e-escher-atlas.md — Escher local-to-global frustration experiment
+- docs/16-h2e-escher-atlas.md — H2-E1 edge-gain Escher result
+- docs/17-h2e2-higher-atlas.md — H2-E2 higher-order chart experiment
 - notes/research-log.md — chronological record
 - spec/morph-kem-v0.1.md — future-spec skeleton
 
@@ -73,7 +74,7 @@ See:
 
 **H2-E1:** implemented and rejected. The Escher/Penrose relative-height atlas is genuinely locally satisfiable and globally frustrated, but its obstruction is exactly ordinary cycle-gain data and minimum equivalent seam repairs are found cheaply by unbalanced-cycle branching.
 
-**H2-E2:** next Escher step, if pursued, must use higher-order overlapping charts rather than one edge gain per adjacency.
+**H2-E2:** active. Uses signed NAE-3 charts: every chart pair is locally compatible, while the full atlas has no global section until a bounded number of chart seams are removed. Exact Max/NAE-CSP repair is the primary attack.
 
 **H2-H (#17):** parallel hyperbolic/Klein-quartic branch remains open.
 

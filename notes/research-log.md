@@ -160,3 +160,25 @@ For escher-20 the solver found a smaller equivalent repair than the planted four
 The Escher intuition itself remains useful, but edge-relative height data is too low-order: its obstruction is completely captured by cycle gains/cohomology and seam repair is a known gain-graph balancing problem.
 
 Next Escher experiment, if continued: overlapping multi-variable charts/higher-order constraints that cannot be flattened to one group label per graph edge.
+
+
+### H2-E2 — higher-order Escher atlas started
+
+H2-E1 showed that a one-dimensional relative-height field is only a gain graph.
+
+H2-E2 raises the local data from edges to 3-variable charts.
+
+Each chart is a signed NAE-3 relation. Two key properties are enforced:
+
+1. every chart is individually satisfiable;
+2. every pair of charts has a compatible joint local assignment.
+
+The generator conditions normal charts on a hidden assignment until that assignment (up to global complement symmetry) is the unique normal-atlas global section. It then injects seam charts that reject that section, making the full public atlas globally inconsistent.
+
+The public verifier accepts any equivalent repair: any seam-chart set within budget plus any satisfying global assignment.
+
+The primary attack is exact minimum-violation NAE-CSP branch-and-bound.
+
+No novelty/security claim is made. NAE-3SAT is a standard Boolean CSP family and the local/global-section viewpoint is established prior art.
+
+Disposition awaits CI measurements.

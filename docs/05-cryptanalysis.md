@@ -186,3 +186,21 @@ The escher-20 attack found an accepted equivalent repair using only 3 seams even
 For escher-12 the exact attack required 27 search nodes, 24 backtracks and 469 public edge checks.
 
 H2-E1 is therefore rejected. The relation is an instance of known gain/group-labelled graph balancing/cycle-hitting structure; increasing graph size does not repair the conceptual issue.
+
+
+### H-E03 — exact higher-order NAE atlas repair
+
+H2-E2 moves from edge gains to 3-variable local charts. Every chart uses a signed Not-All-Equal relation on three Boolean variables.
+
+The public verifier accepts any global assignment plus any chart-seam set within budget such that every retained chart is satisfied.
+
+Attack H-E03 minimizes the number of violated charts over global assignments using exact branch-and-bound:
+
+- global complement symmetry fixes one variable;
+- variables are ordered by chart incidence;
+- partial assignments use an admissible lower bound from already violated charts and conflicting one-variable NAE requirements;
+- the leaf violation set is itself an accepted equivalent seam set.
+
+This is a standard CSP/Max-CSP style attack, not a novel cryptanalytic algorithm.
+
+**Assessment:** implemented; final disposition waits for fixed-seed CI measurements.
