@@ -433,3 +433,43 @@ The attack uses only public instance data. Any accepted equivalent frame assignm
 This does not prove a polynomial-time attack or characterize asymptotic complexity. It is nevertheless enough to falsify the current generated instance as a cryptographic hardness candidate under the repository's attack-first rules.
 
 **Lesson:** removing abelianization and moving to an exact hyperbolic surface can make naive search much harder without creating a usable one-way relation. Industrial exact solvers must be part of the gate before interpreting bounded heuristic failure.
+
+
+### K-A01 — Klein-bottle orientation gauge recovery
+
+Target: K0 non-orientable orientation-atlas control.
+
+For every dual edge between faces f and g, the public scaffold determines a canonical orientation-transition bit b_fg. Generation hides it only by face gauge bits:
+
+~~~text
+T_fg = b_fg XOR phi_f XOR phi_g.
+~~~
+
+Therefore:
+
+~~~text
+T_fg XOR b_fg = phi_f XOR phi_g.
+~~~
+
+A public dual spanning tree recovers all face gauges relative to one root bit. Equivalently, tree-gauge normalization removes every secret per-face label and leaves exactly the canonical cycle-obstruction data.
+
+The non-tree normalized bits are the fundamental-cycle orientation syndromes. Their non-zero values certify that the local orientation equations cannot be made globally consistent, but they are public linear data rather than a trapdoor.
+
+**Expected result:** fatal to K0 by construction.
+
+K0 exists to verify that non-orientability and Möbius/Klein-bottle intuition do not become cryptographic hardness when the protected quantity is only an orientation character or face gauge.
+
+
+Fixed-seed K0 CI sweep:
+
+| Set | V | E | F | Dual cycle rank | Non-zero syndromes | Gauge recovered | Edge checks |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| klein-bottle-4x4 | 16 | 48 | 32 | 17 | 6 | yes | 48 |
+| klein-bottle-5x4 | 20 | 60 | 40 | 21 | 7 | yes | 60 |
+| klein-bottle-6x4 | 24 | 72 | 48 | 25 | 8 | yes | 72 |
+
+For the baseline klein-bottle-5x4 instance, public normalization exactly equals canonical normalization and every hidden face gauge is recovered relative to the root face. The only ambiguity is the expected common global XOR bit.
+
+**Result:** K0 rejected exactly as designed.
+
+**Lesson:** a genuine non-orientable surface and non-zero global orientation obstruction do not imply cryptographic hardness. If the hidden information is only local orientation gauge, the public relation is linear Z2 synchronization.
