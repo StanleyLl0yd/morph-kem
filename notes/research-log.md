@@ -160,3 +160,53 @@ For escher-20 the solver found a smaller equivalent repair than the planted four
 The Escher intuition itself remains useful, but edge-relative height data is too low-order: its obstruction is completely captured by cycle gains/cohomology and seam repair is a known gain-graph balancing problem.
 
 Next Escher experiment, if continued: overlapping multi-variable charts/higher-order constraints that cannot be flattened to one group label per graph edge.
+
+
+### H2-E2 — higher-order Escher atlas started
+
+H2-E1 showed that a one-dimensional relative-height field is only a gain graph.
+
+H2-E2 raises the local data from edges to 3-variable charts.
+
+Each chart is a signed NAE-3 relation. Two key properties are enforced:
+
+1. every chart is individually satisfiable;
+2. every pair of charts has a compatible joint local assignment.
+
+The generator conditions normal charts on a hidden assignment until that assignment (up to global complement symmetry) is the unique normal-atlas global section. It then injects seam charts that reject that section, making the full public atlas globally inconsistent.
+
+The public verifier accepts any equivalent repair: any seam-chart set within budget plus any satisfying global assignment.
+
+The primary attack is exact minimum-violation NAE-CSP branch-and-bound.
+
+No novelty/security claim is made. NAE-3SAT is a standard Boolean CSP family and the local/global-section viewpoint is established prior art.
+
+Fixed-seed CI measurements:
+
+~~~text
+atlas-8:  min seam 1, nodes 43,  backtracks 21
+atlas-10: min seam 1, nodes 41,  backtracks 20
+atlas-12: min seam 1, nodes 37,  backtracks 18
+atlas-14: min seam 1, nodes 73,  backtracks 36
+atlas-16: min seam 1, nodes 281, backtracks 138
+~~~
+
+All tested chart pairs were locally compatible.
+
+For atlas-12:
+
+~~~text
+pairwise compatibility: 435/435
+planted budget: 2
+minimum equivalent repair: 1
+proven minimum: yes
+nodes/backtracks: 37/18
+~~~
+
+The public role-signature audit also exposed planted roles: no planted seam signature occurred among normal charts in atlas-10, atlas-12, or atlas-14.
+
+**H2-E2 rejected.**
+
+This is a stronger lesson than "SAT is easy at small n." The generated distribution itself has a one-seam escape and visible planted-role correlations. Scaling would only hide the defect rather than fix it.
+
+A future H2-E3 must change the verifier relation and generator, not increase NAE instance size.
