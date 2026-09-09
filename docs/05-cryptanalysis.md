@@ -433,3 +433,28 @@ The attack uses only public instance data. Any accepted equivalent frame assignm
 This does not prove a polynomial-time attack or characterize asymptotic complexity. It is nevertheless enough to falsify the current generated instance as a cryptographic hardness candidate under the repository's attack-first rules.
 
 **Lesson:** removing abelianization and moving to an exact hyperbolic surface can make naive search much harder without creating a usable one-way relation. Industrial exact solvers must be part of the gate before interpreting bounded heuristic failure.
+
+
+### K-A01 — Klein-bottle orientation gauge recovery
+
+Target: K0 non-orientable orientation-atlas control.
+
+For every dual edge between faces f and g, the public scaffold determines a canonical orientation-transition bit b_fg. Generation hides it only by face gauge bits:
+
+~~~text
+T_fg = b_fg XOR phi_f XOR phi_g.
+~~~
+
+Therefore:
+
+~~~text
+T_fg XOR b_fg = phi_f XOR phi_g.
+~~~
+
+A public dual spanning tree recovers all face gauges relative to one root bit. Equivalently, tree-gauge normalization removes every secret per-face label and leaves exactly the canonical cycle-obstruction data.
+
+The non-tree normalized bits are the fundamental-cycle orientation syndromes. Their non-zero values certify that the local orientation equations cannot be made globally consistent, but they are public linear data rather than a trapdoor.
+
+**Expected result:** fatal to K0 by construction.
+
+K0 exists to verify that non-orientability and Möbius/Klein-bottle intuition do not become cryptographic hardness when the protected quantity is only an orientation character or face gauge.

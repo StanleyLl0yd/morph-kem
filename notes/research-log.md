@@ -429,3 +429,21 @@ The solver used no planted reference witness. Any accepted equivalent A5 frame a
 This is not an asymptotic hardness result; it is a concrete falsification of the current generated instance. The earlier bounded Python baseline was therefore attack-limited, not evidence of one-wayness.
 
 Next H-series work must change the relation rather than inflate the Klein-quartic genus or the local finite group.
+
+
+### K0 — Klein-bottle orientation control
+
+Opened K0 as the first executable non-orientable calibration after the H2 Klein-quartic/A5 SAT break.
+
+K0 uses an exact finite Klein-bottle triangulation with:
+
+- closed 2D incidence;
+- Euler characteristic 0;
+- two triangles at every edge;
+- a public Z2 orientation-transition cocycle on the dual graph.
+
+Generation disguises the canonical transition bits with one reference gauge bit per face.
+
+The mandatory attack is public spanning-tree XOR normalization. It should recover every hidden face gauge up to one global bit and leave only the gauge-invariant fundamental-cycle orientation syndromes.
+
+K0 is expected to fail. The purpose is to prove in executable form that genuine non-orientability can still reduce to cheap linear gauge data.

@@ -67,6 +67,7 @@ See:
 - docs/19-h3e-lifted-atlas.md — graph-cover prior art and public gauge-normalization calibration
 - docs/20-h3e-composite-cover-frontier.md — public-key adaptation/interface gate
 - docs/21-h2-klein-quartic-a5.md — exact hyperbolic Klein-quartic/A5 experiment
+- docs/22-k0-klein-bottle.md — non-orientable Klein-bottle orientation control
 - notes/research-log.md — chronological record
 - spec/morph-kem-v0.1.md — future-spec skeleton
 
@@ -89,6 +90,8 @@ See:
 **H3-E:** may proceed only after defining a trapdoor positive cover distribution with a concrete efficient secret recovery algorithm.
 
 **H2-H / H2.1:** rejected on the fixed generated instance by an exact industrial SAT attack. The exact {3,7} Klein-quartic/A5 relation encodes to 1,440 Boolean variables and 47,545 CNF clauses after fixing the global gauge. MiniSat returned SAT and the decoded assignment passed the repository's exact A5 verifier. On the recorded CI run it used 2,810,606 conflicts, 6,909,361 decisions, 172,452,978 propagations and about 115 CPU seconds. This is a concrete generated-instance break, not an asymptotic theorem; increasing genus or group size is not an acceptable repair.
+
+**K0:** active non-orientable control. It uses an exact finite Klein-bottle triangulation and deliberately tests whether hidden local orientation labels are anything more than a Z2 gauge. The expected public attack is spanning-tree XOR normalization and recovery up to one global bit.
 
 No security or post-quantum claim exists.
 
