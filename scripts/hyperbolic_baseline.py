@@ -32,8 +32,8 @@ def main() -> int:
     local_started = time.perf_counter()
     local = recover_a5_min_conflicts(
         public,
-        restarts=24,
-        max_sweeps=160,
+        restarts=8,
+        max_sweeps=80,
         attack_seed=b"H2-fixed-baseline",
     )
     local_elapsed = time.perf_counter() - local_started
