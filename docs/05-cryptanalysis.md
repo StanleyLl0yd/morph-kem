@@ -14,7 +14,7 @@ This file is intentionally a ledger of attacks, including attacks that succeed.
 | A-005 | MILP reconstruction | High risk | Not implemented |
 | A-006 | Treewidth / separator methods | High risk | Not implemented |
 | A-007 | Spectral / invariant distinguisher | High risk | Not implemented |
-| A-008 | Meet-in-the-middle on coordinate path | High risk | Not implemented |
+| A-008 | Generic meet-in-the-middle path recovery | **Fatal to M1 as a security candidate** | Implemented |
 | A-009 | Learned gadget recognition | Unknown/high | Not implemented |
 | A-010 | Invalid-ciphertext / oracle leakage | Critical for KEM | Initial malformed-input tests only |
 | A-011 | Generic quantum search | Expected baseline | Analytical only |
@@ -42,13 +42,53 @@ The implementation is direct_public_recover. Unit tests exercise it over all 256
 
 ### Interpretation
 
-This does not falsify a claimed security property because M0 makes none. It establishes a minimum bar for M1: public evaluation cannot expose independent coordinate-local recipes whose selected outputs remain directly recognizable.
+This does not falsify a claimed security property because M0 makes none. It established the first minimum bar: public evaluation cannot expose independent coordinate-local recipes whose selected outputs remain directly recognizable.
+
+## A-008 — generic meet-in-the-middle path recovery
+
+### Target
+
+M1 non-local branching-path experiment.
+
+### Observation
+
+M1 removes M0's local triangle marker. Each selected branch instead relabels the complete shared simplicial scaffold using a large-support public permutation.
+
+However, every layer still has two public efficiently invertible choices. An attacker can enumerate prefixes from the base and suffixes backwards from the target, then join equal middle states.
+
+### Complexity
+
+For ell layers and a balanced split:
+
+~~~text
+forward states  ~ 2^(ell/2)
+reverse states  ~ 2^(ell/2)
+memory          ~ 2^(ell/2)
+~~~
+
+plus representation and verification cost.
+
+Both inverse branch choices are always syntactically valid, so reverse enumeration receives no structural pruning from the simplicial-complex validity relation.
+
+### Initial result
+
+The implementation mitm_path_recover recovered tested path-16 and path-20 targets without secret information.
+
+A tested path-12 instance also had 4096 distinct final states for 4096 seeds, showing that the observed recovery was not relying on a collision in that instance.
+
+### Interpretation
+
+**M1 is unsuitable as a security candidate.**
+
+This is a stronger lesson than A-000: removing local coordinate leakage is necessary but not sufficient. A public low-branching sequence of efficiently invertible transformations retains a generic bidirectional-search weakness even when every branch has global support.
+
+A future model must introduce real forward/inverse asymmetry rather than merely hiding local coordinates behind global permutations.
 
 ## Fatal-flaw candidate #1: shared hidden structure
 
 If many public transformations share one hidden representation, an attacker may recover that representation, an equivalent coordinate system, or enough common structure to invert ciphertexts without solving a generic Morse problem.
 
-This attack must be tested before investing in large parameters.
+This attack remains relevant even if M2 removes A-008.
 
 ## Fatal-flaw candidate #2: planted-instance leakage
 
@@ -60,7 +100,7 @@ Experiments must compare generated instances with suitable controls and search f
 
 If coordinates or gadgets can be isolated, seed recovery may decompose into many small independent problems. Local invariants, separators, graph embeddings, or message-passing models may reveal this.
 
-M0 demonstrates the extreme case of this flaw through A-000.
+M0 demonstrates the extreme local form through A-000. M1 demonstrates that merely replacing local gadgets with global reversible steps still leaves a generic path decomposition through A-008.
 
 ## Reporting template
 
