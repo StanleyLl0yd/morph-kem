@@ -11,6 +11,7 @@ from morph_kem.maze import (
     greedy_reduce,
     planted_reduction_metrics,
     random_greedy_survey,
+    recover_three_regular_core,
 )
 
 
@@ -43,6 +44,10 @@ def main() -> int:
     search = bounded_core_search(public, max_nodes=args.search_nodes)
     search_elapsed = time.perf_counter() - started
 
+    started = time.perf_counter()
+    core_recovery = recover_three_regular_core(public, max_nodes=max(args.search_nodes, 100_000))
+    core_recovery_elapsed = time.perf_counter() - started
+
     print(f"parameters: {args.params}")
     print(f"target simplices: {len(public.target.simplices)}")
     print(f"hidden core simplices: {len(trapdoor.core.simplices)}")
@@ -57,6 +62,8 @@ def main() -> int:
     print(f"random mean collapses: {survey.mean_collapses:.2f}")
     print(f"bounded search: found={search.found} nodes={search.nodes} visited={search.visited_states} max_frontier={search.max_frontier}")
     print(f"bounded search elapsed seconds: {search_elapsed:.6f}")
+    print(f"degree-core recovery: found={core_recovery.found} nodes={core_recovery.nodes} candidates={core_recovery.degree_candidates} forced_edges={core_recovery.forced_edges} optional_edges={core_recovery.optional_edges}")
+    print(f"degree-core recovery elapsed seconds: {core_recovery_elapsed:.6f}")
     return 0
 
 
