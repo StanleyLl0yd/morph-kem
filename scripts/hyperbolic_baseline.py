@@ -10,6 +10,7 @@ from morph_kem.hyperbolic import (
     generate_klein_quartic,
     recover_a5_min_conflicts,
     recover_a5_pair_repair,
+    recover_a5_spectral,
     solve_a5_csp,
     validate_a5_frames,
 )
@@ -30,12 +31,20 @@ def main() -> int:
     audit = audit_a5()
     public, reference = generate_a5_instance(bytes.fromhex(args.master_seed))
 
+    spectral_started = time.perf_counter()
+    spectral = recover_a5_spectral(
+        public,
+        iterations=80,
+    )
+    spectral_elapsed = time.perf_counter() - spectral_started
+
     local_started = time.perf_counter()
     local = recover_a5_min_conflicts(
         public,
         restarts=8,
         max_sweeps=80,
         attack_seed=b"H2-fixed-baseline",
+        initial_frames=spectral.frames,
     )
     local_elapsed = time.perf_counter() - local_started
 
@@ -76,6 +85,9 @@ def main() -> int:
     print(f"A5 order/class-size/class-order: {audit.order}/{audit.conjugacy_class_size}/{audit.conjugacy_class_order}")
     print(f"A5 commutator/generated-by-class size: {audit.commutator_subgroup_size}/{audit.generated_by_class_size}")
     print(f"reference accepted: {validate_a5_frames(public, reference.frames).accepted}")
+    print(f"spectral violations: {spectral.violations}")
+    print(f"spectral rounding error: {spectral.rounding_error:.6f}")
+    print(f"spectral elapsed seconds: {spectral_elapsed:.6f}")
     print(f"local-search accepted: {local.accepted}")
     print(f"local-search restarts/sweeps/moves: {local.restarts_used}/{local.sweeps_used}/{local.moves}")
     print(f"local-search best violations: {local.best_violations}")
