@@ -123,6 +123,14 @@ class A5GroupAudit:
 
 
 @dataclass(frozen=True, slots=True)
+class A5BeliefResult:
+    frames: tuple[int, ...]
+    violations: int
+    iterations: int
+    mean_confidence_gap: float
+
+
+@dataclass(frozen=True, slots=True)
 class A5SpectralResult:
     frames: tuple[int, ...]
     violations: int
@@ -509,6 +517,156 @@ def a5_violation_count(
         if _normalized_a5(frames[left], label, frames[right]) not in allowed:
             violations += 1
     return violations
+
+
+def recover_a5_belief_propagation(
+    public: A5PublicInstance,
+    iterations: int = 60,
+    damping: float = 0.35,
+) -> A5BeliefResult:
+    """Sum-product attack on the public A5 pairwise CSP.
+
+    The global left gauge is fixed by forcing vertex 0 to identity. Messages
+    then estimate cavity extension counts on each directed public edge.
+    """
+    if iterations <= 0 or iterations > 10_000:
+        raise HyperbolicExperimentError("BP iterations must be in [1, 10000]")
+    if not (0.0 <= damping < 1.0):
+        raise HyperbolicExperimentError("BP damping must be in [0, 1)")
+
+    group_size = len(A5_ELEMENTS)
+    vertex_count = len(public.scaffold.vertices)
+
+    adjacency: list[list[int]] = [[] for _ in range(vertex_count)]
+    label_by_edge: dict[Edge, int] = {}
+    for edge, label in zip(public.scaffold.edges, public.edge_labels):
+        left, right = edge
+        adjacency[left].append(right)
+        adjacency[right].append(left)
+        label_by_edge[edge] = label
+    for neighbors in adjacency:
+        neighbors.sort()
+
+    forward_cache: dict[tuple[int, int], tuple[int, ...]] = {}
+    reverse_cache: dict[tuple[int, int], tuple[int, ...]] = {}
+
+    def forward_values(label: int, left_value: int) -> tuple[int, ...]:
+        key = (label, left_value)
+        cached = forward_cache.get(key)
+        if cached is None:
+            cached = tuple(sorted(_allowed_right_values(
+                label,
+                left_value,
+                public.conjugacy_class,
+            )))
+            forward_cache[key] = cached
+        return cached
+
+    def reverse_values(label: int, right_value: int) -> tuple[int, ...]:
+        key = (label, right_value)
+        cached = reverse_cache.get(key)
+        if cached is None:
+            values = tuple(
+                left_value
+                for left_value in range(group_size)
+                if right_value in forward_values(label, left_value)
+            )
+            cached = values
+            reverse_cache[key] = cached
+        return cached
+
+    directed_edges = tuple(
+        (source, target)
+        for edge in public.scaffold.edges
+        for source, target in (edge, (edge[1], edge[0]))
+    )
+    uniform = 1.0 / group_size
+    messages: dict[tuple[int, int], list[float]] = {
+        edge: [uniform] * group_size
+        for edge in directed_edges
+    }
+
+    def normalize(values: list[float]) -> list[float]:
+        total = sum(values)
+        if total <= 0.0:
+            return [uniform] * group_size
+        return [value / total for value in values]
+
+    for _ in range(iterations):
+        updated: dict[tuple[int, int], list[float]] = {}
+
+        for source, target in directed_edges:
+            cavity = [1.0] * group_size
+            if source == 0:
+                cavity = [0.0] * group_size
+                cavity[A5_IDENTITY] = 1.0
+
+            for neighbor in adjacency[source]:
+                if neighbor == target:
+                    continue
+                incoming = messages[(neighbor, source)]
+                for value in range(group_size):
+                    cavity[value] *= incoming[value]
+
+            cavity = normalize(cavity)
+
+            canonical = (
+                (source, target)
+                if source < target
+                else (target, source)
+            )
+            label = label_by_edge[canonical]
+            outgoing = [0.0] * group_size
+
+            if source < target:
+                for source_value, weight in enumerate(cavity):
+                    if weight == 0.0:
+                        continue
+                    for target_value in forward_values(label, source_value):
+                        outgoing[target_value] += weight
+            else:
+                for source_value, weight in enumerate(cavity):
+                    if weight == 0.0:
+                        continue
+                    for target_value in reverse_values(label, source_value):
+                        outgoing[target_value] += weight
+
+            outgoing = normalize(outgoing)
+            old = messages[(source, target)]
+            if damping:
+                outgoing = normalize([
+                    (1.0 - damping) * new_value + damping * old_value
+                    for new_value, old_value in zip(outgoing, old)
+                ])
+            updated[(source, target)] = outgoing
+
+        messages = updated
+
+    frames: list[int] = [A5_IDENTITY]
+    gaps: list[float] = []
+
+    for vertex in range(1, vertex_count):
+        belief = [1.0] * group_size
+        for neighbor in adjacency[vertex]:
+            incoming = messages[(neighbor, vertex)]
+            for value in range(group_size):
+                belief[value] *= incoming[value]
+        belief = normalize(belief)
+
+        ranked = sorted(
+            range(group_size),
+            key=lambda value: (-belief[value], value),
+        )
+        frames.append(ranked[0])
+        gaps.append(belief[ranked[0]] - belief[ranked[1]])
+
+    candidate = tuple(frames)
+    return A5BeliefResult(
+        candidate,
+        a5_violation_count(public, candidate),
+        iterations,
+        mean(gaps) if gaps else 0.0,
+    )
 
 
 def recover_a5_spectral(
