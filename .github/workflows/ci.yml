@@ -29,7 +29,11 @@ jobs:
         env:
           PYTHONPATH: src
         run: python -m unittest discover -s tests -v
-      - name: Exhaustive toy-8 baseline
+      - name: M0 exhaustive toy-8 baseline
         env:
           PYTHONPATH: src
         run: python scripts/exhaustive_baseline.py --params toy-8 --seed 0xA5
+      - name: M1 meet-in-the-middle path-16 baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/mitm_baseline.py --params path-16 --seed 0xB6D3
