@@ -522,24 +522,37 @@ def recover_a5_min_conflicts(
         incident[left].append((index, edge, label))
         incident[right].append((index, edge, label))
 
-    allowed = set(public.conjugacy_class)
+    compatibility_cache: dict[tuple[int, int], int] = {}
+
+    def right_mask(label: int, left_value: int) -> int:
+        key = (label, left_value)
+        cached = compatibility_cache.get(key)
+        if cached is None:
+            mask = 0
+            for value in _allowed_right_values(
+                label,
+                left_value,
+                public.conjugacy_class,
+            ):
+                mask |= 1 << value
+            cached = mask
+            compatibility_cache[key] = cached
+        return cached
+
     best_violations = len(public.scaffold.edges)
     total_moves = 0
     total_sweeps = 0
 
     def local_cost(vertex: int, candidate: int, frames: list[int]) -> int:
-        old = frames[vertex]
-        frames[vertex] = candidate
         cost = 0
         for _, edge, label in incident[vertex]:
             left, right = edge
-            if _normalized_a5(
-                frames[left],
-                label,
-                frames[right],
-            ) not in allowed:
+            if vertex == left:
+                valid = (right_mask(label, candidate) >> frames[right]) & 1
+            else:
+                valid = (right_mask(label, frames[left]) >> candidate) & 1
+            if not valid:
                 cost += 1
-        frames[vertex] = old
         return cost
 
     for restart in range(1, restarts + 1):
