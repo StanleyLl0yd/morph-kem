@@ -55,3 +55,12 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/morse_sweep.py --collapse-trials 32 --greedy-trials 8
+      - name: M4 torus tree-cotree baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/surface_baseline.py --params torus-4x4 --tree-trials 16 --greedy-trials 4
+      - name: M4 tree-cotree scaling sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/surface_sweep.py --trials 32
