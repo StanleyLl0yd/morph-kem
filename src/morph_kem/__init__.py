@@ -6,6 +6,7 @@ Research only. This package does not provide production cryptography.
 from .complex import ComplexEncodingError, SimplicialComplex
 from .maze import (
     MAZE_PARAMETER_SETS,
+    CoreRecoveryResult,
     GreedyResult,
     GreedySurvey,
     MazeExperimentError,
@@ -20,6 +21,7 @@ from .maze import (
     planted_reduce,
     planted_reduction_metrics,
     random_greedy_survey,
+    recover_three_regular_core,
     verify_core,
 )
 from .path import (
@@ -58,6 +60,7 @@ __all__ = [
     "AmbiguousPreimageError",
     "CollisionProfile",
     "ComplexEncodingError",
+    "CoreRecoveryResult",
     "GreedyResult",
     "GreedySurvey",
     "MAZE_PARAMETER_SETS",
@@ -98,6 +101,7 @@ __all__ = [
     "planted_reduce",
     "planted_reduction_metrics",
     "random_greedy_survey",
+    "recover_three_regular_core",
     "support_metrics",
     "verify_core",
 ]
