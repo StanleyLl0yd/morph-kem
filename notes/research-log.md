@@ -210,3 +210,36 @@ The public role-signature audit also exposed planted roles: no planted seam sign
 This is a stronger lesson than "SAT is easy at small n." The generated distribution itself has a one-seam escape and visible planted-role correlations. Scaling would only hide the defect rather than fix it.
 
 A future H2-E3 must change the verifier relation and generator, not increase NAE instance size.
+
+
+### H2-E3 — all-charts frontier review
+
+The natural next Escher construction was intentionally stopped before code.
+
+Naive formulation:
+
+~~~text
+hidden global state x
++
+many overlapping constant-size public chart neighborhoods Sj
++
+bounded-local predicate/output on x|Sj
++
+inversion = recover any globally compatible x'
+~~~
+
+This is essentially Goldreich's random local-function / planted-CSP paradigm.
+
+Key prior-art findings:
+
+- Goldreich proposed overlapping small input subsets selected by combinatorial/expander structure with one fixed local predicate as a candidate OWF in 2000.
+- Planted-CSP theory directly studies recovery of a planted assignment from such local constraints.
+- Concrete Goldreich-PRG cryptanalysis includes guess-and-determine, algebraic, guess-and-decode, and correlation attacks.
+- ECCC TR25-139 (2025, revised 2026) gives a search-to-decision reduction for random local functions for any constant-arity predicate.
+- CSP global-section and cohomological local-to-global methods are established prior art.
+
+**Decision: naive H2-E3 rejected before implementation.**
+
+Changing visualization, using a hyperbolic tiling, larger finite alphabet, non-abelian local state, or another constant-arity predicate would not by itself create a new mathematical cryptosystem.
+
+Proposed next frontier: H3-E Lifted Atlas, but only if hidden covering/lifting data changes the computational relation itself and survives canonicalization, graph-cover, monodromy, fundamental-group, homology, group-action, and local-function-flattening attacks.

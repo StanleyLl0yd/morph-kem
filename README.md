@@ -63,6 +63,7 @@ See:
 - docs/15-h1-holonomy-experiment.md — H1 signed-holonomy result
 - docs/16-h2e-escher-atlas.md — H2-E1 edge-gain Escher result
 - docs/17-h2e2-higher-atlas.md — H2-E2 higher-order chart experiment
+- docs/18-h2e3-frontier.md — Goldreich/local-OWF frontier and H3-E novelty gate
 - notes/research-log.md — chronological record
 - spec/morph-kem-v0.1.md — future-spec skeleton
 
@@ -76,7 +77,9 @@ See:
 
 **H2-E2:** implemented and rejected. Every tested chart pair is locally compatible, but exact Max/NAE-CSP repair finds a one-chart equivalent repair across the full toy ladder; simple chart signatures also expose planted roles in several sets.
 
-**H2-E3:** any next Escher experiment must avoid both edge-gain flattening and ordinary planted deletion-CSP structure; it needs a verifier where small seam deletion is not the built-in escape hatch.
+**H2-E3:** naive all-charts variant rejected before code. Once written as one hidden global state observed by many overlapping bounded-local predicates, it is essentially Goldreich random local functions / planted CSP, an established and actively studied cryptographic family.
+
+**H3-E:** proposed frontier: a Lifted Atlas where hidden covering/lifting structure changes the computational relation itself rather than merely choosing a structured local-predicate hypergraph.
 
 **H2-H (#17):** parallel hyperbolic/Klein-quartic branch remains open.
 
