@@ -471,3 +471,30 @@ sweep:
 **K0 rejected as designed.**
 
 The non-orientable obstruction is real but public; hiding local orientation labels adds only gauge. This confirms that the K-series must not treat the orientation character itself as a trapdoor.
+
+
+### K1 — non-orientable hyperbolic regular-map control
+
+After K0's exact Z2 gauge break, K1 moves to a genuine non-orientable regular map of hyperbolic type rather than increasing the Klein-bottle mesh.
+
+The chosen scaffold is N4:{6,4}_3:
+
+~~~text
+V/E/F = 6/12/4
+chi = -2
+non-orientable genus = 4
+vertex degree = 4
+face size = 6
+underlying graph = K_{2,2,2}
+~~~
+
+The implementation derives its four hexagonal faces as Petrie cycles of the octahedral skeleton.
+
+K1 keeps the deliberately weak orientation-gauge relation so the mandatory public attack can test two things:
+
+1. spanning-tree recovery of all face gauges up to one global bit;
+2. explicit reconstruction of the orientable two-sheet cover from public transitions.
+
+The referenced orientable cover S3:{6,4} has expected V/E/F = 12/24/8 and genus 3.
+
+K1 is expected to fail if those properties are recovered directly.
