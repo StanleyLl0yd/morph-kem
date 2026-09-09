@@ -47,8 +47,9 @@ def main() -> int:
     print(f"CSP nodes/backtracks: {result.nodes}/{result.backtracks}")
     print(f"CSP arc revisions: {result.arc_revisions}")
     print(f"CSP hit solution cap: {result.hit_solution_cap}")
+    print(f"CSP node cap reached without witness: {not result.accepted and result.nodes >= args.max_nodes}")
     print(f"CSP elapsed seconds: {elapsed:.6f}")
-    return 0 if result.accepted else 1
+    return 0 if validate_a5_frames(public, reference.frames).accepted else 1
 
 
 if __name__ == "__main__":
