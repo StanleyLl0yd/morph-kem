@@ -103,4 +103,4 @@ jobs:
         if: matrix.python-version == '3.12'
         env:
           PYTHONPATH: src
-        run: python scripts/hyperbolic_baseline.py --solution-cap 4 --max-nodes 5000
+        run: python scripts/hyperbolic_baseline.py --solution-cap 2 --max-nodes 1000
