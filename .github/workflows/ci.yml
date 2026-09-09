@@ -50,3 +50,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/morse_baseline.py --params morse-6 --collapse-trials 16 --greedy-trials 4
+      - name: M3 constructive attack sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/morse_sweep.py --collapse-trials 32 --greedy-trials 8
