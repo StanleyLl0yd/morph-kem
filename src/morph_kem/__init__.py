@@ -42,6 +42,7 @@ from .higher_atlas import (
 )
 from .hyperbolic import (
     A5BeliefResult,
+    A5BreakoutResult,
     A5CspResult,
     A5LocalSearchResult,
     A5PairRepairResult,
@@ -58,6 +59,7 @@ from .hyperbolic import (
     generate_a5_instance,
     generate_klein_quartic,
     recover_a5_belief_propagation,
+    recover_a5_breakout,
     recover_a5_min_conflicts,
     recover_a5_pair_repair,
     recover_a5_spectral,
@@ -196,6 +198,7 @@ from .toy import (
 __all__ = [
     "AbelianizationLeak",
     "A5BeliefResult",
+    "A5BreakoutResult",
     "A5CspResult",
     "A5LocalSearchResult",
     "A5PairRepairResult",
@@ -339,6 +342,7 @@ __all__ = [
     "random_greedy_survey",
     "residual_root_relabelings",
     "recover_a5_belief_propagation",
+    "recover_a5_breakout",
     "recover_a5_min_conflicts",
     "recover_a5_pair_repair",
     "recover_a5_spectral",
