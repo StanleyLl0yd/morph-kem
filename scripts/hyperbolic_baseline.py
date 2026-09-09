@@ -9,6 +9,7 @@ from morph_kem.hyperbolic import (
     generate_a5_instance,
     generate_klein_quartic,
     recover_a5_min_conflicts,
+    recover_a5_pair_repair,
     solve_a5_csp,
     validate_a5_frames,
 )
@@ -38,12 +39,30 @@ def main() -> int:
     )
     local_elapsed = time.perf_counter() - local_started
 
+    pair_started = time.perf_counter()
+    pair = (
+        recover_a5_pair_repair(
+            public,
+            local.frames,
+            max_iterations=8,
+        )
+        if local.frames is not None
+        else None
+    )
+    pair_elapsed = time.perf_counter() - pair_started
+
+    preferred = (
+        pair.frames
+        if pair is not None and pair.best_violations <= local.best_violations
+        else local.frames
+    )
+
     started = time.perf_counter()
     result = solve_a5_csp(
         public,
         solution_cap=args.solution_cap,
         max_nodes=args.max_nodes,
-        preferred_frames=local.frames,
+        preferred_frames=preferred,
     )
     elapsed = time.perf_counter() - started
 
@@ -61,6 +80,10 @@ def main() -> int:
     print(f"local-search restarts/sweeps/moves: {local.restarts_used}/{local.sweeps_used}/{local.moves}")
     print(f"local-search best violations: {local.best_violations}")
     print(f"local-search elapsed seconds: {local_elapsed:.6f}")
+    print(f"pair-repair accepted: {pair.accepted if pair is not None else False}")
+    print(f"pair-repair iterations/tests: {pair.iterations if pair is not None else 0}/{pair.pair_assignments_tested if pair is not None else 0}")
+    print(f"pair-repair best violations: {pair.best_violations if pair is not None else local.best_violations}")
+    print(f"pair-repair elapsed seconds: {pair_elapsed:.6f}")
     print(f"CSP accepted: {result.accepted}")
     print(f"CSP solutions found: {result.solutions_found}")
     print(f"CSP nodes/backtracks: {result.nodes}/{result.backtracks}")
