@@ -5,6 +5,7 @@ import argparse
 import time
 
 from morph_kem.hyperbolic import (
+    a5_violation_count,
     audit_a5,
     generate_a5_instance,
     generate_klein_quartic,
@@ -15,6 +16,7 @@ from morph_kem.hyperbolic import (
     recover_a5_neighborhood_repair,
     recover_a5_pair_repair,
     recover_a5_spectral,
+    recover_a5_tree_coordinates,
     solve_a5_csp,
     validate_a5_frames,
 )
@@ -99,6 +101,18 @@ def main() -> int:
         else breakout.frames
     )
 
+    tree_started = time.perf_counter()
+    tree_coordinates = recover_a5_tree_coordinates(
+        public,
+        preferred,
+        max_sweeps=80,
+        attack_seed=b"H2-fixed-tree-coordinates",
+    )
+    tree_elapsed = time.perf_counter() - tree_started
+
+    if tree_coordinates.best_violations <= a5_violation_count(public, preferred):
+        preferred = tree_coordinates.frames
+
     hamming_started = time.perf_counter()
     hamming = recover_a5_hamming_repair(
         public,
@@ -160,6 +174,11 @@ def main() -> int:
     print(f"pair-repair iterations/tests: {pair.iterations if pair is not None else 0}/{pair.pair_assignments_tested if pair is not None else 0}")
     print(f"pair-repair best violations: {pair.best_violations if pair is not None else local.best_violations}")
     print(f"pair-repair elapsed seconds: {pair_elapsed:.6f}")
+    print(f"tree-coordinate accepted: {tree_coordinates.accepted}")
+    print(f"tree-coordinate tree/chords: {tree_coordinates.tree_edges}/{tree_coordinates.chord_edges}")
+    print(f"tree-coordinate sweeps/moves/weight-updates: {tree_coordinates.sweeps}/{tree_coordinates.moves}/{tree_coordinates.weight_updates}")
+    print(f"tree-coordinate best violations/max-weight: {tree_coordinates.best_violations}/{tree_coordinates.max_chord_weight}")
+    print(f"tree-coordinate elapsed seconds: {tree_elapsed:.6f}")
     print(f"hamming-repair accepted: {hamming.accepted}")
     print(f"hamming-repair changes/radius: {hamming.changes}/{hamming.radius_tested}")
     print(f"hamming-repair nodes/backtracks/arcs: {hamming.nodes}/{hamming.backtracks}/{hamming.arc_revisions}")
