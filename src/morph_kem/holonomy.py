@@ -233,6 +233,13 @@ class AbelianizationLeak:
 
 
 @dataclass(frozen=True, slots=True)
+class S3AbelianRecovery:
+    accepted: bool
+    frames: tuple[int, ...]
+    edge_checks: int
+
+
+@dataclass(frozen=True, slots=True)
 class S3CspResult:
     accepted: bool
     first_solution: tuple[int, ...] | None
@@ -526,6 +533,31 @@ def recover_s3_abelianization(public: S3PublicInstance) -> AbelianizationLeak:
         tuple(int(value) for value in parities),
         recovered,
         edge_checks,
+    )
+
+
+def recover_s3_via_abelianization(public: S3PublicInstance) -> S3AbelianRecovery:
+    """Construct an accepted S3 witness using only the public sign equations.
+
+    This works because the allowed normalized set is exactly the odd coset of
+    A3: in S3 every odd permutation is a transposition. Therefore the H1-S3
+    relation contains no information beyond its Z2 abelianization.
+    """
+    leak = recover_s3_abelianization(public)
+    if not leak.consistent:
+        return S3AbelianRecovery(False, (), leak.edge_checks)
+
+    even_representative = S3_IDENTITY
+    odd_representative = S3_TRANSPOSITIONS[0]
+    frames = tuple(
+        even_representative if parity == 0 else odd_representative
+        for parity in leak.parities
+    )
+    validation = validate_s3_frames(public, frames)
+    return S3AbelianRecovery(
+        accepted=validation.accepted,
+        frames=frames,
+        edge_checks=leak.edge_checks + len(public.graph.edges),
     )
 
 
