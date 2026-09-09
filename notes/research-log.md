@@ -1,109 +1,54 @@
 # Research log
 
-## 2026-09-09 — project initialization
+## 2026-09-09
 
-Selected combinatorial topology and discrete Morse reductions as the initial research family.
+### M0
+Canonical toy relation implemented; A-000 directly recovers coordinates. **Rejected.**
 
-Provisional research labels:
+### M1
+Global reversible path implemented; A-008 meet-in-the-middle recovers paths. **Rejected.**
 
-- HMCP — Hidden Morse Coordinate Problem
-- HMRP — Hidden Morse Reduction Path Problem
-- HMCR — Hidden Morse Conjugacy Recovery
+### M2
+Genuine collapse maze implemented; A-014 reconstructs the 3-regular planted core from generator invariants; A-015 shows many alternative residuals. **Rejected.**
 
-The project starts with no security claim. Negative results and successful breaks are first-class outputs.
+### M3
+Equivalent-witness relation formalized: any valid acyclic Hasse matching with public target vector is accepted. A-016 collapses graph-expanded instances to arbitrary graph residuals and completes a spanning-tree witness; A-017 generic greedy matching also succeeds frequently. **Rejected.**
 
-## 2026-09-09 — M0 executable relation
+### M4 — closed surface
 
-Implemented canonical finite simplicial complexes, deterministic toy generation, planted elementary-collapse certificates, exact forward/accept/invert functions, and exhaustive baselines.
+M4 uses periodic triangulated tori to remove M3's free-collapse-to-graph shortcut.
 
-A-000 directly recovers every M0 seed from public coordinate-local triangle recipes.
+For all fixed-seed tested sets, every edge has two incident triangles and free collapse pair count is zero.
 
-**Result:** M0 rejected.
+A-018 constructs a public primal/dual tree-cotree Morse matching.
 
-## 2026-09-09 — M1 non-local branching path
-
-Replaced local M0 markers with globally supported public vertex permutations.
-
-A-008 meet-in-the-middle recovers the hidden branch path in roughly 2^(ell/2) state enumeration.
-
-**Result:** M1 rejected.
-
-**Lesson:** global support is not inversion asymmetry.
-
-## 2026-09-09 — M2 collapse maze
-
-Implemented genuine elementary expansion/collapse branching around a hidden 3-regular graph core.
-
-A-013 bounded collapse DFS recovers the small fixed-seed core, but A-014 is stronger: zero-triangle-incidence edges plus the public 3-regular generator invariant recover the hidden core directly.
-
-Fixed-seed A-014 nodes:
+Baseline torus-4x4:
 
 ~~~text
-maze-4:  13
-maze-6:  59
-maze-8:  520
-maze-10: 51
-maze-12: 441
+V/E/F: 16/48/32
+free pairs: 0
+target: (1,2,1)
+primal/dual tree edges: 15/31
+critical edges: 2
+tree-cotree accepted: yes
+randomized survey: 16/16 accepted, 16 unique
+generic greedy: 0/4 target hits, best total critical 6
 ~~~
 
-A-015 also shows many same-sized irreducible residuals.
-
-**Result:** M2 rejected.
-
-**Lesson:** the generator can leak an easier reconstruction problem than the nominal reduction maze, and the planted residual is not automatically the right security witness.
-
-## 2026-09-09 — M3 equivalent-witness Morse relation
-
-### Relation correction
-
-M3 removes the planted-core digest from the success relation.
-
-The public instance contains only the 2D simplicial complex and a target critical vector.
-
-Any simplex-disjoint acyclic Hasse matching with that critical vector is accepted.
-
-The exact validator checks incidence, disjointness, directed-Hasse acyclicity, and critical counts.
-
-### Generator
-
-M3 replaces M2's 3-regular graph with a variable-degree connected graph, applies edge/triangle expansions, and relabels vertices.
-
-The planted witness combines expansion edge/triangle pairs with a spanning-tree vertex/edge matching on the graph core.
-
-### A-016 constructive equivalent witness
-
-The attacker collapses public free edge/triangle pairs until any graph residual is reached, then builds a spanning-tree matching on that residual.
-
-Fixed-seed sweep:
+Scaling:
 
 ~~~text
-morse-6:  lex yes, reverse yes, random 32/32
-morse-8:  lex yes, reverse yes, random 32/32
-morse-10: lex yes, reverse yes, random 32/32
-morse-12: lex yes, reverse yes, random 32/32
-morse-16: lex yes, reverse yes, random 32/32
+torus-3x3: accepted, random 32/32, unique 32
+torus-4x4: accepted, random 32/32, unique 32
+torus-5x5: accepted, random 32/32, unique 32
+torus-6x6: accepted, random 32/32, unique 32
+torus-7x7: accepted, random 32/32, unique 32
 ~~~
 
-Every set produced 32 distinct residuals in 32 random trials, and every residual yielded an accepted equivalent witness.
+**M4 rejected.**
 
-### A-017 generic greedy matching
+Main lesson: genuine 2D structure and absence of free collapses do not create hardness if the public family has a simple global witness decomposition.
 
-Eight randomized greedy acyclic-Hasse trials per set hit the exact target:
+### Next
 
-~~~text
-morse-6:  8/8
-morse-8:  5/8
-morse-10: 3/8
-morse-12: 3/8
-morse-16: 4/8
-~~~
-
-### Result
-
-**M3 rejected.**
-
-### Main lesson
-
-Equivalent-witness semantics are the correct security discipline, but "graph + collapsible 2D decoration" has an elementary public witness construction.
-
-The next model must have a genuinely higher-dimensional useful witness structure and must be tested against generic Hasse-matching and solver attacks before scaling.
+M5: irregular non-manifold 2-complexes with planted acyclic matching; add exact/solver attacks before scaling.
