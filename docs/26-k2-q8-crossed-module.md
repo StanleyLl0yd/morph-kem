@@ -6,6 +6,8 @@ K2.2 is an executable falsification experiment for genuinely two-level data.
 
 It is not a KEM, one-way function, trapdoor primitive, or security candidate.
 
+**Disposition: rejected.** The exact public face-lift attack constructs an accepted equivalent witness without the planted representative.
+
 ## Crossed module
 
 The experiment uses the automorphism crossed module of the quaternion group:
@@ -27,7 +29,7 @@ The implementation constructs Q8 and all automorphisms directly and checks:
 |coker(partial)| = 6
 ~~~
 
-It also exhaustively verifies both crossed-module identities.
+It also exhaustively verifies both crossed-module identities: 192 equivariance checks and 64 Peiffer checks.
 
 References:
 - GroupNames Q8: https://people.maths.bris.ac.uk/~matyd/GroupNames/1/Q8.html
@@ -70,13 +72,39 @@ equivalent face-lift witnesses.
 
 The attack does not need the planted representative.
 
-## Exit criterion
+## Measured CI result
 
-If CI confirms four independent fibers of size two and an accepted public lift, K2.2 is rejected.
+Fixed master seed `40226490aabbccddeeff001122334455`, Python 3.12 CI:
 
-The intended lesson is that putting variables on faces is not enough: fake-flatness alone may decompose into independent boundary-preimage problems.
+~~~text
+Q8 order:                         8
+Aut(Q8) order:                   24
+boundary kernel/image/cokernel:  2/4/6
+crossed identity checks:         192/64
+crossed identities hold:         true
+base V/E/F:                      6/12/4
+reference accepted:              true
+boundary-image faces:            4/4
+nonidentity face curvatures:     4
+public fiber sizes:              (2,2,2,2)
+equivalent fake-flat witnesses:  16
+public attack accepted:          true
+edge compositions:               24
+Q8 preimage checks:              32
+attack equals planted witness:   false
+~~~
 
-A successor would need genuine coupling between face variables — for example a higher coherence/Postnikov/3-cell-style relation — and must still survive ordinary CSP/SAT and cohomological flattening attacks.
+This is stronger than merely finding another witness: the verifier decomposes exactly into four independent public preimage problems. The attack performs 24 public edge compositions plus 32 Q8 boundary checks and deliberately returns a representative different from the planted one.
+
+## Disposition
+
+**K2.2 is rejected.**
+
+Putting variables on faces is not sufficient to create useful higher-dimensional coupling. For this fake-flatness relation, each face can be solved independently and every solution fiber is exactly a coset of the public kernel `ker(partial) = C2`.
+
+Increasing the number of faces or using a larger cellulation would only multiply independent kernel choices; it would not create a trapdoor.
+
+The next admissible experiment must couple the face lifts through genuinely higher coherence. For this crossed module the remaining ambiguity lives in the abelian kernel C2, so the first mandatory successor attack is a GF(2)/cohomology reduction. Activating a genuine Postnikov-style 3-dimensional constraint likely requires moving from a 2-complex to a 3-complex; that dimensional move must be justified by an exact public/trapdoor relation, not by geometric complexity alone.
 
 ## Security status
 
