@@ -1,0 +1,64 @@
+name: G7 measured closure bookkeeping
+
+on:
+  push:
+    branches: ['g7/hges-planted-3sat']
+    paths: ['.github/workflows/g7-closure-write.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: g7/hges-planted-3sat
+      - name: Record G7 rejection
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          readme = Path('README.md')
+          text = readme.read_text()
+          text = text.replace(
+              'HGES controls G0–G6 are implemented and rejected.',
+              'HGES controls G0–G7 are implemented and rejected.'
+          )
+          old_frontier = "BTTS failed its first two generated-distribution calibrations, T0 and T1. HGES has now failed four controlled stages: G0 exposed tree-bridge decomposition; bridge-free G1 exposed every piece as an exact public `K4`; G2's stellar subdivision was publicly contracted back to the same fatal G1 macro relation; and G3 made local interfaces indistinguishable but thereby exposed a second accepted alternating perfect matching. None is positive hardness evidence."
+          new_frontier = "BTTS failed its first two generated-distribution calibrations, T0 and T1. HGES has now failed eight controlled stages G0–G7: canonical separators and motifs (G0–G2), equivalent local decompositions (G3), explicit parity synchronization (G4), affine leakage through nonlinear exact-one predicates (G5–G6), and finally generic DPLL/MiniSat plus abundant equivalent witnesses on planted signed 3-SAT (G7). None is positive hardness evidence."
+          if old_frontier in text:
+              text = text.replace(old_frontier, new_frontier)
+          if '## G7 — planted signed 3-SAT HGES control' not in text:
+              marker = '\n## Research discipline\n'
+              block = '''\n## G7 — planted signed 3-SAT HGES control\n\nG7 is the first control in the G4–G7 phase-coupling line whose local signed 3-OR predicate has no non-trivial affine GF(2) implication. That removes the direct parity shortcut, but not generic solver attacks.\n\n**G7 is rejected by A-034.** On fixed Python 3.12 `g7-24`, public unit propagation + deterministic DPLL finds 16/16 capped accepted solutions in 40 nodes and 22 decisions; all 16 differ from the hidden reference. Across `g7-12`, `g7-18`, `g7-24` × eight deterministic seeds, all **24/24** instances yield an accepted public witness and an accepted non-reference witness, with at most 86 DPLL nodes in the measured sweep.\n\nAn independent MiniSat check on the fixed 24-variable/96-clause baseline reports SAT using 3 conflicts, 13 decisions and 41 propagations; the decoded model passes the exact repository verifier. This is generated-distribution evidence only, not a theorem about arbitrary 3-SAT.\n\nSee `docs/42-g7-planted-3sat.md`.\n'''
+              if marker not in text:
+                  raise SystemExit('README insertion marker missing')
+              text = text.replace(marker, block + marker, 1)
+          readme.write_text(text)
+
+          ledger = Path('docs/05-cryptanalysis.md')
+          text = ledger.read_text()
+          row = '| A-034 | Public planted 3-SAT DPLL + independent MiniSat recovery | **Fatal to G7 generated distribution** | Implemented |'
+          if row not in text:
+              anchor = '| A-033 | Affine-coset residual exact-one enumeration | **Fatal to G6 generated distribution** | Implemented |'
+              if anchor not in text:
+                  raise SystemExit('A-033 ledger anchor missing')
+              text = text.replace(anchor, anchor + '\n' + row, 1)
+          if '## A-034 — public planted 3-SAT DPLL + independent MiniSat recovery' not in text:
+              text = text.rstrip() + '''\n\n## A-034 — public planted 3-SAT DPLL + independent MiniSat recovery\n\n### Target\n\nG7 planted signed 3-SAT phase-CSP negative control. G7 deliberately removes the direct affine shortcuts that rejected G4–G6: exhaustive local affine-hull enumeration confirms that the signed 3-OR predicate has no non-trivial GF(2) equation shared by all accepted local tuples.\n\n### Public attack\n\nA-034 uses only public gadgets and signed clauses:\n\n1. recover and canonically order the two accepted G3 matchings for every gadget;\n2. run iterative public unit propagation;\n3. branch deterministically on the unresolved variable with highest current clause incidence;\n4. enumerate phase assignments up to an explicit cap;\n5. lift every assignment to local matching witnesses and submit it to the exact G7 verifier;\n6. classify non-reference solutions only after public acceptance;\n7. independently encode the fixed baseline as DIMACS, solve it with MiniSat, decode the model, lift it, and recheck it with the repository verifier.\n\n### Exact Python 3.12 `g7-24` result\n\n~~~text\ngadgets:                                24\ntotal public tetrahedra:               144\nclauses:                                96\nvariable degree histogram:             ((12,24),)\nfactor components / cycle rank:        1/169\nlocal affine implications:             0\nlocal matching nodes / backtracks:     168/0\nDPLL solutions / cap:                  16/16\nDPLL cap hit:                           yes\nDPLL nodes / decisions:                40/22\nDPLL propagations / conflicts:         34/2\nDPLL backtracks:                       2\nexact verifier clause checks:          1536\naccepted DPLL solutions:               16\naccepted non-reference solutions:      16\nfirst solution equals reference:       no\n~~~\n\nThe independent MiniSat fixed-baseline run is SAT and records 3 conflicts, 13 decisions, and 41 propagations. Its decoded witness passes all 96 public clauses in the exact G7 verifier. Solver wall-clock timing is not used as stable evidence.\n\nPython 3.12 also tests `g7-12`, `g7-18`, and `g7-24` over eight deterministic seeds each. All **24/24** instances yield at least one accepted public witness and at least one accepted non-reference witness. Measured DPLL node counts range from 23 to 86.\n\n### Result\n\n**G7 is rejected by A-034.** Removing an obvious affine quotient was necessary but not sufficient: the current deterministic planted 3-SAT distribution remains solver-friendly and exposes equivalent accepted witnesses. Do not repair this relation merely by increasing the variable or clause count. Worst-case 3-SAT hardness is not average-case cryptographic hardness.\n\nThis is not a theorem that arbitrary 3-SAT or general HGES is easy.\n'''
+          ledger.write_text(text)
+
+          log = Path('notes/research-log.md')
+          text = log.read_text()
+          if '## 2026-09-10 — G7 rejected by A-034' not in text:
+              text = text.rstrip() + '''\n\n## 2026-09-10 — G7 rejected by A-034\n\nImplemented G7 planted signed 3-SAT phase coupling as the first G-series predicate with zero non-trivial local affine GF(2) implications. Public deterministic DPLL nevertheless recovers accepted witnesses cheaply. Fixed Python 3.12 `g7-24`: 24 gadgets, 96 clauses, degree 12, factor cycle rank 169, 40 DPLL nodes / 22 decisions / 34 propagations / 2 conflicts / 2 backtracks, 16/16 capped accepted solutions, all 16 non-reference. The 24-instance all-size/eight-seed sweep succeeds on every instance with a measured maximum of 86 DPLL nodes and at least one non-reference accepted witness each. Independent MiniSat finds SAT with 3 conflicts / 13 decisions / 41 propagations and its decoded model passes the exact verifier.\n\nConclusion: G7 rejected. Eliminating the parity quotient alone does not make this planted distribution cryptographically hard; equivalent-witness multiplicity remains fatal. G8 must change the generated relation rather than scale G7. No security claim.\n'''
+              log.write_text(text)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md docs/05-cryptanalysis.md notes/research-log.md
+          git diff --cached --quiet && exit 0
+          git commit -m 'G7: record A-034 measured rejection'
+          git push origin HEAD:g7/hges-planted-3sat
