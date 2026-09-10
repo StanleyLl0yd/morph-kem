@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G8 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G9 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -257,6 +257,16 @@ The solver serialization contains no tetrahedra, faces, vertices, simplicial lab
 
 See `docs/43-g8-topology-csp-collapse.md`.
 
+## G9 — overlapping-carrier HGES exact-cover control
+
+G9 removes the independent local phase domains broken by G8. It publishes one connected tetrahedron-cycle complex whose allowed D2/D3 candidate pieces overlap directly in public tetrahedra.
+
+**G9 is rejected by A-036.** Public candidate-subcomplex enumeration followed by exact cover finds 90, 224 and 450 accepted tilings for `g9-18`, `g9-24` and `g9-30`; an independent public cycle-composition DP obtains exactly the same counts. On `g9-30`, exact cover uses 2820 nodes / 899 backtracks and all 450 recovered covers verify, including 449 non-reference witnesses.
+
+Across all three sets and eight deterministic seeds each, **24/24** instances reproduce the same break. Overlap by itself is therefore not enough when the candidate hypergraph is a bounded-width interval/cycle relation.
+
+See `docs/44-g9-overlapping-exact-cover.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -297,16 +307,17 @@ See `docs/43-g8-topology-csp-collapse.md`.
 - `docs/41-g6-affine-coset-residual.md` — measured G6/A-033 negative control
 - `docs/42-g7-planted-3sat.md` — measured G7/A-034 negative control
 - `docs/43-g8-topology-csp-collapse.md` — measured G8/A-035 structural collapse audit
+- `docs/44-g9-overlapping-exact-cover.md` — measured G9/A-036 negative control
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G9**, not a trapdoor construction. G8 shows that adding increasingly sophisticated global CSP predicates over independently enumerable local topological phase gadgets does not create topological hardness: the topology can be compiled away before solving.
+The next controlled HGES experiment is **G10**, not a trapdoor construction. G9 shows that eliminating independent local phase domains is still insufficient when public candidate carriers form a bounded-width interval/cycle overlap relation.
 
-G9 must therefore attack the premise of `PhaseExtract` itself. A useful negative control should overlap/entangle candidate local decompositions across public boundaries so there is no cheap independent per-gadget domain table. Before any positive interpretation it must face multiscale decomposition, separator/link/motif, normalization/automorphism, overlapping exact-cover/CSP/SAT/CP-SAT, low-width, equivalent-witness, generated-role leakage, and contraction/quotient attacks.
+G10 must change the overlap interaction graph itself. Before any positive interpretation, first measure public separator and treewidth structure of the candidate-overlap graph and attempt decomposition-based dynamic programming. It must also face multiscale motif/link normalization, candidate-subcomplex enumeration, exact cover/set packing, matching, generic CSP/SAT/CP-SAT, contraction/quotient simplification, equivalent-witness enumeration and generated-role leakage.
 
-Only a relation where public extraction of a compact local witness domain itself survives these attacks could justify asking whether a secret decomposition supplies a real recovery advantage. No trapdoor/KEM work begins before that.
+Only a relation where both public candidate extraction and the resulting overlap interaction resist these attacks could justify asking whether a secret decomposition supplies a real recovery advantage. No trapdoor/KEM work begins before that.
 
 No security or post-quantum claim exists.
 
