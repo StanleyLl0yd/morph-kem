@@ -331,3 +331,40 @@ The all-parameter, eight-seed sweep recovered and accepted **24/24** partitions,
 **G0 rejected as designed by A-024.**
 
 Lesson: hiding local piece labels and gluing permutations does not help when the quotient exposes a canonical separator decomposition. G1 must structurally remove the bridge shortcut before any further HGES interpretation.
+
+### G1 — bridge-free clique-decomposition control
+
+Reused the G0 punctured-4-simplex pieces but changed the hidden assembly graph from a tree to a simple cycle. This removes the exact A-024 bridge shortcut without increasing parameters.
+
+The bridge regression behaves as intended on `g1-12`:
+
+~~~text
+A-024 dual bridges = 0
+A-024 bridge-block witness accepted by G1 = no
+articulation points = 0
+~~~
+
+However the pieces themselves remain canonical in the public tetrahedron dual graph. A-028 enumerates public four-vertex dual cliques, filters them through the exact allowed-piece predicate, and solves the resulting exact cover.
+
+Exact-head Python 3.12 `g1-12` baseline:
+
+~~~text
+public V/E/F/T = 26/85/108/48
+boundary/max face incidence = 24/2
+dual graph vertices/edges = 48/84
+two-vertex separator pairs = 264
+face occurrences = 192
+4-subsets tested = 194580
+dual K4 candidates = 12
+allowed-piece candidates = 12
+exact-cover solutions/cap = 1/64
+exact-cover nodes/backtracks = 13/0
+public A-028 witness accepted = yes
+matches planted partition up to order = yes
+~~~
+
+The all-parameter, eight-seed sweep recovered and accepted **24/24** partitions and matched the planted partition in **24/24** cases. Per-size A-028 cover search remained deterministic under public relabeling: `g1-4` used 5/0 cover nodes/backtracks, `g1-8` 9/0, and `g1-12` 13/0.
+
+**G1 rejected by A-028.**
+
+Lesson: removing bridges and articulation vertices does not create gluing hardness when each hidden piece remains an exact fixed-size public clique. Do not scale the cycle. G2 must change the piece/overlap structure so the intended pieces are not directly the canonical `K4` blocks, and must still face separator, motif, local-role, automorphism, exact-cover/SAT/CP-SAT, equivalent-witness, and planted-role leakage attacks.

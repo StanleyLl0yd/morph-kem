@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and the first HGES negative control G0 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G1 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -51,7 +51,7 @@ The original ranking after prior-art/attack screening was:
 3. **HICQF — Hidden Intermediate Cover / Quotient Factorization.**
 4. **CMPS — Coupled Monodromy–Postnikov Search**, still theoretical and without a trapdoor interface.
 
-BTTS has now failed its first two generated-distribution calibrations, T0 and T1. HGES has passed only its deliberately breakable G0 harness-control step; that is not positive hardness evidence.
+BTTS has failed its first two generated-distribution calibrations, T0 and T1. HGES has now also failed two deliberately controlled stages: G0 exposed tree-bridge decomposition, while bridge-free G1 still exposed every piece as an exact public `K4` block. Neither is positive hardness evidence.
 
 Orientation alone, hyperbolicity/geodesics alone, and hidden Tietze-presentation rewriting are not accepted as new hardness assumptions.
 
@@ -124,6 +124,33 @@ This validates the HGES decomposition-attack harness; it is not evidence for a h
 
 See `docs/35-g0-hges-canonical-gluing.md`.
 
+## G1 — bridge-free HGES clique-decomposition control
+
+G1 removes G0's exact bridge shortcut by gluing the same allowed pieces in a simple cycle. The resulting public dual graph has no bridges and no articulation points.
+
+**G1 is nevertheless rejected by A-028.** Each hidden four-tetrahedron piece remains an exact public `K4` in the tetrahedron dual graph. Enumerating four-vertex cliques, applying the exact allowed-piece predicate, and solving the induced exact cover recovers an accepted witness.
+
+Fixed Python 3.12 `g1-12` baseline:
+
+~~~text
+public V/E/F/T:                    26/85/108/48
+dual vertices/edges:               48/84
+bridges / articulation points:     0 / 0
+two-vertex separator pairs:        264
+4-subsets tested:                  194580
+dual K4 / allowed candidates:      12 / 12
+exact-cover solutions:             1
+exact-cover nodes/backtracks:      13 / 0
+public witness accepted:           yes
+matches planted partition:         yes
+~~~
+
+Across `g1-4`, `g1-8`, `g1-12` and eight deterministic public relabel seeds each, **24/24** public A-028 recoveries were accepted and **24/24** matched the planted partition up to group order.
+
+The important negative result is structural: removing one canonical separator class did not hide the pieces themselves. Increasing the cycle size is not a repair.
+
+See `docs/36-g1-bridge-free-clique-gluing.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -139,7 +166,8 @@ See `docs/35-g0-hges-canonical-gluing.md`.
 - `src/morph_kem/` — executable constructions and attacks
 - `tests/` — exact validators and regression tests
 - `scripts/` — deterministic baselines and sweeps
-- `docs/05-cryptanalysis.md` — attack ledger
+- `docs/05-cryptanalysis.md` — compact canonical attack index and newest detailed attacks
+- `docs/05-cryptanalysis-through-a024.md` — verbatim detailed attack ledger through A-024
 - `docs/21-h2-klein-quartic-a5.md` — exact hyperbolic/A5 experiment
 - `docs/22-k0-klein-bottle.md` — Klein-bottle control
 - `docs/23-k1-nonorientable-hyperbolic.md` — hyperbolic non-orientable control
@@ -155,14 +183,17 @@ See `docs/35-g0-hges-canonical-gluing.md`.
 - `docs/33-t0-pachner-results.md` — measured T0/A-022 result
 - `docs/34-t1-distance-conditioned-results.md` — measured T1/A-023 result
 - `docs/35-g0-hges-canonical-gluing.md` — measured G0/A-024 negative control
+- `docs/36-g1-bridge-free-clique-gluing.md` — measured G1/A-028 negative control
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G1**, not a trapdoor construction. It must remove G0's exact bridge shortcut structurally rather than by parameter inflation.
+The next controlled HGES experiment is **G2**, not a trapdoor construction. It must remove G1's exact fixed-size `K4` piece signature structurally rather than by parameter inflation.
 
-The smallest useful change is a 2-edge-connected or overlapping gluing distribution. Before any positive interpretation, G1 must test whether the supposedly hidden pieces are still recovered by articulation/low-order separators, maximal `K4`-like dual subgraphs, apex/boundary signatures, piece automorphisms, and exact-cover/SAT/CP-SAT partitioning.
+A useful G2 should make the planted pieces non-canonical in the public dual graph through controlled overlap, subdivision, mixed piece types, or another relation where an accepted witness is not simply a partition into maximal fixed-size cliques.
+
+Before any positive interpretation, G2 must face bridge/articulation/low-order separator decomposition, motif/subcomplex enumeration, local apex and boundary-role signatures, automorphism normalization, exact-cover/SAT/CP-SAT recovery, equivalent-witness enumeration, and planted-role statistical leakage.
 
 Only an HGES distribution that survives those public attacks could justify asking whether a secret decomposition supplies a real recovery advantage with:
 
