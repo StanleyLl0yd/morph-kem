@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G3 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G4 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -207,6 +207,16 @@ The failure is structural but different from G1: local indistinguishability crea
 
 See `docs/38-g3-equivalent-matching.md`.
 
+## G4 — coupled-phase HGES parity-collapse control
+
+G4 couples the two public matching phases of many G3 gadgets through redundant pairwise XOR constraints. This is the first HGES control with explicit nonlocal coupling.
+
+**G4 is rejected by A-031.** Public spanning-tree phase propagation and independent GF(2) elimination recover both accepted global phase assignments. On `g4-12`, the 18×12 system has rank/nullity `11/1`; the attack uses 72 row XORs and returns two accepted witnesses, one different from the hidden reference.
+
+Across `g4-4`, `g4-8`, `g4-12` and eight deterministic seeds each, **24/24** instances have rank `g-1`, nullity 1, two accepted public solutions and one non-reference solution. The coupling is therefore binary synchronization/cohomology, not evidence of hardness.
+
+See `docs/39-g4-coupled-phase-parity.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -242,14 +252,15 @@ See `docs/38-g3-equivalent-matching.md`.
 - `docs/36-g1-bridge-free-clique-gluing.md` — measured G1/A-028 negative control
 - `docs/37-g2-stellar-contraction.md` — measured G2/A-029 negative control
 - `docs/38-g3-equivalent-matching.md` — measured G3/A-030 negative control
+- `docs/39-g4-coupled-phase-parity.md` — measured G4/A-031 negative control
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G4**, not a trapdoor construction. G4 may add genuinely nonlocal coupling between otherwise plausible local decomposition choices, but the coupling itself must be treated as the new public attack surface rather than as assumed hardness.
+The next controlled HGES experiment is **G5**, not a trapdoor construction. G4 showed that explicit nonlocal coupling is still useless when it factors through public pairwise XOR differences.
 
-A first G4 control should deliberately test whether binary local matching phases coupled across multiple gadgets collapse to parity/cycle-space/cohomology or another low-width constraint problem. Before any positive interpretation, G4 must face constrained matching, factor-graph propagation, low-width dynamic programming, exact-cover/CSP/SAT/CP-SAT, automorphism/normalization, equivalent-witness enumeration, and planted-role statistical leakage.
+G5 must change the constraint algebra rather than increase the coupling graph. Before any positive interpretation it must face quotient/abelianization tests, finite-domain CSP, belief propagation/local consistency, low-width dynamic programming, exact SAT/CP-SAT, automorphism/normalization, equivalent-witness enumeration, and planted-role statistical leakage.
 
 Only an HGES distribution that survives these public attacks could justify asking whether a secret decomposition supplies a real recovery advantage with:
 

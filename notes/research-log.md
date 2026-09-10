@@ -430,3 +430,15 @@ Across `g3-3`, `g3-5`, and `g3-8` with eight deterministic public relabel seeds 
 **G3 rejected by A-030.**
 
 Lesson: making local interfaces indistinguishable can make the attacker relation easier under equivalent-witness semantics. The hidden planted phase is irrelevant when the other alternating perfect matching is also accepted. Do not scale the even cycle. G4 must add genuinely nonlocal coupling and attack that coupling first as parity/cohomology/gauge, constrained matching, low-width DP/CSP, exact-cover/SAT/CP-SAT, automorphism/normalization, equivalent-witness, and planted-role leakage structure.
+
+### G4 — coupled-phase parity-collapse control
+
+Coupled many locally ambiguous `g3-3` gadgets with public pairwise phase differences on redundant connected graphs. Each local gadget still has exactly two accepted matching phases; generation reference phases are not used by the attack.
+
+A-031 independently performs spanning-tree XOR propagation and full GF(2) row reduction. Exact-head Python 3.12 `g4-12` gives 12 gadgets / 72 tetrahedra, 18 coupling constraints, cycle rank 7, rank/nullity 11/1, 72 row XORs, 84/0 local matching nodes/backtracks, and two accepted global phase solutions, one non-reference.
+
+Across `g4-4`, `g4-8`, `g4-12` × eight seeds, **24/24** instances have rank `g-1`, nullity 1, two accepted solutions and one non-reference solution.
+
+**G4 rejected by A-031.**
+
+Lesson: adding nonlocal coupling does not create hardness when the coupling factors exactly through public XOR differences. G5 must change the constraint algebra and immediately face quotient/abelianization, bounded-domain CSP, local consistency/belief propagation, low-width DP, SAT/CP-SAT, normalization and equivalent-witness attacks.
