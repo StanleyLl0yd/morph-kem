@@ -2,7 +2,7 @@
 
 ## Status
 
-**G10 is an attack calibration in progress. No hardness or security conclusion is permitted until exact-head CI records A-037.**
+**G10 is rejected by A-037.** Exact-head Python 3.11/3.12/3.13 dedicated CI and the common repository CI pass. The public toroidal decomposition relation is ordinary bipartite perfect matching, and equivalent accepted matchings are abundant on the measured family.
 
 G10 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -47,7 +47,7 @@ Thus the relation is intentionally tested at its simplest exact semantics: accep
 
 ## Structural gate
 
-The measured public object must satisfy:
+The measured public object satisfies:
 
 - one connected closed 2D simplicial complex;
 - every edge has triangle incidence exactly two;
@@ -74,14 +74,54 @@ A-037 uses only public incidence:
 
 The implementation records augmentations, recursive augmenting-search calls, public dual-edge scans, forced-edge attempts and alternative-search edge scans.
 
-## Rejection gate
+## Exact Python 3.12 `g10-8x8` result
 
-Any accepted public perfect matching rejects G10. Alternative accepted matchings strengthen the result under equivalent-witness semantics.
+```text
+torus rows/cols:                              8/8
+public V/E/F:                                64/192/128
+Euler characteristic:                        0
+edge triangle incidence min/max:             2/2
+dual vertices/edges:                         128/192
+dual degree histogram:                       ((3,128),)
+bridges/articulation points:                  0/0
+public bipartition sizes:                     (64,64)
+allowed candidate dual edges:                192
+base matching augmentations/DFS calls/scans: 64/455/770
+alternative forced-edge attempts:             63
+alternative matching edge scans:           49473
+matching solutions/cap:                       64/64
+matching cap hit:                             yes
+accepted public solutions:                    64
+accepted non-reference solutions:            63
+reference witness accepted:                  yes
+```
 
-Increasing torus dimensions cannot repair a relation that is exactly bipartite perfect matching; the polynomial algorithm applies regardless of grid width or treewidth.
+The base public recovery therefore produces a verifier-valid decomposition in polynomial matching work. The alternative search immediately reaches the explicit 64-solution cap; 63 of those accepted witnesses differ from the hidden reference.
+
+## Deterministic sweep
+
+Python 3.12 tested `g10-4x4`, `g10-6x6`, and `g10-8x8` over eight independently derived deterministic public relabel seeds each.
+
+| Set | Dual V/E | Bipartition | Base augmentations | Base DFS calls range | Base edge scans range | Accepted solutions range | Non-reference range | Cap behavior |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| g10-4x4 | 32/48 | 16/16 | 16 | 59–76 | 98–132 | 22–26 | 21–25 | cap 64 not reached |
+| g10-6x6 | 72/108 | 36/36 | 36 | 151–271 | 237–474 | 62–64 | 61–63 | cap reached on 6/8 seeds |
+| g10-8x8 | 128/192 | 64/64 | 64 | 390–564 | 655–986 | 64 | 63 | cap reached on 8/8 seeds |
+
+Across all **24/24** measured instances, the public graph is 3-regular and bipartite with zero bridges/articulation points, A-037 finds an accepted public perfect matching, and at least one accepted non-reference matching is recovered. On every `g10-8x8` seed the alternative search reaches the 64-solution cap.
+
+## Result
+
+**G10 is rejected by A-037.**
+
+The move from one-dimensional cyclic overlap to a genuinely two-dimensional toroidal interaction changes the geometry but not the computational relation. Because each accepted piece contains exactly two adjacent triangles, public decomposition is exactly a graph perfect-matching problem. The recovered bipartition makes deterministic polynomial matching sufficient, regardless of the torus width or separator growth.
+
+Do not increase torus dimensions as a repair. Equivalent-witness multiplicity is also substantial and helps the attacker under MORPH-KEM semantics.
+
+This is a generated-relation falsification, not a theorem that arbitrary HGES or hypergraph decomposition is easy.
 
 ## G11 gate
 
-If G10 fails as expected, G11 must change the allowed-piece relation beyond pairwise matching. The next useful control should use overlapping pieces of size greater than two so candidate selection is genuinely hypergraphic, while immediately testing planarity/toroidality, separators/treewidth, Pfaffian/matching reductions, local signatures, exact cover/set packing, low-width DP, generic CSP/SAT/CP-SAT, equivalent-witness multiplicity and generated-role leakage.
+G11 must change the allowed-piece relation beyond pairwise matching. The next useful control should use overlapping pieces of size greater than two so candidate selection is genuinely hypergraphic. It must immediately test planarity/toroidality, separators/treewidth, matching/Pfaffian reductions, local signatures, exact cover/set packing, low-width DP, generic CSP/SAT/CP-SAT, equivalent-witness multiplicity and generated-role leakage.
 
-No security claim.
+No trapdoor work begins from G10. No security claim.
