@@ -6,7 +6,7 @@
 Canonical toy relation implemented; A-000 directly recovers coordinates. **Rejected.**
 
 ### M1
-Global reversible path implemented; A-008 meet-in-the-middle recovers paths. **Rejected.**
+Global reversible path implemented; A-008 meet-in-the-middle path recovery. **Rejected.**
 
 ### M2
 Genuine collapse maze implemented; A-014 reconstructs the 3-regular planted core from generator invariants; A-015 shows many alternative residuals. **Rejected.**
@@ -331,3 +331,28 @@ The all-parameter, eight-seed sweep recovered and accepted **24/24** partitions,
 **G0 rejected as designed by A-024.**
 
 Lesson: hiding local piece labels and gluing permutations does not help when the quotient exposes a canonical separator decomposition. G1 must structurally remove the bridge shortcut before any further HGES interpretation.
+
+### G1 — bridge-free cycle gluing
+
+Reassembled the same four-tetrahedron 3-ball pieces in a cycle using distinct incoming/outgoing ports and parity-conditioned seeded boundary swaps. The public tetrahedron dual graph now has no bridges and no articulation vertices, so G0's A-024 shortcut is genuinely gone.
+
+Exact-head Python 3.12 `g1-8`:
+
+~~~text
+public V/E/F/T = 18/57/72/32
+boundary/max face incidence = 16/2
+dual graph vertices/edges = 32/56
+bridges/articulation vertices = 0/0
+dual degree histogram = ((3,16),(4,16))
+vertex tetrahedron-degree histogram = ((4,8),(6,8),(24,2))
+~~~
+
+A-028 uses public vertex stars. The eight degree-4 vertices expose exactly eight valid piece candidates; exact cover succeeds in 9 nodes with 0 backtracks and matches the planted partition.
+
+A-029 independently enumerates dual `K4` blocks. On `g1-8`, 35,960 four-subsets contain exactly eight K4/allowed-piece candidates; exact cover again succeeds in 9 nodes with 0 backtracks and matches the planted partition.
+
+Across `g1-3`, `g1-5`, `g1-8` and eight seeds each, the bridge/articulation gate passes **24/24**, while both A-028 and A-029 recover accepted decompositions **24/24**, all matching the planted partition.
+
+**G1 rejected by A-028 and A-029.**
+
+Lesson: removing canonical assembly separators does not help if each hidden piece remains canonically recognizable through an interior-apex star or a unique dual block. The next HGES step must change the piece family, not scale the cycle.
