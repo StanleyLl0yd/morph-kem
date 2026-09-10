@@ -1,0 +1,58 @@
+name: G3 HGES equivalent matching negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_matching.py'
+      - 'tests/test_gluing_matching.py'
+      - 'scripts/gluing_matching_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/38-g3-equivalent-matching.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g3.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_matching.py'
+      - 'tests/test_gluing_matching.py'
+      - 'scripts/gluing_matching_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/38-g3-equivalent-matching.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g3.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  g3:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G3
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/gluing_matching.py tests/test_gluing_matching.py scripts/gluing_matching_baseline.py scripts/gluing_matching_sweep.py
+      - name: G3 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_gluing_matching -v
+      - name: G3 equivalent-matching baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_matching_baseline.py --params g3-8
+      - name: G3 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_matching_sweep.py --seeds 8
