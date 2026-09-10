@@ -1,0 +1,93 @@
+name: G8 measured collapse bookkeeping
+
+on:
+  push:
+    branches: ['g8/hges-phase-csp-collapse']
+    paths: ['.github/workflows/g8-closure-write.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: g8/hges-phase-csp-collapse
+      - name: Record A-035 and clean G8 typing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          code = Path('src/morph_kem/gluing_phase_csp.py')
+          text = code.read_text()
+          text = text.replace(
+              'from .gluing import GluingExperimentError, TetrahedronGroup',
+              'from .gluing import GluingExperimentError, GluingPublicInstance, TetrahedronGroup'
+          )
+          text = text.replace(
+              'def _extract_public_domains(gadgets: tuple[object, ...]) -> PhaseLiftTable:',
+              'def _extract_public_domains(gadgets: tuple[GluingPublicInstance, ...]) -> PhaseLiftTable:'
+          )
+          text = text.replace(
+              'canonical, gadget_nodes, gadget_backtracks = _canonical_gadget_matchings(gadget)  # type: ignore[arg-type]',
+              'canonical, gadget_nodes, gadget_backtracks = _canonical_gadget_matchings(gadget)'
+          )
+          text = text.replace(
+              'tetrahedra += len(gadget.tetrahedra)  # type: ignore[attr-defined]',
+              'tetrahedra += len(gadget.tetrahedra)'
+          )
+          code.write_text(text)
+
+          readme = Path('README.md')
+          text = readme.read_text()
+          text = text.replace('HGES controls G0–G7 are implemented and rejected.', 'HGES controls G0–G8 are implemented and rejected.')
+          text = text.replace(
+              'BTTS failed its first two generated-distribution calibrations, T0 and T1. HGES has now failed eight controlled stages G0–G7: canonical separators and motifs (G0–G2), equivalent local decompositions (G3), explicit parity synchronization (G4), affine leakage through nonlinear exact-one predicates (G5–G6), and finally generic DPLL/MiniSat plus abundant equivalent witnesses on planted signed 3-SAT (G7). None is positive hardness evidence.',
+              'BTTS failed its first two generated-distribution calibrations, T0 and T1. HGES has now failed G0–G8: G0–G2 exposed canonical separator/motif/refinement structure; G3 exposed equivalent local decompositions; G4–G6 collapsed through parity/affine structure; G7 remained generic-SAT friendly even after the affine shortcut was removed; and G8 confirms the deeper architectural failure that G4–G7 factor exactly through an ordinary finite-domain CSP after cheap public local-phase extraction. None is positive hardness evidence.'
+          )
+          if '## G8 — topology-to-CSP collapse audit' not in text:
+              marker = '\n## Research discipline\n'
+              block = '''\n## G8 — topology-to-CSP collapse audit\n\nG8 attacks the architecture shared by G4–G7 rather than another clause predicate. The public attacker independently enumerates each G3 gadget's two accepted local decompositions, compiles all global constraints to integer finite-domain relation tables, solves that topology-free CSP, and mechanically lifts assignments back to topological witnesses.\n\n**G8 is rejected by A-035, and A-035 confirms a structural G4–G7 topology-to-CSP collapse.** Exhaustive Python 3.12 comparison checks 12,304 phase assignments across the smallest G4/G5/G6/G7 instances with **zero semantic mismatches** between the compiled CSP and the original HGES verifiers. On larger fixed baselines the generic solver needs 3 nodes/1 decision for G4–G6 and 38 nodes/22 decisions for G7; every recovered assignment lifts to an accepted original witness. A four-seed/four-family regression succeeds 16/16, with G7 requiring at most 100 generic-CSP nodes.\n\nThe solver serialization contains no tetrahedra, faces, vertices, simplicial labels, or witness groups. Topology survives only in a separate public lift table after the solve. Therefore choosing a harder CSP predicate over the same independently enumerable local domains is not additional topological hardness.\n\nSee `docs/43-g8-topology-csp-collapse.md`.\n'''
+              if marker not in text:
+                  raise SystemExit('README research-discipline marker missing')
+              text = text.replace(marker, block + marker, 1)
+          key_anchor = '- `docs/41-g6-affine-coset-residual.md` — measured G6/A-033 negative control\n'
+          key_extra = '- `docs/42-g7-planted-3sat.md` — measured G7/A-034 negative control\n- `docs/43-g8-topology-csp-collapse.md` — measured G8/A-035 structural collapse audit\n'
+          if 'docs/43-g8-topology-csp-collapse.md` — measured' not in text:
+              if key_anchor not in text:
+                  raise SystemExit('README key-file anchor missing')
+              text = text.replace(key_anchor, key_anchor + key_extra, 1)
+          start = text.find('## Next gate\n')
+          end = text.find('\n## Naming\n', start)
+          if start < 0 or end < 0:
+              raise SystemExit('README next-gate section missing')
+          next_gate = '''## Next gate\n\nThe next controlled HGES experiment is **G9**, not a trapdoor construction. G8 shows that adding increasingly sophisticated global CSP predicates over independently enumerable local topological phase gadgets does not create topological hardness: the topology can be compiled away before solving.\n\nG9 must therefore attack the premise of `PhaseExtract` itself. A useful negative control should overlap/entangle candidate local decompositions across public boundaries so there is no cheap independent per-gadget domain table. Before any positive interpretation it must face multiscale decomposition, separator/link/motif, normalization/automorphism, overlapping exact-cover/CSP/SAT/CP-SAT, low-width, equivalent-witness, generated-role leakage, and contraction/quotient attacks.\n\nOnly a relation where public extraction of a compact local witness domain itself survives these attacks could justify asking whether a secret decomposition supplies a real recovery advantage. No trapdoor/KEM work begins before that.\n\nNo security or post-quantum claim exists.\n'''
+          text = text[:start] + next_gate + text[end:]
+          readme.write_text(text)
+
+          ledger = Path('docs/05-cryptanalysis.md')
+          text = ledger.read_text()
+          row = '| A-035 | Public local-phase extraction and topology-to-CSP factorization | **Structural break of G4–G7 design line** | Implemented |'
+          if row not in text:
+              anchor = '| A-034 | Public planted 3-SAT DPLL + independent MiniSat recovery | **Fatal to G7 generated distribution** | Implemented |'
+              if anchor not in text:
+                  raise SystemExit('A-034 ledger anchor missing')
+              text = text.replace(anchor, anchor + '\n' + row, 1)
+          if '## A-035 — public local-phase extraction and topology-to-CSP factorization' not in text:
+              text = text.rstrip() + '''\n\n## A-035 — public local-phase extraction and topology-to-CSP factorization\n\n### Target\n\nThe architecture shared by HGES G4–G7: independently relabelled G3 gadgets expose small publicly enumerable local decomposition domains, while global verification is expressed as constraints on those local choices.\n\n### Public reduction\n\nA-035 uses no planted roles. It publicly enumerates/canonically orders the two accepted local G3 decompositions per gadget, compiles every global verifier constraint to a finite relation over integer domain indices, and serializes a `CompiledPhaseCSP` that contains no tetrahedra, faces, vertices, simplicial labels, or witness groups. A generic GAC/MRV solver sees only this compiled object. A separate public lift table is consulted only after solving to reconstruct a witness for the original exact HGES verifier.\n\n### Exact semantic-equivalence audit\n\nPython 3.12 exhaustively checks the full local-domain product on the smallest instance of every affected family:\n\n~~~text\nG4 g4-4:   16 checked,   compiled 2,  original 2,  mismatches 0\nG5 g5-12:  4096 checked, compiled 1,  original 1,  mismatches 0\nG6 g6-12:  4096 checked, compiled 1,  original 1,  mismatches 0\nG7 g7-12:  4096 checked, compiled 10, original 10, mismatches 0\n~~~\n\nTotal: **12,304/12,304 assignments with zero semantic mismatches**. The equivalence covers the full measured accepted relation, not just a planted witness.\n\n### Fixed large-family topology-free baseline\n\n~~~text\nfamily  vars/constraints  relation      tets  extraction n/b  generic solutions  generic n/d  lifted accepted  nonref\nG4      12/18             (2,2) x18      72   84/0            2                 3/1          2                1\nG5      24/48             (3,3) x48     144   168/0           1                 3/1          1                0\nG6      24/48             (3,3) x48     144   168/0           1                 3/1          1                0\nG7      24/96             (3,7) x96     144   168/0          16/16             38/22        16               16\n~~~\n\nSerialized CSP sizes are 798, 2772, 2772, and 8520 bytes respectively, with the explicit topology-token check false in all four cases.\n\nA four-seed sweep over the largest representative of all four families gives **16/16** successful topology-free solves followed by accepted original-verifier lifts. G4–G6 always use 3 solver nodes/1 decision. G7 uses 40–100 nodes and 23–53 decisions; all runs reach the 16-solution cap, with 15 or 16 non-reference witnesses among the first 16.\n\n### Result\n\n**A-035 confirms a structural topology-to-CSP collapse for the G4–G7 design line.** Once the local topological witness domains are cheaply and independently enumerable, topology becomes public preprocessing plus a mechanical post-solve lift. Selecting a different worst-case-hard CSP over the same exposed domains is not additional topological hardness.\n\nThis is not a theorem that arbitrary HGES, topology, CSP, or SAT is easy. A successor must break the premise of cheap independent phase extraction rather than scale this architecture.\n'''
+          ledger.write_text(text)
+
+          log = Path('notes/research-log.md')
+          text = log.read_text()
+          if '## 2026-09-10 — G8 confirms topology-to-CSP collapse via A-035' not in text:
+              text = text.rstrip() + '''\n\n## 2026-09-10 — G8 confirms topology-to-CSP collapse via A-035\n\nImplemented a generic public compiler for the G4–G7 HGES architecture. Each local G3 gadget's two accepted decompositions are enumerated/canonically ordered publicly; global constraints are compiled to finite relation tables with no simplicial identifiers; a generic GAC/MRV solver operates only on the compiled CSP; assignments are lifted afterward and checked by the original exact HGES verifier.\n\nExact Python 3.12 semantic audit: G4 `16/16`, G5 `4096/4096`, G6 `4096/4096`, G7 `4096/4096` phase assignments checked, **0 mismatches** in every family (12,304 total). Fixed large-family solver work is G4 `3/1`, G5 `3/1`, G6 `3/1`, G7 `38/22` nodes/decisions; all recovered assignments lift successfully, with G7 exposing 16/16 non-reference solutions in its capped batch. Four-seed/four-family sweep succeeds 16/16; G7 max generic work is 100 nodes / 53 decisions.\n\nConclusion: A-035 is a structural break of the G4–G7 design line. A harder global CSP predicate over the same independently enumerable local phase domains would be cosmetic with respect to topology. G9 must make public phase/domain extraction itself nontrivial by entangling local topology across boundaries, then attack that extraction aggressively. No security claim.\n'''
+              log.write_text(text)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/morph_kem/gluing_phase_csp.py README.md docs/05-cryptanalysis.md notes/research-log.md
+          git diff --cached --quiet && exit 0
+          git commit -m 'G8: record A-035 structural collapse'
+          git push origin HEAD:g8/hges-phase-csp-collapse
