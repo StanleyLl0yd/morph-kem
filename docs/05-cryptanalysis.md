@@ -34,6 +34,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-028 | Public K4 / allowed-piece exact-cover recovery | **Fatal to G1 generated distribution** | Implemented |
 | A-029 | Public stellar-center contraction + macro recovery | **Fatal to G2 generated distribution** | Implemented |
 | A-030 | Equivalent perfect-matching gluing recovery | **Fatal to G3 generated distribution** | Implemented |
+| A-031 | Public GF(2) coupled-phase synchronization | **Fatal to G4 generated distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -259,3 +260,69 @@ A successor may add genuinely nonlocal coupling between otherwise plausible loca
 - planted-role statistical leakage.
 
 No one-wayness, average-case hardness, post-quantum hardness, IND-CPA, IND-CCA, KEM, or production-security claim exists.
+
+## A-031 — public GF(2) coupled-phase synchronization
+
+### Target
+
+G4 coupled-phase HGES negative control.
+
+G4 starts from locally ambiguous `g3-3` gadgets. Each gadget has exactly two accepted public perfect-match decompositions, canonically represented by one phase bit. Generation publishes only pairwise phase differences `b_ij = x_i XOR x_j` on a connected redundant coupling graph.
+
+### Public attack
+
+A-031 uses no hidden reference phases:
+
+1. enumerate and canonically order the two accepted G3 matchings for every gadget;
+2. translate every public coupling edge into one binary linear equation;
+3. recover phases by spanning-tree propagation from an arbitrary root bit;
+4. check every redundant cycle constraint;
+5. independently row-reduce the full public equation system over GF(2);
+6. repeat propagation for both root bits;
+7. lift both public phase vectors to local matching witnesses;
+8. submit both to the exact G4 verifier;
+9. compare to generation history only after public acceptance.
+
+### Exact Python 3.12 `g4-12` result
+
+~~~text
+gadgets:                                  12
+total public tetrahedra:                  72
+coupling vertices / edges:                12/18
+coupling cycle rank:                       7
+per-gadget perfect matchings:              twelve copies of 2
+total local matching nodes/backtracks:    84/0
+XOR equations / variables:                18/12
+GF(2) rank / nullity:                     11/1
+GF(2) row XORs:                           72
+propagation tree assignments:             22
+propagation constraint checks:            36
+recovered phase solutions:                 2
+accepted public solutions:                 2
+accepted non-reference solutions:          1
+reference witness accepted:               yes
+~~~
+
+### Deterministic sweep
+
+Python 3.12 tested `g4-4`, `g4-8`, and `g4-12` over eight independently derived deterministic seeds each.
+
+| Set | Gadgets | Coupling edges | Cycle rank | Rank/nullity | Row XORs | Local matching nodes/backtracks | Propagation assignments/checks | Accepted | Non-reference |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| g4-4 | 4 | 6 | 3 | 3/1 | 10 | 28/0 | 6/12 | 2 | 1 |
+| g4-8 | 8 | 12 | 5 | 7/1 | 38 | 56/0 | 14/24 | 2 | 1 |
+| g4-12 | 12 | 18 | 7 | 11/1 | 72 | 84/0 | 22/36 | 2 | 1 |
+
+All **24/24** generated instances have rank `g-1`, nullity `1`, two accepted public phase assignments, and exactly one accepted assignment different from the hidden reference.
+
+### Result
+
+**G4 is rejected by A-031.**
+
+The new nonlocal coupling is exactly public binary synchronization/cohomology. Redundant cycles add consistency checks but no secret asymmetry; on a connected graph the only residual freedom is the common global phase flip, which is itself an accepted equivalent witness. Increasing the number of gadgets or coupling edges cannot repair the algebraic collapse.
+
+This is not a theorem that general HGES is easy. It rejects this generated relation and shows that nonlocality alone is not useful when it factors through an abelian binary quotient.
+
+### G5 gate
+
+A successor must change the constraint algebra, not merely the graph. It must first face quotient/abelianization tests, finite-domain CSP, belief propagation/local consistency, low-width dynamic programming, exact SAT/CP-SAT, automorphism/normalization, equivalent-witness enumeration, and generated-role leakage. No trapdoor work begins from a parity-coupled relation.
