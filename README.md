@@ -1,6 +1,6 @@
 # MORPH-KEM
 
-**MORPH-KEM** is exploratory post-quantum public-key cryptography research based on discrete Morse theory, combinatorial topology, and attack-first mathematical experimentation.
+**MORPH-KEM** is exploratory public-key/post-quantum cryptography research based on discrete Morse theory, combinatorial topology, hyperbolic/non-orientable structures, and attack-first mathematical experimentation.
 
 > **Research only. Not for production use. Not a security claim.**
 >
@@ -8,27 +8,39 @@
 
 ## Current status
 
-**M0–M4 have all been implemented and rejected. No candidate primitive exists.**
+**M0–M5 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
-- **M0** — broken by A-000 direct public coordinate recovery.
-- **M1** — broken by A-008 meet-in-the-middle path recovery.
-- **M2** — broken by A-014 structural hidden-core reconstruction.
-- **M3** — honest equivalent-witness relation; broken by A-016 collapse plus spanning-tree construction.
-- **M4** — closed triangulated tori with zero free collapses; broken by A-018 public primal/dual tree-cotree construction.
+Core M-series:
 
-M5 is now being implemented on a parallel branch as an irregular non-manifold equivalent-witness experiment.
+- **M0** — A-000 direct public coordinate recovery.
+- **M1** — A-008 meet-in-the-middle path recovery.
+- **M2** — A-014 structural hidden-core reconstruction.
+- **M3** — A-016 collapse + spanning-tree equivalent witness.
+- **M4** — A-018 public primal/dual tree-cotree witness.
+- **M5** — irregular non-manifold 2-core with zero free collapses, but a public tree-plus-extension search reaches an accepted equivalent Morse witness in 30 nodes on the fixed baseline.
 
-## H-series side track
+The project does not interpret increasingly elaborate topology as security. Every new relation is attacked before scaling.
 
-A separate **H-series** studies the Möbius / Escher / Lobachevsky direction without changing the M-series conclusions.
+## H / Escher / covering results
 
-Working research label:
+- **H1:** S3 holonomy verifier factors exactly through Z2 parity.
+- **H2-E1:** Escher relative-height atlas reduces to gain/cocycle cycle balance.
+- **H2-E2:** higher-order NAE charts reduce to solver-friendly planted deletion-CSP; role leakage also appears.
+- **H2-E3:** naive all-charts variant rejected pre-code as Goldreich/random-local-function/planted-CSP structure.
+- **H3-E0:** hidden graph-cover fiber coordinates are public gauge after spanning-tree normalization.
+- **H3-E1:** naive composite-cover public-key adaptation fails the public-evaluation/trapdoor interface gate.
+- **H2-H/H2.1:** exact `{3,7}` Klein-quartic/A5 relation is broken on the fixed generated instance by exact MiniSat; the decoded SAT assignment passes the repository verifier.
 
-**Hyperbolic Frustrated MORPH (HFM)**
+## K-series results
 
-The H-series investigates finite hyperbolic-like quotients and cell complexes with negative-curvature combinatorics, orientation-reversing gluings, overlapping holonomy, non-manifold junctions, local-to-global constraints, and equivalent-witness semantics.
+The K-series tests non-orientable and higher-gauge variants.
 
-Hyperbolic geometry, non-orientability, and holonomy are never treated as hardness assumptions by themselves.
+- **K0:** Klein-bottle orientation data collapses to public Z2 gauge/cohomology.
+- **K1:** exact non-orientable hyperbolic `N4:{6,4}_3` still exposes its orientation double cover and local gauge.
+- **K2.0:** orientation-twisted `A5 ⋊ C2` is exactly ordinary `S5` transport.
+- **K2.1:** crossed modules/strict 2-groups are established 2-type machinery; hidden higher gauge is not itself a trapdoor.
+- **K2.2:** for `partial: Q8 -> Aut(Q8)`, fake-flatness factorizes into independent public face lifts. Four faces expose `2^4 = 16` equivalent witnesses.
+- **K2.3:** the first genuine 3D coherence calibration also collapses exactly. Once one public lift per Q8 boundary fiber is chosen, the remaining face choices are `C2` bits and tetrahedral coherence is `A z = b` over GF(2). On the boundary of a 4-simplex the public matrix has 5 equations, 10 variables, rank 4, nullity 6, and therefore 64 equivalent witnesses. Gaussian elimination constructs an accepted non-planted witness in the measured CI baseline.
 
 ## Research discipline
 
@@ -37,61 +49,40 @@ Hyperbolic geometry, non-orientability, and holonomy are never treated as hardne
 - Worst-case hardness is not average-case cryptographic hardness.
 - Negative results are preserved.
 - Structural breaks are redesigned, not repaired by larger parameters.
-- No KEM wrapper until a primitive survives dedicated attacks.
-- "Hyperbolic", "non-orientable", "higher-gauge", or "Escher-like" are mathematical descriptions, never security arguments.
+- Hyperbolic, non-orientable, higher-gauge, Escher-like, or high-dimensional are mathematical descriptions, never security arguments.
+- No KEM wrapper until a mathematical primitive survives dedicated attacks and has a complete public-evaluation/trapdoor-recovery interface.
 
 ## Key files
 
-- `src/morph_kem/` — constructions and attacks
-- `tests/` — exact validators and attack tests
+- `src/morph_kem/` — executable constructions and attacks
+- `tests/` — exact validators and regression tests
 - `scripts/` — deterministic baselines and sweeps
 - `docs/05-cryptanalysis.md` — attack ledger
-- `docs/13-m4-closed-surface.md` — M4 result
-- `docs/14-h-series-hyperbolic-charter.md` — H-series prior-art/threat charter
-- `docs/15-h1-holonomy-experiment.md` — H1 signed-holonomy result
-- `docs/16-h2e-escher-atlas.md` — H2-E1 edge-gain Escher result
-- `docs/17-h2e2-higher-atlas.md` — H2-E2 higher-order chart experiment
-- `docs/18-h2e3-frontier.md` — Goldreich/local-OWF frontier and H3-E novelty gate
-- `docs/19-h3e-lifted-atlas.md` — graph-cover gauge-normalization calibration
-- `docs/20-h3e-composite-cover-frontier.md` — graph-cover public-key interface gate
-- `docs/21-h2-klein-quartic-a5.md` — exact hyperbolic Klein-quartic/A5 experiment
-- `docs/22-k0-klein-bottle.md` — non-orientable Klein-bottle orientation control
-- `docs/23-k1-nonorientable-hyperbolic.md` — exact N4:{6,4}_3 hyperbolic non-orientable control
-- `docs/24-k2-twisted-a5-semidir.md` — orientation-twisted A5 / S5 semidirect-product calibration
-- `docs/25-k2-crossed-module-frontier.md` — crossed-module / finite-2-group prior-art and trapdoor gate
-- `docs/26-k2-q8-crossed-module.md` — executable Q8 crossed-module fake-flatness result
+- `docs/21-h2-klein-quartic-a5.md` — exact hyperbolic/A5 experiment
+- `docs/22-k0-klein-bottle.md` — Klein-bottle control
+- `docs/23-k1-nonorientable-hyperbolic.md` — hyperbolic non-orientable control
+- `docs/24-k2-twisted-a5-semidir.md` — A5/S5 flattening
+- `docs/25-k2-crossed-module-frontier.md` — crossed-module prior-art/trapdoor gate
+- `docs/26-k2-q8-crossed-module.md` — K2.2 fake-flatness result
+- `docs/27-m5-irregular-nonmanifold.md` — M5 result
+- `docs/28-k2-3d-kernel-coherence.md` — K2.3 3D/GF(2) result
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
-## Next directions
+## Next gate
 
-**M5:** irregular non-manifold 2-complexes, exact equivalent-witness search, CSP/SAT-style attacks, and incidence/canonicalization analysis.
+Do **not** continue by merely increasing genus, group order, cover degree, kernel size, or complex dimension.
 
-**H1:** rejected. Z2 collapses by spanning-tree/cycle-space recovery; the S3 verifier collapses exactly to Z2 parity.
+A successor must begin with an explicit interface such as:
 
-**H2-E1:** rejected. Relative-height Escher atlas is ordinary gain/cocycle structure and equivalent seam repair is cheap.
+~~~text
+(pk, td) <- TrapdoorGen(lambda)
+y        <- PublicEval(pk, r)
+w        <- TrapdoorRecover(td, pk, y)
+Verify(pk, y, w)
+~~~
 
-**H2-E2:** rejected. Pairwise-compatible NAE charts are a solver-friendly planted deletion-CSP with visible role leakage.
-
-**H2-E3:** rejected before code. A naive all-charts hidden-state construction is Goldreich/random-local-function/planted-CSP structure.
-
-**H3-E0:** rejected. Public permutation-voltage path lifting exposes the same graph cover up to global sheet gauge.
-
-**H3-E1:** rejected before code. Naive composite-cover public-key adaptations either reveal the decoder structure or lack a trapdoor recovery algorithm.
-
-**H2-H / H2.1:** rejected on the fixed generated Klein-quartic/A5 instance by exact industrial MiniSat; the decoded SAT model passes the repository verifier.
-
-**K0:** rejected as designed. Exact Klein-bottle non-orientability leaves only public Z2 orientation obstruction plus one global gauge bit.
-
-**K1:** rejected as designed. Exact non-orientable hyperbolic N4:{6,4}_3 still exposes the orientation double cover and all face gauge up to one bit.
-
-**K2.0:** rejected algebraically. Orientation-twisted A5 is exactly `A5 ⋊ C2 ~= S5`, with zero predicate mismatches over all 43,200 tested endpoint assignments.
-
-**K2.1:** frontier review completed. Crossed modules/strict 2-groups are established 2-type machinery and already have cryptographic prior art; hiding higher gauge is not a trapdoor.
-
-**K2.2:** implemented and rejected. For `partial: Q8 -> Aut(Q8)` the exact structure is kernel/image/cokernel `2/4/6`. On N4:{6,4}_3 all four public face holonomies lie in the boundary image, each has exactly two Q8 lifts, and the verifier therefore exposes `2^4 = 16` equivalent fake-flat witnesses. A public attack constructs an accepted witness with only 24 edge compositions and 32 Q8 preimage checks, and its witness differs from the planted representative. Fake-flatness alone is therefore independent face lifting, not higher-order asymmetry.
-
-The next K-series experiment must couple those face lifts through genuinely higher coherence. Since the remaining Q8 boundary ambiguity is the abelian kernel `C2`, the first successor attack must be a GF(2)/cohomology reduction; a genuine Postnikov-style coupling may require moving to a 3-complex, but only after an exact public/trapdoor interface is specified.
+and demonstrate why `td` gives an invariant recovery advantage on the generated positive distribution. Before implementation, the relation must be reduced against gauge/canonicalization, homology/cohomology, finite-module linear algebra, group synchronization, graph-cover recovery, and CSP/SAT/CP-SAT.
 
 No security or post-quantum claim exists.
 
