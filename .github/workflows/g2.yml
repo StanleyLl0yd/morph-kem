@@ -1,0 +1,63 @@
+name: G2 HGES stellar contraction negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_stellar.py'
+      - 'tests/test_gluing_stellar.py'
+      - 'scripts/gluing_stellar_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/37-g2-stellar-contraction.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g2.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_stellar.py'
+      - 'tests/test_gluing_stellar.py'
+      - 'scripts/gluing_stellar_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/37-g2-stellar-contraction.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g2.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  g2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G2
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/gluing_stellar.py tests/test_gluing_stellar.py scripts/gluing_stellar_baseline.py scripts/gluing_stellar_sweep.py
+      - name: G2 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_gluing_stellar -v
+      - name: G2 stellar-contraction baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_stellar_baseline.py --params g2-8
+      - name: G1 A-028 granularity regression
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_stellar_baseline.py --params g2-4 --old-a028
+      - name: G2 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_stellar_sweep.py --seeds 8

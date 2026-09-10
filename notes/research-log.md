@@ -368,3 +368,34 @@ The all-parameter, eight-seed sweep recovered and accepted **24/24** partitions 
 **G1 rejected by A-028.**
 
 Lesson: removing bridges and articulation vertices does not create gluing hardness when each hidden piece remains an exact fixed-size public clique. Do not scale the cycle. G2 must change the piece/overlap structure so the intended pieces are not directly the canonical `K4` blocks, and must still face separator, motif, local-role, automorphism, exact-cover/SAT/CP-SAT, equivalent-witness, and planted-role leakage attacks.
+
+### G2 — stellar-subdivision contraction control
+
+Every G1 macro tetrahedron was stellar-subdivided `1 -> 4`, turning each four-macro-tetrahedron piece into a sixteen-micro-tetrahedron public piece. The old A-028 regression no longer directly returns an accepted piece-level witness: on `g2-4` it finds 16 small `K4`/allowed center stars, but G2 requires four 16-tetrahedron piece groups.
+
+A-029 uses those public local stars against the construction. It identifies candidate stellar centers from vertex incidence, exact-covers the micro tetrahedra by center stars, contracts them back to the G1 macro complex, applies macro A-028, then lifts the recovered partition and checks the exact G2 verifier.
+
+Exact-head Python 3.12 `g2-8` baseline:
+
+~~~text
+public micro V/E/F/T = 50/185/264/128
+micro dual edges = 248
+bridges / articulation points = 0 / 0
+two-vertex separator pairs = 112
+candidate stellar centers = 32
+candidate-center false positives/misses = 0/0
+center exact-cover solutions/cap = 1/64
+center cover nodes/backtracks = 33/0
+reconstructed macro tetrahedra = 32
+contracted macro V/E/F/T = 18/57/72/32
+macro K4 / allowed candidates = 8/8
+macro cover nodes/backtracks = 9/0
+A-029 public witness accepted = yes
+matches planted partition up to order = yes
+~~~
+
+The all-size eight-seed sweep recovered and accepted **24/24** G2 witnesses, matched the planted piece partition in **24/24** cases, and produced zero candidate-center false positives or misses. Center exact-cover and macro exact-cover search had zero backtracking on every measured set.
+
+**G2 rejected by A-029.**
+
+Lesson: subdivision/refinement is not hiding when the generated representation has a public local inverse that restores an already-fatal macro decomposition. Do not scale or repeat the stellar subdivision. G3 must eliminate both canonical small piece motifs and obvious public contraction/simplification paths, while still facing separator, multiscale motif, local-link, automorphism, exact-cover/SAT/CP-SAT, equivalent-witness, and planted-role leakage attacks.
