@@ -69,6 +69,7 @@ See:
 - docs/21-h2-klein-quartic-a5.md — exact hyperbolic Klein-quartic/A5 experiment
 - docs/22-k0-klein-bottle.md — non-orientable Klein-bottle orientation control
 - docs/23-k1-nonorientable-hyperbolic.md — exact N4:{6,4}_3 hyperbolic non-orientable control
+- docs/24-k2-twisted-a5-semidir.md — orientation-twisted A5 / S5 semidirect-product calibration
 - notes/research-log.md — chronological record
 - spec/morph-kem-v0.1.md — future-spec skeleton
 
@@ -95,6 +96,8 @@ See:
 **K0:** implemented and rejected as designed. The exact finite Klein-bottle triangulation is genuinely non-orientable, but public spanning-tree XOR normalization removes the hidden local orientation gauge completely up to one global bit. On the baseline klein-bottle-5x4 instance, all 40 face-gauge bits are recovered up to that global bit with 60 public edge checks; the remaining 7/21 non-zero fundamental syndromes are public orientation-obstruction data, not a trapdoor.
 
 **K1:** implemented and rejected as designed. On exact N4:{6,4}_3 (V/E/F = 6/12/4, chi = -2, non-orientable, hyperbolic type {6,4}), the public Z2 normalization recovers all hidden face gauges up to one global bit in 12 edge checks. The orientation double cover is then reconstructed from public transition data alone and has V/E/F = 12/24/8, chi = -4, is orientable, and has genus 3. Genuine hyperbolicity does not rescue an orientation-character trapdoor.
+
+**K2.0:** active algebraic calibration. It twists A5 transport by the K1 orientation character through the non-trivial outer automorphism and tests whether the result is anything more than the semidirect product A5 ⋊ C2 ~= S5. The implementation exhaustively checks the 120-element map and exact edge-predicate flattening before any larger K2 construction.
 
 No security or post-quantum claim exists.
 

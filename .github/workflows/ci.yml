@@ -135,3 +135,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/nonorientable_map_baseline.py
+      - name: K2.0 twisted A5/S5 flattening baseline
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/twisted_a5_baseline.py

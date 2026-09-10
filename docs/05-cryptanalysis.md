@@ -529,3 +529,32 @@ reconstructed from public data:     yes
 **Result:** K1 rejected exactly as designed.
 
 **Lesson:** passing from the Klein bottle to a genuine non-orientable hyperbolic regular map does not create asymmetry when the protected object still factors through the orientation character. The orientation double cover is a public construction from the same transition data.
+
+
+### K-A03 — semidirect-product completion of twisted A5
+
+Target: K2.0 orientation-twisted A5 local system.
+
+Let the public orientation bit act on A5 through the non-trivial outer automorphism induced by conjugation with a fixed odd permutation r in S5.
+
+Then the twisted transport law is:
+
+~~~text
+(a,b)(c,d) = (a alpha^b(c), b XOR d).
+~~~
+
+The map:
+
+~~~text
+Phi(a,b) = a r^b
+~~~
+
+is tested exhaustively against S5 multiplication.
+
+If Phi is bijective and homomorphic, every orientation-twisted pairwise A5 transport is exactly one ordinary S5 transport. The public orientation bit is simply the permutation parity.
+
+K2.0 additionally checks every endpoint-frame pair on every N4:{6,4}_3 dual edge to ensure that the twisted verifier and flattened S5 verifier agree exactly.
+
+**Expected result:** structural rejection of naive K2.0.
+
+This attack is algebraic rather than complexity-based: scaling the same twisted 1-dimensional transport does not remove the semidirect-product equivalence.
