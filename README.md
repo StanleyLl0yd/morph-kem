@@ -70,6 +70,7 @@ See:
 - docs/22-k0-klein-bottle.md — non-orientable Klein-bottle orientation control
 - docs/23-k1-nonorientable-hyperbolic.md — exact N4:{6,4}_3 hyperbolic non-orientable control
 - docs/24-k2-twisted-a5-semidir.md — orientation-twisted A5 / S5 semidirect-product calibration
+- docs/25-k2-crossed-module-frontier.md — crossed-module / finite-2-group prior-art and trapdoor gate
 - notes/research-log.md — chronological record
 - spec/morph-kem-v0.1.md — future-spec skeleton
 
@@ -99,7 +100,7 @@ See:
 
 **K2.0:** implemented and rejected algebraically. The orientation-twisted A5 transport is exactly A5 ⋊ C2 ~= S5: all 120 elements map bijectively, all 14,400 products agree, and the orientation component is exactly S5 parity. On N4:{6,4}_3, all 43,200 endpoint assignments across the 12 public dual edges give zero mismatches between the twisted verifier and its ordinary S5 flattening. Non-orientable 1-dimensional transport still supplies no new hardness relation.
 
-**K2.1:** literature/interface frontier opened for genuinely 2-dimensional crossed-module / finite-2-group transport. Crossed modules and even crossed-module key exchange already exist in prior art, so no implementation proceeds until an exact relation survives semidirect, cohomological, CSP and public-interface flattening checks.
+**K2.1:** frontier review completed. Crossed modules/strict 2-groups are established 2-type machinery, finite higher-gauge models already place data on edges and faces, and crossed-module key exchange has prior art. Naively hiding a higher gauge is rejected before code. A K2.2 relation must have non-trivial kernel and cokernel, a materially relevant action/Postnikov layer, and—most importantly—a complete public-evaluation/trapdoor-recovery interface that is not just gauge, cohomology, semidirect completion, or bounded-local CSP.
 
 No security or post-quantum claim exists.
 

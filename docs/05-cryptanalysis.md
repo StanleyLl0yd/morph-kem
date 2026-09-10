@@ -590,3 +590,32 @@ twisted relation:
 The failure is exact, not a solver timeout or small-parameter observation. Every tested pairwise orientation-twisted A5 edge predicate is the same predicate written inside S5 after semidirect completion.
 
 **Lesson:** outer twisting by the orientation character does not evade ordinary finite-group transport. A successor must add genuinely 2-dimensional data rather than a more complicated one-group-per-edge notation.
+
+
+### K-A04 — crossed-module kernel/cokernel and gauge projection
+
+Target: any proposed K2.1/K2.2 finite crossed-module construction.
+
+For a crossed module partial:E->G:
+
+~~~text
+pi1 ~= coker(partial)
+pi2 ~= ker(partial)
+~~~
+
+with ker(partial) abelian and im(partial) normal.
+
+This gives an immediate structural attack hierarchy:
+
+- partial injective -> pi2 vanishes; reduce first to ordinary quotient/group structure;
+- partial surjective -> pi1 vanishes; the remaining higher homotopy layer is abelian;
+- partial an isomorphism -> represented 2-type is trivial;
+- general case -> expose ker, coker, the induced action and the Postnikov/cohomological layer before treating the presentation as a new hard problem.
+
+A hidden 1-gauge/2-gauge representative is not accepted as a trapdoor because equivalent gauges are attacker success.
+
+**Current result:** naive K2.1 "hide a crossed-module gauge" rejected before code.
+
+A successor is admissible only after defining an explicit generated positive distribution and a secret TrapdoorRecover algorithm that is not merely gauge normalization.
+
+Sources and details are recorded in `docs/25-k2-crossed-module-frontier.md`.
