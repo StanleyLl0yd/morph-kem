@@ -1,0 +1,85 @@
+name: G7 HGES planted 3-SAT negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_sat.py'
+      - 'src/morph_kem/gluing_matching.py'
+      - 'src/morph_kem/gluing_exact_one.py'
+      - 'tests/test_gluing_sat.py'
+      - 'scripts/gluing_sat_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/42-g7-planted-3sat.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g7.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_sat.py'
+      - 'src/morph_kem/gluing_matching.py'
+      - 'src/morph_kem/gluing_exact_one.py'
+      - 'tests/test_gluing_sat.py'
+      - 'scripts/gluing_sat_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/42-g7-planted-3sat.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g7.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  g7:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G7
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/gluing_sat.py tests/test_gluing_sat.py scripts/gluing_sat_baseline.py scripts/gluing_sat_sweep.py scripts/gluing_sat_dimacs.py
+      - name: G7 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_gluing_sat -v
+      - name: G7 planted 3-SAT DPLL baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_sat_baseline.py --params g7-24
+      - name: G7 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_sat_sweep.py --seeds 8
+      - name: Install MiniSat
+        if: matrix.python-version == '3.12'
+        run: sudo apt-get update -qq && sudo apt-get install -y minisat
+      - name: G7 MiniSat independent cross-check
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: |
+          python scripts/gluing_sat_dimacs.py --params g7-24 --cnf /tmp/g7.cnf --reference /tmp/g7-reference.txt
+          minisat /tmp/g7.cnf /tmp/g7-model.txt
+          python - <<'PY'
+          from pathlib import Path
+          from morph_kem.gluing_sat import G7_PARAMETER_SETS, generate_sat_phase_instance, groups_for_sat_phases, parse_minisat_model, validate_sat_witness
+
+          seed = bytes.fromhex('76120450aabbccddeeff001122334455')
+          public, _ = generate_sat_phase_instance(G7_PARAMETER_SETS['g7-24'], seed)
+          phases = parse_minisat_model(Path('/tmp/g7-model.txt').read_text(), len(public.gadgets))
+          groups = groups_for_sat_phases(public, phases)
+          validation = validate_sat_witness(public, groups)
+          print(f'MiniSat witness accepted: {validation.valid}')
+          print(f'MiniSat verifier clause checks: {validation.clause_checks}')
+          raise SystemExit(0 if validation.valid else 1)
+          PY
