@@ -6,7 +6,11 @@ on:
       - 'src/morph_kem/pachner.py'
       - 'tests/test_pachner.py'
       - 'scripts/pachner_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/30-t0-bounded-pachner-spec.md'
       - 'docs/33-t0-pachner-results.md'
+      - 'notes/research-log.md'
+      - 'README.md'
       - '.github/workflows/t0.yml'
   push:
     branches: [main]
@@ -14,7 +18,11 @@ on:
       - 'src/morph_kem/pachner.py'
       - 'tests/test_pachner.py'
       - 'scripts/pachner_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/30-t0-bounded-pachner-spec.md'
       - 'docs/33-t0-pachner-results.md'
+      - 'notes/research-log.md'
+      - 'README.md'
       - '.github/workflows/t0.yml'
 
 permissions:
