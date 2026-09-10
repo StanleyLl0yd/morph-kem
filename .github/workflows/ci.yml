@@ -140,3 +140,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/twisted_a5_baseline.py
+      - name: M5 irregular non-manifold baseline
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/nonmanifold_baseline.py --params m5-8 --greedy-trials 32 --tree-trials 4 --max-nodes 20000
