@@ -2,7 +2,7 @@
 
 ## Status
 
-**G6 is an attack calibration in progress.** G6 deliberately leaves a four-element affine residual after the cheapest parity projection. No hardness or security conclusion is permitted until exact-head CI records A-033 against the original nonlinear verifier.
+**G6 is rejected by A-033.** Exact-head Python 3.12 confirms that the public parity projection leaves exactly four affine candidates at every declared size and exhaustive residual verification recovers one accepted nonlinear witness.
 
 G6 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -70,23 +70,31 @@ A-033 uses only public data:
 
 The residual phase scan deliberately evaluates every public clause for every affine candidate rather than stopping at the first violation. This makes the work counter deterministic for the fixed clause family.
 
-## Predicted structural work
+## Measured result
 
-Before exact-head CI, the declared templates predict:
+Fixed Python 3.12 `g6-24` baseline:
 
-| Set | Rank/nullity | Affine candidates | GF(2) row XORs | Local matching nodes/backtracks | Residual clause checks |
-|---|---:|---:|---:|---:|---:|
-| g6-12 | 10/2 | 4 | 92 | 84/0 | 96 |
-| g6-18 | 16/2 | 4 | 188 | 126/0 | 144 |
-| g6-24 | 22/2 | 4 | 308 | 168/0 | 192 |
+~~~text
+gadgets:                               24
+total public tetrahedra:              144
+clauses:                               48
+variable degree histogram:            ((6,24),)
+factor components / cycle rank:       1/73
+local matching nodes/backtracks:      168/0
+projected equations/variables:        48/24
+GF(2) rank/nullity:                   22/2
+GF(2) row XORs:                       308
+affine candidates:                      4
+residual nonlinear clause checks:      192
+accepted affine candidates:              1
+exact verifier clause checks:           48
+accepted non-reference candidates:       0
+first accepted matches reference:       yes
+~~~
 
-These are regression predictions, not a measured security statement.
+Python 3.12 sweep over `g6-12`, `g6-18`, `g6-24` × eight deterministic seeds gives **24/24** instances with nullity two, four affine candidates, exactly one accepted nonlinear candidate, and zero accepted non-reference candidates. Per-size row-XOR work is `92`, `188`, `308`; full residual clause checks are `96`, `144`, `192`.
 
-## Rejection gate
-
-Reject G6 if exhaustive enumeration of the four-element affine coset yields any witness accepted by the original nonlinear verifier. If only one candidate survives, the distribution still fails: a constant-size residual search is not a hardness source. If multiple candidates survive, equivalent-witness multiplicity makes the rejection stronger.
-
-Do not increase `g` while the projected nullity remains fixed at two.
+**Result: G6 rejected by A-033.** The affine quotient is not solver-complete, but its residual is only two bits. Exhaustive enumeration of four candidates is a constant-size public attack. Do not scale `g` while that residual dimension remains fixed.
 
 ## G7 gate
 

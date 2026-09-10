@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G5 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G6 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -227,6 +227,16 @@ Across `g5-12`, `g5-18`, `g5-24` and eight deterministic seeds each, **24/24** p
 
 See `docs/40-g5-exact-one-parity.md`.
 
+## G6 — affine-coset residual HGES control
+
+G6 keeps G5's nonlinear exact-one verifier but deliberately reduces the rank of its public parity projection so two affine bits remain free. Every instance therefore exposes four public affine candidates rather than one.
+
+**G6 is rejected by A-033.** On `g6-24`, the public 48×24 parity system has rank/nullity `22/2`; the attacker enumerates four affine candidates, performs 192 nonlinear clause checks, and exactly one candidate survives and passes the exact verifier.
+
+Across `g6-12`, `g6-18`, `g6-24` and eight deterministic seeds each, **24/24** instances expose four candidates and exactly one accepted public witness. The residual dimension is constant, so scaling the gadget count is not a repair.
+
+See `docs/41-g6-affine-coset-residual.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -264,14 +274,15 @@ See `docs/40-g5-exact-one-parity.md`.
 - `docs/38-g3-equivalent-matching.md` — measured G3/A-030 negative control
 - `docs/39-g4-coupled-phase-parity.md` — measured G4/A-031 negative control
 - `docs/40-g5-exact-one-parity.md` — measured G5/A-032 negative control
+- `docs/41-g6-affine-coset-residual.md` — measured G6/A-033 negative control
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G6**, not a trapdoor construction. G5 showed that merely changing the visible predicate from XOR to nonlinear exact-one is insufficient when a full-rank affine consequence already reconstructs the witness.
+The next controlled HGES experiment is **G7**, not a trapdoor construction. G6 showed that a cheap quotient may leave genuine ambiguity and still fail when the residual search dimension is constant.
 
-G6 must ensure that cheap affine/quotient consequences leave genuine residual ambiguity, then attack that residual before any positive interpretation with finite-domain CSP/SAT, local consistency, low-width dynamic programming, automorphism/normalization, equivalent-witness enumeration, and generated-role leakage tests.
+G7 must make every known cheap quotient leave residual dimension growing with the generated instance, then attack that growing residual with exact CSP/SAT, local consistency, low-width dynamic programming, automorphism/normalization, equivalent-witness enumeration, and generated-role leakage tests.
 
 Only an HGES distribution that survives these public attacks could justify asking whether a secret decomposition supplies a real recovery advantage with:
 

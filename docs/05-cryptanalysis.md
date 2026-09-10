@@ -36,6 +36,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-030 | Equivalent perfect-matching gluing recovery | **Fatal to G3 generated distribution** | Implemented |
 | A-031 | Public GF(2) coupled-phase synchronization | **Fatal to G4 generated distribution** | Implemented |
 | A-032 | Public exact-one parity projection | **Fatal to G5 generated distribution** | Implemented |
+| A-033 | Affine-coset residual exact-one enumeration | **Fatal to G6 generated distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -397,3 +398,70 @@ This is not a theorem that general exact-one CSP or HGES is easy. It falsifies t
 ### G6 gate
 
 A successor must use an accepted predicate whose cheap affine/quotient consequences are insufficient to reconstruct a verifier-valid witness. It must still face quotient tests, CSP/SAT, local consistency, low-width algorithms, automorphism/normalization, equivalent-witness multiplicity, and generated-role leakage before any trapdoor work.
+
+## A-033 — affine-coset residual exact-one enumeration
+
+### Target
+
+G6 residual-affine HGES negative control.
+
+G6 keeps G5's nonlinear signed exact-one verifier but changes the public clause scopes so the necessary GF(2) parity projection is deliberately incomplete: the coefficient matrix has rank `g-2`, nullity `2`, leaving four public affine phase candidates.
+
+### Public attack
+
+A-033 uses no hidden reference phases:
+
+1. enumerate and canonically order the two public G3 matching phases for every gadget;
+2. project every exact-one clause to its necessary affine GF(2) equation;
+3. Gauss-Jordan reduce the public system;
+4. recover a particular solution and the two-dimensional nullspace;
+5. enumerate all four affine phase candidates;
+6. evaluate every public nonlinear exact-one clause for every candidate;
+7. lift surviving phase candidates to local matching witnesses;
+8. submit survivors to the exact nonlinear verifier;
+9. compare to generation history only after public acceptance.
+
+### Exact Python 3.12 `g6-24` result
+
+~~~text
+gadgets:                                  24
+total public tetrahedra:                 144
+clauses:                                  48
+variable degree histogram:               ((6,24),)
+factor components / cycle rank:          1/73
+local matching nodes / backtracks:       168/0
+projected equations / variables:          48/24
+GF(2) rank / nullity:                     22/2
+GF(2) row XORs:                           308
+affine candidates:                         4
+residual nonlinear clause checks:         192
+accepted affine candidates:                 1
+exact verifier clause checks:              48
+accepted non-reference candidates:          0
+first accepted candidate = reference:      yes
+reference witness accepted:                yes
+~~~
+
+### Deterministic sweep
+
+Python 3.12 tested `g6-12`, `g6-18`, and `g6-24` over eight independently derived deterministic seeds each.
+
+| Set | Rank/nullity | Affine candidates | GF(2) row XORs | Local matching nodes/backtracks | Residual checks | Accepted | Non-reference |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| g6-12 | 10/2 | 4 | 92 | 84/0 | 96 | 1 | 0 |
+| g6-18 | 16/2 | 4 | 188 | 126/0 | 144 | 1 | 0 |
+| g6-24 | 22/2 | 4 | 308 | 168/0 | 192 | 1 | 0 |
+
+All **24/24** generated instances expose exactly four affine candidates. A-033 finds exactly one nonlinear-valid public candidate in every instance; all **24/24** accepted candidates equal the hidden reference only under post-attack comparison.
+
+### Result
+
+**G6 is rejected by A-033.**
+
+Unlike G5, the cheap affine quotient is genuinely incomplete, but its residual dimension is a fixed two bits. Exhaustively checking four public candidates is therefore a constant-size residual attack, not a cryptographic hardness source. Increasing `g` while preserving nullity two cannot repair the relation.
+
+This is not a theorem that exact-one CSP or general HGES is easy. It falsifies this generated family and sharpens the next gate: quotient residual complexity must itself grow and survive dedicated solver attacks.
+
+### G7 gate
+
+A successor must ensure that every cheap quotient leaves residual entropy/search dimension growing with the generated instance, then face exact CSP/SAT, local consistency, low-width algorithms, normalization, equivalent-witness enumeration, and generated-role leakage before any trapdoor work.
