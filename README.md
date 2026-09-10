@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and the first HGES negative control G0 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G1 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -51,7 +51,7 @@ The original ranking after prior-art/attack screening was:
 3. **HICQF — Hidden Intermediate Cover / Quotient Factorization.**
 4. **CMPS — Coupled Monodromy–Postnikov Search**, still theoretical and without a trapdoor interface.
 
-BTTS has now failed its first two generated-distribution calibrations, T0 and T1. HGES has passed only its deliberately breakable G0 harness-control step; that is not positive hardness evidence.
+BTTS failed its first two generated-distribution calibrations, T0 and T1. HGES G0–G1 have now exposed two distinct structural failure modes: canonical assembly separators and canonical piece recognizability. Neither direction currently supplies positive hardness evidence.
 
 Orientation alone, hyperbolicity/geodesics alone, and hidden Tietze-presentation rewriting are not accepted as new hardness assumptions.
 
@@ -124,6 +124,40 @@ This validates the HGES decomposition-attack harness; it is not evidence for a h
 
 See `docs/35-g0-hges-canonical-gluing.md`.
 
+## G1 — bridge-free HGES cycle gluing
+
+G1 keeps the G0 piece for one controlled step but glues the pieces in a cycle. The public tetrahedron dual graph therefore has **zero bridges and zero articulation vertices**; G0's A-024 separator attack is structurally removed.
+
+That does not help. The piece itself remains recognizable in two independent ways.
+
+**A-028** enumerates public vertices incident to exactly four tetrahedra. Each such star is exactly one valid hidden piece. **A-029** independently enumerates four-tetrahedron `K4` blocks in the public dual graph. Both attacks recover the complete partition without backtracking.
+
+Fixed Python 3.12 `g1-8` baseline:
+
+~~~text
+public V/E/F/T:                     18/57/72/32
+dual graph vertices/edges:          32/56
+bridges/articulation vertices:      0/0
+vertex tetrahedron-degree histogram: ((4,8),(6,8),(24,2))
+
+A-028:
+  candidates:                       8
+  exact-cover nodes/backtracks:     9/0
+  accepted/matches planted:         yes/yes
+
+A-029:
+  4-subset checks:                  35,960
+  K4/valid candidates:              8/8
+  exact-cover nodes/backtracks:     9/0
+  accepted/matches planted:         yes/yes
+~~~
+
+Across `g1-3`, `g1-5`, `g1-8` and eight deterministic seeds each, the no-bridge/no-articulation structural gate passes **24/24**, while both A-028 and A-029 recover accepted decompositions **24/24** and match the planted partition **24/24**.
+
+**G1 rejected. Do not scale the cycle.** The next change must remove canonical piece signatures rather than merely change the assembly graph.
+
+See `docs/36-g1-hges-cycle-gluing.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -155,16 +189,19 @@ See `docs/35-g0-hges-canonical-gluing.md`.
 - `docs/33-t0-pachner-results.md` — measured T0/A-022 result
 - `docs/34-t1-distance-conditioned-results.md` — measured T1/A-023 result
 - `docs/35-g0-hges-canonical-gluing.md` — measured G0/A-024 negative control
+- `docs/36-g1-hges-cycle-gluing.md` — measured G1/A-028/A-029 result
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G1**, not a trapdoor construction. It must remove G0's exact bridge shortcut structurally rather than by parameter inflation.
+The next HGES experiment is **G2**, still a falsification control rather than a trapdoor construction.
 
-The smallest useful change is a 2-edge-connected or overlapping gluing distribution. Before any positive interpretation, G1 must test whether the supposedly hidden pieces are still recovered by articulation/low-order separators, maximal `K4`-like dual subgraphs, apex/boundary signatures, piece automorphisms, and exact-cover/SAT/CP-SAT partitioning.
+G2 should remove G1's local apex/K4 signature by making internal and external gluing faces locally indistinguishable. The clean calibration is a two-tetrahedron 3-ball assembled so the full public tetrahedron dual graph is an even cycle `C_{2n}`. Every adjacent tetrahedron pair then has the same allowed-piece type, so the two alternating perfect matchings are candidate equivalent decompositions.
 
-Only an HGES distribution that survives those public attacks could justify asking whether a secret decomposition supplies a real recovery advantage with:
+The mandatory first attack is public perfect-matching/exact-cover recovery with equivalent-decomposition enumeration. If either alternating decomposition verifies, attacker success is immediate under the project's equivalent-witness rule and G2 is rejected. That would demonstrate the next design tension: eliminating unique piece signatures can create cheap witness multiplicity rather than hardness.
+
+Only a later HGES distribution that survives canonical decomposition, local piece recognition, equivalent-decomposition attacks, automorphism normalization, boundary invariants, and exact-cover/SAT/CP-SAT search could justify asking whether a secret decomposition supplies a real recovery advantage with:
 
 ~~~text
 (pk, td) <- TrapdoorGen(lambda)
