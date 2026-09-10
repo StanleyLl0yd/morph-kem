@@ -6,6 +6,7 @@ on:
       - 'src/morph_kem/pachner.py'
       - 'tests/test_pachner.py'
       - 'scripts/pachner_*.py'
+      - 'docs/33-t0-pachner-results.md'
       - '.github/workflows/t0.yml'
   push:
     branches: [main]
@@ -13,6 +14,7 @@ on:
       - 'src/morph_kem/pachner.py'
       - 'tests/test_pachner.py'
       - 'scripts/pachner_*.py'
+      - 'docs/33-t0-pachner-results.md'
       - '.github/workflows/t0.yml'
 
 permissions:
