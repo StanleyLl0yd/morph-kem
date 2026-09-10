@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G10 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G11 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -277,6 +277,18 @@ The failure is structural: a two-dimensional overlap graph does not help when th
 
 See `docs/45-g10-toroidal-matching.md`.
 
+## G11 — toroidal P3 hypergraph exact-cover control
+
+G11 moves beyond pairwise perfect matching by using three-triangle `P3` disks on the periodic torus. The resulting public relation is a genuine 3-uniform hypergraph exact-cover problem.
+
+**G11 is rejected by A-038.** Fixed `g11-6x9` exposes 324 public candidates over 108 triangles; Algorithm-X-style MRV reaches 64/64 capped accepted covers in 292 nodes / 71 decisions / 10 backtracks, all non-reference. Across all three sizes and eight deterministic seeds each, **24/24** attacks reach cap 32 and every returned witness is accepted and non-reference.
+
+An independent 324-variable / 3996-clause MiniSat encoding also returns an accepted non-reference cover, with 2 conflicts, 137 decisions and 574 propagations on the fixed baseline.
+
+The graph-matching reduction is gone, but the regular periodic hypergraph is still easy and has massive equivalent-witness multiplicity.
+
+See `docs/46-g11-toroidal-hypercover.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -319,16 +331,17 @@ See `docs/45-g10-toroidal-matching.md`.
 - `docs/43-g8-topology-csp-collapse.md` — measured G8/A-035 structural collapse audit
 - `docs/44-g9-overlapping-exact-cover.md` — measured G9/A-036 negative control
 - `docs/45-g10-toroidal-matching.md` — measured G10/A-037 negative control
+- `docs/46-g11-toroidal-hypercover.md` — measured G11/A-038 negative control
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G11**, not a trapdoor construction. G10 shows that even a genuinely two-dimensional candidate interaction is useless when accepted pieces have size two and decomposition is ordinary bipartite perfect matching.
+The next controlled HGES experiment is **G12**, not a trapdoor construction. G11 shows that moving from graph matching to a genuine 3-uniform exact-cover relation is still insufficient when the public carrier is highly periodic and exposes many equivalent local covers.
 
-G11 must move to overlapping pieces of size greater than two so candidate selection is genuinely hypergraphic. Before any positive interpretation it must test toroidal/planar special structure, separators/treewidth, matching or Pfaffian reductions, candidate-subcomplex enumeration, exact cover/set packing, low-width DP, generic CSP/SAT/CP-SAT, contraction/normalization, equivalent-witness multiplicity and generated-role leakage.
+G12 must break the repeated torus translation/local-role structure without reintroducing canonical separators. Before any positive interpretation it must test automorphism and planted-role leakage, candidate-subcomplex extraction, separator/treewidth structure, exact cover/set packing, low-width algorithms, generic CSP/SAT/CP-SAT, simplification/normalization and equivalent-witness multiplicity.
 
-Only after both public candidate extraction and the resulting hypergraph relation survive these attacks may the project ask whether a hidden decomposition gives a real recovery advantage. No trapdoor/KEM work begins before that.
+Only a distribution where public candidate extraction and the resulting irregular hypergraph both resist these attacks could justify asking whether a secret decomposition provides a recovery advantage. No trapdoor/KEM work begins before that.
 
 No security or post-quantum claim exists.
 
