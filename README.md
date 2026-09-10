@@ -17,7 +17,7 @@ Core M-series:
 - **M2** — A-014 structural hidden-core reconstruction.
 - **M3** — A-016 collapse + spanning-tree equivalent witness.
 - **M4** — A-018 public primal/dual tree-cotree witness.
-- **M5** — irregular non-manifold 2-core with zero free collapses, but a public tree-plus-extension search reaches an accepted equivalent Morse witness in 30 nodes on the fixed baseline.
+- **M5** — irregular non-manifold 2-core with zero free collapses, but public tree-plus-extension search reaches an accepted equivalent Morse witness in 30 nodes on the fixed baseline.
 
 The project does not interpret increasingly elaborate topology as security. Every new relation is attacked before scaling.
 
@@ -33,14 +33,32 @@ The project does not interpret increasingly elaborate topology as security. Ever
 
 ## K-series results
 
-The K-series tests non-orientable and higher-gauge variants.
-
 - **K0:** Klein-bottle orientation data collapses to public Z2 gauge/cohomology.
 - **K1:** exact non-orientable hyperbolic `N4:{6,4}_3` still exposes its orientation double cover and local gauge.
 - **K2.0:** orientation-twisted `A5 ⋊ C2` is exactly ordinary `S5` transport.
 - **K2.1:** crossed modules/strict 2-groups are established 2-type machinery; hidden higher gauge is not itself a trapdoor.
 - **K2.2:** for `partial: Q8 -> Aut(Q8)`, fake-flatness factorizes into independent public face lifts. Four faces expose `2^4 = 16` equivalent witnesses.
-- **K2.3:** the first genuine 3D coherence calibration also collapses exactly. Once one public lift per Q8 boundary fiber is chosen, the remaining face choices are `C2` bits and tetrahedral coherence is `A z = b` over GF(2). On the boundary of a 4-simplex the public matrix has 5 equations, 10 variables, rank 4, nullity 6, and therefore 64 equivalent witnesses. Gaussian elimination constructs an accepted non-planted witness in the measured CI baseline.
+- **K2.3:** genuine 3D kernel coherence also collapses exactly: residual face choices lie in `C2`, tetrahedral coherence is affine GF(2), and the boundary-of-4-simplex baseline exposes 64 equivalent witnesses.
+
+## K2.4 topological hard-problem frontier
+
+K2.4 broadens the search beyond one higher-gauge construction. It explicitly screens hard-problem candidates based on orientation, gluings, covering spaces, lift/projection, homotopy classes, fundamental groups, geodesics, hyperbolic and quotient spaces, non-local properties, equivalent embeddings, and hidden transformations between different representations of the same space.
+
+Current ranking after prior-art/attack screening:
+
+1. **BTTS — Bounded Topological Transformation Search**, initially bounded Pachner/bistellar reconfiguration between equivalent 3-manifold triangulations.
+2. **HGES — Hidden Gluing Equivalence Search.**
+3. **HICQF — Hidden Intermediate Cover / Quotient Factorization.**
+4. **HHEE — Hidden Homotopy/Embedding Equivalence**, treated initially as part of BTTS.
+
+The common abstraction for BTTS and equivalent embeddings is a **bounded path in an equivalence groupoid/reconfiguration graph**: local moves are state-dependent and compose only when their source/target representations match. This avoids assuming that every hidden transformation is a single global group action, but group-action reductions, CAT(0)/commuting-move structure and bidirectional search remain mandatory attacks.
+
+Orientation alone, hyperbolicity/geodesics alone, and hidden Tietze-presentation rewriting are not accepted as new hardness assumptions.
+
+See:
+- `docs/29-k2-topological-hard-problem-frontier.md`
+- `docs/30-t0-bounded-pachner-spec.md`
+- `docs/31-equivalence-groupoid-hardness.md`
 
 ## Research discipline
 
@@ -66,14 +84,19 @@ The K-series tests non-orientable and higher-gauge variants.
 - `docs/26-k2-q8-crossed-module.md` — K2.2 fake-flatness result
 - `docs/27-m5-irregular-nonmanifold.md` — M5 result
 - `docs/28-k2-3d-kernel-coherence.md` — K2.3 3D/GF(2) result
+- `docs/29-k2-topological-hard-problem-frontier.md` — topological hard-problem screening
+- `docs/30-t0-bounded-pachner-spec.md` — exact first T-series calibration design
+- `docs/31-equivalence-groupoid-hardness.md` — reconfiguration/groupoid abstraction and fatal reductions
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-Do **not** continue by merely increasing genus, group order, cover degree, kernel size, or complex dimension.
+The next executable experiment is **T0 — Bounded Pachner Equivalence Search calibration**, but it is not yet a trapdoor primitive.
 
-A successor must begin with an explicit interface such as:
+T0 must test generated pairs of equivalent triangulations against canonical-state BFS, bidirectional/MITM search, A*/IDA*, random-restart search, automorphism-aware hashing, and bounded SAT/CP-SAT planning. The planted move sequence is only a reference witness; any path within the public bound is attacker success.
+
+Only if the reconfiguration relation itself survives those attacks may the project search for a trapdoor distribution with:
 
 ~~~text
 (pk, td) <- TrapdoorGen(lambda)
@@ -81,8 +104,6 @@ y        <- PublicEval(pk, r)
 w        <- TrapdoorRecover(td, pk, y)
 Verify(pk, y, w)
 ~~~
-
-and demonstrate why `td` gives an invariant recovery advantage on the generated positive distribution. Before implementation, the relation must be reduced against gauge/canonicalization, homology/cohomology, finite-module linear algebra, group synchronization, graph-cover recovery, and CSP/SAT/CP-SAT.
 
 No security or post-quantum claim exists.
 
