@@ -7,6 +7,10 @@ on:
       - 'src/morph_kem/pachner_distance.py'
       - 'tests/test_pachner*.py'
       - 'scripts/pachner_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/34-t1-distance-conditioned-results.md'
+      - 'notes/research-log.md'
+      - 'README.md'
       - '.github/workflows/t1.yml'
   push:
     branches: [main]
@@ -15,6 +19,10 @@ on:
       - 'src/morph_kem/pachner_distance.py'
       - 'tests/test_pachner*.py'
       - 'scripts/pachner_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/34-t1-distance-conditioned-results.md'
+      - 'notes/research-log.md'
+      - 'README.md'
       - '.github/workflows/t1.yml'
 
 permissions:
