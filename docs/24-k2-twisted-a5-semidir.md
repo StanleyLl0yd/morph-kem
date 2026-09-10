@@ -146,3 +146,48 @@ The next admissible direction must use genuinely higher-order 2-cell/face data a
 ## 7. Security status
 
 No one-wayness, average-case hardness, post-quantum, IND-CPA, IND-CCA, KEM, or production-security claim exists.
+
+
+## 8. Measured result
+
+Fixed master seed `36026490a1b2c3d4e5f60718293a4b5c`, Python 3.12 CI runner.
+
+~~~text
+semidirect audit:
+  twisted elements = 120
+  S5 image elements = 120
+  bijective = true
+  homomorphic = true
+  multiplication checks = 14,400
+  orientation/parity checks = 120
+  orientation component equals S5 parity = true
+
+base:
+  N4:{6,4}_3 V/E/F = 6/12/4
+  orientable = false
+  non-zero orientation syndromes = 6/9
+
+exact verifier comparison:
+  public dual edges = 12
+  endpoint assignments checked = 43,200
+  relation mismatches = 0
+  public edge parity/orientation matches = 12/12
+  planted twisted witness accepted = true
+  planted flattened witness accepted = true
+~~~
+
+## 9. Disposition
+
+**K2.0 is rejected algebraically.**
+
+This result is stronger than a successful SAT attack: the supposedly new orientation-twisted pairwise relation is literally the same relation after an explicit bijective homomorphism into S5.
+
+The following therefore do not constitute repairs:
+
+- larger non-orientable maps;
+- larger numbers of pairwise twisted A5 edges;
+- hiding the A5/C2 split in another serialization;
+- changing the odd representative r;
+- treating S5 parity as secret.
+
+K2.1 must examine genuinely higher-dimensional transport. The novelty bar is high because crossed modules/strict 2-groups and higher gauge theory are established mathematics, and crossed modules have already been proposed for cryptographic key exchange.

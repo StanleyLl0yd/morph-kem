@@ -543,4 +543,24 @@ The implementation does not accept those identities only as literature facts. It
 
 It then generates a twisted A5 transport relation on exact N4:{6,4}_3 and checks every 60x60 endpoint-frame pair on every public dual edge against the flattened S5 predicate.
 
-K2.0 is expected to be rejected if there are zero predicate mismatches.
+Measured K2.0 result:
+
+~~~text
+A5 ⋊ C2 elements = 120
+S5 image elements = 120
+all 14,400 products agree
+orientation bit = S5 parity on all 120 elements
+
+N4 twisted transport:
+  public edges = 12
+  endpoint assignments checked = 43,200
+  predicate mismatches = 0
+  edge parity/orientation matches = 12/12
+  planted witness accepted in both representations
+~~~
+
+**K2.0 rejected algebraically.**
+
+The orientation twist is not a new relation: at the 1-dimensional transport level it is exactly ordinary S5 semidirect completion.
+
+K2.1 is therefore a literature/interface gate for crossed-module / finite-2-group transport rather than another immediate implementation.

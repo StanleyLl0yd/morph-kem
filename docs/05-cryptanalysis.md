@@ -558,3 +558,35 @@ K2.0 additionally checks every endpoint-frame pair on every N4:{6,4}_3 dual edge
 **Expected result:** structural rejection of naive K2.0.
 
 This attack is algebraic rather than complexity-based: scaling the same twisted 1-dimensional transport does not remove the semidirect-product equivalence.
+
+
+Fixed-seed K2.0 CI result:
+
+~~~text
+semidirect elements:                  120
+S5 image elements:                    120
+bijective:                             yes
+homomorphic:                           yes
+multiplication checks:              14,400
+orientation/parity checks:             120
+orientation component = S5 parity:    yes
+
+N4:{6,4}_3:
+  V/E/F = 6/12/4
+  orientable = no
+  non-zero orientation syndromes = 6/9
+
+twisted relation:
+  public dual edges = 12
+  endpoint assignments checked = 43,200
+  relation mismatches = 0
+  public edge parity matches orientation = 12/12
+  planted twisted witness accepted = yes
+  same witness under S5 flattening = yes
+~~~
+
+**Result:** K2.0 rejected algebraically.
+
+The failure is exact, not a solver timeout or small-parameter observation. Every tested pairwise orientation-twisted A5 edge predicate is the same predicate written inside S5 after semidirect completion.
+
+**Lesson:** outer twisting by the orientation character does not evade ordinary finite-group transport. A successor must add genuinely 2-dimensional data rather than a more complicated one-group-per-edge notation.

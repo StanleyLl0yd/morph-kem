@@ -97,7 +97,9 @@ See:
 
 **K1:** implemented and rejected as designed. On exact N4:{6,4}_3 (V/E/F = 6/12/4, chi = -2, non-orientable, hyperbolic type {6,4}), the public Z2 normalization recovers all hidden face gauges up to one global bit in 12 edge checks. The orientation double cover is then reconstructed from public transition data alone and has V/E/F = 12/24/8, chi = -4, is orientable, and has genus 3. Genuine hyperbolicity does not rescue an orientation-character trapdoor.
 
-**K2.0:** active algebraic calibration. It twists A5 transport by the K1 orientation character through the non-trivial outer automorphism and tests whether the result is anything more than the semidirect product A5 ⋊ C2 ~= S5. The implementation exhaustively checks the 120-element map and exact edge-predicate flattening before any larger K2 construction.
+**K2.0:** implemented and rejected algebraically. The orientation-twisted A5 transport is exactly A5 ⋊ C2 ~= S5: all 120 elements map bijectively, all 14,400 products agree, and the orientation component is exactly S5 parity. On N4:{6,4}_3, all 43,200 endpoint assignments across the 12 public dual edges give zero mismatches between the twisted verifier and its ordinary S5 flattening. Non-orientable 1-dimensional transport still supplies no new hardness relation.
+
+**K2.1:** literature/interface frontier opened for genuinely 2-dimensional crossed-module / finite-2-group transport. Crossed modules and even crossed-module key exchange already exist in prior art, so no implementation proceeds until an exact relation survives semidirect, cohomological, CSP and public-interface flattening checks.
 
 No security or post-quantum claim exists.
 
