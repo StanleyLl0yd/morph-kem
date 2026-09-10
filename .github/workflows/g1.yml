@@ -1,0 +1,58 @@
+name: G1 HGES bridge-free clique negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_cycle.py'
+      - 'tests/test_gluing_cycle.py'
+      - 'scripts/gluing_cycle_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/36-g1-bridge-free-clique-gluing.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g1.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_cycle.py'
+      - 'tests/test_gluing_cycle.py'
+      - 'scripts/gluing_cycle_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/36-g1-bridge-free-clique-gluing.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  g1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G1
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/gluing_cycle.py tests/test_gluing_cycle.py scripts/gluing_cycle_baseline.py scripts/gluing_cycle_sweep.py
+      - name: G1 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_gluing_cycle -v
+      - name: G1 bridge-free clique-recovery baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_cycle_baseline.py --params g1-12
+      - name: G1 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_cycle_sweep.py --seeds 8
