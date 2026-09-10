@@ -69,6 +69,7 @@ See:
 - docs/21-h2-klein-quartic-a5.md — exact hyperbolic Klein-quartic/A5 experiment
 - docs/22-k0-klein-bottle.md — non-orientable Klein-bottle orientation control
 - docs/23-k1-nonorientable-hyperbolic.md — exact N4:{6,4}_3 hyperbolic non-orientable control
+- docs/24-k2-twisted-a5-semidir.md — orientation-twisted A5 / S5 semidirect-product calibration
 - notes/research-log.md — chronological record
 - spec/morph-kem-v0.1.md — future-spec skeleton
 
@@ -95,6 +96,10 @@ See:
 **K0:** implemented and rejected as designed. The exact finite Klein-bottle triangulation is genuinely non-orientable, but public spanning-tree XOR normalization removes the hidden local orientation gauge completely up to one global bit. On the baseline klein-bottle-5x4 instance, all 40 face-gauge bits are recovered up to that global bit with 60 public edge checks; the remaining 7/21 non-zero fundamental syndromes are public orientation-obstruction data, not a trapdoor.
 
 **K1:** implemented and rejected as designed. On exact N4:{6,4}_3 (V/E/F = 6/12/4, chi = -2, non-orientable, hyperbolic type {6,4}), the public Z2 normalization recovers all hidden face gauges up to one global bit in 12 edge checks. The orientation double cover is then reconstructed from public transition data alone and has V/E/F = 12/24/8, chi = -4, is orientable, and has genus 3. Genuine hyperbolicity does not rescue an orientation-character trapdoor.
+
+**K2.0:** implemented and rejected algebraically. The orientation-twisted A5 transport is exactly A5 ⋊ C2 ~= S5: all 120 elements map bijectively, all 14,400 products agree, and the orientation component is exactly S5 parity. On N4:{6,4}_3, all 43,200 endpoint assignments across the 12 public dual edges give zero mismatches between the twisted verifier and its ordinary S5 flattening. Non-orientable 1-dimensional transport still supplies no new hardness relation.
+
+**K2.1:** literature/interface frontier opened for genuinely 2-dimensional crossed-module / finite-2-group transport. Crossed modules and even crossed-module key exchange already exist in prior art, so no implementation proceeds until an exact relation survives semidirect, cohomological, CSP and public-interface flattening checks.
 
 No security or post-quantum claim exists.
 
