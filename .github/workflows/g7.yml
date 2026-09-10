@@ -69,7 +69,11 @@ jobs:
           PYTHONPATH: src
         run: |
           python scripts/gluing_sat_dimacs.py --params g7-24 --cnf /tmp/g7.cnf --reference /tmp/g7-reference.txt
+          set +e
           minisat /tmp/g7.cnf /tmp/g7-model.txt
+          rc=$?
+          set -e
+          test "$rc" -eq 10
           python - <<'PY'
           from pathlib import Path
           from morph_kem.gluing_sat import G7_PARAMETER_SETS, generate_sat_phase_instance, groups_for_sat_phases, parse_minisat_model, validate_sat_witness
