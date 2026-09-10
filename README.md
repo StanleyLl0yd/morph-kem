@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5 and the first T0 reconfiguration calibration are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -42,16 +42,16 @@ The project does not interpret increasingly elaborate topology as security. Ever
 
 ## K2.4 topological hard-problem frontier
 
-K2.4 broadens the search beyond one higher-gauge construction. It explicitly screens hard-problem candidates based on orientation, gluings, covering spaces, lift/projection, homotopy classes, fundamental groups, geodesics, hyperbolic and quotient spaces, non-local properties, equivalent embeddings, and hidden transformations between different representations of the same space.
+K2.4 broadened the search beyond one higher-gauge construction. It screened hard-problem candidates based on orientation, gluings, covering spaces, lift/projection, homotopy classes, fundamental groups, geodesics, hyperbolic and quotient spaces, non-local properties, equivalent embeddings, and hidden transformations between different representations of the same space.
 
 Current ranking after prior-art/attack screening:
 
-1. **BTTS — Bounded Topological Transformation Search**, initially bounded Pachner/bistellar reconfiguration between equivalent 3-manifold triangulations.
+1. **BTTS — Bounded Topological Transformation Search**, using state-dependent reconfiguration paths as the first executable direction.
 2. **HGES — Hidden Gluing Equivalence Search.**
 3. **HICQF — Hidden Intermediate Cover / Quotient Factorization.**
-4. **HHEE — Hidden Homotopy/Embedding Equivalence**, treated initially as part of BTTS.
+4. **CMPS — Coupled Monodromy–Postnikov Search**, still theoretical and without a trapdoor interface.
 
-The common abstraction for BTTS and equivalent embeddings is a **bounded path in an equivalence groupoid/reconfiguration graph**: local moves are state-dependent and compose only when their source/target representations match. This avoids assuming that every hidden transformation is a single global group action, but group-action reductions, CAT(0)/commuting-move structure and bidirectional search remain mandatory attacks.
+The common abstraction for BTTS and equivalent embeddings is a **bounded path in an equivalence groupoid/reconfiguration graph**: local moves are state-dependent and compose only when their source/target representations match. This avoids assuming that every hidden transformation is a single global group action, but group-action reductions, canonicalization, low-width structure and bidirectional search remain mandatory attacks.
 
 Orientation alone, hyperbolicity/geodesics alone, and hidden Tietze-presentation rewriting are not accepted as new hardness assumptions.
 
@@ -59,6 +59,25 @@ See:
 - `docs/29-k2-topological-hard-problem-frontier.md`
 - `docs/30-t0-bounded-pachner-spec.md`
 - `docs/31-equivalence-groupoid-hardness.md`
+- `docs/32-coupled-monodromy-postnikov-frontier.md`
+
+## T0 — bounded Pachner calibration
+
+T0 is the first executable BTTS experiment. Public endpoints are closed 3D simplicial states, vertex labels are quotiented by exact toy canonicalization, and witnesses are arbitrary legal state-dependent `2-3` / `3-2` Pachner paths within a public bound.
+
+**T0 is rejected by A-022.** On the fixed Python 3.12 CI sweep:
+
+~~~text
+t0-4: planted 4, shortest 4, bidirectional expanded 13
+t0-6: planted 6, shortest 6, bidirectional expanded 75
+t0-8: planted 8, shortest 4, bidirectional expanded 13
+~~~
+
+For `t0-8`, BFS visits only 170 canonical states and bidirectional search visits 40/65 states from the two sides. The mean unique branching is 20 while only 17 of 1,821 tested move pairs commute, so the failure is not merely a fixed binary path or a mostly commuting product decomposition.
+
+The result is a generated-distribution break, not a theorem that bounded Pachner search is easy. It establishes that **planted walk length is not a hardness parameter**.
+
+See `docs/33-t0-pachner-results.md`.
 
 ## Research discipline
 
@@ -67,7 +86,7 @@ See:
 - Worst-case hardness is not average-case cryptographic hardness.
 - Negative results are preserved.
 - Structural breaks are redesigned, not repaired by larger parameters.
-- Hyperbolic, non-orientable, higher-gauge, Escher-like, or high-dimensional are mathematical descriptions, never security arguments.
+- Hyperbolic, non-orientable, higher-gauge, Escher-like, high-dimensional, or long-path are mathematical descriptions, never security arguments.
 - No KEM wrapper until a mathematical primitive survives dedicated attacks and has a complete public-evaluation/trapdoor-recovery interface.
 
 ## Key files
@@ -85,18 +104,20 @@ See:
 - `docs/27-m5-irregular-nonmanifold.md` — M5 result
 - `docs/28-k2-3d-kernel-coherence.md` — K2.3 3D/GF(2) result
 - `docs/29-k2-topological-hard-problem-frontier.md` — topological hard-problem screening
-- `docs/30-t0-bounded-pachner-spec.md` — exact first T-series calibration design
+- `docs/30-t0-bounded-pachner-spec.md` — T0 design
 - `docs/31-equivalence-groupoid-hardness.md` — reconfiguration/groupoid abstraction and fatal reductions
+- `docs/32-coupled-monodromy-postnikov-frontier.md` — CMPS theory note
+- `docs/33-t0-pachner-results.md` — measured T0/A-022 result
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next executable experiment is **T0 — Bounded Pachner Equivalence Search calibration**, but it is not yet a trapdoor primitive.
+The next executable experiment may be **T1 — distance-conditioned Pachner endpoint generation**, but it remains a falsification experiment rather than a trapdoor primitive.
 
-T0 must test generated pairs of equivalent triangulations against canonical-state BFS, bidirectional/MITM search, A*/IDA*, random-restart search, automorphism-aware hashing, and bounded SAT/CP-SAT planning. The planted move sequence is only a reference witness; any path within the public bound is attacker success.
+T1 must sample endpoints by **measured shortest quotient distance**, not by generation-path length. It must report exact shell/ball growth, shortest-path multiplicity, bidirectional frontier size, canonical-state collisions, and move-interaction structure. Industrial bounded planning/SAT/CP-SAT attacks remain part of the gate.
 
-Only if the reconfiguration relation itself survives those attacks may the project search for a trapdoor distribution with:
+Only if the reconfiguration relation itself shows meaningful generated-instance resistance may the project search for a trapdoor distribution with:
 
 ~~~text
 (pk, td) <- TrapdoorGen(lambda)
@@ -104,6 +125,8 @@ y        <- PublicEval(pk, r)
 w        <- TrapdoorRecover(td, pk, y)
 Verify(pk, y, w)
 ~~~
+
+The secret must give a recovery advantage that survives quotienting by all equivalent representations/witnesses.
 
 No security or post-quantum claim exists.
 
