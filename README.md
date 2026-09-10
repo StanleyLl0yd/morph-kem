@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G4 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G5 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -217,6 +217,16 @@ Across `g4-4`, `g4-8`, `g4-12` and eight deterministic seeds each, **24/24** ins
 
 See `docs/39-g4-coupled-phase-parity.md`.
 
+## G5 — nonlinear exact-one HGES parity-projection control
+
+G5 replaces G4's explicit XOR edges by signed ternary exact-one constraints over public two-phase G3 gadgets. The verifier is genuinely nonlinear, but every accepted clause still implies one public XOR equation.
+
+**G5 is rejected by A-032.** On `g5-24`, the resulting 48×24 public affine system has rank/nullity `24/0`; Gauss-Jordan elimination uses 436 row XORs, recovers one phase vector, and that vector passes all 48 original nonlinear clause checks.
+
+Across `g5-12`, `g5-18`, `g5-24` and eight deterministic seeds each, **24/24** public parity recoveries are accepted and match the hidden reference after post-attack comparison. DPLL/SAT is unnecessary because the cheaper affine projection is already fatal.
+
+See `docs/40-g5-exact-one-parity.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -253,14 +263,15 @@ See `docs/39-g4-coupled-phase-parity.md`.
 - `docs/37-g2-stellar-contraction.md` — measured G2/A-029 negative control
 - `docs/38-g3-equivalent-matching.md` — measured G3/A-030 negative control
 - `docs/39-g4-coupled-phase-parity.md` — measured G4/A-031 negative control
+- `docs/40-g5-exact-one-parity.md` — measured G5/A-032 negative control
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G5**, not a trapdoor construction. G4 showed that explicit nonlocal coupling is still useless when it factors through public pairwise XOR differences.
+The next controlled HGES experiment is **G6**, not a trapdoor construction. G5 showed that merely changing the visible predicate from XOR to nonlinear exact-one is insufficient when a full-rank affine consequence already reconstructs the witness.
 
-G5 must change the constraint algebra rather than increase the coupling graph. Before any positive interpretation it must face quotient/abelianization tests, finite-domain CSP, belief propagation/local consistency, low-width dynamic programming, exact SAT/CP-SAT, automorphism/normalization, equivalent-witness enumeration, and planted-role statistical leakage.
+G6 must ensure that cheap affine/quotient consequences leave genuine residual ambiguity, then attack that residual before any positive interpretation with finite-domain CSP/SAT, local consistency, low-width dynamic programming, automorphism/normalization, equivalent-witness enumeration, and generated-role leakage tests.
 
 Only an HGES distribution that survives these public attacks could justify asking whether a secret decomposition supplies a real recovery advantage with:
 

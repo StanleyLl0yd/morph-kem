@@ -2,7 +2,7 @@
 
 ## Status
 
-**G5 is an attack calibration in progress.** Pre-code structural analysis already found that every signed exact-one-of-three clause exposes a necessary affine GF(2) equation. Exact-head CI must confirm whether the proposed full-rank templates let that cheaper projection recover a witness accepted by the original nonlinear verifier.
+**G5 is rejected by A-032.** Exact-head Python 3.12 confirms that the public parity projection is full rank for every declared toy set, recovers a unique phase vector, and that vector is accepted by the original nonlinear exact-one verifier.
 
 G5 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -88,11 +88,31 @@ The implementation records:
 
 The regular clause template deliberately avoids isolated or unusually low-degree variables. That prevents an easy role-leak explanation from being confused with the parity-projection attack.
 
-## Rejection gate
+## Measured result
 
-Reject G5 if A-032 recovers an accepted nonlinear witness from the public affine quotient. Do not increase `g` or clause density as a repair when the coefficient family remains full rank.
+Fixed Python 3.12 `g5-24` baseline:
 
-Worst-case exact-one-3-SAT hardness is irrelevant if this generated family publishes a solver-complete affine quotient.
+~~~text
+gadgets:                               24
+total public tetrahedra:              144
+clauses:                               48
+variable degree histogram:            ((6,24),)
+factor components / cycle rank:       1/73
+local matching nodes/backtracks:      168/0
+projected equations/variables:        48/24
+GF(2) rank/nullity:                   24/0
+GF(2) row XORs:                       436
+affine solution count:                1
+nonlinear clause checks:               48
+public parity witness accepted:        yes
+matches reference after recovery:      yes
+~~~
+
+Python 3.12 sweep over `g5-12`, `g5-18`, `g5-24` × eight deterministic seeds gives **24/24** accepted public affine recoveries and **24/24** post-attack reference matches. Per-size rank/nullity is `12/0`, `18/0`, `24/0`; row-XOR work is `127`, `261`, `436`.
+
+**Result: G5 rejected by A-032.** The nonlinear predicate exposes a solver-complete affine quotient on this generated family. DPLL/SAT is not needed for rejection because it is strictly heavier than the successful public parity attack.
+
+Do not scale this distribution as a repair. Worst-case exact-one-3-SAT hardness does not apply to a generated family whose necessary affine consequences already determine the unique verifier-valid witness.
 
 ## G6 gate
 

@@ -35,6 +35,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-029 | Public stellar-center contraction + macro recovery | **Fatal to G2 generated distribution** | Implemented |
 | A-030 | Equivalent perfect-matching gluing recovery | **Fatal to G3 generated distribution** | Implemented |
 | A-031 | Public GF(2) coupled-phase synchronization | **Fatal to G4 generated distribution** | Implemented |
+| A-032 | Public exact-one parity projection | **Fatal to G5 generated distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -326,3 +327,73 @@ This is not a theorem that general HGES is easy. It rejects this generated relat
 ### G5 gate
 
 A successor must change the constraint algebra, not merely the graph. It must first face quotient/abelianization tests, finite-domain CSP, belief propagation/local consistency, low-width dynamic programming, exact SAT/CP-SAT, automorphism/normalization, equivalent-witness enumeration, and generated-role leakage. No trapdoor work begins from a parity-coupled relation.
+
+## A-032 — public exact-one parity projection
+
+### Target
+
+G5 nonlinear exact-one HGES negative control.
+
+G5 replaces G4's explicit pairwise XOR coupling by signed ternary exact-one clauses over the same publicly canonicalized two-phase G3 gadgets. A clause accepts when exactly one of `x_i XOR n_i`, `x_j XOR n_j`, `x_k XOR n_k` is true.
+
+### Public attack
+
+Exact-one-of-three has an immediate necessary parity consequence:
+
+~~~text
+(x_i XOR n_i) XOR (x_j XOR n_j) XOR (x_k XOR n_k) = 1,
+~~~
+
+so every public clause exposes
+
+~~~text
+x_i XOR x_j XOR x_k = 1 XOR n_i XOR n_j XOR n_k.
+~~~
+
+A-032 enumerates the two accepted local G3 matching phases, constructs this public affine system, performs Gauss-Jordan elimination over GF(2), lifts the recovered phase vector to public matching witnesses, and checks the original nonlinear exact-one verifier. Reference phases are used only after public acceptance.
+
+### Exact Python 3.12 `g5-24` result
+
+~~~text
+gadgets:                                  24
+total public tetrahedra:                 144
+clauses:                                  48
+variable degree histogram:               ((6,24),)
+factor components / cycle rank:          1/73
+per-gadget perfect matchings:             twenty-four copies of 2
+local matching nodes / backtracks:        168/0
+projected GF(2) equations / variables:    48/24
+GF(2) rank / nullity:                     24/0
+GF(2) row XORs:                           436
+affine solution count:                    1
+nonlinear clause checks:                  48
+public parity witness accepted:           yes
+public affine solution = reference:       yes
+reference witness accepted:               yes
+~~~
+
+### Deterministic sweep
+
+Python 3.12 tested `g5-12`, `g5-18`, and `g5-24` over eight independently derived deterministic seeds each.
+
+| Set | Gadgets | Clauses | Degree | Factor cycle rank | Rank/nullity | Row XORs | Local matching nodes/backtracks | Nonlinear checks | Accepted/matched |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| g5-12 | 12 | 24 | 6 | 37 | 12/0 | 127 | 84/0 | 24 | 8/8 |
+| g5-18 | 18 | 36 | 6 | 55 | 18/0 | 261 | 126/0 | 36 | 8/8 |
+| g5-24 | 24 | 48 | 6 | 73 | 24/0 | 436 | 168/0 | 48 | 8/8 |
+
+All **24/24** public parity recoveries are accepted by the original nonlinear verifier and all **24/24** equal the hidden reference phase vector after post-attack comparison.
+
+### Result
+
+**G5 is rejected by A-032.**
+
+The nonlinear surface predicate does not help because this generated clause family publishes a full-rank solver-complete affine quotient. The parity equations are only necessary in general, but here they have a unique solution; the planted satisfying assignment is necessarily that solution, and the attacker confirms it with the public nonlinear verifier.
+
+DPLL/SAT is not required to reject G5 because it would be a heavier attack than the already-fatal GF(2) projection. Increasing gadget count or clause density while retaining the same full-rank projection is not a repair.
+
+This is not a theorem that general exact-one CSP or HGES is easy. It falsifies the current generated relation.
+
+### G6 gate
+
+A successor must use an accepted predicate whose cheap affine/quotient consequences are insufficient to reconstruct a verifier-valid witness. It must still face quotient tests, CSP/SAT, local consistency, low-width algorithms, automorphism/normalization, equivalent-witness multiplicity, and generated-role leakage before any trapdoor work.
