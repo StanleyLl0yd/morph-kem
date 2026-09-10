@@ -150,3 +150,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/nonmanifold_baseline.py --params m5-8 --greedy-trials 32 --tree-trials 4 --max-nodes 20000
+      - name: K2.3 3D kernel-coherence GF(2) baseline
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/coherence3_baseline.py
