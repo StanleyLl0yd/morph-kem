@@ -2,7 +2,7 @@
 
 ## Status
 
-**G3 is an attack calibration in progress. No hardness or security conclusion is permitted until exact-head CI records the public matching attack.**
+**G3 is rejected by A-030 on the measured generated distribution.**
 
 G3 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -49,7 +49,7 @@ A witness is any partition of all public tetrahedra into `n` valid adjacent pair
 
 The verifier never asks for the planted alternating phase. Any accepted equivalent decomposition is attacker success.
 
-## Structural predictions
+## Structural formulas
 
 For the canonical gluing:
 
@@ -73,32 +73,77 @@ A-030 uses only public incidence:
 
 1. build the tetrahedron dual graph;
 2. keep every dual edge that satisfies the exact allowed two-tetrahedron piece predicate;
-3. enumerate perfect matchings with a deterministic exact backtracking search;
+3. enumerate perfect matchings using MRV branching on the unmatched vertex with the fewest remaining candidate edges;
 4. submit each matching to the exact G3 verifier;
 5. compare with the planted matching only after public acceptance has already been established.
 
-A single even cycle has exactly two alternating perfect matchings. The expected negative-control result is that both are accepted and one differs from the planted partition.
+The first implementation used the smallest public vertex label as its branch pivot. It still found the two valid matchings, but public tetrahedron relabeling changed the amount of dead-end search. The final exact-head attack uses MRV. On an even cycle, after the initial two-way phase choice every remaining choice is forced, giving relabel-stable work counters.
 
-If exact-head CI confirms this, **G3 is rejected**. Increasing `n` cannot repair the conceptual problem: local indistinguishability has produced another valid attacker witness rather than hiding the planted one.
+## Exact Python 3.12 `g3-8` result
 
-## Measurements
+~~~text
+pieces:                                  8
+public V/E/F/T:                          18/49/48/16
+Euler characteristic:                   1
+boundary faces / max face incidence:    32/2
+dual graph vertices / edges:            16/16
+dual degree histogram:                  ((2,16),)
+bridges / articulation points:           0/0
+allowed candidate dual edges:            16
+vertex-star candidate pairs:              16
+vertex tetrahedron-degree histogram:     ((2,16),(16,2))
+face occurrence checks:                  64
+perfect matchings / cap:                  2/16
+matching cap hit:                        no
+matching nodes / backtracks:             17/0
+accepted decompositions:                  2
+accepted non-planted decompositions:      1
+reference witness accepted:              yes
+~~~
 
-The workflow records:
+## Deterministic sweep
 
-- public `V/E/F/T`, Euler characteristic, boundary faces and max face incidence;
-- dual vertices/edges and degree histogram;
-- bridges and articulation points;
-- public allowed candidate dual edges;
-- public degree-two vertex-star candidate pairs;
-- vertex/tetrahedron incidence histogram;
-- exact matching count, solution cap, nodes and backtracks;
-- accepted matching count;
-- accepted non-planted matching count;
-- deterministic all-size, eight-seed sweep.
+Python 3.12 tested `g3-3`, `g3-5`, and `g3-8` over eight independently derived public relabel seeds each.
 
-## Successor gate
+| Set | V/E/F/T | Boundary | Dual edges | Candidate edges | Vertex-star pairs | Matching nodes/backtracks | Accepted | Non-planted accepted |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| g3-3 | 8/19/18/6 | 12 | 6 | 6 | 6 | 7/0 | 2 | 1 |
+| g3-5 | 12/31/30/10 | 20 | 10 | 10 | 10 | 11/0 | 2 | 1 |
+| g3-8 | 18/49/48/16 | 32 | 16 | 16 | 16 | 17/0 | 2 | 1 |
 
-If G3 fails as expected, G4 must introduce genuinely nonlocal coupling between otherwise plausible local decomposition choices. Before any positive interpretation, that coupling must be attacked as parity/cohomology/gauge, constrained matching, low-width CSP, exact cover, SAT/CP-SAT and equivalent-witness search.
+Across all **24/24** generated instances:
+
+- the dual graph has zero bridges and zero articulation vertices;
+- every dual edge is a valid allowed-piece candidate;
+- all degree-two public vertex stars expose the same full candidate-edge set;
+- A-030 finds exactly two perfect matchings;
+- both matchings pass the exact G3 verifier;
+- exactly one accepted decomposition differs from the planted partition;
+- matching search has zero backtracking after MRV strengthening.
+
+The dedicated workflow succeeds on Python 3.11, 3.12 and 3.13.
+
+## Result
+
+**G3 is rejected by A-030.**
+
+This failure is deliberately different from G1. The pieces are no longer singled out by a unique public fixed-size motif: every local adjacency is plausible. But under equivalent-witness semantics this creates another public solution rather than hiding the planted one. The two alternating perfect matchings of the even cycle are both accepted witnesses.
+
+Increasing `n` cannot repair this structural fact. The attack remains a public matching problem with two alternating solutions; the measured MRV search uses `2n+1` nodes and zero backtracking on the current family.
+
+This is not a theorem that general HGES is easy. It is a falsification of this generated distribution.
+
+## G4 gate
+
+G4 may add genuinely nonlocal coupling between otherwise plausible local decomposition choices. Before any positive interpretation, that coupling must be attacked as:
+
+- parity / cycle-space / cohomology / gauge reduction;
+- constrained matching and factor-graph propagation;
+- low-width dynamic programming;
+- exact-cover / CSP / SAT / CP-SAT recovery;
+- automorphism and normalization attacks;
+- equivalent-witness enumeration;
+- planted-role statistical leakage.
 
 No trapdoor work follows merely from hiding the planted local phase.
 
