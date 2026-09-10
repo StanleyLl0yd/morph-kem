@@ -1,0 +1,62 @@
+name: G9 HGES overlapping exact-cover negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_overlap.py'
+      - 'src/morph_kem/gluing_matching.py'
+      - 'src/morph_kem/gluing.py'
+      - 'tests/test_gluing_overlap.py'
+      - 'scripts/gluing_overlap_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/44-g9-overlapping-exact-cover.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g9.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_overlap.py'
+      - 'src/morph_kem/gluing_matching.py'
+      - 'src/morph_kem/gluing.py'
+      - 'tests/test_gluing_overlap.py'
+      - 'scripts/gluing_overlap_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/44-g9-overlapping-exact-cover.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g9.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  g9:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G9
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/gluing_overlap.py tests/test_gluing_overlap.py scripts/gluing_overlap_baseline.py scripts/gluing_overlap_sweep.py
+      - name: G9 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_gluing_overlap -v
+      - name: G9 overlapping exact-cover baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_overlap_baseline.py --params g9-30
+      - name: G9 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_overlap_sweep.py --seeds 8
