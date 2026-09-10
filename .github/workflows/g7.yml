@@ -68,7 +68,7 @@ jobs:
         env:
           PYTHONPATH: src
         run: |
-          python scripts/gluing_sat_dimacs.py --params g7-24 --cnf /tmp/g7.cnf --reference /tmp/g7-reference.txt
+          python scripts/gluing_sat_dimacs.py --params g7-24 --output /tmp/g7.cnf
           set +e
           minisat /tmp/g7.cnf /tmp/g7-model.txt
           rc=$?
