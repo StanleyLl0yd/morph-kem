@@ -2,7 +2,7 @@
 
 ## Status
 
-**Negative control under exact-head CI. Expected outcome: A-024 recovers the gluing decomposition publicly.**
+**G0 is rejected as designed by A-024. The public dual-graph bridge attack recovers the canonical gluing decomposition exactly on the measured distribution.**
 
 G0 is not a hardness candidate, trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction. Its job is to make sure the HGES attack harness breaks a distribution that is deliberately canonically decomposable.
 
@@ -95,7 +95,7 @@ n - 1    inter-piece gluing edges
 
 Every inter-piece edge is a graph bridge, while no internal `K4` edge is a bridge. Deleting all bridges must therefore recover exactly `n` four-tetrahedron blocks.
 
-This is an analytic prediction of the negative-control break. CI is testing the implementation and verifier, not looking for evidence of hardness.
+This is an analytic prediction of the negative-control break. CI tests the implementation and verifier, not cryptographic hardness.
 
 ## Public relation
 
@@ -130,27 +130,65 @@ Measured work counters are structural rather than wall-clock based:
 - verifier acceptance;
 - equality with the planted partition up to group order, used only after the public attack completes.
 
-## Toy parameter sets
+## Exact-head measurements
+
+Fixed master seed:
 
 ~~~text
-g0-3: 3 pieces, path assembly
-g0-5: 5 pieces, branched tree
-g0-8: 8 pieces, larger branched tree
+76120450aabbccddeeff001122334455
 ~~~
 
-The exact-head baseline uses `g0-8`. The Python 3.12 sweep additionally runs all three parameter sets over eight independently derived deterministic seeds. Python 3.11 and 3.13 run the unit tests and fixed baseline.
+Python 3.12 exact-head baseline for `g0-8`:
 
-## Rejection interpretation
+~~~text
+pieces:                                      8
+public V/E/F/T:                              19/59/73/32
+Euler characteristic:                       1
+boundary faces / max face incidence:         18/2
+dual graph vertices / edges:                 32/55
+dual bridges:                                7
+bridge component sizes:                      (4,4,4,4,4,4,4,4)
+face occurrence checks:                      128
+DFS edge scans:                              110
+reference witness accepted:                  yes
+public bridge witness accepted:              yes
+recovered partition = planted up to order:   yes
+~~~
 
-Expected result:
+The deterministic Python 3.12 sweep covered all three parameter sets and eight independently derived seeds each: **24/24 public bridge recoveries were accepted and 24/24 matched the planted partition up to group order.**
 
-> **A-024 recovers an accepted gluing witness and G0 is rejected as designed.**
+Per-size structural counters were invariant across the eight tested seeds:
 
-If this fails, the correct interpretation is a bug in the generator, verifier, or attack harness — never evidence of hardness.
+| Set | Pieces | V/E/F/T | Boundary | Dual edges | Bridges | Component sizes | Face occurrences | DFS scans | Accepted/matched |
+|---|---:|---|---:|---:|---:|---|---:|---:|---:|
+| g0-3 | 3 | 9/24/28/12 | 8 | 20 | 2 | 4/4/4 | 48 | 40 | 8/8 |
+| g0-5 | 5 | 13/38/46/20 | 12 | 34 | 4 | 4/4/4/4/4 | 80 | 68 | 8/8 |
+| g0-8 | 8 | 19/59/73/32 | 18 | 55 | 7 | 4/4/4/4/4/4/4/4 | 128 | 110 | 8/8 |
 
-A G1 successor is permitted only after G0 behaves as expected. G1 should first remove the exact bridge shortcut, for example by using a 2-edge-connected assembly/overlapping gluing pattern, and then face richer public attacks: separator decomposition, piece automorphisms, boundary signatures, SAT/CP-SAT pairing recovery, isomorphism normalization, and equivalent-witness search.
+Python 3.11, 3.12 and 3.13 all passed compile, unit-test and fixed-baseline jobs; Python 3.12 additionally passed the complete 24-instance sweep.
 
-No trapdoor search starts at G0.
+## Decision
+
+**A-024 succeeds exactly as the negative-control analysis predicts. G0 is rejected as designed, and the HGES public decomposition attack harness is validated.**
+
+The result is stronger than an isolated runtime observation for this family: the tree-of-`K4` dual-graph structure makes every inter-piece gluing edge a bridge by construction. Increasing the number of pieces leaves the same public linear-time graph decomposition.
+
+This does not show that arbitrary hidden gluing equivalence search is easy. It rejects this deliberately canonical distribution and establishes the minimum attack that every successor must defeat.
+
+## Next gate — G1
+
+G1 may now remove the exact bridge shortcut, but it must change structure rather than merely scale G0. The minimal controlled successor should use a 2-edge-connected assembly or overlapping gluing pattern and immediately test whether the pieces are still publicly recoverable as maximal `K4`-like dual subgraphs or via other low-order separators.
+
+Mandatory G1 attacks include:
+
+- bridge, articulation and low-order separator decomposition;
+- enumeration of allowed piece subcomplexes / maximal `K4`-like dual blocks;
+- local apex and boundary-port signatures;
+- piece-automorphism normalization;
+- exact-cover / SAT / CP-SAT partition and pairing search;
+- equivalent-witness enumeration where tractable.
+
+No trapdoor search starts merely because the bridge attack has been removed.
 
 ## Relation to established triangulation machinery
 
@@ -159,7 +197,7 @@ Dual/face-pairing graphs and relabeling-invariant triangulation representations 
 References:
 
 - B. A. Burton, *Enumeration of non-orientable 3-manifolds using face-pairing graphs and union-find*, Discrete & Computational Geometry 38 (2007), 527–571. DOI: `10.1007/s00454-007-1307-x`.
-- R. Burke, B. Burton, J. Spreer, *Small Triangulations of 4-Manifolds and the 4-Manifold Census*, Discrete & Computational Geometry (2026). DOI: `10.1007/s00454-026-00818-w`. The paper explicitly treats dual/face-pairing graphs and isomorphism signatures as core triangulation machinery.
+- R. Burke, B. Burton, J. Spreer, *Small Triangulations of 4-Manifolds and the 4-Manifold Census*, Discrete & Computational Geometry (2026). DOI: `10.1007/s00454-026-00818-w`.
 - W. D. Neumann, G. A. Swarup, *Canonical decompositions of 3-manifolds*, Geometry & Topology 1 (1997), 21–40, arXiv:`math/9712227`.
 
 ## Security status
