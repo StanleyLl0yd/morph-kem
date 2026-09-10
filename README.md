@@ -166,7 +166,8 @@ See `docs/36-g1-bridge-free-clique-gluing.md`.
 - `src/morph_kem/` — executable constructions and attacks
 - `tests/` — exact validators and regression tests
 - `scripts/` — deterministic baselines and sweeps
-- `docs/05-cryptanalysis.md` — attack ledger
+- `docs/05-cryptanalysis.md` — compact canonical attack index and newest detailed attacks
+- `docs/05-cryptanalysis-through-a024.md` — verbatim detailed attack ledger through A-024
 - `docs/21-h2-klein-quartic-a5.md` — exact hyperbolic/A5 experiment
 - `docs/22-k0-klein-bottle.md` — Klein-bottle control
 - `docs/23-k1-nonorientable-hyperbolic.md` — hyperbolic non-orientable control
