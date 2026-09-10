@@ -140,6 +140,11 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/twisted_a5_baseline.py
+      - name: K2.2 Q8 crossed-module fake-flatness baseline
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/crossed_q8_baseline.py
       - name: M5 irregular non-manifold baseline
         if: matrix.python-version == '3.12'
         env:
