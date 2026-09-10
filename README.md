@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G1 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G2 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -51,7 +51,7 @@ The original ranking after prior-art/attack screening was:
 3. **HICQF — Hidden Intermediate Cover / Quotient Factorization.**
 4. **CMPS — Coupled Monodromy–Postnikov Search**, still theoretical and without a trapdoor interface.
 
-BTTS has failed its first two generated-distribution calibrations, T0 and T1. HGES has now also failed two deliberately controlled stages: G0 exposed tree-bridge decomposition, while bridge-free G1 still exposed every piece as an exact public `K4` block. Neither is positive hardness evidence.
+BTTS failed its first two generated-distribution calibrations, T0 and T1. HGES has now failed three controlled stages: G0 exposed tree-bridge decomposition, bridge-free G1 exposed every piece as an exact public `K4`, and G2's stellar subdivision was publicly contracted back to the same fatal G1 macro relation. None is positive hardness evidence.
 
 Orientation alone, hyperbolicity/geodesics alone, and hidden Tietze-presentation rewriting are not accepted as new hardness assumptions.
 
@@ -151,6 +151,35 @@ The important negative result is structural: removing one canonical separator cl
 
 See `docs/36-g1-bridge-free-clique-gluing.md`.
 
+## G2 — stellar-subdivision HGES contraction control
+
+G2 stellar-subdivides every G1 macro tetrahedron `1 -> 4`. A four-macro-tetrahedron G1 piece therefore becomes a sixteen-micro-tetrahedron public G2 piece. The old A-028 no longer directly returns a G2 piece partition, but every subdivision center has a public four-tetrahedron vertex-star signature.
+
+**G2 is rejected by A-029.** The public attack recognizes those center stars, exact-covers the micro tetrahedra, contracts them back to the G1 macro complex, applies macro A-028, lifts the recovered partition, and passes the exact G2 verifier.
+
+Fixed Python 3.12 `g2-8` baseline:
+
+~~~text
+public micro V/E/F/T:              50/185/264/128
+micro dual vertices/edges:         128/248
+bridges / articulation points:     0 / 0
+two-vertex separator pairs:        112
+candidate stellar centers:         32
+false positives / misses:          0 / 0
+center cover nodes/backtracks:     33 / 0
+contracted macro V/E/F/T:          18/57/72/32
+macro K4 / allowed candidates:     8 / 8
+macro cover nodes/backtracks:      9 / 0
+public witness accepted:           yes
+matches planted partition:         yes
+~~~
+
+Across `g2-4`, `g2-6`, `g2-8` and eight deterministic seeds each, **24/24** public A-029 recoveries were accepted and **24/24** matched the planted partition up to group order; candidate-center false positives and misses were zero throughout the measured sweep.
+
+The negative result is again structural: local refinement is not hiding when the representation exposes a public inverse that reconstructs an already-broken macro relation. More pieces or repeated stellar subdivision are not repairs.
+
+See `docs/37-g2-stellar-contraction.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -184,18 +213,19 @@ See `docs/36-g1-bridge-free-clique-gluing.md`.
 - `docs/34-t1-distance-conditioned-results.md` — measured T1/A-023 result
 - `docs/35-g0-hges-canonical-gluing.md` — measured G0/A-024 negative control
 - `docs/36-g1-bridge-free-clique-gluing.md` — measured G1/A-028 negative control
+- `docs/37-g2-stellar-contraction.md` — measured G2/A-029 negative control
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G2**, not a trapdoor construction. It must remove G1's exact fixed-size `K4` piece signature structurally rather than by parameter inflation.
+The next controlled HGES experiment is **G3**, not a trapdoor construction. G3 must eliminate both of the shortcuts calibrated by G1/G2: a small fixed piece dictionary visible as canonical public motifs, and an obvious public local inverse that simply restores those motifs.
 
-A useful G2 should make the planted pieces non-canonical in the public dual graph through controlled overlap, subdivision, mixed piece types, or another relation where an accepted witness is not simply a partition into maximal fixed-size cliques.
+A useful G3 should make macro-piece boundaries genuinely noncanonical or overlapping and must be attacked before scaling. At minimum it must face bridge/articulation/low-order separators, multiscale motif/subcomplex enumeration, vertex-link and boundary-role signatures, public simplification/contraction and bistellar normalization, automorphism normalization, exact-cover/SAT/CP-SAT recovery, equivalent-witness enumeration, and planted-role statistical leakage.
 
-Before any positive interpretation, G2 must face bridge/articulation/low-order separator decomposition, motif/subcomplex enumeration, local apex and boundary-role signatures, automorphism normalization, exact-cover/SAT/CP-SAT recovery, equivalent-witness enumeration, and planted-role statistical leakage.
+One controlled next step is a **mixed finite piece family** in which allowed pieces have more than one triangulation and no single literal `K4` piece signature. That experiment is still expected to be attacked as a finite-dictionary subcomplex/exact-cover problem; surviving only one motif detector would not be positive evidence.
 
-Only an HGES distribution that survives those public attacks could justify asking whether a secret decomposition supplies a real recovery advantage with:
+Only an HGES distribution that survives these public attacks could justify asking whether a secret decomposition supplies a real recovery advantage with:
 
 ~~~text
 (pk, td) <- TrapdoorGen(lambda)
