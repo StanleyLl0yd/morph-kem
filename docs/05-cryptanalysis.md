@@ -33,6 +33,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-024 | Dual-graph canonical gluing recovery | **Fatal to G0 by design** | Implemented |
 | A-028 | Public K4 / allowed-piece exact-cover recovery | **Fatal to G1 generated distribution** | Implemented |
 | A-029 | Public stellar-center contraction + macro recovery | **Fatal to G2 generated distribution** | Implemented |
+| A-030 | Equivalent perfect-matching gluing recovery | **Fatal to G3 generated distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -184,16 +185,76 @@ Do not repair G2 with more pieces, repeated stellar subdivisions, or deeper loca
 
 This is not a theorem that general HGES is easy. It is a falsification of the current generated distribution.
 
-### G3 gate
+## A-030 — equivalent perfect-matching gluing recovery
 
-A successor must remove both canonical fixed-size piece motifs and obvious public local inverses. It must immediately face:
+### Target
 
-- bridge, articulation, and low-order separator decomposition;
-- multiscale motif/subcomplex enumeration;
-- vertex-link and boundary-signature role leakage;
-- public simplification/contraction and bistellar normalization;
-- piece automorphism normalization;
-- exact-cover / SAT / CP-SAT recovery;
+G3 indistinguishable-edge HGES matching control.
+
+G3 changes the piece family to a two-tetrahedron 3-ball and arranges `n` pieces so the public tetrahedron dual graph is exactly the even cycle `C_(2n)`. Every dual edge—planted internal or planted external—passes the same exact allowed-piece predicate. Thus the planted alternating phase is not locally distinguished.
+
+### Public attack
+
+A-030 uses only public incidence:
+
+1. build triangle incidence and the tetrahedron dual graph;
+2. retain every dual edge whose two tetrahedra form the allowed five-vertex 3-ball;
+3. enumerate exact perfect matchings using MRV branching on the unmatched dual vertex with the fewest remaining candidate edges;
+4. submit every recovered matching, up to the explicit solution cap, to the exact G3 verifier;
+5. compare to the planted partition only after public acceptance.
+
+The first implementation used a label-order pivot and correctly found the two matchings but performed relabel-dependent dead-end branches. The exact-head attack was strengthened to MRV; on an even cycle this leaves the initial two-way phase choice and then forces each remaining path, making the measured search relabel-stable.
+
+### Exact Python 3.12 `g3-8` result
+
+~~~text
+pieces:                                  8
+public V/E/F/T:                          18/49/48/16
+Euler characteristic:                   1
+boundary faces / max face incidence:    32/2
+dual graph vertices / edges:            16/16
+dual degree histogram:                  ((2,16),)
+bridges / articulation points:           0/0
+allowed candidate dual edges:            16
+vertex-star candidate pairs:              16
+vertex tetrahedron-degree histogram:     ((2,16),(16,2))
+face occurrence checks:                  64
+perfect matchings / cap:                  2/16
+matching nodes / backtracks:             17/0
+accepted decompositions:                  2
+accepted non-planted decompositions:      1
+reference witness accepted:              yes
+~~~
+
+### Deterministic sweep
+
+Python 3.12 tested `g3-3`, `g3-5`, and `g3-8` over eight independently derived public relabel seeds each.
+
+| Set | V/E/F/T | Dual edges | Candidate edges | Vertex-star pairs | Matching nodes/backtracks | Accepted | Non-planted accepted |
+|---|---|---:|---:|---:|---:|---:|---:|
+| g3-3 | 8/19/18/6 | 6 | 6 | 6 | 7/0 | 2 | 1 |
+| g3-5 | 12/31/30/10 | 10 | 10 | 10 | 11/0 | 2 | 1 |
+| g3-8 | 18/49/48/16 | 16 | 16 | 16 | 17/0 | 2 | 1 |
+
+Across all **24/24** generated instances, the structural gate has zero bridges and zero articulation vertices, every dual edge is a valid candidate piece, A-030 finds exactly two accepted perfect-match decompositions, and exactly one accepted decomposition differs from the planted partition.
+
+### Result
+
+**G3 is rejected by A-030.**
+
+This failure is the opposite of G1's piece recognizability. In G3 the local interfaces are intentionally indistinguishable, but that creates equivalent-witness multiplicity: the public object admits two alternating valid decompositions and either is sufficient for attacker success. Increasing the even-cycle length cannot repair this structural fact.
+
+This is not a theorem that general HGES is easy. It rejects this generated distribution and shows that hiding the planted local phase is not enough when another public phase verifies.
+
+### G4 gate
+
+A successor may add genuinely nonlocal coupling between otherwise plausible local decomposition choices, but that coupling must be attacked before any trapdoor work as:
+
+- parity / cycle-space / cohomology / gauge reduction;
+- constrained matching and factor-graph propagation;
+- low-width dynamic programming;
+- exact-cover / CSP / SAT / CP-SAT recovery;
+- automorphism and normalization attacks;
 - equivalent-witness enumeration;
 - planted-role statistical leakage.
 

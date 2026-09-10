@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G2 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G3 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -51,7 +51,7 @@ The original ranking after prior-art/attack screening was:
 3. **HICQF — Hidden Intermediate Cover / Quotient Factorization.**
 4. **CMPS — Coupled Monodromy–Postnikov Search**, still theoretical and without a trapdoor interface.
 
-BTTS failed its first two generated-distribution calibrations, T0 and T1. HGES has now failed three controlled stages: G0 exposed tree-bridge decomposition, bridge-free G1 exposed every piece as an exact public `K4`, and G2's stellar subdivision was publicly contracted back to the same fatal G1 macro relation. None is positive hardness evidence.
+BTTS failed its first two generated-distribution calibrations, T0 and T1. HGES has now failed four controlled stages: G0 exposed tree-bridge decomposition; bridge-free G1 exposed every piece as an exact public `K4`; G2's stellar subdivision was publicly contracted back to the same fatal G1 macro relation; and G3 made local interfaces indistinguishable but thereby exposed a second accepted alternating perfect matching. None is positive hardness evidence.
 
 Orientation alone, hyperbolicity/geodesics alone, and hidden Tietze-presentation rewriting are not accepted as new hardness assumptions.
 
@@ -180,6 +180,33 @@ The negative result is again structural: local refinement is not hiding when the
 
 See `docs/37-g2-stellar-contraction.md`.
 
+## G3 — indistinguishable-edge HGES equivalent-matching control
+
+G3 changes the piece family to a two-tetrahedron 3-ball and arranges the public tetrahedron dual graph as an even cycle. Every dual edge—whether planted internal or planted external—satisfies the same exact allowed-piece predicate, so the planted matching phase is not locally privileged.
+
+**G3 is rejected by A-030.** The public attack enumerates exact perfect matchings of the allowed dual-edge graph. An even cycle has two alternating perfect matchings; both pass the exact public verifier, and one differs from the planted partition.
+
+Fixed Python 3.12 `g3-8` baseline:
+
+~~~text
+public V/E/F/T:                    18/49/48/16
+dual vertices/edges:               16/16
+dual degree histogram:             ((2,16),)
+bridges / articulation points:     0 / 0
+allowed candidate dual edges:      16
+vertex-star candidate pairs:       16
+perfect matchings:                 2
+matching nodes/backtracks:         17 / 0
+accepted decompositions:           2
+accepted non-planted:              1
+~~~
+
+Across `g3-3`, `g3-5`, `g3-8` and eight deterministic public relabel seeds each, all **24/24** instances expose exactly two accepted perfect-match decompositions, and in every instance exactly one accepted decomposition is non-planted. MRV matching recovery uses 7/0, 11/0 and 17/0 nodes/backtracks respectively and is stable under public relabeling.
+
+The failure is structural but different from G1: local indistinguishability creates equivalent-witness multiplicity rather than inversion hardness. Scaling the even cycle is not a repair.
+
+See `docs/38-g3-equivalent-matching.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -214,16 +241,15 @@ See `docs/37-g2-stellar-contraction.md`.
 - `docs/35-g0-hges-canonical-gluing.md` — measured G0/A-024 negative control
 - `docs/36-g1-bridge-free-clique-gluing.md` — measured G1/A-028 negative control
 - `docs/37-g2-stellar-contraction.md` — measured G2/A-029 negative control
+- `docs/38-g3-equivalent-matching.md` — measured G3/A-030 negative control
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G3**, not a trapdoor construction. G3 must eliminate both of the shortcuts calibrated by G1/G2: a small fixed piece dictionary visible as canonical public motifs, and an obvious public local inverse that simply restores those motifs.
+The next controlled HGES experiment is **G4**, not a trapdoor construction. G4 may add genuinely nonlocal coupling between otherwise plausible local decomposition choices, but the coupling itself must be treated as the new public attack surface rather than as assumed hardness.
 
-A useful G3 should make macro-piece boundaries genuinely noncanonical or overlapping and must be attacked before scaling. At minimum it must face bridge/articulation/low-order separators, multiscale motif/subcomplex enumeration, vertex-link and boundary-role signatures, public simplification/contraction and bistellar normalization, automorphism normalization, exact-cover/SAT/CP-SAT recovery, equivalent-witness enumeration, and planted-role statistical leakage.
-
-One controlled next step is a **mixed finite piece family** in which allowed pieces have more than one triangulation and no single literal `K4` piece signature. That experiment is still expected to be attacked as a finite-dictionary subcomplex/exact-cover problem; surviving only one motif detector would not be positive evidence.
+A first G4 control should deliberately test whether binary local matching phases coupled across multiple gadgets collapse to parity/cycle-space/cohomology or another low-width constraint problem. Before any positive interpretation, G4 must face constrained matching, factor-graph propagation, low-width dynamic programming, exact-cover/CSP/SAT/CP-SAT, automorphism/normalization, equivalent-witness enumeration, and planted-role statistical leakage.
 
 Only an HGES distribution that survives these public attacks could justify asking whether a secret decomposition supplies a real recovery advantage with:
 

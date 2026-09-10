@@ -399,3 +399,34 @@ The all-size eight-seed sweep recovered and accepted **24/24** G2 witnesses, mat
 **G2 rejected by A-029.**
 
 Lesson: subdivision/refinement is not hiding when the generated representation has a public local inverse that restores an already-fatal macro decomposition. Do not scale or repeat the stellar subdivision. G3 must eliminate both canonical small piece motifs and obvious public contraction/simplification paths, while still facing separator, multiscale motif, local-link, automorphism, exact-cover/SAT/CP-SAT, equivalent-witness, and planted-role leakage attacks.
+
+### G3 — indistinguishable-edge equivalent-matching control
+
+Changed the piece family to a two-tetrahedron 3-ball and arranged the public tetrahedron dual graph as the even cycle `C_(2n)`. Every planted internal edge and every planted external gluing edge satisfies the same public allowed-piece predicate, so the planted matching phase is no longer locally canonical.
+
+This does not create hardness. A-030 enumerates exact perfect matchings from the public allowed dual edges and submits them to the exact verifier. The first label-order DFS found the right solutions but had relabel-dependent dead ends; the final MRV attack removes that artifact.
+
+Exact-head Python 3.12 `g3-8` baseline:
+
+~~~text
+public V/E/F/T = 18/49/48/16
+boundary/max face incidence = 32/2
+dual vertices/edges = 16/16
+dual degree histogram = ((2,16),)
+bridges / articulation points = 0/0
+allowed candidate dual edges = 16
+vertex-star candidate pairs = 16
+vertex tetrahedron-degree histogram = ((2,16),(16,2))
+face occurrences = 64
+perfect matchings/cap = 2/16
+matching nodes/backtracks = 17/0
+accepted decompositions = 2
+accepted non-planted decompositions = 1
+reference witness accepted = yes
+~~~
+
+Across `g3-3`, `g3-5`, and `g3-8` with eight deterministic public relabel seeds each, all **24/24** instances have zero bridges/articulation points, every dual edge is a valid candidate piece, and A-030 finds exactly two accepted perfect-match decompositions. In every instance exactly one accepted decomposition differs from the planted partition. MRV matching work is relabel-stable: 7/0, 11/0, and 17/0 nodes/backtracks for `g3-3`, `g3-5`, and `g3-8` respectively.
+
+**G3 rejected by A-030.**
+
+Lesson: making local interfaces indistinguishable can make the attacker relation easier under equivalent-witness semantics. The hidden planted phase is irrelevant when the other alternating perfect matching is also accepted. Do not scale the even cycle. G4 must add genuinely nonlocal coupling and attack that coupling first as parity/cohomology/gauge, constrained matching, low-width DP/CSP, exact-cover/SAT/CP-SAT, automorphism/normalization, equivalent-witness, and planted-role leakage structure.
