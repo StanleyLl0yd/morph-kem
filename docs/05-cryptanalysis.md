@@ -39,6 +39,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-033 | Affine-coset residual exact-one enumeration | **Fatal to G6 generated distribution** | Implemented |
 | A-034 | Public planted 3-SAT DPLL + independent MiniSat recovery | **Fatal to G7 generated distribution** | Implemented |
 | A-035 | Public local-phase extraction and topology-to-CSP factorization | **Structural break of G4–G7 design line** | Implemented |
+| A-036 | Public overlapping-piece enumeration + exact cover / cycle DP | **Fatal to G9 generated distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -559,3 +560,61 @@ A four-seed sweep over the largest representative of all four families gives **1
 **A-035 confirms a structural topology-to-CSP collapse for the G4–G7 design line.** Once the local topological witness domains are cheaply and independently enumerable, topology becomes public preprocessing plus a mechanical post-solve lift. Selecting a different worst-case-hard CSP over the same exposed domains is not additional topological hardness.
 
 This is not a theorem that arbitrary HGES, topology, CSP, or SAT is easy. A successor must break the premise of cheap independent phase extraction rather than scale this architecture.
+
+## A-036 — public overlapping-piece enumeration + exact cover / cycle DP
+
+### Target
+
+G9 overlapping-carrier HGES negative control.
+
+G9 removes the direct G8/A-035 architecture of a public tuple of disjoint local gadgets. Instead, one connected tetrahedron-cycle complex exposes two allowed piece types, D2 and D3, whose public candidate carriers overlap directly in tetrahedra.
+
+### Public attack
+
+A-036 uses no planted carrier boundaries. It builds public face incidence and the tetrahedron dual graph, enumerates all valid D2 dual edges and D3 length-two dual paths, validates each candidate by the exact simplicial piece predicate, and solves the resulting candidate/tetrahedron exact-cover relation with the public piece-count constraint.
+
+An independent public attack derives a canonical dual-cycle traversal and enumerates the required length-2/length-3 cyclic compositions by bounded-state dynamic programming. Covers from both paths are normalized and checked by the exact G9 verifier.
+
+### Exact Python 3.12 `g9-30` result
+
+~~~text
+public tetrahedra / witness pieces:       30/11
+required D2/D3 pieces:                    3/8
+public V/E/F/T:                           32/91/90/30
+Euler characteristic:                    1
+boundary faces / max face incidence:      60/2
+dual graph vertices / edges:              30/30
+dual degree histogram:                    ((2,30),)
+bridges / articulation points:             0/0
+D2 / D3 public candidates:                30/30
+candidate memberships per tetrahedron:    ((5,30),)
+candidate overlap-degree histogram:       ((6,30),(8,30))
+candidate/tetrahedron incidence size:     150
+face occurrence checks:                   120
+exact-cover solutions / cap:              450/1024
+exact-cover nodes / backtracks:           2820/899
+cycle-DP states / transitions / tilings:  36/70/450
+accepted public solutions:                450
+accepted non-reference solutions:        449
+reference witness accepted:               yes
+~~~
+
+### Deterministic sweep
+
+| Set | Exact-cover solutions | Exact-cover nodes/backtracks | DP states/transitions/tilings | Accepted | Non-reference |
+|---|---:|---:|---:|---:|---:|
+| g9-18 | 90 | 420/102 | 20/38/90 | 90 | 89 |
+| g9-24 | 224 | 1211/345 | 28/54/224 | 224 | 223 |
+| g9-30 | 450 | 2820/899 | 36/70/450 | 450 | 449 |
+
+Python 3.12 tested all three sets over eight independently derived deterministic seeds. All **24/24** instances have zero bridges and articulation points, exactly `T` D2 and `T` D3 candidates, five candidate memberships per tetrahedron, and exact agreement between analytic cyclic-tiling count, exact-cover enumeration and cycle-DP enumeration. Every recovered cover is accepted.
+
+### Result
+
+**G9 is rejected by A-036.**
+
+Overlapping the local carriers removes independent phase extraction, but the public candidate hypergraph is still a bounded-width interval/cycle relation. Exact cover and cycle DP recover all accepted tilings cheaply. Equivalent-witness multiplicity is severe: `g9-30` has 450 accepted witnesses, 449 non-reference.
+
+Do not scale the cycle. A G10 successor must change the public overlap interaction graph itself and must be attacked first for separators/treewidth, motif/link normalization, candidate-subcomplex enumeration, exact cover/set packing, matching, low-width DP, generic CSP/SAT/CP-SAT, contraction/quotient simplification, equivalent witnesses and generated-role leakage.
+
+This is a generated-distribution falsification, not a theorem that general HGES or general exact cover is easy. No security claim.

@@ -480,3 +480,13 @@ Implemented a generic public compiler for the G4–G7 HGES architecture. Each lo
 Exact Python 3.12 semantic audit: G4 `16/16`, G5 `4096/4096`, G6 `4096/4096`, G7 `4096/4096` phase assignments checked, **0 mismatches** in every family (12,304 total). Fixed large-family solver work is G4 `3/1`, G5 `3/1`, G6 `3/1`, G7 `38/22` nodes/decisions; all recovered assignments lift successfully, with G7 exposing 16/16 non-reference solutions in its capped batch. Four-seed/four-family sweep succeeds 16/16; G7 max generic work is 100 nodes / 53 decisions.
 
 Conclusion: A-035 is a structural break of the G4–G7 design line. A harder global CSP predicate over the same independently enumerable local phase domains would be cosmetic with respect to topology. G9 must make public phase/domain extraction itself nontrivial by entangling local topology across boundaries, then attack that extraction aggressively. No security claim.
+
+## 2026-09-10 — G9 rejected by A-036
+
+G9 removed the G4–G8 independent local phase-domain architecture by publishing one connected tetrahedron-cycle complex with overlapping D2/D3 candidate carriers. Every tetrahedron belongs to five public candidates.
+
+A-036 enumerates those candidates and solves exact cover; an independent cycle-composition DP derives the same witness family from the public dual cycle. Fixed Python 3.12 `g9-30`: 30 tetrahedra / 11 pieces, 30 D2 + 30 D3 candidates, exact-cover 450 solutions in 2820 nodes / 899 backtracks, cycle DP 36 states / 70 transition checks / 450 tilings, all 450 accepted and 449 non-reference.
+
+Across `g9-18`, `g9-24`, `g9-30` × eight seeds, **24/24** instances produce exact agreement between exact cover and cycle DP: respectively 90, 224 and 450 accepted tilings, with all but the planted reference available as equivalent attacker witnesses.
+
+**G9 rejected by A-036.** Lesson: breaking independent phase extraction is necessary but not sufficient. If public candidate carriers form a low-width interval/cycle overlap relation, decomposition remains a cheap exact-cover/DP problem and equivalent-witness multiplicity becomes even worse. G10 must change the overlap interaction graph and measure separator/treewidth structure before any solver growth is interpreted. No security claim.
