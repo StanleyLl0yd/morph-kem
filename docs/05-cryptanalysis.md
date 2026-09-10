@@ -37,6 +37,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-031 | Public GF(2) coupled-phase synchronization | **Fatal to G4 generated distribution** | Implemented |
 | A-032 | Public exact-one parity projection | **Fatal to G5 generated distribution** | Implemented |
 | A-033 | Affine-coset residual exact-one enumeration | **Fatal to G6 generated distribution** | Implemented |
+| A-034 | Public planted 3-SAT DPLL + independent MiniSat recovery | **Fatal to G7 generated distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -465,3 +466,52 @@ This is not a theorem that exact-one CSP or general HGES is easy. It falsifies t
 ### G7 gate
 
 A successor must ensure that every cheap quotient leaves residual entropy/search dimension growing with the generated instance, then face exact CSP/SAT, local consistency, low-width algorithms, normalization, equivalent-witness enumeration, and generated-role leakage before any trapdoor work.
+
+## A-034 — public planted 3-SAT DPLL + independent MiniSat recovery
+
+### Target
+
+G7 planted signed 3-SAT phase-CSP negative control. G7 deliberately removes the direct affine shortcuts that rejected G4–G6: exhaustive local affine-hull enumeration confirms that the signed 3-OR predicate has no non-trivial GF(2) equation shared by all accepted local tuples.
+
+### Public attack
+
+A-034 uses only public gadgets and signed clauses:
+
+1. recover and canonically order the two accepted G3 matchings for every gadget;
+2. run iterative public unit propagation;
+3. branch deterministically on the unresolved variable with highest current clause incidence;
+4. enumerate phase assignments up to an explicit cap;
+5. lift every assignment to local matching witnesses and submit it to the exact G7 verifier;
+6. classify non-reference solutions only after public acceptance;
+7. independently encode the fixed baseline as DIMACS, solve it with MiniSat, decode the model, lift it, and recheck it with the repository verifier.
+
+### Exact Python 3.12 `g7-24` result
+
+~~~text
+gadgets:                                24
+total public tetrahedra:               144
+clauses:                                96
+variable degree histogram:             ((12,24),)
+factor components / cycle rank:        1/169
+local affine implications:             0
+local matching nodes / backtracks:     168/0
+DPLL solutions / cap:                  16/16
+DPLL cap hit:                           yes
+DPLL nodes / decisions:                40/22
+DPLL propagations / conflicts:         34/2
+DPLL backtracks:                       2
+exact verifier clause checks:          1536
+accepted DPLL solutions:               16
+accepted non-reference solutions:      16
+first solution equals reference:       no
+~~~
+
+The independent MiniSat fixed-baseline run is SAT and records 3 conflicts, 13 decisions, and 41 propagations. Its decoded witness passes all 96 public clauses in the exact G7 verifier. Solver wall-clock timing is not used as stable evidence.
+
+Python 3.12 also tests `g7-12`, `g7-18`, and `g7-24` over eight deterministic seeds each. All **24/24** instances yield at least one accepted public witness and at least one accepted non-reference witness. Measured DPLL node counts range from 23 to 86.
+
+### Result
+
+**G7 is rejected by A-034.** Removing an obvious affine quotient was necessary but not sufficient: the current deterministic planted 3-SAT distribution remains solver-friendly and exposes equivalent accepted witnesses. Do not repair this relation merely by increasing the variable or clause count. Worst-case 3-SAT hardness is not average-case cryptographic hardness.
+
+This is not a theorem that arbitrary 3-SAT or general HGES is easy.

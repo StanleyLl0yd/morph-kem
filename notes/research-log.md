@@ -466,3 +466,9 @@ Across `g6-12`, `g6-18`, `g6-24` × eight seeds, **24/24** instances expose exac
 **G6 rejected by A-033.**
 
 Lesson: making the affine quotient incomplete is necessary but not sufficient. A constant two-bit residual is still trivial. G7 must make cheap-quotient residual dimension grow with the instance and attack that growing residual with exact CSP/SAT and structural methods.
+
+## 2026-09-10 — G7 rejected by A-034
+
+Implemented G7 planted signed 3-SAT phase coupling as the first G-series predicate with zero non-trivial local affine GF(2) implications. Public deterministic DPLL nevertheless recovers accepted witnesses cheaply. Fixed Python 3.12 `g7-24`: 24 gadgets, 96 clauses, degree 12, factor cycle rank 169, 40 DPLL nodes / 22 decisions / 34 propagations / 2 conflicts / 2 backtracks, 16/16 capped accepted solutions, all 16 non-reference. The 24-instance all-size/eight-seed sweep succeeds on every instance with a measured maximum of 86 DPLL nodes and at least one non-reference accepted witness each. Independent MiniSat finds SAT with 3 conflicts / 13 decisions / 41 propagations and its decoded model passes the exact verifier.
+
+Conclusion: G7 rejected. Eliminating the parity quotient alone does not make this planted distribution cryptographically hard; equivalent-witness multiplicity remains fatal. G8 must change the generated relation rather than scale G7. No security claim.

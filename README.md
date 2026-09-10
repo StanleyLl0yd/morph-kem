@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G6 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G7 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -51,7 +51,7 @@ The original ranking after prior-art/attack screening was:
 3. **HICQF — Hidden Intermediate Cover / Quotient Factorization.**
 4. **CMPS — Coupled Monodromy–Postnikov Search**, still theoretical and without a trapdoor interface.
 
-BTTS failed its first two generated-distribution calibrations, T0 and T1. HGES has now failed four controlled stages: G0 exposed tree-bridge decomposition; bridge-free G1 exposed every piece as an exact public `K4`; G2's stellar subdivision was publicly contracted back to the same fatal G1 macro relation; and G3 made local interfaces indistinguishable but thereby exposed a second accepted alternating perfect matching. None is positive hardness evidence.
+BTTS failed its first two generated-distribution calibrations, T0 and T1. HGES has now failed eight controlled stages G0–G7: canonical separators and motifs (G0–G2), equivalent local decompositions (G3), explicit parity synchronization (G4), affine leakage through nonlinear exact-one predicates (G5–G6), and finally generic DPLL/MiniSat plus abundant equivalent witnesses on planted signed 3-SAT (G7). None is positive hardness evidence.
 
 Orientation alone, hyperbolicity/geodesics alone, and hidden Tietze-presentation rewriting are not accepted as new hardness assumptions.
 
@@ -236,6 +236,16 @@ G6 keeps G5's nonlinear exact-one verifier but deliberately reduces the rank of 
 Across `g6-12`, `g6-18`, `g6-24` and eight deterministic seeds each, **24/24** instances expose four candidates and exactly one accepted public witness. The residual dimension is constant, so scaling the gadget count is not a repair.
 
 See `docs/41-g6-affine-coset-residual.md`.
+
+## G7 — planted signed 3-SAT HGES control
+
+G7 is the first control in the G4–G7 phase-coupling line whose local signed 3-OR predicate has no non-trivial affine GF(2) implication. That removes the direct parity shortcut, but not generic solver attacks.
+
+**G7 is rejected by A-034.** On fixed Python 3.12 `g7-24`, public unit propagation + deterministic DPLL finds 16/16 capped accepted solutions in 40 nodes and 22 decisions; all 16 differ from the hidden reference. Across `g7-12`, `g7-18`, `g7-24` × eight deterministic seeds, all **24/24** instances yield an accepted public witness and an accepted non-reference witness, with at most 86 DPLL nodes in the measured sweep.
+
+An independent MiniSat check on the fixed 24-variable/96-clause baseline reports SAT using 3 conflicts, 13 decisions and 41 propagations; the decoded model passes the exact repository verifier. This is generated-distribution evidence only, not a theorem about arbitrary 3-SAT.
+
+See `docs/42-g7-planted-3sat.md`.
 
 ## Research discipline
 
