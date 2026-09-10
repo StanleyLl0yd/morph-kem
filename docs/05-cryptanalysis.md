@@ -27,6 +27,7 @@ This file preserves attacks including successful breaks.
 | A-020 | Independent Q8 boundary-fiber lifting | **Fatal to K2.2** | Implemented |
 | A-021 | GF(2) kernel-coherence elimination | **Fatal to K2.3 relation family** | Implemented |
 | A-022 | Short equivalent Pachner path + bidirectional recovery | **Fatal to T0 generator** | Implemented |
+| A-023 | Exact-distance bidirectional Pachner recovery | **Fatal to T1 generated distribution** | Implemented |
 
 ## M0–M3 summary
 
@@ -736,3 +737,45 @@ This is not a theorem that bounded Pachner search is easy in general. It is a ge
 The low commuting fraction also matters: the break is not explained by a trivial decomposition into mostly independent commuting moves. The more basic defect is that random non-self-repeating walks can return close to the start or target through alternate quotient paths.
 
 **Lesson:** planted walk length is not a hardness parameter. A successor must control or measure actual quotient distance, short-path multiplicity, and bidirectional frontier growth before any path length is interpreted as security evidence.
+
+## A-023 — exact-distance bidirectional Pachner recovery
+
+Target: T1 exact-distance-conditioned BTTS/Pachner calibration.
+
+T1 removes T0's endpoint-distance defect. It constructs complete canonical quotient BFS shells and samples a target from the exact shell `S_D`. Within that shell, generation first maximizes slack against the public tetrahedron-count lower bound and then minimizes capped shortest-path multiplicity, so the calibration does not deliberately choose an obviously easy target.
+
+Fixed-seed Python 3.12 exact-head CI:
+
+| Set | D | Shell sizes | Ball | Target delta/slack | Shortest paths | Shortest predecessors | Bidir F/R visited | Bidir expanded | A* visited/expanded |
+|---|---:|---|---:|---:|---:|---:|---:|---:|---:|
+| t1-2 | 2 | 1/8/31 | 40 | 0/2 | 1 | 1 | 9/4 | **2** | 21/2 |
+| t1-3 | 3 | 1/8/31/83 | 123 | 1/2 | 1 | 1 | 9/14 | **5** | 119/36 |
+
+Detailed `t1-3` baseline:
+
+~~~text
+exact distance/public bound:        3/3
+ball size/shell-build expanded:      123/40
+raw moves/unique neighbors:         639/420
+local neighbor collisions:          219
+revisit hits:                       298
+target tetrahedron delta/slack:     1/2
+max-slack candidates:               14
+min-path finalists:                 1
+shortest paths/predecessors:        1/1
+BFS visited/expanded:               119/36
+bidirectional F/R visited:          9/14
+bidirectional expanded:             5
+tetrahedron A* visited/expanded:    119/36
+recovered witness valid:            yes
+~~~
+
+The target is genuinely at distance 3, has a unique measured shortest path, and is deliberately poorly predicted by tetrahedron count: that lower bound is only 1 while the exact distance is 3. Nevertheless generic bidirectional search recovers the target after expanding only five quotient states.
+
+**Result:** T1 generated distribution rejected.
+
+This triggers the pre-declared T1 rejection condition that bidirectional search remains tiny at exact-distance-conditioned targets. Exact-distance conditioning fixes the specific T0 generator bug but does not provide evidence of generated-instance hardness.
+
+Do not add `D=4` merely to inflate the work factor. This is not a theorem that bounded Pachner reconfiguration is easy and does not contradict worst-case NP-hardness for related move problems. It is a falsification of the current generated distribution as a cryptographic hardness direction.
+
+Because a cheaper mandatory attack already triggers rejection, the heavier bounded SAT/CP-SAT/planning gate is not required to reject T1. It remains mandatory for any future BTTS distribution that first survives the cheap exact and bidirectional gates.

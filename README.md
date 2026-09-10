@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5 and the first T0 reconfiguration calibration are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5 and the first two BTTS/Pachner calibrations T0–T1 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -79,6 +79,26 @@ The result is a generated-distribution break, not a theorem that bounded Pachner
 
 See `docs/33-t0-pachner-results.md`.
 
+## T1 — exact-distance Pachner calibration
+
+T1 repairs T0's immediate generator defect by building complete canonical quotient BFS shells and selecting the target from an exact shortest-distance shell `S_D`. The target selection deliberately maximizes slack against the public tetrahedron-count lower bound and then minimizes capped shortest-path multiplicity.
+
+**T1 is rejected by A-023 on the measured generated distribution.** Fixed Python 3.12 CI:
+
+~~~text
+t1-2: D=2, shells 1/8/31, ball 40, shortest paths 1,
+      bidirectional 9/4 visited, 2 expanded
+
+t1-3: D=3, shells 1/8/31/83, ball 123, target tet slack 2,
+      shortest paths 1, bidirectional 9/14 visited, 5 expanded
+~~~
+
+The `t1-3` endpoint is genuinely at distance 3 and is not nearly certified by tetrahedron count, yet generic bidirectional recovery still needs only five quotient-state expansions. This triggers the pre-declared rejection condition. The project will not add depth 4 merely to inflate the work factor.
+
+This remains a generated-distribution falsification, not an asymptotic theorem about Pachner reconfiguration.
+
+See `docs/34-t1-distance-conditioned-results.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -108,16 +128,17 @@ See `docs/33-t0-pachner-results.md`.
 - `docs/31-equivalence-groupoid-hardness.md` — reconfiguration/groupoid abstraction and fatal reductions
 - `docs/32-coupled-monodromy-postnikov-frontier.md` — CMPS theory note
 - `docs/33-t0-pachner-results.md` — measured T0/A-022 result
+- `docs/34-t1-distance-conditioned-results.md` — measured T1/A-023 result
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next executable experiment may be **T1 — distance-conditioned Pachner endpoint generation**, but it remains a falsification experiment rather than a trapdoor primitive.
+The current BTTS/Pachner generated distribution is rejected. The next K2.4 frontier experiment is **HGES — Hidden Gluing Equivalence Search**.
 
-T1 must sample endpoints by **measured shortest quotient distance**, not by generation-path length. It must report exact shell/ball growth, shortest-path multiplicity, bidirectional frontier size, canonical-state collisions, and move-interaction structure. Industrial bounded planning/SAT/CP-SAT attacks remain part of the gate.
+The first HGES stage should be a negative control: construct a finite piece family whose canonical decomposition is known, publish only the quotient object and allowed piece/boundary types, and verify that public canonical-decomposition/incidence recovery reconstructs an accepted gluing witness. This validates the attack harness before any deliberately noncanonical or overlapping gluing distribution is considered.
 
-Only if the reconfiguration relation itself shows meaningful generated-instance resistance may the project search for a trapdoor distribution with:
+Only a later HGES distribution that survives canonical decomposition, automorphism normalization, boundary invariants, SAT/CP-SAT pairing search, and equivalent-witness attacks could justify searching for a secret recovery advantage with:
 
 ~~~text
 (pk, td) <- TrapdoorGen(lambda)

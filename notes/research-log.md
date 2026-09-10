@@ -202,7 +202,7 @@ Measured Python 3.12 CI:
 ~~~text
 equations / variables = 5 / 10
 rank / nullity = 4 / 6
-dependent equations = 1
+independent equations = 1
 row XOR operations = 7
 equivalent witnesses = 64
 public Gaussian-elimination witness = accepted
@@ -279,3 +279,29 @@ Verify(pk, y, w)
 ~~~
 
 Any secret advantage must survive quotienting by all equivalent representations and equivalent accepted witnesses.
+
+### T1 — exact-distance Pachner endpoint calibration
+
+T1 fixes T0's immediate generator defect by building exact canonical quotient BFS shells and choosing the target from `S_D` rather than from a planted walk endpoint. Target selection first maximizes slack against the public tetrahedron-count lower bound and then minimizes capped shortest-path multiplicity.
+
+Measured Python 3.12 dedicated CI:
+
+~~~text
+t1-2: D=2, shells 1/8/31, ball 40,
+      target delta/slack 0/2, shortest paths 1,
+      bidir 9/4 visited, 2 expanded
+
+t1-3: D=3, shells 1/8/31/83, ball 123,
+      target delta/slack 1/2, shortest paths 1,
+      bidir 9/14 visited, 5 expanded,
+      BFS 119 visited / 36 expanded,
+      tetrahedron A* 119 visited / 36 expanded
+~~~
+
+The `t1-3` target is genuinely at distance 3, has one measured shortest path and is deliberately poorly predicted by tetrahedron count, yet bidirectional recovery still expands only five quotient states.
+
+**T1 rejected by A-023 on the measured generated distribution.**
+
+This triggers the pre-declared rejection condition. Do not add depth 4 merely to inflate the work factor. The result is not a theorem that bounded Pachner reconfiguration is easy; it rejects this generated BTTS/Pachner distribution as evidence of cryptographic hardness.
+
+Next frontier: HGES canonical-gluing recovery negative control.
