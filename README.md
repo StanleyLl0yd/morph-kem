@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G9 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G10 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -267,6 +267,16 @@ Across all three sets and eight deterministic seeds each, **24/24** instances re
 
 See `docs/44-g9-overlapping-exact-cover.md`.
 
+## G10 — toroidal overlapping-pair HGES matching control
+
+G10 replaces G9's interval/cycle candidate interaction with a closed periodic torus. Public candidate pieces are adjacent triangle pairs, so the dual interaction graph is genuinely two-dimensional and 3-regular.
+
+**G10 is rejected by A-037.** The public dual graph is bipartite, and deterministic augmenting-path perfect matching directly constructs an accepted witness. Fixed `g10-8x8` has dual 128/192 and bipartition 64/64; the base attack uses 64 augmentations, 455 DFS calls and 770 edge scans. Forced-edge re-solving reaches the 64-solution cap, with 63 returned witnesses non-reference. Across all three sizes and eight seeds each, **24/24** public base matchings verify and every instance exposes an accepted non-reference decomposition.
+
+The failure is structural: a two-dimensional overlap graph does not help when the relation itself is ordinary bipartite matching.
+
+See `docs/45-g10-toroidal-matching.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -308,16 +318,17 @@ See `docs/44-g9-overlapping-exact-cover.md`.
 - `docs/42-g7-planted-3sat.md` — measured G7/A-034 negative control
 - `docs/43-g8-topology-csp-collapse.md` — measured G8/A-035 structural collapse audit
 - `docs/44-g9-overlapping-exact-cover.md` — measured G9/A-036 negative control
+- `docs/45-g10-toroidal-matching.md` — measured G10/A-037 negative control
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G10**, not a trapdoor construction. G9 shows that eliminating independent local phase domains is still insufficient when public candidate carriers form a bounded-width interval/cycle overlap relation.
+The next controlled HGES experiment is **G11**, not a trapdoor construction. G10 shows that even a genuinely two-dimensional candidate interaction is useless when accepted pieces have size two and decomposition is ordinary bipartite perfect matching.
 
-G10 must change the overlap interaction graph itself. Before any positive interpretation, first measure public separator and treewidth structure of the candidate-overlap graph and attempt decomposition-based dynamic programming. It must also face multiscale motif/link normalization, candidate-subcomplex enumeration, exact cover/set packing, matching, generic CSP/SAT/CP-SAT, contraction/quotient simplification, equivalent-witness enumeration and generated-role leakage.
+G11 must move to overlapping pieces of size greater than two so candidate selection is genuinely hypergraphic. Before any positive interpretation it must test toroidal/planar special structure, separators/treewidth, matching or Pfaffian reductions, candidate-subcomplex enumeration, exact cover/set packing, low-width DP, generic CSP/SAT/CP-SAT, contraction/normalization, equivalent-witness multiplicity and generated-role leakage.
 
-Only a relation where both public candidate extraction and the resulting overlap interaction resist these attacks could justify asking whether a secret decomposition supplies a real recovery advantage. No trapdoor/KEM work begins before that.
+Only after both public candidate extraction and the resulting hypergraph relation survive these attacks may the project ask whether a hidden decomposition gives a real recovery advantage. No trapdoor/KEM work begins before that.
 
 No security or post-quantum claim exists.
 
