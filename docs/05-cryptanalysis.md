@@ -23,6 +23,9 @@ This file preserves attacks including successful breaks.
 | A-016 | Collapse + spanning-tree witness | **Fatal to M3** | Implemented |
 | A-017 | Generic greedy acyclic Hasse matching | Strong M3 baseline | Implemented |
 | A-018 | Primal/dual tree-cotree witness | **Fatal to M4** | Implemented |
+| A-019 | Tree-plus-extension equivalent Morse witness | **Fatal to M5 fixed generated baseline** | Implemented |
+| A-020 | Independent Q8 boundary-fiber lifting | **Fatal to K2.2** | Implemented |
+| A-021 | GF(2) kernel-coherence elimination | **Fatal to K2.3 relation family** | Implemented |
 
 ## M0–M3 summary
 
@@ -82,7 +85,6 @@ Generic greedy matching on the torus-4x4 baseline hit the target 0/4 times, with
 - low-width or solver-friendly Hasse structure.
 
 Every future attack record should include the exact parameter set, seeds, work metric, outcome, and interpretation.
-
 
 ## H-series attacks
 
@@ -145,7 +147,6 @@ Wall-clock time is environment-dependent and is not a complexity claim.
 
 **Lesson:** choosing a non-commutative group does not help when the verifier accepts an entire fiber of a cheap quotient homomorphism.
 
-
 ### H-E01 — fundamental-cycle obstruction extraction
 
 H2-E1 assigns a relative height increment in Z/7Z to every public edge. Fixing a public spanning tree determines vertex potentials. Every non-tree edge then exposes one fundamental-cycle syndrome.
@@ -187,7 +188,6 @@ For escher-12 the exact attack required 27 search nodes, 24 backtracks and 469 p
 
 H2-E1 is therefore rejected. The relation is an instance of known gain/group-labelled graph balancing/cycle-hitting structure; increasing graph size does not repair the conceptual issue.
 
-
 ### H-E03 — exact higher-order NAE atlas repair
 
 H2-E2 moves from edge gains to 3-variable local charts. Every chart uses a signed Not-All-Equal relation on three Boolean variables.
@@ -226,7 +226,6 @@ Two independent failures are visible:
 
 Worst-case NAE-3SAT hardness does not rescue a generated distribution that is both solver-friendly and statistically role-leaking.
 
-
 ### H-E04 — local-function flattening
 
 Target: any proposed all-charts Escher construction.
@@ -248,7 +247,6 @@ The proposed "all charts remain" construction maps directly to Goldreich's local
 **Disposition:** naive H2-E3 rejected before code.
 
 Mandatory successor gate: any H3-E construction must demonstrate a public operation/witness relation that cannot be flattened to independent bounded-local predicates of one hidden vector.
-
 
 ### H-E05 — public spanning-tree gauge normalization
 
@@ -297,7 +295,6 @@ The 120 residual choices are a single global relabeling of the five sheets. They
 
 **H3-E0 rejected.**
 
-
 ### H-E06 — composite-cover public-key interface collapse
 
 Target: naive adaptation of Negami-style composite graph-cover cryptography.
@@ -314,7 +311,6 @@ Four variants were checked:
 This is an interface failure, not a proof that every cover-based public-key primitive is impossible.
 
 Mandatory successor gate: define an efficient TrapdoorRecover algorithm on an exact generated positive cover distribution before claiming a cover-based one-way relation.
-
 
 ### H-H01 — exact A5 frame CSP on Klein quartic
 
@@ -398,16 +394,13 @@ A deterministic four-instance sweep uses lighter attack budgets to test whether 
 
 Each mini-sweep CSP is capped at 250 search nodes and 50 singleton probes. No singleton probe removes a value on these four instances.
 
-**Assessment:** H2-H remains unresolved rather than broken. Four samples and bounded Python attacks are far below the evidence required for a cryptographic assumption.
+**Assessment:** H2-H remains unresolved rather than broken under these bounded Python attacks. Four samples and bounded attacks are far below the evidence required for a cryptographic assumption.
 
-Next mandatory attacks include industrial SAT/SMT/CP-SAT, subgroup/coset projections, representation-theoretic relaxations, automorphism/canonicalization exploitation, and substantially larger generated-distribution studies.
-
-
-### H-H02 — exact MiniSat recovery
+### H-H04 — exact MiniSat recovery
 
 Target: the H2-H Klein-quartic/A5 generated relation.
 
-The exact public relation was encoded to CNF with one Boolean variable for every vertex/A5-frame value. One global gauge representative is fixed at the root. Exactly-one constraints enforce one frame per vertex, and edge clauses encode the exact A5 3-cycle compatibility relation. The decoded solver model is checked again with the repository's exact verifier, so a SAT result is not accepted merely on the CNF encoder's word.
+The exact public relation was encoded to CNF with one Boolean variable for every vertex/A5-frame value. One global gauge representative is fixed at the root. Exactly-one constraints enforce one frame per vertex, and edge clauses encode the exact A5 3-cycle compatibility relation. The decoded solver model is checked again with the repository's exact verifier.
 
 Fixed generated instance:
 
@@ -423,8 +416,9 @@ MiniSat:
   conflicts:              2,810,606
   decisions:              6,909,361
   propagations:         172,452,978
-  CPU time:                 115.099 s
 ~~~
+
+Recorded CPU time varies by CI runner; the exact SAT witness is the result that matters.
 
 The attack uses only public instance data. Any accepted equivalent frame assignment is attacker success; the planted reference frames are not used by the solver.
 
@@ -433,7 +427,6 @@ The attack uses only public instance data. Any accepted equivalent frame assignm
 This does not prove a polynomial-time attack or characterize asymptotic complexity. It is nevertheless enough to falsify the current generated instance as a cryptographic hardness candidate under the repository's attack-first rules.
 
 **Lesson:** removing abelianization and moving to an exact hyperbolic surface can make naive search much harder without creating a usable one-way relation. Industrial exact solvers must be part of the gate before interpreting bounded heuristic failure.
-
 
 ### K-A01 — Klein-bottle orientation gauge recovery
 
@@ -455,11 +448,6 @@ A public dual spanning tree recovers all face gauges relative to one root bit. E
 
 The non-tree normalized bits are the fundamental-cycle orientation syndromes. Their non-zero values certify that the local orientation equations cannot be made globally consistent, but they are public linear data rather than a trapdoor.
 
-**Expected result:** fatal to K0 by construction.
-
-K0 exists to verify that non-orientability and Möbius/Klein-bottle intuition do not become cryptographic hardness when the protected quantity is only an orientation character or face gauge.
-
-
 Fixed-seed K0 CI sweep:
 
 | Set | V | E | F | Dual cycle rank | Non-zero syndromes | Gauge recovered | Edge checks |
@@ -473,7 +461,6 @@ For the baseline klein-bottle-5x4 instance, public normalization exactly equals 
 **Result:** K0 rejected exactly as designed.
 
 **Lesson:** a genuine non-orientable surface and non-zero global orientation obstruction do not imply cryptographic hardness. If the hidden information is only local orientation gauge, the public relation is linear Z2 synchronization.
-
 
 ### K-A02 — public orientation-double-cover reconstruction
 
@@ -496,11 +483,6 @@ T_fg XOR b_fg = phi_f XOR phi_g.
 ~~~
 
 Thus the hidden face gauges collapse to one global bit, while the public cover exposes the orientable lift.
-
-**Expected result:** fatal to K1 if the reconstructed cover has the predicted orientable genus-3 invariants.
-
-K1 is intentionally a control: genuine hyperbolicity is not accepted as a security argument if the computational relation still factors through the orientation character.
-
 
 Fixed-seed K1 CI result:
 
@@ -530,7 +512,6 @@ reconstructed from public data:     yes
 
 **Lesson:** passing from the Klein bottle to a genuine non-orientable hyperbolic regular map does not create asymmetry when the protected object still factors through the orientation character. The orientation double cover is a public construction from the same transition data.
 
-
 ### K-A03 — semidirect-product completion of twisted A5
 
 Target: K2.0 orientation-twisted A5 local system.
@@ -554,11 +535,6 @@ is tested exhaustively against S5 multiplication.
 If Phi is bijective and homomorphic, every orientation-twisted pairwise A5 transport is exactly one ordinary S5 transport. The public orientation bit is simply the permutation parity.
 
 K2.0 additionally checks every endpoint-frame pair on every N4:{6,4}_3 dual edge to ensure that the twisted verifier and flattened S5 verifier agree exactly.
-
-**Expected result:** structural rejection of naive K2.0.
-
-This attack is algebraic rather than complexity-based: scaling the same twisted 1-dimensional transport does not remove the semidirect-product equivalence.
-
 
 Fixed-seed K2.0 CI result:
 
@@ -591,7 +567,6 @@ The failure is exact, not a solver timeout or small-parameter observation. Every
 
 **Lesson:** outer twisting by the orientation character does not evade ordinary finite-group transport. A successor must add genuinely 2-dimensional data rather than a more complicated one-group-per-edge notation.
 
-
 ### K-A04 — crossed-module kernel/cokernel and gauge projection
 
 Target: any proposed K2.1/K2.2 finite crossed-module construction.
@@ -614,8 +589,109 @@ This gives an immediate structural attack hierarchy:
 
 A hidden 1-gauge/2-gauge representative is not accepted as a trapdoor because equivalent gauges are attacker success.
 
-**Current result:** naive K2.1 "hide a crossed-module gauge" rejected before code.
-
-A successor is admissible only after defining an explicit generated positive distribution and a secret TrapdoorRecover algorithm that is not merely gauge normalization.
+**Result:** naive K2.1 "hide a crossed-module gauge" rejected before code.
 
 Sources and details are recorded in `docs/25-k2-crossed-module-frontier.md`.
+
+## A-019 — M5 public tree-plus-extension equivalent witness
+
+Target: M5 irregular non-manifold triangular 2-core.
+
+M5 deliberately removes both the M3 free-collapse shortcut and the M4 closed-manifold structure. On the fixed baseline:
+
+~~~text
+V/E/F:                         8/27/29
+edge triangle incidence:       2..6
+free collapse pairs:           0
+critical target:               (1,0,9)
+~~~
+
+A public multi-start tree/triangle greedy already finds two distinct accepted target matchings in 32 trials. More decisively, `bounded_tree_extension_search` fixes a public spanning-tree vertex/edge matching and exactly branches over remaining edge/triangle matching choices.
+
+Measured Python 3.12 CI:
+
+~~~text
+accepted equivalent witness:   yes
+search nodes:                   30
+spanning-tree trials:           1
+search exhausted:               no
+~~~
+
+No planted reference information is used.
+
+**Result:** M5 rejected on the fixed generated baseline.
+
+This is a generated-distribution falsification, not an asymptotic theorem. It is enough to reject parameter inflation as a repair.
+
+## A-020 / K-A05 — Q8 independent public face lifting
+
+Target: K2.2 automorphism crossed module `partial: Q8 -> Aut(Q8)`.
+
+The exact crossed-module audit gives:
+
+~~~text
+|Q8| = 8
+|Aut(Q8)| = 24
+|ker(partial)| = 2
+|im(partial)| = 4
+|coker(partial)| = 6
+~~~
+
+On exact `N4:{6,4}_3`, every public face holonomy lies in `im(partial)`. Each such boundary has exactly two Q8 preimages, a coset of `ker(partial) ~= C2`.
+
+The public attack computes every face holonomy and independently chooses any preimage. For four faces:
+
+~~~text
+fiber sizes:                    (2,2,2,2)
+equivalent witnesses:           16
+edge compositions:              24
+Q8 preimage checks:             32
+accepted equivalent witness:    yes
+same as planted representative: no
+~~~
+
+**Result:** K2.2 rejected exactly for fake-flatness alone.
+
+**Lesson:** placing independent witness variables on faces does not create higher-order asymmetry when verification factorizes into independent boundary-preimage tests.
+
+## A-021 / K-A06 — affine GF(2) kernel-coherence collapse
+
+Target: K2.3 three-dimensional successor to K2.2.
+
+After selecting one public canonical lift `h_f^0` in each two-element Q8 boundary fiber, any other valid lift is uniquely
+
+~~~text
+h_f = (-1)^z_f h_f^0,
+z_f in GF(2).
+~~~
+
+The implemented tetrahedral coherence predicate multiplies these central kernel choices around each 3-cell. Consequently the entire residual witness relation is exactly
+
+~~~text
+A z = b  over GF(2).
+~~~
+
+The public attack row-reduces this system and lifts any solution back to Q8.
+
+Fixed-seed Python 3.12 CI on the boundary of a 4-simplex:
+
+~~~text
+V/E/F/T:                        5/10/10/5
+boundary fiber sizes:           ten copies of 2
+equations / variables:          5 / 10
+rank / nullity:                 4 / 6
+dependent equations:            1
+row XOR operations:             7
+equivalent witnesses:           64
+public attack accepted:         yes
+same as planted representative: no
+elapsed:                        0.000111 s
+~~~
+
+The row dependency is structural: every triangular face belongs to two tetrahedra, so the XOR of all five tetrahedral incidence rows is zero.
+
+**Result:** K2.3 rejected exactly for this relation family.
+
+This is stronger than a toy-runtime result. For any larger instance that keeps the same semantics — public two-element central-kernel fibers plus coherence given by products of their `C2` choices — witness recovery remains affine binary linear algebra. Increasing the complex size only increases the public linear system.
+
+This does **not** show that every higher-topological cryptosystem is linear or impossible. It shows that the next hard component, if one exists, cannot live solely in the abelian `pi2`/kernel cochain. A successor must expose a genuinely coupled unknown `pi1`/`pi2` or other trapdoor distribution and still survive cohomology, finite-module, gauge, group-synchronization, canonicalization and CSP/SAT attacks.
