@@ -442,3 +442,15 @@ Across `g4-4`, `g4-8`, `g4-12` × eight seeds, **24/24** instances have rank `g-
 **G4 rejected by A-031.**
 
 Lesson: adding nonlocal coupling does not create hardness when the coupling factors exactly through public XOR differences. G5 must change the constraint algebra and immediately face quotient/abelianization, bounded-domain CSP, local consistency/belief propagation, low-width DP, SAT/CP-SAT, normalization and equivalent-witness attacks.
+
+### G5 — nonlinear exact-one parity-projection control
+
+Replaced explicit pairwise XOR coupling with signed ternary exact-one clauses over the same public two-phase G3 gadgets. Pre-code attack screening found that every accepted exact-one clause implies one affine GF(2) parity equation.
+
+The chosen regular templates have degree six and connected factor graphs but full GF(2) rank. Exact-head Python 3.12 `g5-24` gives 24 gadgets / 144 tetrahedra, 48 clauses, factor cycle rank 73, rank/nullity 24/0, 436 row XORs, 168/0 local matching nodes/backtracks, and one affine solution. That public solution passes all 48 original nonlinear clause checks and equals the hidden reference only in post-attack comparison.
+
+Across `g5-12`, `g5-18`, `g5-24` × eight seeds, **24/24** public affine recoveries are accepted and **24/24** match the reference.
+
+**G5 rejected by A-032.**
+
+Lesson: changing the visible verifier from XOR to a nonlinear predicate is cosmetic when the predicate leaks a full-rank affine quotient that uniquely determines the satisfying witness. G6 must require that cheap quotient information leave genuine residual ambiguity and then attack that residual with CSP/SAT and structural methods.

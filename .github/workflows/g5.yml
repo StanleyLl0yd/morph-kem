@@ -1,0 +1,58 @@
+name: G5 HGES exact-one parity negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_exact_one.py'
+      - 'tests/test_gluing_exact_one.py'
+      - 'scripts/gluing_exact_one_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/40-g5-exact-one-parity.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g5.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_exact_one.py'
+      - 'tests/test_gluing_exact_one.py'
+      - 'scripts/gluing_exact_one_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/40-g5-exact-one-parity.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g5.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  g5:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G5
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/gluing_exact_one.py tests/test_gluing_exact_one.py scripts/gluing_exact_one_baseline.py scripts/gluing_exact_one_sweep.py
+      - name: G5 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_gluing_exact_one -v
+      - name: G5 exact-one parity baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_exact_one_baseline.py --params g5-24
+      - name: G5 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_exact_one_sweep.py --seeds 8
