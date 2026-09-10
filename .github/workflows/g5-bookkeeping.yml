@@ -1,0 +1,82 @@
+name: G5 one-shot result bookkeeping
+
+on:
+  push:
+    branches: ['g5/hges-exact-one-csp']
+    paths: ['.github/workflows/g5-bookkeeping.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  bookkeeping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: g5/hges-exact-one-csp
+      - name: Record measured G5 rejection
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          ledger = Path('docs/05-cryptanalysis.md')
+          text = ledger.read_text()
+          row = '| A-032 | Public exact-one parity projection | **Fatal to G5 generated distribution** | Implemented |'
+          anchor = '| A-031 | Public GF(2) coupled-phase synchronization | **Fatal to G4 generated distribution** | Implemented |'
+          if row not in text:
+              if anchor not in text:
+                  raise SystemExit('A-031 ledger anchor missing')
+              text = text.replace(anchor, anchor + '\n' + row, 1)
+          heading = '## A-032 — public exact-one parity projection'
+          if heading not in text:
+              text = text.rstrip() + '''\n\n## A-032 — public exact-one parity projection\n\n### Target\n\nG5 nonlinear exact-one HGES negative control.\n\nG5 replaces G4's explicit pairwise XOR coupling by signed ternary exact-one clauses over the same publicly canonicalized two-phase G3 gadgets. A clause accepts when exactly one of `x_i XOR n_i`, `x_j XOR n_j`, `x_k XOR n_k` is true.\n\n### Public attack\n\nExact-one-of-three has an immediate necessary parity consequence:\n\n~~~text\n(x_i XOR n_i) XOR (x_j XOR n_j) XOR (x_k XOR n_k) = 1,\n~~~\n\nso every public clause exposes\n\n~~~text\nx_i XOR x_j XOR x_k = 1 XOR n_i XOR n_j XOR n_k.\n~~~\n\nA-032 enumerates the two accepted local G3 matching phases, constructs this public affine system, performs Gauss-Jordan elimination over GF(2), lifts the recovered phase vector to public matching witnesses, and checks the original nonlinear exact-one verifier. Reference phases are used only after public acceptance.\n\n### Exact Python 3.12 `g5-24` result\n\n~~~text\ngadgets:                                  24\ntotal public tetrahedra:                 144\nclauses:                                  48\nvariable degree histogram:               ((6,24),)\nfactor components / cycle rank:          1/73\nper-gadget perfect matchings:             twenty-four copies of 2\nlocal matching nodes / backtracks:        168/0\nprojected GF(2) equations / variables:    48/24\nGF(2) rank / nullity:                     24/0\nGF(2) row XORs:                           436\naffine solution count:                    1\nnonlinear clause checks:                  48\npublic parity witness accepted:           yes\npublic affine solution = reference:       yes\nreference witness accepted:               yes\n~~~\n\n### Deterministic sweep\n\nPython 3.12 tested `g5-12`, `g5-18`, and `g5-24` over eight independently derived deterministic seeds each.\n\n| Set | Gadgets | Clauses | Degree | Factor cycle rank | Rank/nullity | Row XORs | Local matching nodes/backtracks | Nonlinear checks | Accepted/matched |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| g5-12 | 12 | 24 | 6 | 37 | 12/0 | 127 | 84/0 | 24 | 8/8 |\n| g5-18 | 18 | 36 | 6 | 55 | 18/0 | 261 | 126/0 | 36 | 8/8 |\n| g5-24 | 24 | 48 | 6 | 73 | 24/0 | 436 | 168/0 | 48 | 8/8 |\n\nAll **24/24** public parity recoveries are accepted by the original nonlinear verifier and all **24/24** equal the hidden reference phase vector after post-attack comparison.\n\n### Result\n\n**G5 is rejected by A-032.**\n\nThe nonlinear surface predicate does not help because this generated clause family publishes a full-rank solver-complete affine quotient. The parity equations are only necessary in general, but here they have a unique solution; the planted satisfying assignment is necessarily that solution, and the attacker confirms it with the public nonlinear verifier.\n\nDPLL/SAT is not required to reject G5 because it would be a heavier attack than the already-fatal GF(2) projection. Increasing gadget count or clause density while retaining the same full-rank projection is not a repair.\n\nThis is not a theorem that general exact-one CSP or HGES is easy. It falsifies the current generated relation.\n\n### G6 gate\n\nA successor must use an accepted predicate whose cheap affine/quotient consequences are insufficient to reconstruct a verifier-valid witness. It must still face quotient tests, CSP/SAT, local consistency, low-width algorithms, automorphism/normalization, equivalent-witness multiplicity, and generated-role leakage before any trapdoor work.\n'''
+          ledger.write_text(text)
+
+          log = Path('notes/research-log.md')
+          text = log.read_text()
+          if '### G5 — nonlinear exact-one parity-projection control' not in text:
+              text = text.rstrip() + '''\n\n### G5 — nonlinear exact-one parity-projection control\n\nReplaced explicit pairwise XOR coupling with signed ternary exact-one clauses over the same public two-phase G3 gadgets. Pre-code attack screening found that every accepted exact-one clause implies one affine GF(2) parity equation.\n\nThe chosen regular templates have degree six and connected factor graphs but full GF(2) rank. Exact-head Python 3.12 `g5-24` gives 24 gadgets / 144 tetrahedra, 48 clauses, factor cycle rank 73, rank/nullity 24/0, 436 row XORs, 168/0 local matching nodes/backtracks, and one affine solution. That public solution passes all 48 original nonlinear clause checks and equals the hidden reference only in post-attack comparison.\n\nAcross `g5-12`, `g5-18`, `g5-24` × eight seeds, **24/24** public affine recoveries are accepted and **24/24** match the reference.\n\n**G5 rejected by A-032.**\n\nLesson: changing the visible verifier from XOR to a nonlinear predicate is cosmetic when the predicate leaks a full-rank affine quotient that uniquely determines the satisfying witness. G6 must require that cheap quotient information leave genuine residual ambiguity and then attack that residual with CSP/SAT and structural methods.\n'''
+              log.write_text(text)
+
+          readme = Path('README.md')
+          text = readme.read_text()
+          text = text.replace('HGES controls G0–G4 are implemented and rejected.', 'HGES controls G0–G5 are implemented and rejected.')
+          marker = '\n## Research discipline\n'
+          if '## G5 — nonlinear exact-one HGES parity-projection control' not in text:
+              if marker not in text:
+                  raise SystemExit('README research-discipline anchor missing')
+              section = '''\n## G5 — nonlinear exact-one HGES parity-projection control\n\nG5 replaces G4's explicit XOR edges by signed ternary exact-one constraints over public two-phase G3 gadgets. The verifier is genuinely nonlinear, but every accepted clause still implies one public XOR equation.\n\n**G5 is rejected by A-032.** On `g5-24`, the resulting 48×24 public affine system has rank/nullity `24/0`; Gauss-Jordan elimination uses 436 row XORs, recovers one phase vector, and that vector passes all 48 original nonlinear clause checks.\n\nAcross `g5-12`, `g5-18`, `g5-24` and eight deterministic seeds each, **24/24** public parity recoveries are accepted and match the hidden reference after post-attack comparison. DPLL/SAT is unnecessary because the cheaper affine projection is already fatal.\n\nSee `docs/40-g5-exact-one-parity.md`.\n'''
+              text = text.replace(marker, section + marker, 1)
+          key_anchor = '- `docs/39-g4-coupled-phase-parity.md` — measured G4/A-031 negative control'
+          key_row = '- `docs/40-g5-exact-one-parity.md` — measured G5/A-032 negative control'
+          if key_row not in text:
+              if key_anchor not in text:
+                  raise SystemExit('README docs39 anchor missing')
+              text = text.replace(key_anchor, key_anchor + '\n' + key_row, 1)
+          old = '''The next controlled HGES experiment is **G5**, not a trapdoor construction. G4 showed that explicit nonlocal coupling is still useless when it factors through public pairwise XOR differences.\n\nG5 must change the constraint algebra rather than increase the coupling graph. Before any positive interpretation it must face quotient/abelianization tests, finite-domain CSP, belief propagation/local consistency, low-width dynamic programming, exact SAT/CP-SAT, automorphism/normalization, equivalent-witness enumeration, and planted-role statistical leakage.\n'''
+          new = '''The next controlled HGES experiment is **G6**, not a trapdoor construction. G5 showed that merely changing the visible predicate from XOR to nonlinear exact-one is insufficient when a full-rank affine consequence already reconstructs the witness.\n\nG6 must ensure that cheap affine/quotient consequences leave genuine residual ambiguity, then attack that residual before any positive interpretation with finite-domain CSP/SAT, local consistency, low-width dynamic programming, automorphism/normalization, equivalent-witness enumeration, and generated-role leakage tests.\n'''
+          if old not in text:
+              raise SystemExit('README G5 gate anchor missing')
+          text = text.replace(old, new, 1)
+          readme.write_text(text)
+
+          doc = Path('docs/40-g5-exact-one-parity.md')
+          text = doc.read_text()
+          text = text.replace(
+              '**G5 is an attack calibration in progress.** Pre-code structural analysis already found that every signed exact-one-of-three clause exposes a necessary affine GF(2) equation. Exact-head CI must confirm whether the proposed full-rank templates let that cheaper projection recover a witness accepted by the original nonlinear verifier.',
+              '**G5 is rejected by A-032.** Exact-head Python 3.12 confirms that the public parity projection is full rank for every declared toy set, recovers a unique phase vector, and that vector is accepted by the original nonlinear exact-one verifier.'
+          )
+          gate = '''## Rejection gate\n\nReject G5 if A-032 recovers an accepted nonlinear witness from the public affine quotient. Do not increase `g` or clause density as a repair when the coefficient family remains full rank.\n\nWorst-case exact-one-3-SAT hardness is irrelevant if this generated family publishes a solver-complete affine quotient.\n'''
+          result = '''## Measured result\n\nFixed Python 3.12 `g5-24` baseline:\n\n~~~text\ngadgets:                               24\ntotal public tetrahedra:              144\nclauses:                               48\nvariable degree histogram:            ((6,24),)\nfactor components / cycle rank:       1/73\nlocal matching nodes/backtracks:      168/0\nprojected equations/variables:        48/24\nGF(2) rank/nullity:                   24/0\nGF(2) row XORs:                       436\naffine solution count:                1\nnonlinear clause checks:               48\npublic parity witness accepted:        yes\nmatches reference after recovery:      yes\n~~~\n\nPython 3.12 sweep over `g5-12`, `g5-18`, `g5-24` × eight deterministic seeds gives **24/24** accepted public affine recoveries and **24/24** post-attack reference matches. Per-size rank/nullity is `12/0`, `18/0`, `24/0`; row-XOR work is `127`, `261`, `436`.\n\n**Result: G5 rejected by A-032.** The nonlinear predicate exposes a solver-complete affine quotient on this generated family. DPLL/SAT is not needed for rejection because it is strictly heavier than the successful public parity attack.\n\nDo not scale this distribution as a repair. Worst-case exact-one-3-SAT hardness does not apply to a generated family whose necessary affine consequences already determine the unique verifier-valid witness.\n'''
+          if gate not in text:
+              raise SystemExit('docs40 rejection gate anchor missing')
+          text = text.replace(gate, result, 1)
+          doc.write_text(text)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/05-cryptanalysis.md docs/40-g5-exact-one-parity.md notes/research-log.md README.md
+          git diff --cached --quiet && exit 0
+          git commit -m 'G5: record exact-one parity break'
+          git push origin HEAD:g5/hges-exact-one-csp
