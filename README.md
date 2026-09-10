@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5 and the first two BTTS/Pachner calibrations T0–T1 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and the first HGES negative control G0 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -44,14 +44,14 @@ The project does not interpret increasingly elaborate topology as security. Ever
 
 K2.4 broadened the search beyond one higher-gauge construction. It screened hard-problem candidates based on orientation, gluings, covering spaces, lift/projection, homotopy classes, fundamental groups, geodesics, hyperbolic and quotient spaces, non-local properties, equivalent embeddings, and hidden transformations between different representations of the same space.
 
-Current ranking after prior-art/attack screening:
+The original ranking after prior-art/attack screening was:
 
-1. **BTTS — Bounded Topological Transformation Search**, using state-dependent reconfiguration paths as the first executable direction.
+1. **BTTS — Bounded Topological Transformation Search.**
 2. **HGES — Hidden Gluing Equivalence Search.**
 3. **HICQF — Hidden Intermediate Cover / Quotient Factorization.**
 4. **CMPS — Coupled Monodromy–Postnikov Search**, still theoretical and without a trapdoor interface.
 
-The common abstraction for BTTS and equivalent embeddings is a **bounded path in an equivalence groupoid/reconfiguration graph**: local moves are state-dependent and compose only when their source/target representations match. This avoids assuming that every hidden transformation is a single global group action, but group-action reductions, canonicalization, low-width structure and bidirectional search remain mandatory attacks.
+BTTS has now failed its first two generated-distribution calibrations, T0 and T1. HGES has passed only its deliberately breakable G0 harness-control step; that is not positive hardness evidence.
 
 Orientation alone, hyperbolicity/geodesics alone, and hidden Tietze-presentation rewriting are not accepted as new hardness assumptions.
 
@@ -99,6 +99,31 @@ This remains a generated-distribution falsification, not an asymptotic theorem a
 
 See `docs/34-t1-distance-conditioned-results.md`.
 
+## G0 — HGES canonical-gluing negative control
+
+G0 deliberately uses a canonically decomposable gluing distribution: copies of one four-tetrahedron 3-ball are glued along a hidden tree, so every inter-piece shared face becomes a bridge in the public tetrahedron dual graph.
+
+**G0 is rejected as designed by A-024.** The public attack builds triangle incidence, finds dual-graph bridges and recovers the bridge-block components without using the planted partition.
+
+Fixed Python 3.12 `g0-8` baseline:
+
+~~~text
+public V/E/F/T:                    19/59/73/32
+dual graph vertices/edges:         32/55
+bridges:                           7
+component sizes:                   4/4/4/4/4/4/4/4
+face occurrence checks:            128
+DFS edge scans:                    110
+public witness accepted:           yes
+matches planted partition:         yes
+~~~
+
+Across `g0-3`, `g0-5`, `g0-8` and eight deterministic seeds each, **24/24** public recoveries were accepted and matched the planted partition up to group order.
+
+This validates the HGES decomposition-attack harness; it is not evidence for a hard problem.
+
+See `docs/35-g0-hges-canonical-gluing.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -129,16 +154,17 @@ See `docs/34-t1-distance-conditioned-results.md`.
 - `docs/32-coupled-monodromy-postnikov-frontier.md` — CMPS theory note
 - `docs/33-t0-pachner-results.md` — measured T0/A-022 result
 - `docs/34-t1-distance-conditioned-results.md` — measured T1/A-023 result
+- `docs/35-g0-hges-canonical-gluing.md` — measured G0/A-024 negative control
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The current BTTS/Pachner generated distribution is rejected. The next K2.4 frontier experiment is **HGES — Hidden Gluing Equivalence Search**.
+The next controlled HGES experiment is **G1**, not a trapdoor construction. It must remove G0's exact bridge shortcut structurally rather than by parameter inflation.
 
-The first HGES stage should be a negative control: construct a finite piece family whose canonical decomposition is known, publish only the quotient object and allowed piece/boundary types, and verify that public canonical-decomposition/incidence recovery reconstructs an accepted gluing witness. This validates the attack harness before any deliberately noncanonical or overlapping gluing distribution is considered.
+The smallest useful change is a 2-edge-connected or overlapping gluing distribution. Before any positive interpretation, G1 must test whether the supposedly hidden pieces are still recovered by articulation/low-order separators, maximal `K4`-like dual subgraphs, apex/boundary signatures, piece automorphisms, and exact-cover/SAT/CP-SAT partitioning.
 
-Only a later HGES distribution that survives canonical decomposition, automorphism normalization, boundary invariants, SAT/CP-SAT pairing search, and equivalent-witness attacks could justify searching for a secret recovery advantage with:
+Only an HGES distribution that survives those public attacks could justify asking whether a secret decomposition supplies a real recovery advantage with:
 
 ~~~text
 (pk, td) <- TrapdoorGen(lambda)
