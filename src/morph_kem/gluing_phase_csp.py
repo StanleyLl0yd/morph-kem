@@ -6,7 +6,7 @@ import json
 from math import prod
 from typing import TypeAlias
 
-from .gluing import GluingExperimentError, TetrahedronGroup
+from .gluing import GluingExperimentError, GluingPublicInstance, TetrahedronGroup
 from .gluing_coupled import (
     CoupledPhasePublicInstance,
     validate_coupled_phase_witness,
@@ -72,19 +72,19 @@ class SemanticEquivalenceAudit:
     mismatches: int
 
 
-def _extract_public_domains(gadgets: tuple[object, ...]) -> PhaseLiftTable:
+def _extract_public_domains(gadgets: tuple[GluingPublicInstance, ...]) -> PhaseLiftTable:
     domains: list[LocalDomain] = []
     nodes = 0
     backtracks = 0
     tetrahedra = 0
     for gadget in gadgets:
-        canonical, gadget_nodes, gadget_backtracks = _canonical_gadget_matchings(gadget)  # type: ignore[arg-type]
+        canonical, gadget_nodes, gadget_backtracks = _canonical_gadget_matchings(gadget)
         if len(canonical) != 2:
             raise GluingExperimentError("G8 expected exactly two public local phases")
         domains.append(canonical)
         nodes += gadget_nodes
         backtracks += gadget_backtracks
-        tetrahedra += len(gadget.tetrahedra)  # type: ignore[attr-defined]
+        tetrahedra += len(gadget.tetrahedra)
     return PhaseLiftTable(
         domains=tuple(domains),
         extraction_nodes=nodes,

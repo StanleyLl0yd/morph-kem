@@ -472,3 +472,11 @@ Lesson: making the affine quotient incomplete is necessary but not sufficient. A
 Implemented G7 planted signed 3-SAT phase coupling as the first G-series predicate with zero non-trivial local affine GF(2) implications. Public deterministic DPLL nevertheless recovers accepted witnesses cheaply. Fixed Python 3.12 `g7-24`: 24 gadgets, 96 clauses, degree 12, factor cycle rank 169, 40 DPLL nodes / 22 decisions / 34 propagations / 2 conflicts / 2 backtracks, 16/16 capped accepted solutions, all 16 non-reference. The 24-instance all-size/eight-seed sweep succeeds on every instance with a measured maximum of 86 DPLL nodes and at least one non-reference accepted witness each. Independent MiniSat finds SAT with 3 conflicts / 13 decisions / 41 propagations and its decoded model passes the exact verifier.
 
 Conclusion: G7 rejected. Eliminating the parity quotient alone does not make this planted distribution cryptographically hard; equivalent-witness multiplicity remains fatal. G8 must change the generated relation rather than scale G7. No security claim.
+
+## 2026-09-10 — G8 confirms topology-to-CSP collapse via A-035
+
+Implemented a generic public compiler for the G4–G7 HGES architecture. Each local G3 gadget's two accepted decompositions are enumerated/canonically ordered publicly; global constraints are compiled to finite relation tables with no simplicial identifiers; a generic GAC/MRV solver operates only on the compiled CSP; assignments are lifted afterward and checked by the original exact HGES verifier.
+
+Exact Python 3.12 semantic audit: G4 `16/16`, G5 `4096/4096`, G6 `4096/4096`, G7 `4096/4096` phase assignments checked, **0 mismatches** in every family (12,304 total). Fixed large-family solver work is G4 `3/1`, G5 `3/1`, G6 `3/1`, G7 `38/22` nodes/decisions; all recovered assignments lift successfully, with G7 exposing 16/16 non-reference solutions in its capped batch. Four-seed/four-family sweep succeeds 16/16; G7 max generic work is 100 nodes / 53 decisions.
+
+Conclusion: A-035 is a structural break of the G4–G7 design line. A harder global CSP predicate over the same independently enumerable local phase domains would be cosmetic with respect to topology. G9 must make public phase/domain extraction itself nontrivial by entangling local topology across boundaries, then attack that extraction aggressively. No security claim.

@@ -38,6 +38,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-032 | Public exact-one parity projection | **Fatal to G5 generated distribution** | Implemented |
 | A-033 | Affine-coset residual exact-one enumeration | **Fatal to G6 generated distribution** | Implemented |
 | A-034 | Public planted 3-SAT DPLL + independent MiniSat recovery | **Fatal to G7 generated distribution** | Implemented |
+| A-035 | Public local-phase extraction and topology-to-CSP factorization | **Structural break of G4–G7 design line** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -515,3 +516,46 @@ Python 3.12 also tests `g7-12`, `g7-18`, and `g7-24` over eight deterministic se
 **G7 is rejected by A-034.** Removing an obvious affine quotient was necessary but not sufficient: the current deterministic planted 3-SAT distribution remains solver-friendly and exposes equivalent accepted witnesses. Do not repair this relation merely by increasing the variable or clause count. Worst-case 3-SAT hardness is not average-case cryptographic hardness.
 
 This is not a theorem that arbitrary 3-SAT or general HGES is easy.
+
+## A-035 — public local-phase extraction and topology-to-CSP factorization
+
+### Target
+
+The architecture shared by HGES G4–G7: independently relabelled G3 gadgets expose small publicly enumerable local decomposition domains, while global verification is expressed as constraints on those local choices.
+
+### Public reduction
+
+A-035 uses no planted roles. It publicly enumerates/canonically orders the two accepted local G3 decompositions per gadget, compiles every global verifier constraint to a finite relation over integer domain indices, and serializes a `CompiledPhaseCSP` that contains no tetrahedra, faces, vertices, simplicial labels, or witness groups. A generic GAC/MRV solver sees only this compiled object. A separate public lift table is consulted only after solving to reconstruct a witness for the original exact HGES verifier.
+
+### Exact semantic-equivalence audit
+
+Python 3.12 exhaustively checks the full local-domain product on the smallest instance of every affected family:
+
+~~~text
+G4 g4-4:   16 checked,   compiled 2,  original 2,  mismatches 0
+G5 g5-12:  4096 checked, compiled 1,  original 1,  mismatches 0
+G6 g6-12:  4096 checked, compiled 1,  original 1,  mismatches 0
+G7 g7-12:  4096 checked, compiled 10, original 10, mismatches 0
+~~~
+
+Total: **12,304/12,304 assignments with zero semantic mismatches**. The equivalence covers the full measured accepted relation, not just a planted witness.
+
+### Fixed large-family topology-free baseline
+
+~~~text
+family  vars/constraints  relation      tets  extraction n/b  generic solutions  generic n/d  lifted accepted  nonref
+G4      12/18             (2,2) x18      72   84/0            2                 3/1          2                1
+G5      24/48             (3,3) x48     144   168/0           1                 3/1          1                0
+G6      24/48             (3,3) x48     144   168/0           1                 3/1          1                0
+G7      24/96             (3,7) x96     144   168/0          16/16             38/22        16               16
+~~~
+
+Serialized CSP sizes are 798, 2772, 2772, and 8520 bytes respectively, with the explicit topology-token check false in all four cases.
+
+A four-seed sweep over the largest representative of all four families gives **16/16** successful topology-free solves followed by accepted original-verifier lifts. G4–G6 always use 3 solver nodes/1 decision. G7 uses 40–100 nodes and 23–53 decisions; all runs reach the 16-solution cap, with 15 or 16 non-reference witnesses among the first 16.
+
+### Result
+
+**A-035 confirms a structural topology-to-CSP collapse for the G4–G7 design line.** Once the local topological witness domains are cheaply and independently enumerable, topology becomes public preprocessing plus a mechanical post-solve lift. Selecting a different worst-case-hard CSP over the same exposed domains is not additional topological hardness.
+
+This is not a theorem that arbitrary HGES, topology, CSP, or SAT is easy. A successor must break the premise of cheap independent phase extraction rather than scale this architecture.

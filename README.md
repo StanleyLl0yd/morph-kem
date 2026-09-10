@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G7 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G8 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -51,7 +51,7 @@ The original ranking after prior-art/attack screening was:
 3. **HICQF — Hidden Intermediate Cover / Quotient Factorization.**
 4. **CMPS — Coupled Monodromy–Postnikov Search**, still theoretical and without a trapdoor interface.
 
-BTTS failed its first two generated-distribution calibrations, T0 and T1. HGES has now failed eight controlled stages G0–G7: canonical separators and motifs (G0–G2), equivalent local decompositions (G3), explicit parity synchronization (G4), affine leakage through nonlinear exact-one predicates (G5–G6), and finally generic DPLL/MiniSat plus abundant equivalent witnesses on planted signed 3-SAT (G7). None is positive hardness evidence.
+BTTS failed its first two generated-distribution calibrations, T0 and T1. HGES has now failed G0–G8: G0–G2 exposed canonical separator/motif/refinement structure; G3 exposed equivalent local decompositions; G4–G6 collapsed through parity/affine structure; G7 remained generic-SAT friendly even after the affine shortcut was removed; and G8 confirms the deeper architectural failure that G4–G7 factor exactly through an ordinary finite-domain CSP after cheap public local-phase extraction. None is positive hardness evidence.
 
 Orientation alone, hyperbolicity/geodesics alone, and hidden Tietze-presentation rewriting are not accepted as new hardness assumptions.
 
@@ -247,6 +247,16 @@ An independent MiniSat check on the fixed 24-variable/96-clause baseline reports
 
 See `docs/42-g7-planted-3sat.md`.
 
+## G8 — topology-to-CSP collapse audit
+
+G8 attacks the architecture shared by G4–G7 rather than another clause predicate. The public attacker independently enumerates each G3 gadget's two accepted local decompositions, compiles all global constraints to integer finite-domain relation tables, solves that topology-free CSP, and mechanically lifts assignments back to topological witnesses.
+
+**G8 is rejected by A-035, and A-035 confirms a structural G4–G7 topology-to-CSP collapse.** Exhaustive Python 3.12 comparison checks 12,304 phase assignments across the smallest G4/G5/G6/G7 instances with **zero semantic mismatches** between the compiled CSP and the original HGES verifiers. On larger fixed baselines the generic solver needs 3 nodes/1 decision for G4–G6 and 38 nodes/22 decisions for G7; every recovered assignment lifts to an accepted original witness. A four-seed/four-family regression succeeds 16/16, with G7 requiring at most 100 generic-CSP nodes.
+
+The solver serialization contains no tetrahedra, faces, vertices, simplicial labels, or witness groups. Topology survives only in a separate public lift table after the solve. Therefore choosing a harder CSP predicate over the same independently enumerable local domains is not additional topological hardness.
+
+See `docs/43-g8-topology-csp-collapse.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -285,25 +295,18 @@ See `docs/42-g7-planted-3sat.md`.
 - `docs/39-g4-coupled-phase-parity.md` — measured G4/A-031 negative control
 - `docs/40-g5-exact-one-parity.md` — measured G5/A-032 negative control
 - `docs/41-g6-affine-coset-residual.md` — measured G6/A-033 negative control
+- `docs/42-g7-planted-3sat.md` — measured G7/A-034 negative control
+- `docs/43-g8-topology-csp-collapse.md` — measured G8/A-035 structural collapse audit
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G7**, not a trapdoor construction. G6 showed that a cheap quotient may leave genuine ambiguity and still fail when the residual search dimension is constant.
+The next controlled HGES experiment is **G9**, not a trapdoor construction. G8 shows that adding increasingly sophisticated global CSP predicates over independently enumerable local topological phase gadgets does not create topological hardness: the topology can be compiled away before solving.
 
-G7 must make every known cheap quotient leave residual dimension growing with the generated instance, then attack that growing residual with exact CSP/SAT, local consistency, low-width dynamic programming, automorphism/normalization, equivalent-witness enumeration, and generated-role leakage tests.
+G9 must therefore attack the premise of `PhaseExtract` itself. A useful negative control should overlap/entangle candidate local decompositions across public boundaries so there is no cheap independent per-gadget domain table. Before any positive interpretation it must face multiscale decomposition, separator/link/motif, normalization/automorphism, overlapping exact-cover/CSP/SAT/CP-SAT, low-width, equivalent-witness, generated-role leakage, and contraction/quotient attacks.
 
-Only an HGES distribution that survives these public attacks could justify asking whether a secret decomposition supplies a real recovery advantage with:
-
-~~~text
-(pk, td) <- TrapdoorGen(lambda)
-y        <- PublicEval(pk, r)
-w        <- TrapdoorRecover(td, pk, y)
-Verify(pk, y, w)
-~~~
-
-The secret must give a recovery advantage that survives quotienting by all equivalent representations/witnesses.
+Only a relation where public extraction of a compact local witness domain itself survives these attacks could justify asking whether a secret decomposition supplies a real recovery advantage. No trapdoor/KEM work begins before that.
 
 No security or post-quantum claim exists.
 
