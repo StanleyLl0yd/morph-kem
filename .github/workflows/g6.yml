@@ -1,0 +1,62 @@
+name: G6 HGES affine-coset residual negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_residual.py'
+      - 'src/morph_kem/gluing_exact_one.py'
+      - 'src/morph_kem/gluing_matching.py'
+      - 'tests/test_gluing_residual.py'
+      - 'scripts/gluing_residual_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/41-g6-affine-coset-residual.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g6.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_residual.py'
+      - 'src/morph_kem/gluing_exact_one.py'
+      - 'src/morph_kem/gluing_matching.py'
+      - 'tests/test_gluing_residual.py'
+      - 'scripts/gluing_residual_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/41-g6-affine-coset-residual.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g6.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  g6:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G6
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/gluing_residual.py tests/test_gluing_residual.py scripts/gluing_residual_baseline.py scripts/gluing_residual_sweep.py
+      - name: G6 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_gluing_residual -v
+      - name: G6 affine-coset residual baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_residual_baseline.py --params g6-24
+      - name: G6 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_residual_sweep.py --seeds 8

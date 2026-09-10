@@ -454,3 +454,15 @@ Across `g5-12`, `g5-18`, `g5-24` × eight seeds, **24/24** public affine recover
 **G5 rejected by A-032.**
 
 Lesson: changing the visible verifier from XOR to a nonlinear predicate is cosmetic when the predicate leaks a full-rank affine quotient that uniquely determines the satisfying witness. G6 must require that cheap quotient information leave genuine residual ambiguity and then attack that residual with CSP/SAT and structural methods.
+
+### G6 — affine-coset residual control
+
+Kept the nonlinear G5 exact-one verifier but changed the circulant clause scopes so the public parity projection has rank `g-2` and nullity `2`. Thus the attacker no longer obtains the witness directly from GF(2); it obtains a four-element affine coset.
+
+A-033 enumerates that entire public coset and evaluates all nonlinear clauses for every candidate before exact-verifier confirmation. Exact-head Python 3.12 `g6-24` gives rank/nullity `22/2`, 308 row XORs, four affine candidates, 192 residual clause checks, one accepted candidate and 48 final verifier checks.
+
+Across `g6-12`, `g6-18`, `g6-24` × eight seeds, **24/24** instances expose exactly four affine candidates and exactly one nonlinear-valid public witness; all accepted witnesses match the hidden reference only in post-attack comparison.
+
+**G6 rejected by A-033.**
+
+Lesson: making the affine quotient incomplete is necessary but not sufficient. A constant two-bit residual is still trivial. G7 must make cheap-quotient residual dimension grow with the instance and attack that growing residual with exact CSP/SAT and structural methods.
