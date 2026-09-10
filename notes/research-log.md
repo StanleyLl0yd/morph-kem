@@ -564,3 +564,31 @@ N4 twisted transport:
 The orientation twist is not a new relation: at the 1-dimensional transport level it is exactly ordinary S5 semidirect completion.
 
 K2.1 is therefore a literature/interface gate for crossed-module / finite-2-group transport rather than another immediate implementation.
+
+
+### K2.1 — crossed-module frontier review
+
+Reviewed strict 2-groups/crossed modules as the first genuinely two-dimensional successor to K2.0.
+
+Findings:
+
+- crossed modules are established models of homotopy 2-types;
+- finite higher-gauge models already use G-valued edge data and E-valued face data;
+- ker(partial) is abelian, im(partial) is normal, pi1 is coker(partial), and pi2 is ker(partial);
+- the remaining 2-type data includes a standard Postnikov/cohomological layer;
+- crossed modules have already been proposed for public key exchange (Inassaridze & Khmaladze, 2019).
+
+**Naive K2.1 rejected before code.**
+
+Merely hiding a 1-gauge/2-gauge, orientation trivialization, or crossed-module presentation does not define a trapdoor.
+
+K2.2 may proceed only after a complete public interface is specified:
+
+~~~text
+(pk,td) <- TwoTypeTrapdoorGen
+y       <- PublicEval(pk,...)
+w       <- TrapdoorRecover(td,pk,y)
+Verify(pk,y,w)
+~~~
+
+with attacker success defined as any equivalent accepted witness.

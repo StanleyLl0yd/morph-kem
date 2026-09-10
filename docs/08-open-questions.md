@@ -29,3 +29,22 @@ Before scaling an M5 distribution, test:
 7. canonicalization and width structure.
 
 No KEM wrapper until a primitive survives these gates.
+
+
+## K2 two-type trapdoor gate
+
+After K0/K1/K2.0, non-orientability, orientation covers, and pairwise outer twisting are all known to collapse to public gauge/group structure.
+
+Crossed modules / finite 2-groups are the next mathematical layer, but they are established prior art and do not supply a trapdoor by themselves.
+
+Before K2.2 code:
+
+1. choose a crossed module with non-trivial kernel and cokernel;
+2. compute its induced action and Postnikov/cohomology data;
+3. write exact KeyGen/PublicEval/TrapdoorRecover/Verify algorithms;
+4. prove generated correctness;
+5. define attacker success as any equivalent witness;
+6. show the trapdoor is not merely a 1-gauge/2-gauge representative;
+7. test semidirect, kernel/cokernel, cohomology, orientation-cover and local-CSP flattening before scaling.
+
+If no complete trapdoor-positive distribution can be written, stop the K-series rather than adding more categorical notation.
