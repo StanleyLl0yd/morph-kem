@@ -473,3 +473,59 @@ For the baseline klein-bottle-5x4 instance, public normalization exactly equals 
 **Result:** K0 rejected exactly as designed.
 
 **Lesson:** a genuine non-orientable surface and non-zero global orientation obstruction do not imply cryptographic hardness. If the hidden information is only local orientation gauge, the public relation is linear Z2 synchronization.
+
+
+### K-A02 — public orientation-double-cover reconstruction
+
+Target: K1 exact non-orientable hyperbolic regular-map control.
+
+The base map is N4:{6,4}_3 with V/E/F = 6/12/4, Euler characteristic -2 and regular type {6,4}. The public face-orientation transitions define a two-sheet orientation cover directly.
+
+For every dual edge f--g with public transition T_fg, the attack glues local sheet copies by:
+
+~~~text
+(f, s) <-> (g, s XOR T_fg).
+~~~
+
+This requires no hidden reference face gauge.
+
+The same public transition data also gives the K0-style linear recovery:
+
+~~~text
+T_fg XOR b_fg = phi_f XOR phi_g.
+~~~
+
+Thus the hidden face gauges collapse to one global bit, while the public cover exposes the orientable lift.
+
+**Expected result:** fatal to K1 if the reconstructed cover has the predicted orientable genus-3 invariants.
+
+K1 is intentionally a control: genuine hyperbolicity is not accepted as a security argument if the computational relation still factors through the orientation character.
+
+
+Fixed-seed K1 CI result:
+
+~~~text
+map: N4:{6,4}_3
+base V/E/F:                         6/12/4
+base vertex degree:                 4
+base face size:                     6
+base edge-face degree:              2
+base Euler characteristic:         -2
+base dual cycle rank:               9
+regular type hyperbolic:            yes
+base orientable:                    no
+non-zero orientation syndromes:     6/9
+public normalization = canonical:   yes
+hidden face gauges recovered:       yes, up to one global bit
+public gauge edge checks:           12
+
+orientation cover V/E/F:            12/24/8
+orientation cover chi:              -4
+orientation cover orientable:       yes
+orientation cover genus:            3
+reconstructed from public data:     yes
+~~~
+
+**Result:** K1 rejected exactly as designed.
+
+**Lesson:** passing from the Klein bottle to a genuine non-orientable hyperbolic regular map does not create asymmetry when the protected object still factors through the orientation character. The orientation double cover is a public construction from the same transition data.

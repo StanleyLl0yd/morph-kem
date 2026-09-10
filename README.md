@@ -68,6 +68,7 @@ See:
 - docs/20-h3e-composite-cover-frontier.md — public-key adaptation/interface gate
 - docs/21-h2-klein-quartic-a5.md — exact hyperbolic Klein-quartic/A5 experiment
 - docs/22-k0-klein-bottle.md — non-orientable Klein-bottle orientation control
+- docs/23-k1-nonorientable-hyperbolic.md — exact N4:{6,4}_3 hyperbolic non-orientable control
 - notes/research-log.md — chronological record
 - spec/morph-kem-v0.1.md — future-spec skeleton
 
@@ -92,6 +93,8 @@ See:
 **H2-H / H2.1:** rejected on the fixed generated instance by an exact industrial SAT attack. The exact {3,7} Klein-quartic/A5 relation encodes to 1,440 Boolean variables and 47,545 CNF clauses after fixing the global gauge. MiniSat returned SAT and the decoded assignment passed the repository's exact A5 verifier. On the recorded CI run it used 2,810,606 conflicts, 6,909,361 decisions, 172,452,978 propagations and about 115 CPU seconds. This is a concrete generated-instance break, not an asymptotic theorem; increasing genus or group size is not an acceptable repair.
 
 **K0:** implemented and rejected as designed. The exact finite Klein-bottle triangulation is genuinely non-orientable, but public spanning-tree XOR normalization removes the hidden local orientation gauge completely up to one global bit. On the baseline klein-bottle-5x4 instance, all 40 face-gauge bits are recovered up to that global bit with 60 public edge checks; the remaining 7/21 non-zero fundamental syndromes are public orientation-obstruction data, not a trapdoor.
+
+**K1:** implemented and rejected as designed. On exact N4:{6,4}_3 (V/E/F = 6/12/4, chi = -2, non-orientable, hyperbolic type {6,4}), the public Z2 normalization recovers all hidden face gauges up to one global bit in 12 edge checks. The orientation double cover is then reconstructed from public transition data alone and has V/E/F = 12/24/8, chi = -4, is orientable, and has genus 3. Genuine hyperbolicity does not rescue an orientation-character trapdoor.
 
 No security or post-quantum claim exists.
 

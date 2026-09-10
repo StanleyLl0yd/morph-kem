@@ -130,3 +130,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: python scripts/klein_bottle_sweep.py
+      - name: K1 non-orientable hyperbolic baseline
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/nonorientable_map_baseline.py
