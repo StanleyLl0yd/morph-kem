@@ -1,0 +1,62 @@
+name: G10 HGES toroidal perfect-matching negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_surface_matching.py'
+      - 'src/morph_kem/surface.py'
+      - 'src/morph_kem/complex.py'
+      - 'tests/test_gluing_surface_matching.py'
+      - 'scripts/gluing_surface_matching_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/45-g10-toroidal-matching.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g10.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_surface_matching.py'
+      - 'src/morph_kem/surface.py'
+      - 'src/morph_kem/complex.py'
+      - 'tests/test_gluing_surface_matching.py'
+      - 'scripts/gluing_surface_matching_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/45-g10-toroidal-matching.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g10.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  g10:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G10
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/gluing_surface_matching.py tests/test_gluing_surface_matching.py scripts/gluing_surface_matching_baseline.py scripts/gluing_surface_matching_sweep.py
+      - name: G10 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_gluing_surface_matching -v
+      - name: G10 toroidal perfect-matching baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_surface_matching_baseline.py --params g10-8x8 --solution-cap 64
+      - name: G10 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_surface_matching_sweep.py --seeds 8 --solution-cap 64
