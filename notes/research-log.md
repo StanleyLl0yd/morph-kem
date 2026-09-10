@@ -490,3 +490,13 @@ A-036 enumerates those candidates and solves exact cover; an independent cycle-c
 Across `g9-18`, `g9-24`, `g9-30` × eight seeds, **24/24** instances produce exact agreement between exact cover and cycle DP: respectively 90, 224 and 450 accepted tilings, with all but the planted reference available as equivalent attacker witnesses.
 
 **G9 rejected by A-036.** Lesson: breaking independent phase extraction is necessary but not sufficient. If public candidate carriers form a low-width interval/cycle overlap relation, decomposition remains a cheap exact-cover/DP problem and equivalent-witness multiplicity becomes even worse. G10 must change the overlap interaction graph and measure separator/treewidth structure before any solver growth is interpreted. No security claim.
+
+## 2026-09-10 — G10 rejected by A-037
+
+G10 moved the overlap interaction from G9's one-dimensional cycle to the closed periodic torus triangulation. The public triangle-dual graph is connected, 3-regular and bipartite with zero bridges/articulation points, so G9's cycle-DP shortcut is genuinely gone.
+
+A-037 nevertheless reduces the exact public witness relation to ordinary bipartite perfect matching. Fixed Python 3.12 `g10-8x8`: 64/192/128 public V/E/F, dual 128/192, bipartition 64/64, base matching 64 augmentations / 455 DFS calls / 770 edge scans. Forced-edge re-solving reaches the 64-solution cap using 49,473 additional edge scans; all 64 returned witnesses verify and 63 are non-reference.
+
+Across `g10-4x4`, `g10-6x6`, `g10-8x8` × eight seeds, **24/24** base public matchings verify and every instance yields a non-reference witness. All eight `g10-8x8` runs hit the 64-solution cap.
+
+**G10 rejected by A-037.** Lesson: increasing geometric dimension/overlap width is irrelevant when the witness relation still collapses to a known polynomial graph problem. G11 must use pieces of size greater than two so candidate selection becomes genuinely hypergraphic, then attack exact cover/set packing, toroidal special structure, low-width methods and SAT/CP-SAT before any positive interpretation. No security claim.

@@ -40,6 +40,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-034 | Public planted 3-SAT DPLL + independent MiniSat recovery | **Fatal to G7 generated distribution** | Implemented |
 | A-035 | Public local-phase extraction and topology-to-CSP factorization | **Structural break of G4–G7 design line** | Implemented |
 | A-036 | Public overlapping-piece enumeration + exact cover / cycle DP | **Fatal to G9 generated distribution** | Implemented |
+| A-037 | Public toroidal bipartite perfect-matching recovery | **Fatal to G10 generated distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -618,3 +619,50 @@ Overlapping the local carriers removes independent phase extraction, but the pub
 Do not scale the cycle. A G10 successor must change the public overlap interaction graph itself and must be attacked first for separators/treewidth, motif/link normalization, candidate-subcomplex enumeration, exact cover/set packing, matching, low-width DP, generic CSP/SAT/CP-SAT, contraction/quotient simplification, equivalent witnesses and generated-role leakage.
 
 This is a generated-distribution falsification, not a theorem that general HGES or general exact cover is easy. No security claim.
+
+## A-037 — public toroidal bipartite perfect-matching recovery
+
+### Target
+
+G10 toroidal overlapping-pair HGES negative control.
+
+G10 removes G9's interval/cycle ordering by using the exact periodic torus triangulations from M4. Public allowed pieces are pairs of adjacent triangles, so candidate interaction is the 3-regular two-dimensional triangle-dual graph.
+
+### Public attack
+
+A-037 uses only public incidence: build the triangle-dual graph, recover its bipartition by BFS coloring, run deterministic augmenting-path perfect matching, lift matched dual edges to triangle-pair witnesses, and force non-matching public edges one at a time to recover alternative accepted matchings up to an explicit cap. Reference data is consulted only after public acceptance.
+
+### Exact Python 3.12 `g10-8x8` result
+
+~~~text
+public V/E/F:                                64/192/128
+Euler characteristic:                        0
+edge triangle incidence min/max:             2/2
+dual vertices/edges:                         128/192
+dual degree histogram:                       ((3,128),)
+bridges / articulation points:               0/0
+public bipartition sizes:                     64/64
+allowed candidate dual edges:                192
+base matching augmentations/DFS calls/scans: 64/455/770
+alternative forced-edge attempts:             63
+alternative matching edge scans:           49473
+matching solutions / cap:                     64/64
+matching cap hit:                             yes
+accepted public solutions:                    64
+accepted non-reference solutions:            63
+reference witness accepted:                  yes
+~~~
+
+### Deterministic sweep
+
+Python 3.12 tested `g10-4x4`, `g10-6x6`, and `g10-8x8` over eight independently derived deterministic public relabel seeds each. All **24/24** public base perfect matchings are accepted and every instance exposes at least one accepted non-reference matching.
+
+- `g10-4x4`: 22–26 accepted matchings found, 21–25 non-reference; cap 64 is not reached.
+- `g10-6x6`: 62–64 accepted, 61–63 non-reference; cap reached on 6/8 seeds.
+- `g10-8x8`: 64/64 accepted on every seed, all runs cap-hit, 63 non-reference among the returned solutions.
+
+### Result
+
+**G10 is rejected by A-037.** The two-dimensional toroidal overlap is genuine, but the accepted relation itself is exactly bipartite perfect matching. Increasing torus width, treewidth, or vertex count cannot repair a polynomial matching reduction. Equivalent-witness multiplicity further helps the attacker.
+
+This is a generated-relation falsification, not a theorem that arbitrary HGES or hypergraph decomposition is easy. G11 must move beyond pairwise pieces to a genuinely hypergraphic candidate-selection relation and immediately attack its special toroidal structure. No security claim.
