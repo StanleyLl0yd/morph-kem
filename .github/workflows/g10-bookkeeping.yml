@@ -1,0 +1,70 @@
+name: G10 one-shot result bookkeeping
+
+on:
+  push:
+    branches: ['g10/hges-toroidal-perfect-matching']
+    paths: ['.github/workflows/g10-bookkeeping.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  bookkeeping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: g10/hges-toroidal-perfect-matching
+      - name: Record measured G10 rejection
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          ledger = Path('docs/05-cryptanalysis.md')
+          text = ledger.read_text()
+          anchor = '| A-036 | Public overlapping-piece enumeration + exact cover / cycle DP | **Fatal to G9 generated distribution** | Implemented |'
+          row = '| A-037 | Public toroidal bipartite perfect-matching recovery | **Fatal to G10 generated distribution** | Implemented |'
+          if row not in text:
+              if anchor not in text:
+                  raise SystemExit('A-036 ledger anchor missing')
+              text = text.replace(anchor, anchor + '\n' + row, 1)
+          heading = '## A-037 — public toroidal bipartite perfect-matching recovery'
+          if heading not in text:
+              text = text.rstrip() + '''\n\n## A-037 — public toroidal bipartite perfect-matching recovery\n\n### Target\n\nG10 toroidal overlapping-pair HGES negative control.\n\nG10 removes G9's interval/cycle ordering by using the exact periodic torus triangulations from M4. Public allowed pieces are pairs of adjacent triangles, so candidate interaction is the 3-regular two-dimensional triangle-dual graph.\n\n### Public attack\n\nA-037 uses only public incidence: build the triangle-dual graph, recover its bipartition by BFS coloring, run deterministic augmenting-path perfect matching, lift matched dual edges to triangle-pair witnesses, and force non-matching public edges one at a time to recover alternative accepted matchings up to an explicit cap. Reference data is consulted only after public acceptance.\n\n### Exact Python 3.12 `g10-8x8` result\n\n~~~text\npublic V/E/F:                                64/192/128\nEuler characteristic:                        0\nedge triangle incidence min/max:             2/2\ndual vertices/edges:                         128/192\ndual degree histogram:                       ((3,128),)\nbridges / articulation points:               0/0\npublic bipartition sizes:                     64/64\nallowed candidate dual edges:                192\nbase matching augmentations/DFS calls/scans: 64/455/770\nalternative forced-edge attempts:             63\nalternative matching edge scans:           49473\nmatching solutions / cap:                     64/64\nmatching cap hit:                             yes\naccepted public solutions:                    64\naccepted non-reference solutions:            63\nreference witness accepted:                  yes\n~~~\n\n### Deterministic sweep\n\nPython 3.12 tested `g10-4x4`, `g10-6x6`, and `g10-8x8` over eight independently derived deterministic public relabel seeds each. All **24/24** public base perfect matchings are accepted and every instance exposes at least one accepted non-reference matching.\n\n- `g10-4x4`: 22–26 accepted matchings found, 21–25 non-reference; cap 64 is not reached.\n- `g10-6x6`: 62–64 accepted, 61–63 non-reference; cap reached on 6/8 seeds.\n- `g10-8x8`: 64/64 accepted on every seed, all runs cap-hit, 63 non-reference among the returned solutions.\n\n### Result\n\n**G10 is rejected by A-037.** The two-dimensional toroidal overlap is genuine, but the accepted relation itself is exactly bipartite perfect matching. Increasing torus width, treewidth, or vertex count cannot repair a polynomial matching reduction. Equivalent-witness multiplicity further helps the attacker.\n\nThis is a generated-relation falsification, not a theorem that arbitrary HGES or hypergraph decomposition is easy. G11 must move beyond pairwise pieces to a genuinely hypergraphic candidate-selection relation and immediately attack its special toroidal structure. No security claim.\n'''
+          ledger.write_text(text)
+
+          log = Path('notes/research-log.md')
+          text = log.read_text()
+          heading = '## 2026-09-10 — G10 rejected by A-037'
+          if heading not in text:
+              text = text.rstrip() + '''\n\n## 2026-09-10 — G10 rejected by A-037\n\nG10 moved the overlap interaction from G9's one-dimensional cycle to the closed periodic torus triangulation. The public triangle-dual graph is connected, 3-regular and bipartite with zero bridges/articulation points, so G9's cycle-DP shortcut is genuinely gone.\n\nA-037 nevertheless reduces the exact public witness relation to ordinary bipartite perfect matching. Fixed Python 3.12 `g10-8x8`: 64/192/128 public V/E/F, dual 128/192, bipartition 64/64, base matching 64 augmentations / 455 DFS calls / 770 edge scans. Forced-edge re-solving reaches the 64-solution cap using 49,473 additional edge scans; all 64 returned witnesses verify and 63 are non-reference.\n\nAcross `g10-4x4`, `g10-6x6`, `g10-8x8` × eight seeds, **24/24** base public matchings verify and every instance yields a non-reference witness. All eight `g10-8x8` runs hit the 64-solution cap.\n\n**G10 rejected by A-037.** Lesson: increasing geometric dimension/overlap width is irrelevant when the witness relation still collapses to a known polynomial graph problem. G11 must use pieces of size greater than two so candidate selection becomes genuinely hypergraphic, then attack exact cover/set packing, toroidal special structure, low-width methods and SAT/CP-SAT before any positive interpretation. No security claim.\n'''
+              log.write_text(text)
+
+          readme = Path('README.md')
+          text = readme.read_text()
+          text = text.replace('HGES controls G0–G9 are implemented and rejected.', 'HGES controls G0–G10 are implemented and rejected.')
+          if '## G10 — toroidal overlapping-pair HGES matching control' not in text:
+              marker = '\n## Research discipline\n'
+              if marker not in text:
+                  raise SystemExit('README research-discipline anchor missing')
+              section = '''\n## G10 — toroidal overlapping-pair HGES matching control\n\nG10 replaces G9's interval/cycle candidate interaction with a closed periodic torus. Public candidate pieces are adjacent triangle pairs, so the dual interaction graph is genuinely two-dimensional and 3-regular.\n\n**G10 is rejected by A-037.** The public dual graph is bipartite, and deterministic augmenting-path perfect matching directly constructs an accepted witness. Fixed `g10-8x8` has dual 128/192 and bipartition 64/64; the base attack uses 64 augmentations, 455 DFS calls and 770 edge scans. Forced-edge re-solving reaches the 64-solution cap, with 63 returned witnesses non-reference. Across all three sizes and eight seeds each, **24/24** public base matchings verify and every instance exposes an accepted non-reference decomposition.\n\nThe failure is structural: a two-dimensional overlap graph does not help when the relation itself is ordinary bipartite matching.\n\nSee `docs/45-g10-toroidal-matching.md`.\n'''
+              text = text.replace(marker, section + marker, 1)
+          key_anchor = '- `docs/44-g9-overlapping-exact-cover.md` — measured G9/A-036 negative control'
+          key_row = '- `docs/45-g10-toroidal-matching.md` — measured G10/A-037 negative control'
+          if key_row not in text:
+              if key_anchor not in text:
+                  raise SystemExit('README key-file anchor missing')
+              text = text.replace(key_anchor, key_anchor + '\n' + key_row, 1)
+          old = '''The next controlled HGES experiment is **G10**, not a trapdoor construction. G9 shows that eliminating independent local phase domains is still insufficient when public candidate carriers form a bounded-width interval/cycle overlap relation.\n\nG10 must change the overlap interaction graph itself. Before any positive interpretation, first measure public separator and treewidth structure of the candidate-overlap graph and attempt decomposition-based dynamic programming. It must also face multiscale motif/link normalization, candidate-subcomplex enumeration, exact cover/set packing, matching, generic CSP/SAT/CP-SAT, contraction/quotient simplification, equivalent-witness enumeration and generated-role leakage.\n\nOnly a relation where both public candidate extraction and the resulting overlap interaction resist these attacks could justify asking whether a secret decomposition supplies a real recovery advantage. No trapdoor/KEM work begins before that.\n'''
+          new = '''The next controlled HGES experiment is **G11**, not a trapdoor construction. G10 shows that even a genuinely two-dimensional candidate interaction is useless when accepted pieces have size two and decomposition is ordinary bipartite perfect matching.\n\nG11 must move to overlapping pieces of size greater than two so candidate selection is genuinely hypergraphic. Before any positive interpretation it must test toroidal/planar special structure, separators/treewidth, matching or Pfaffian reductions, candidate-subcomplex enumeration, exact cover/set packing, low-width DP, generic CSP/SAT/CP-SAT, contraction/normalization, equivalent-witness multiplicity and generated-role leakage.\n\nOnly after both public candidate extraction and the resulting hypergraph relation survive these attacks may the project ask whether a hidden decomposition gives a real recovery advantage. No trapdoor/KEM work begins before that.\n'''
+          if old not in text:
+              raise SystemExit('README G10 next-gate block missing')
+          text = text.replace(old, new, 1)
+          readme.write_text(text)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/05-cryptanalysis.md notes/research-log.md README.md
+          git diff --cached --quiet && exit 0
+          git commit -m 'G10: record toroidal matching rejection'
+          git push origin HEAD:g10/hges-toroidal-perfect-matching
