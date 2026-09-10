@@ -2,7 +2,7 @@
 
 ## Status
 
-**G11 is an attack calibration in progress. No hardness or security conclusion is permitted until exact-head CI records A-038.**
+**G11 is rejected by A-038.** Exact-head dedicated CI passes on Python 3.11, 3.12 and 3.13. Public Algorithm-X-style exact cover reaches the explicit solution cap on every measured instance, and an independent MiniSat encoding recovers another accepted non-reference witness on the fixed largest baseline.
 
 G11 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -56,32 +56,24 @@ A witness is any partition of all public triangles into groups of exactly three,
 
 The verifier does not require the reference cover, torus coordinates, orientation, triangle colors, or generation order. Any accepted equivalent cover is attacker success.
 
-## Structural predictions
+## Structural measurements
 
-For the periodic torus dual graph, each triangle has three dual neighbors. Choosing any two neighbors gives one centered `P3`, so the expected candidate count is
-
-```text
-3F
-```
-
-for `F` public triangles.
-
-Each triangle occurs as the center of three candidates and as an endpoint of six more, hence the predicted public candidate membership is exactly nine per triangle. Direct combinatorial enumeration of the target family predicts:
+The predicted regular candidate profile is confirmed exactly on every measured set. For `F` public triangles:
 
 ```text
-candidate count               = 3F
-candidate memberships         = 9 per triangle
-candidate/triangle incidences = 9F
-candidate overlap degree      = 18 for every candidate
+P3 candidate count             = 3F
+candidate memberships          = 9 per triangle
+candidate/triangle incidences  = 9F
+candidate overlap degree       = 18 for every candidate
 ```
 
-These values are regression predictions, not hardness evidence.
+The dual graph remains 3-regular with zero bridges and articulation points. Thus A-038 is not exploiting a return of G0/G9 separator or interval structure.
 
 ## A-038 — public P3 candidate enumeration + exact cover / SAT
 
 ### Algorithm-X-style path
 
-A-038 first uses only public simplicial incidence:
+A-038 uses only public simplicial incidence:
 
 1. enumerate edge/triangle incidence and construct the public triangle-dual graph;
 2. enumerate every public induced `P3` triple;
@@ -93,32 +85,75 @@ A-038 first uses only public simplicial incidence:
 8. submit every cover to the exact G11 verifier;
 9. compare with the generation reference only after public success.
 
-The implementation records exact-cover nodes, branching decisions and backtracks in addition to candidate and overlap statistics.
+### Exact Python 3.12 `g11-6x9` result
+
+```text
+public V/E/F:                         54/162/108
+Euler characteristic:                0
+edge triangle incidence min/max:     2/2
+witness pieces:                       36
+dual vertices/edges:                 108/162
+dual degree histogram:               ((3,108),)
+bridges / articulation points:       0/0
+public bipartition sizes:             54/54
+P3 public candidates:                324
+candidate memberships per triangle: ((9,108),)
+candidate overlap degree histogram:  ((18,324),)
+candidate/triangle incidence size:   972
+exact-cover solutions / cap:         64/64
+exact-cover cap hit:                  yes
+exact-cover nodes/decisions/backtracks: 292/71/10
+accepted public solutions:           64
+accepted non-reference solutions:    64
+reference witness accepted:          yes
+```
+
+All first 64 public covers found by the fixed baseline differ from the hidden reference. Exact planted recovery is neither requested nor needed.
+
+### Deterministic sweep
+
+Python 3.12 tested `g11-3x6`, `g11-6x6`, and `g11-6x9` over eight independently derived public relabel seeds each, with solution cap 32.
+
+| Set | Candidates | Membership / overlap degree | Nodes range | Decisions range | Backtracks range | Accepted / cap | Non-reference |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| g11-3x6 | 108 | 9 / 18 | 110–142 | 26–38 | 2–16 | 32/32 on 8/8 | 32 on 8/8 |
+| g11-6x6 | 216 | 9 / 18 | 123–224 | 35–56 | 4–74 | 32/32 on 8/8 | 32 on 8/8 |
+| g11-6x9 | 324 | 9 / 18 | 137–225 | 44–59 | 2–21 | 32/32 on 8/8 | 32 on 8/8 |
+
+Across all **24/24** measured instances, the public exact-cover attack reaches the cap, every returned cover passes the exact verifier, and every returned cover differs from the hidden reference.
 
 ### Independent MiniSat path
 
-The same public candidate hypergraph is independently encoded to CNF with one Boolean variable per candidate. For each public triangle, the encoding requires exactly one incident candidate:
+The same public candidate hypergraph is encoded to CNF with one Boolean variable per candidate and an exactly-one constraint per public triangle. The regular membership nine gives `3F` variables and `37F` clauses.
 
-- one at-least-one clause;
-- pairwise at-most-one clauses.
-
-With the predicted regular membership nine, this gives
+Exact Python 3.12 `g11-6x9` cross-check:
 
 ```text
-SAT variables = 3F
-SAT clauses   = F * (1 + C(9,2)) = 37F
+SAT variables:                    324
+SAT clauses:                      3996
+DIMACS bytes:                     47859
+MiniSat return code:              10 (SAT)
+MiniSat conflicts:                2
+MiniSat decisions:                137
+MiniSat propagations:             574
+solver elapsed seconds:           0.004566
+selected candidate pieces:        36
+decoded accepted witness:         yes
+matches reference after success:  no
 ```
 
-The dedicated Python 3.12 workflow runs MiniSat on `g11-6x9`, decodes the selected public candidates and checks the resulting cover again with the exact repository verifier.
+MiniSat therefore independently recovers a verifier-valid non-reference hypercover.
 
-## Rejection gate
+## Result
 
-If either public exact-cover search or independent SAT finds an accepted witness cheaply, G11 is rejected. If many accepted covers exist, equivalent-witness multiplicity is an additional failure mode.
+**G11 is rejected by A-038.**
 
-Do not increase torus dimensions as a repair while this same regular generated candidate hypergraph remains vulnerable.
+Moving from pairwise graph matching to a genuine three-uniform hypergraph relation removes the G10 polynomial matching reduction, but the generated regular toroidal P3 candidate family remains extremely easy for generic public exact-cover search and SAT. Equivalent-witness multiplicity is again severe: even the capped searches immediately return dozens of non-reference accepted covers.
+
+Do not increase torus dimensions as a repair. This is a generated-distribution falsification, not a theorem that general hypergraph exact cover is easy.
 
 ## G12 gate
 
-A successor must distinguish genuine topological structure from generic exact-cover/SAT difficulty. A useful G12 would replace the highly regular periodic carrier or otherwise break its obvious repeated local candidate structure, while immediately testing automorphisms, periodic/generated-role leakage, separator/treewidth methods, candidate extraction, exact cover/set packing, SAT/CP-SAT, normalization/contraction and equivalent-witness multiplicity.
+G12 must test whether the ease is primarily caused by the highly regular periodic carrier and its uniform local candidate dictionary. A useful successor should break the torus translation symmetry and repeated local role structure without reintroducing canonical separators, while immediately facing automorphism/role leakage, candidate extraction, separator/treewidth analysis, exact cover/set packing, SAT/CP-SAT, simplification/normalization and equivalent-witness enumeration.
 
-No trapdoor/KEM work follows from G11 merely because the relation is hypergraphic. No security claim.
+No trapdoor/KEM work follows from G11. No security claim.
