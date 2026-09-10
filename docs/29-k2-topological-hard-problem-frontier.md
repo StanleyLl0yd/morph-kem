@@ -363,33 +363,31 @@ Ranking: **merge into BTTS for the first executable research phase**.
 | — | hyperbolicity/geodesics alone | reject | often aid normal forms/canonicalization |
 | — | hidden Tietze presentation alone | reject as novelty | established group-theoretic/prior-art territory |
 
-## 18. Mandatory cross-cutting attacks A-022 through A-026
+## 18. Mandatory cross-cutting attacks after T0/T1
 
-### A-022 — canonical decomposition / gluing recovery
+The original K2.4 draft reserved A-022 through A-026 before executable T-series experiments existed. T0 and T1 now occupy A-022 and A-023 with concrete bidirectional Pachner attacks. The remaining cross-cutting attack IDs are therefore realigned here to avoid collisions.
+
+### A-024 — canonical decomposition / gluing recovery
 
 Try to recover a canonical or near-canonical decomposition before searching the planted representation.
 
 Targets: HGES, quotient spaces, equivalent embeddings.
 
-### A-023 — bidirectional bounded-move search
+The first executable instance is G0, where public tetrahedron-dual bridges recover the planted punctured-4-simplex blocks exactly on the measured distribution.
 
-Bidirectional BFS/MITM over canonical reconfiguration states.
-
-Targets: BTTS/HHEE.
-
-### A-024 — cover/subgroup/monodromy factorization
+### A-025 — cover/subgroup/monodromy factorization
 
 Translate public cover data into `pi1` subgroups, permutation actions, block systems, deck groups, or locally-bijective-homomorphism CSPs.
 
 Targets: HICQF and any lift/projection proposal.
 
-### A-025 — normal-form/geodesic/mapping-class canonicalization
+### A-026 — normal-form/geodesic/mapping-class canonicalization
 
 Use negative-curvature and surface structure against the construction: normal forms, shortest representatives, curve complexes, mapping-class algorithms, geometric rigidity.
 
 Targets: hyperbolic/geodesic and gluing proposals.
 
-### A-026 — group-action / hidden-shift quantum reduction
+### A-027 — group-action / hidden-shift quantum reduction
 
 Before claiming post-quantum relevance, determine whether hidden transformations define a group action amenable to hidden subgroup/hidden shift/period-finding style quantum algorithms or known group-action attacks.
 
@@ -399,15 +397,11 @@ Targets: all hidden-transformation and quotient-space candidates.
 
 K2.4 does **not** identify a cryptographic primitive.
 
-It does identify a better next falsification experiment:
+It identified BTTS as the first falsification experiment. T0 and T1 subsequently rejected the first two generated Pachner distributions, so the executable frontier has moved to HGES.
 
-> **T0 — Bounded Pachner Equivalence Search calibration.**
+G0 is deliberately a negative control for the HGES attack harness: its canonical bridge decomposition must be recoverable publicly. Only after that control succeeds may G1 remove the exact bridge shortcut and test richer separator/decomposition attacks.
 
-T0 should ask whether generated pairs of equivalent 3-manifold triangulations create a nontrivial average-case bounded path-search problem after canonical relabeling and aggressive bidirectional/solver attacks.
-
-Only if T0 survives should the project ask the harder and separate question of how a secret decomposition could become a trapdoor.
-
-The critical methodological change is therefore:
+The critical methodology remains:
 
 ~~~text
 old approach:

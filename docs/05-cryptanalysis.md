@@ -28,6 +28,7 @@ This file preserves attacks including successful breaks.
 | A-021 | GF(2) kernel-coherence elimination | **Fatal to K2.3 relation family** | Implemented |
 | A-022 | Short equivalent Pachner path + bidirectional recovery | **Fatal to T0 generator** | Implemented |
 | A-023 | Exact-distance bidirectional Pachner recovery | **Fatal to T1 generated distribution** | Implemented |
+| A-024 | Dual-graph canonical gluing recovery | **Fatal to G0 by design** | Implemented |
 
 ## M0–M3 summary
 
@@ -779,3 +780,53 @@ This triggers the pre-declared T1 rejection condition that bidirectional search 
 Do not add `D=4` merely to inflate the work factor. This is not a theorem that bounded Pachner reconfiguration is easy and does not contradict worst-case NP-hardness for related move problems. It is a falsification of the current generated distribution as a cryptographic hardness direction.
 
 Because a cheaper mandatory attack already triggers rejection, the heavier bounded SAT/CP-SAT/planning gate is not required to reject T1. It remains mandatory for any future BTTS distribution that first survives the cheap exact and bidirectional gates.
+
+## A-024 — dual-graph canonical gluing recovery
+
+Target: G0 HGES canonical-gluing negative control.
+
+G0 publishes a quotient complex formed by gluing copies of one punctured-4-simplex 3-ball along a hidden tree. The planted piece partition, assembly tree, local boundary ports and local labels are not public.
+
+Each piece contributes four tetrahedra whose internal tetrahedron-dual graph is `K4`. Every planted inter-piece shared triangular face contributes exactly one dual-graph edge. Because the assembly graph is a tree, those inter-piece dual edges are bridges, while no internal `K4` edge is a bridge.
+
+A-024 uses only public tetrahedron incidence:
+
+1. enumerate every triangular-face occurrence;
+2. build the public tetrahedron dual graph;
+3. compute all bridges with DFS low-link values;
+4. remove those bridges;
+5. return the resulting connected components as the candidate piece partition;
+6. verify that partition with the exact public G0 verifier.
+
+Fixed Python 3.12 exact-head baseline:
+
+~~~text
+parameter:                              g0-8
+pieces:                                 8
+public V/E/F/T:                         19/59/73/32
+Euler characteristic:                  1
+boundary faces / max face incidence:   18/2
+dual graph vertices / edges:           32/55
+dual bridges:                           7
+bridge component sizes:                (4,4,4,4,4,4,4,4)
+face occurrence checks:                 128
+DFS edge scans:                         110
+public bridge witness accepted:         yes
+matches planted partition up to order: yes
+~~~
+
+The Python 3.12 sweep covers `g0-3`, `g0-5`, and `g0-8` over eight independently derived deterministic seeds each. All **24/24** public bridge recoveries are accepted and all **24/24** match the planted partition up to group order.
+
+Per-size work counters are deterministic for the current family:
+
+| Set | Pieces | Dual edges | Bridges | Face occurrences | DFS scans | Accepted/matched |
+|---|---:|---:|---:|---:|---:|---:|
+| g0-3 | 3 | 20 | 2 | 48 | 40 | 8/8 |
+| g0-5 | 5 | 34 | 4 | 80 | 68 | 8/8 |
+| g0-8 | 8 | 55 | 7 | 128 | 110 | 8/8 |
+
+**Result:** G0 rejected as designed.
+
+The attack is structural, not a small wall-clock accident. For the whole tree-of-`K4` family, every inter-piece gluing remains a dual-graph bridge, so ordinary linear-time bridge decomposition reconstructs the assembly blocks regardless of the hidden gluing permutations and global vertex relabeling.
+
+This does not show that general HGES is easy. It validates the intended canonical-decomposition attack harness and establishes the minimum condition for G1: changing only the number of pieces is not a repair. A successor must eliminate the bridge separator structurally and then survive articulation/low-order separator, allowed-piece enumeration, automorphism normalization, boundary-signature and exact-cover/SAT/CP-SAT attacks.

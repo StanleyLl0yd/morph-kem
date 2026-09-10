@@ -1,0 +1,60 @@
+name: G0 HGES canonical gluing negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing.py'
+      - 'tests/test_gluing.py'
+      - 'scripts/gluing_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/29-k2-topological-hard-problem-frontier.md'
+      - 'docs/35-g0-hges-canonical-gluing.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g0.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing.py'
+      - 'tests/test_gluing.py'
+      - 'scripts/gluing_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/29-k2-topological-hard-problem-frontier.md'
+      - 'docs/35-g0-hges-canonical-gluing.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g0.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  g0:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G0
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/gluing.py tests/test_gluing.py scripts/gluing_baseline.py scripts/gluing_sweep.py
+      - name: G0 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_gluing -v
+      - name: G0 bridge-recovery baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_baseline.py --params g0-8
+      - name: G0 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_sweep.py --seeds 8

@@ -305,3 +305,29 @@ The `t1-3` target is genuinely at distance 3, has one measured shortest path and
 This triggers the pre-declared rejection condition. Do not add depth 4 merely to inflate the work factor. The result is not a theorem that bounded Pachner reconfiguration is easy; it rejects this generated BTTS/Pachner distribution as evidence of cryptographic hardness.
 
 Next frontier: HGES canonical-gluing recovery negative control.
+
+### G0 — HGES canonical gluing recovery control
+
+Implemented a tree assembly of punctured-4-simplex 3-ball pieces. Each piece has four tetrahedra with internal dual graph `K4`; hidden inter-piece face gluings become bridges in the public tetrahedron dual graph.
+
+A-024 computes public triangle incidence, finds dual-graph bridges, removes them and returns the remaining components as an equivalent gluing witness.
+
+Exact-head Python 3.12 baseline `g0-8`:
+
+~~~text
+public V/E/F/T = 19/59/73/32
+boundary/max face incidence = 18/2
+dual graph vertices/edges = 32/55
+bridges = 7
+component sizes = eight copies of 4
+face occurrences = 128
+DFS edge scans = 110
+public witness accepted = yes
+matches planted partition up to order = yes
+~~~
+
+The all-parameter, eight-seed sweep recovered and accepted **24/24** partitions, all matching the planted partition up to group order.
+
+**G0 rejected as designed by A-024.**
+
+Lesson: hiding local piece labels and gluing permutations does not help when the quotient exposes a canonical separator decomposition. G1 must structurally remove the bridge shortcut before any further HGES interpretation.
