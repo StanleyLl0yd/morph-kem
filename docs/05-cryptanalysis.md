@@ -26,6 +26,7 @@ This file preserves attacks including successful breaks.
 | A-019 | Tree-plus-extension equivalent Morse witness | **Fatal to M5 fixed generated baseline** | Implemented |
 | A-020 | Independent Q8 boundary-fiber lifting | **Fatal to K2.2** | Implemented |
 | A-021 | GF(2) kernel-coherence elimination | **Fatal to K2.3 relation family** | Implemented |
+| A-022 | Short equivalent Pachner path + bidirectional recovery | **Fatal to T0 generator** | Implemented |
 
 ## M0–M3 summary
 
@@ -695,3 +696,43 @@ The row dependency is structural: every triangular face belongs to two tetrahedr
 This is stronger than a toy-runtime result. For any larger instance that keeps the same semantics — public two-element central-kernel fibers plus coherence given by products of their `C2` choices — witness recovery remains affine binary linear algebra. Increasing the complex size only increases the public linear system.
 
 This does **not** show that every higher-topological cryptosystem is linear or impossible. It shows that the next hard component, if one exists, cannot live solely in the abelian `pi2`/kernel cochain. A successor must expose a genuinely coupled unknown `pi1`/`pi2` or other trapdoor distribution and still survive cohomology, finite-module, gauge, group-synchronization, canonicalization and CSP/SAT attacks.
+
+## A-022 — short equivalent Pachner path and bidirectional recovery
+
+Target: T0 Bounded Topological Transformation Search calibration.
+
+T0 removes several earlier artificial weaknesses: the legal move set is state-dependent, the branching factor is not fixed, vertex labels are quotiented by exact toy canonicalization, and attacker success is any path within the public bound.
+
+Nevertheless the generated challenge walk does not control true distance in the quotient reconfiguration graph.
+
+Fixed-seed Python 3.12 exact-head CI:
+
+| Set | Planted | BFS distance | BFS visited | BFS expanded | Bidir distance | Bidir F/R visited | Bidir expanded | Mean unique branching | Commuting fraction |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| t0-4 | 4 | 4 | 154 | 47 | 4 | 40/55 | 13 | 15.250 | 0.028319 |
+| t0-6 | 6 | 6 | 588 | 316 | 6 | 149/187 | 75 | 18.667 | 0.019201 |
+| t0-8 | 8 | **4** | 170 | 51 | **4** | 40/65 | 13 | 20.000 | 0.009336 |
+
+Detailed `t0-8` baseline:
+
+~~~text
+start vertices/tetrahedra:      9/17
+target vertices/tetrahedra:     9/21
+planted length/public bound:    8/8
+planted moves 2-3 / 3-2:        6/2
+branching initial/min/mean/max: 12/12/21.12/28
+neighbor collisions:            9
+commuting move pairs:           17/1821
+BFS shortest path:              4
+bidirectional shortest path:    4
+bidirectional expansions:       13
+recovered witness valid:        yes
+~~~
+
+**Result:** T0 generator rejected.
+
+This is not a theorem that bounded Pachner search is easy in general. It is a generated-distribution falsification: an eight-step planted challenge has a four-step public equivalent witness, and bidirectional search recovers it after expanding only 13 quotient states.
+
+The low commuting fraction also matters: the break is not explained by a trivial decomposition into mostly independent commuting moves. The more basic defect is that random non-self-repeating walks can return close to the start or target through alternate quotient paths.
+
+**Lesson:** planted walk length is not a hardness parameter. A successor must control or measure actual quotient distance, short-path multiplicity, and bidirectional frontier growth before any path length is interpreted as security evidence.
