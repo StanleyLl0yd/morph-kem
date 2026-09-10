@@ -139,3 +139,48 @@ K2 must therefore use higher-order twisted data that cannot be removed by passin
 ## 7. Security status
 
 No one-wayness, average-case hardness, post-quantum, IND-CPA, IND-CCA, KEM, or production-security claim exists.
+
+
+## 8. Measured result
+
+Fixed master seed `34016490ffeeddccbbaa1234567890ab`, Python 3.12 CI runner.
+
+~~~text
+map: N4:{6,4}_3
+
+base:
+  V/E/F = 6/12/4
+  vertex degree = 4
+  face size = 6
+  edge-face degree = 2
+  chi = -2
+  dual cycle rank = 9
+  regular type hyperbolic = true
+  orientable = false
+  non-zero fundamental orientation syndromes = 6/9
+
+gauge attack:
+  public normalization = canonical normalization
+  hidden face gauges recovered up to one global bit = true
+  edge checks = 12
+
+orientation double cover:
+  V/E/F = 12/24/8
+  chi = -4
+  orientable = true
+  genus = 3
+  reconstructed from public transitions = true
+~~~
+
+## 9. Disposition
+
+**K1 is rejected exactly as intended.**
+
+The experiment distinguishes geometric/topological complexity from computational asymmetry:
+
+1. the base map really is a non-orientable regular map of hyperbolic type;
+2. the orientation obstruction is genuinely global;
+3. nevertheless, the hidden face labels remain a linear Z2 gauge;
+4. the public transition data reconstructs the orientable double cover directly.
+
+Therefore K2 must not merely enlarge N4:{6,4}_3, switch to another regular non-orientable map, or add more orientation bits. It must introduce higher-order data whose useful witness does not collapse under the orientation character, orientation double cover, spanning-tree gauge normalization, or ordinary bounded-local CSP flattening.

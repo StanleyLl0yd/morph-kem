@@ -94,7 +94,7 @@ See:
 
 **K0:** implemented and rejected as designed. The exact finite Klein-bottle triangulation is genuinely non-orientable, but public spanning-tree XOR normalization removes the hidden local orientation gauge completely up to one global bit. On the baseline klein-bottle-5x4 instance, all 40 face-gauge bits are recovered up to that global bit with 60 public edge checks; the remaining 7/21 non-zero fundamental syndromes are public orientation-obstruction data, not a trapdoor.
 
-**K1:** active exact non-orientable hyperbolic control using N4:{6,4}_3. It tests whether the same orientation-gauge failure survives a genuine hyperbolic regular-map scaffold and whether the orientable double cover can be reconstructed from public transition data alone.
+**K1:** implemented and rejected as designed. On exact N4:{6,4}_3 (V/E/F = 6/12/4, chi = -2, non-orientable, hyperbolic type {6,4}), the public Z2 normalization recovers all hidden face gauges up to one global bit in 12 edge checks. The orientation double cover is then reconstructed from public transition data alone and has V/E/F = 12/24/8, chi = -4, is orientable, and has genus 3. Genuine hyperbolicity does not rescue an orientation-character trapdoor.
 
 No security or post-quantum claim exists.
 

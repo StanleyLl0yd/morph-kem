@@ -500,3 +500,32 @@ Thus the hidden face gauges collapse to one global bit, while the public cover e
 **Expected result:** fatal to K1 if the reconstructed cover has the predicted orientable genus-3 invariants.
 
 K1 is intentionally a control: genuine hyperbolicity is not accepted as a security argument if the computational relation still factors through the orientation character.
+
+
+Fixed-seed K1 CI result:
+
+~~~text
+map: N4:{6,4}_3
+base V/E/F:                         6/12/4
+base vertex degree:                 4
+base face size:                     6
+base edge-face degree:              2
+base Euler characteristic:         -2
+base dual cycle rank:               9
+regular type hyperbolic:            yes
+base orientable:                    no
+non-zero orientation syndromes:     6/9
+public normalization = canonical:   yes
+hidden face gauges recovered:       yes, up to one global bit
+public gauge edge checks:           12
+
+orientation cover V/E/F:            12/24/8
+orientation cover chi:              -4
+orientation cover orientable:       yes
+orientation cover genus:            3
+reconstructed from public data:     yes
+~~~
+
+**Result:** K1 rejected exactly as designed.
+
+**Lesson:** passing from the Klein bottle to a genuine non-orientable hyperbolic regular map does not create asymmetry when the protected object still factors through the orientation character. The orientation double cover is a public construction from the same transition data.

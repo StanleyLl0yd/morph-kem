@@ -498,3 +498,28 @@ K1 keeps the deliberately weak orientation-gauge relation so the mandatory publi
 The referenced orientable cover S3:{6,4} has expected V/E/F = 12/24/8 and genus 3.
 
 K1 is expected to fail if those properties are recovered directly.
+
+
+K1 measured result:
+
+~~~text
+N4:{6,4}_3
+  base V/E/F = 6/12/4
+  chi = -2
+  hyperbolic regular type = yes
+  orientable = no
+  non-zero fundamental syndromes = 6/9
+  hidden face gauges recovered up to one global bit = yes
+  public edge checks = 12
+
+orientation double cover:
+  V/E/F = 12/24/8
+  chi = -4
+  orientable = yes
+  genus = 3
+  reconstructed from public transitions = yes
+~~~
+
+**K1 rejected as designed.**
+
+This confirms that genuine hyperbolicity does not help when the computational relation remains ordinary Z2 orientation gauge. The next K-series step must change the relation itself rather than scale the same regular-map/orientation construction.
