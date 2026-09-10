@@ -104,4 +104,10 @@ A G9 successor must break at least one premise of A-035. In particular, it must 
 
 The next useful negative control should entangle local topology across overlapping boundaries so that `PhaseExtract` itself becomes the object under attack. It must immediately face multiscale decomposition, separator/link/motif, normalization/automorphism, overlapping exact-cover/CSP/SAT, low-width, equivalent-witness, generated-role leakage, and public contraction/quotient attacks.
 
+### G9 design rule sharpened by A-035
+
+A G9 construction is **not** considered architecturally different merely because two nominal gadgets share labels, faces, or a bookkeeping constraint. Before implementation, the construction must satisfy a stricter gate: there must be no public partition into bounded-size disjoint carriers on which all accepted local witness choices can be enumerated independently and then represented by a constant-size domain value. If such carriers exist after any cheap public normalization, A-035 applies again and G9 is rejected without scaling.
+
+Accordingly, the first G9 attack must search for a recovered carrier decomposition before running any global solver. Candidate carriers should be tested under exact cover and overlap-aware set packing; public links, stars, dual neighborhoods, boundary-face incidence and canonical simplification are all admissible attacker features. Only if no bounded independent carrier factorization is recovered should G9 proceed to a genuinely joint witness search.
+
 No trapdoor primitive, KEM, one-wayness, average-case hardness, post-quantum, IND-CPA/CCA, or production-security claim exists.
