@@ -51,9 +51,14 @@ Current ranking after prior-art/attack screening:
 3. **HICQF — Hidden Intermediate Cover / Quotient Factorization.**
 4. **HHEE — Hidden Homotopy/Embedding Equivalence**, treated initially as part of BTTS.
 
+The common abstraction for BTTS and equivalent embeddings is a **bounded path in an equivalence groupoid/reconfiguration graph**: local moves are state-dependent and compose only when their source/target representations match. This avoids assuming that every hidden transformation is a single global group action, but group-action reductions, CAT(0)/commuting-move structure and bidirectional search remain mandatory attacks.
+
 Orientation alone, hyperbolicity/geodesics alone, and hidden Tietze-presentation rewriting are not accepted as new hardness assumptions.
 
-See `docs/29-k2-topological-hard-problem-frontier.md`.
+See:
+- `docs/29-k2-topological-hard-problem-frontier.md`
+- `docs/30-t0-bounded-pachner-spec.md`
+- `docs/31-equivalence-groupoid-hardness.md`
 
 ## Research discipline
 
@@ -79,7 +84,9 @@ See `docs/29-k2-topological-hard-problem-frontier.md`.
 - `docs/26-k2-q8-crossed-module.md` — K2.2 fake-flatness result
 - `docs/27-m5-irregular-nonmanifold.md` — M5 result
 - `docs/28-k2-3d-kernel-coherence.md` — K2.3 3D/GF(2) result
-- `docs/29-k2-topological-hard-problem-frontier.md` — topological hard-problem screening and T0 gate
+- `docs/29-k2-topological-hard-problem-frontier.md` — topological hard-problem screening
+- `docs/30-t0-bounded-pachner-spec.md` — exact first T-series calibration design
+- `docs/31-equivalence-groupoid-hardness.md` — reconfiguration/groupoid abstraction and fatal reductions
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
