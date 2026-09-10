@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections import Counter, defaultdict
 from dataclasses import dataclass
-from itertools import combinations
 
 from .gluing import (
     DualEdge,
@@ -72,7 +71,7 @@ class MatchingRecovery:
 
 _LOCAL_A: Tetrahedron = (0, 1, 2, 3)
 _LOCAL_B: Tetrahedron = (0, 1, 2, 4)
-# B_i outgoing face is glued to A_{i+1} incoming face.  With the canonical
+# B_i outgoing face is glued to A_{i+1} incoming face. With the canonical
 # coordinate identification below, internal and external dual edges have the
 # same public two-tetrahedron 3-ball predicate.
 _OUT_FACE = (0, 1, 4)
@@ -277,7 +276,14 @@ def _enumerate_matchings(
             solutions.append(tuple(candidate_edges[index] for index in chosen))
             return
 
-        pivot = min(unmatched)
+        def remaining_options(vertex: int) -> int:
+            return sum(
+                1
+                for edge_index in by_vertex[vertex]
+                if edge_sets[edge_index] <= unmatched
+            )
+
+        pivot = min(unmatched, key=lambda vertex: (remaining_options(vertex), vertex))
         options = [
             edge_index
             for edge_index in by_vertex[pivot]
