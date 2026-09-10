@@ -1,0 +1,60 @@
+name: T0 Pachner calibration
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/pachner.py'
+      - 'tests/test_pachner.py'
+      - 'scripts/pachner_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/30-t0-bounded-pachner-spec.md'
+      - 'docs/33-t0-pachner-results.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/t0.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/pachner.py'
+      - 'tests/test_pachner.py'
+      - 'scripts/pachner_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/30-t0-bounded-pachner-spec.md'
+      - 'docs/33-t0-pachner-results.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/t0.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  t0:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile T0
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/pachner.py tests/test_pachner.py scripts/pachner_baseline.py scripts/pachner_sweep.py
+      - name: T0 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_pachner -v
+      - name: T0 baseline t0-8
+        env:
+          PYTHONPATH: src
+        run: python scripts/pachner_baseline.py --params t0-8 --max-states 20000
+      - name: T0 toy-ladder sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/pachner_sweep.py --max-states 20000

@@ -214,11 +214,62 @@ elapsed = 0.000111 s
 
 The important result is algebraic, not the runtime: any larger instance with the same central-C2 fiber semantics and product/parity 3-cell coherence remains an affine GF(2) solve.
 
-### Next research gate
+### K2.4 — topological hard-problem frontier
 
-Do not escalate dimension, genus, group order, or parameter size by itself.
+Systematically screened orientation, gluings, covers/lifts, homotopy classes, fundamental groups, geodesics, hyperbolic spaces, quotient spaces, non-local properties, equivalent embeddings, and hidden transformations.
 
-The only higher-topological direction still worth formulating must couple a genuinely unknown `pi1`-level object to the abelian `pi2` module/Postnikov layer and, before implementation, provide a complete public-key-style interface:
+The main conclusion is that geometry/topology is useful only if it changes the **computational relation**. Orientation alone collapses to cohomology/gauge; hyperbolicity/geodesics frequently help canonicalization; covers expose subgroup/monodromy/gauge structure unless a separate trapdoor recovery algorithm exists.
+
+The most promising executable template is **BTTS — Bounded Topological Transformation Search**, interpreted as bounded path search in an equivalence groupoid/reconfiguration graph with state-dependent local moves.
+
+Other retained frontiers:
+- HGES — hidden gluing equivalence search;
+- HICQF — hidden intermediate cover/quotient factorization;
+- CMPS — coupled non-abelian monodromy + abelian pi2/Postnikov layer.
+
+No one of these is yet a cryptographic primitive.
+
+### T0 — bounded Pachner equivalence search
+
+Implemented the first BTTS calibration using closed 3D simplicial states and exact canonical quotienting of vertex labels. Challenge moves are state-dependent `2-3` / `3-2` Pachner moves. The verifier accepts any path within the public bound.
+
+Fixed exact-head Python 3.12 CI sweep:
+
+~~~text
+t0-4: planted 4, shortest 4, BFS 154 visited / 47 expanded,
+      bidir 40/55 visited / 13 expanded
+
+t0-6: planted 6, shortest 6, BFS 588 visited / 316 expanded,
+      bidir 149/187 visited / 75 expanded
+
+t0-8: planted 8, shortest 4, BFS 170 visited / 51 expanded,
+      bidir 40/65 visited / 13 expanded
+~~~
+
+For `t0-8` the mean unique branching factor along the planted path is 20.0. Only 17 of 1,821 tested move pairs commute, so the failure is not explained by a mostly commuting Cartesian-product move system.
+
+**T0 generator rejected by A-022.**
+
+The generator produced a non-self-repeating eight-move planted walk but its endpoint lies only four quotient moves away. Therefore planted walk length is not a meaningful hardness parameter.
+
+This is a generated-distribution falsification, not an asymptotic result about Pachner reconfiguration.
+
+### T1 gate
+
+Do not repair T0 by increasing planted path length.
+
+A T1 calibration must sample targets from a measured/certified **shortest-distance shell** in the canonical quotient reconfiguration graph and record:
+
+- true shortest distance;
+- shell and ball size;
+- number/capped count of shortest paths;
+- bidirectional frontier growth;
+- neighbor/state collisions;
+- move-support interaction and commuting structure;
+- canonicalization cost;
+- public lower-bound/potential correlations.
+
+T1 is still not a trapdoor experiment. Only if exact-distance generated endpoints show meaningful public search resistance should a later stage attempt a secret decomposition/gluing-based navigator and require the complete interface:
 
 ~~~text
 (pk, td) <- TrapdoorGen(lambda)
@@ -227,4 +278,4 @@ w        <- TrapdoorRecover(td, pk, y)
 Verify(pk, y, w)
 ~~~
 
-The secret must give an invariant recovery advantage on a generated positive distribution. Hidden gauge, canonical representatives, cohomology representatives, finite linear-code syndromes, and ordinary bounded-local CSPs do not qualify as a trapdoor.
+Any secret advantage must survive quotienting by all equivalent representations and equivalent accepted witnesses.
