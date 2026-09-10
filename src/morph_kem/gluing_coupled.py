@@ -3,10 +3,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
 
-from .gluing import DualEdge, GluingExperimentError, TetrahedronGroup, _normalize_groups
+from .gluing import (
+    DualEdge,
+    GluingExperimentError,
+    GluingPublicInstance,
+    TetrahedronGroup,
+    _normalize_groups,
+)
 from .gluing_matching import (
     G3_PARAMETER_SETS,
-    MatchingGluingReference,
     generate_matching_gluing_instance,
     recover_matching_gluing,
     validate_matching_gluing_witness,
@@ -89,7 +94,7 @@ class PhaseConstraint:
 @dataclass(frozen=True, slots=True)
 class CoupledPhasePublicInstance:
     name: str
-    gadgets: tuple[object, ...]
+    gadgets: tuple[GluingPublicInstance, ...]
     constraints: tuple[PhaseConstraint, ...]
 
 
@@ -129,10 +134,22 @@ class CoupledPhaseRecovery:
     nonreference_accepted_solutions: int
 
 
-def _canonical_gadget_matchings(gadget: object) -> tuple[
+def _constraint_is_well_formed(
+    variable_count: int,
+    constraint: PhaseConstraint,
+) -> bool:
+    return (
+        constraint.parity in (0, 1)
+        and 0 <= constraint.left < variable_count
+        and 0 <= constraint.right < variable_count
+        and constraint.left != constraint.right
+    )
+
+
+def _canonical_gadget_matchings(gadget: GluingPublicInstance) -> tuple[
     tuple[tuple[TetrahedronGroup, ...], tuple[TetrahedronGroup, ...]], int, int
 ]:
-    recovery = recover_matching_gluing(gadget)  # type: ignore[arg-type]
+    recovery = recover_matching_gluing(gadget)
     if recovery.matching_cap_hit or recovery.accepted_solutions != 2:
         raise GluingExperimentError("G4 local gadget does not expose exactly two public phases")
     ordered = tuple(sorted(recovery.accepted_groups))
@@ -142,7 +159,7 @@ def _canonical_gadget_matchings(gadget: object) -> tuple[
 
 
 def _phase_for_groups(
-    gadget: object,
+    gadget: GluingPublicInstance,
     groups: tuple[TetrahedronGroup, ...],
 ) -> int | None:
     canonical, _, _ = _canonical_gadget_matchings(gadget)
@@ -163,7 +180,7 @@ def validate_coupled_phase_witness(
 
     phases: list[int] = []
     for gadget, groups in zip(public.gadgets, groups_by_gadget, strict=True):
-        if not validate_matching_gluing_witness(gadget, groups).valid:  # type: ignore[arg-type]
+        if not validate_matching_gluing_witness(gadget, groups).valid:
             return CoupledPhaseValidation(False, "invalid local G3 matching witness", ())
         phase = _phase_for_groups(gadget, groups)
         if phase is None:
@@ -172,8 +189,8 @@ def validate_coupled_phase_witness(
 
     phase_tuple = tuple(phases)
     for constraint in public.constraints:
-        if constraint.parity not in (0, 1):
-            return CoupledPhaseValidation(False, "invalid public G4 parity", phase_tuple)
+        if not _constraint_is_well_formed(len(public.gadgets), constraint):
+            return CoupledPhaseValidation(False, "malformed public G4 constraint", phase_tuple)
         if phase_tuple[constraint.left] ^ phase_tuple[constraint.right] != constraint.parity:
             return CoupledPhaseValidation(False, "G4 coupling constraint violated", phase_tuple)
 
@@ -271,9 +288,16 @@ def recover_coupled_phases(
         matching_solutions.append(2)
         matching_nodes += nodes
         matching_backtracks += backtracks
-        total_tetrahedra += len(gadget.tetrahedra)  # type: ignore[attr-defined]
+        total_tetrahedra += len(gadget.tetrahedra)
 
     variable_count = len(public.gadgets)
+    if variable_count < 2:
+        raise GluingExperimentError("public G4 instance has too few gadgets")
+    if any(
+        not _constraint_is_well_formed(variable_count, constraint)
+        for constraint in public.constraints
+    ):
+        raise GluingExperimentError("malformed public G4 constraint")
     rank, row_xors, consistent = _gf2_rank_and_work(variable_count, public.constraints)
     if not consistent:
         raise GluingExperimentError("public G4 GF(2) system is inconsistent")

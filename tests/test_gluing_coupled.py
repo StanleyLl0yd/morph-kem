@@ -6,6 +6,8 @@ from morph_kem.gluing import GluingExperimentError, _normalize_groups
 from morph_kem.gluing_coupled import (
     G4_PARAMETER_SETS,
     CoupledPhaseParameters,
+    CoupledPhasePublicInstance,
+    PhaseConstraint,
     generate_coupled_phase_instance,
     recover_coupled_phases,
     validate_coupled_phase_witness,
@@ -94,6 +96,21 @@ class CoupledPhaseTests(unittest.TestCase):
                     self.assertEqual(recovery.accepted_solutions, 2)
                     self.assertEqual(recovery.nonreference_accepted_solutions, 1)
                     self.assertEqual(recovery.gadget_matching_backtracks, 0)
+
+    def test_malformed_public_constraint_is_rejected(self) -> None:
+        public, reference = generate_coupled_phase_instance(
+            G4_PARAMETER_SETS["g4-4"], MASTER_SEED
+        )
+        malformed = CoupledPhasePublicInstance(
+            name=public.name,
+            gadgets=public.gadgets,
+            constraints=public.constraints + (PhaseConstraint(0, 99, 1),),
+        )
+        self.assertFalse(
+            validate_coupled_phase_witness(malformed, reference.groups).valid
+        )
+        with self.assertRaises(GluingExperimentError):
+            recover_coupled_phases(malformed)
 
     def test_parameter_and_seed_bounds(self) -> None:
         with self.assertRaises(GluingExperimentError):
