@@ -1,0 +1,52 @@
+name: T1 distance-conditioned Pachner calibration
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/pachner.py'
+      - 'src/morph_kem/pachner_distance.py'
+      - 'tests/test_pachner*.py'
+      - 'scripts/pachner_*.py'
+      - '.github/workflows/t1.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/pachner.py'
+      - 'src/morph_kem/pachner_distance.py'
+      - 'tests/test_pachner*.py'
+      - 'scripts/pachner_*.py'
+      - '.github/workflows/t1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  t1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile T1
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/pachner.py src/morph_kem/pachner_distance.py tests/test_pachner.py tests/test_pachner_distance.py scripts/pachner_distance_baseline.py scripts/pachner_distance_sweep.py
+      - name: T1 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_pachner_distance -v
+      - name: T1 exact-distance baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/pachner_distance_baseline.py --params t1-3 --attack-states 100000
+      - name: T1 toy-ladder sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/pachner_distance_sweep.py --attack-states 100000
