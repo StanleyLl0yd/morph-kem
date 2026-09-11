@@ -2,7 +2,7 @@
 
 ## Status
 
-**G19 is an attack calibration in progress. No hardness or security conclusion is permitted until exact-head CI records A-046.**
+**G19 is rejected by A-046 on the measured generated distribution.**
 
 G19 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -65,35 +65,66 @@ Deleting the first cycle makes vertex-disjointness part of the recovery procedur
 
 ## Independent cross-check
 
-Independently build one canonical public spanning forest, enumerate every odd fundamental cycle of that tree, and scan its vertex-disjoint cycle pairs against the same exact verifier and bounds. This cross-check does not use the parity-cover/deletion construction or hidden generation ordering.
+Independently build one canonical public spanning tree, enumerate every odd fundamental cycle of that tree, and scan its vertex-disjoint cycle pairs against the same exact verifier and bounds. This cross-check does not use the parity-cover/deletion construction or hidden generation ordering.
 
-## Measurements
+The cross-check is intentionally recorded separately from the primary attack: it succeeds on only 4/24 measured sweep instances, while the primary A-046 attack succeeds on 24/24. Its incompleteness therefore does not contribute to the rejection claim.
 
-Record at least:
+## Fixed Python 3.12 `g19-8x9` result
 
-- public `V/E/F`, Euler characteristic and edge-incidence range;
-- successful flips, generation retries and hidden-tree reference attempts;
-- primal degree histogram and public normalization-improving flip count;
-- public alpha weight / measured `H^1` dimension;
-- public/reference `L_1/L_2`;
-- first-stage parity-cover roots, queue pops, edge scans, candidate count and length histogram;
-- first candidates attempted;
-- second-stage calls, roots, reachable roots, queue pops and edge scans;
-- second-stage decomposition and candidate counts;
-- deleted vertex/edge counts for the selected first cycle;
-- selected two lengths, cocycle pairings and shared-vertex count;
-- exact verifier acceptance and post-success reference equality;
-- independent fundamental-cycle pool size / pair tests / verifier result;
-- deterministic all-size / eight-seed sweep.
+```text
+successful carrier flips / generation retries: 72/0
+public V/E/F:                                  72/216/144
+Euler characteristic / edge incidence:        0 / 2..2
+primal degree histogram:                      ((3,11),(4,11),(5,8),(6,12),(7,11),(8,10),(9,7),(10,1),(13,1))
+normalization-improving legal flips:           66
+public alpha weight / H1 dimension:            21/2
+public short/long bounds:                       8/9
+reference short/long lengths:                   8/9
+reference seeded-tree attempts:                12
+first-stage roots / queue pops / edge scans:   72/9740/58574
+first-stage distinct candidates:               52
+first-stage length histogram:                  ((5,1),(6,13),(7,25),(8,12),(9,1))
+first candidates attempted:                     1
+second-stage calls:                             1
+second-stage roots / reachable roots:          67/67
+second-stage queue pops / edge scans:          8232/43580
+second-stage decomposition cycles/path scans:  67/431
+second-stage candidates:                       44
+selected deleted vertices / edges:              5/41
+selected short/long lengths:                    5/6
+selected cocycle pairings / shared vertices:    1/1/0
+selected accepted:                             yes
+selected matches reference:                    no
+independent odd fundamental cycles/pair tests: 24/276
+independent pair found/accepted:               no/no
+```
 
-## Rejection gate
+The public attack deletes the five vertices of its first cycle, then immediately finds a second odd cycle in the remaining graph. The resulting two cycles are vertex-disjoint, both pair oddly with the public cocycle, fit substantially inside the generation-derived `8/9` bounds, and pass the exact verifier.
 
-If A-046 routinely recovers an accepted bounded vertex-disjoint odd-cycle pair using cheap public parity-cover/deletion work, **reject G19**.
+## Deterministic sweep
 
-If the independent canonical fundamental-cycle pool is even cheaper, preserve it as a stronger attack. Do not increase torus dimensions while the same public delete/recover or cycle-pair reduction remains effective.
+Python 3.12 tested `g19-6x6`, `g19-6x9`, `g19-8x9` over eight independently derived seeds each.
+
+- **24/24** carriers require zero generation retries.
+- **24/24** primary attacks accept the very first first-stage candidate and make exactly one second-stage call.
+- **24/24** recovered pairs have cocycle pairings `1/1`, zero shared vertices, and exact-verifier acceptance.
+- **24/24** recovered pairs differ from the hidden reference after public success.
+- Maximum selected lengths are `4/6`, `6/6`, and `6/7` for the three sizes.
+- Maximum second-stage edge scans are `9450`, `23146`, and `43485` respectively.
+- The independent canonical fundamental-cycle scan succeeds on only `1/8`, `3/8`, and `0/8` instances respectively, i.e. **4/24 total**. This weaker cross-check is preserved as measured evidence rather than upgraded into a claim.
+
+## Result
+
+**G19 is rejected by A-046.** Requiring two simultaneous vertex-disjoint global representatives is still insufficient on this generated torus family. Once one short odd cycle is exposed publicly, deleting its vertices leaves another public odd cycle accessible by the same parity-cover machinery, and both generated bounds are met on every measured instance.
+
+This is not a theorem that arbitrary disjoint noncontractible-cycle problems are easy. It rejects the measured construction and its bound-generation rule. Increasing torus dimensions is not a repair while the same delete-and-recover reduction continues to work.
 
 ## G20 gate
 
-If G19 fails, G20 must require a multicurve relation not reducible to repeated recovery of parallel torus representatives. Candidate directions include a genus-two carrier with multiple independent handles, three or more cycles with a prescribed pairwise intersection matrix, or simultaneous disjointness and independent class constraints. Mandatory attacks include vertex-splitting max-flow, multi-commodity/disjoint-path algorithms, matching, symplectic-basis methods, ILP/SAT/CP-SAT, separator/treewidth, normalization and equivalent-witness enumeration.
+G20 must prevent repeated recovery of parallel representatives on a single torus handle. A useful successor should move to multiple independent homology directions—for example a genus-two carrier with several cycles constrained to distinct public cohomology classes and a prescribed disjointness/intersection pattern.
+
+Mandatory attacks include symplectic homology-basis algorithms, vertex-splitting/max-flow and disjoint-path reductions, matching, shortest-cycle methods, separator/treewidth analysis, ILP/SAT/CP-SAT, normalization, equivalent-witness enumeration and generated-role leakage.
+
+No trapdoor/KEM work begins before such a multicurve relation survives these public attacks.
 
 No security claim.
