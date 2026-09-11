@@ -44,6 +44,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-038 | Public toroidal P3 hypergraph exact-cover + SAT recovery | **Fatal to G11 generated distribution** | Implemented |
 | A-039 | Public irregular-carrier P3 extraction + exact-cover / SAT recovery | **Fatal to G12 generated distribution** | Implemented |
 | A-040 | Configuration-pairing generator-conditioning audit | **Fatal to G13 carrier distribution** | Implemented |
+| A-041 | Public reverse-stacking / stellar-center normalization | **Fatal to G14 carrier distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -793,3 +794,39 @@ Every attempt that survived the loop/parallel checks failed immediately because 
 No P3 exact-cover continuation is run because the declared generator rejection gate already fired. This is not a theorem that better constructive random-triangulation samplers do not exist.
 
 G14 must use a constructive non-toroidal simplicial-surface family. The next negative control is a random stacked/Apollonian sphere, with immediate degree-three/stellar-center contraction, canonicalization, P3 exact-cover, SAT and equivalent-witness attacks. No security claim.
+
+## A-041 — public reverse-stacking / stellar-center normalization
+
+### Target
+
+G14 constructive random stacked/Apollonian 2-sphere carrier. G14 fixes G13's generator-conditioning failure by using only valid face-stacking moves, then globally relabels public vertices.
+
+### Public attack
+
+A-041 repeatedly enumerates degree-three public vertices whose link is exactly one missing triangle, removes the candidate vertex and its three incident triangles, restores the link triangle, and continues with deterministic public-label tie-breaking. The attack uses no planted stacking order.
+
+### Exact Python 3.12 `g14-72` result
+
+~~~text
+stacking steps:                         34
+public V/E/F:                           38/108/72
+Euler characteristic:                   2
+edge triangle incidence min/max:        2/2
+primal vertex-degree histogram:         ((3,15),(4,8),(5,2),(6,4),(7,2),(8,1),(10,2),(12,2),(15,1),(24,1))
+reverse-stacking moves:                 34
+maximum simultaneous reverse candidates: 15
+terminal V/E/F/chi:                     4/6/4/2
+reached tetrahedron boundary:           yes
+~~~
+
+The full public candidate-count histogram on this baseline is `2:5 / 3:5 / 4:1 / 5:2 / 6:4 / 7:2 / 8:1 / 9:2 / 10:5 / 11:1 / 12:2 / 13:1 / 14:1 / 15:2`. The reverse history is therefore far from unique, but uniqueness is irrelevant: every deterministic public route still removes the whole generated ancestry.
+
+### Deterministic sweep
+
+Python 3.12 tested `g14-36`, `g14-54`, `g14-72` over eight deterministic seeds each. All **24/24** instances reach the tetrahedron boundary with exactly 16, 25 and 34 reverse moves respectively. Maximum simultaneous candidate counts over the measured sets are 8, 12 and 17.
+
+### Result
+
+**G14 is rejected by A-041.** Constructive generation solved G13's invalid-sampler problem but exposed a bounded-local public inverse. Increasing the stacking depth cannot repair a relation that can always be peeled back to the tetrahedron boundary. P3 exact-cover/SAT is not run because a cheaper structural carrier break already decides the experiment.
+
+G15 must use a constructive non-toroidal carrier without degree-three stellar-center ancestry and immediately face bistellar normalization, canonicalization, separator/treewidth, candidate extraction, exact cover/CSP/SAT, equivalent-witness and generated-role attacks. No security claim.
