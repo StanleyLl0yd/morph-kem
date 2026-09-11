@@ -1,0 +1,51 @@
+name: NAT1 single-sample multi-error T-join control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/nat_tjoin.py'
+      - 'tests/test_nat_tjoin.py'
+      - 'scripts/nat_tjoin_*.py'
+      - '.github/workflows/nat1.yml'
+      - 'docs/62-nat1-single-sample-tjoin.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/nat_tjoin.py'
+      - 'tests/test_nat_tjoin.py'
+      - 'scripts/nat_tjoin_*.py'
+      - '.github/workflows/nat1.yml'
+      - 'docs/62-nat1-single-sample-tjoin.md'
+
+permissions:
+  contents: read
+
+jobs:
+  nat1:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile NAT1
+        run: >-
+          python -m compileall -q
+          src/morph_kem/nat_tjoin.py
+          tests/test_nat_tjoin.py
+          scripts/nat_tjoin_baseline.py
+          scripts/nat_tjoin_sweep.py
+      - name: NAT1 unit tests
+        run: python -m unittest tests.test_nat_tjoin -v
+      - name: NAT1 fixed recovery curve
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_tjoin_baseline.py --params nat1-72
+      - name: NAT1 multi-seed recovery sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_tjoin_sweep.py --seeds 8
