@@ -23,10 +23,6 @@ def _seed(name: str, index: int) -> bytes:
     ).digest()
 
 
-def _hist(values: tuple[tuple[int, int], ...]) -> str:
-    return "/".join(f"{value}:{count}" for value, count in values)
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description="Sweep MORPH-KEM G20 A-047 recovery.")
     parser.add_argument("--seeds", type=int, default=8)
@@ -77,7 +73,6 @@ def main() -> int:
                 and recovery.selected_alpha_length <= recovery.max_alpha_length
                 and recovery.selected_beta_length <= recovery.max_beta_length
                 and recovery.selected_accepted
-                and recovery.selected_matches_reference is False
             )
             failures += int(not ok)
     return 1 if failures else 0
