@@ -1,0 +1,80 @@
+name: G20 one-shot A-047 bookkeeping
+
+on:
+  push:
+    branches: ['g20/genus2-multicurve']
+    paths: ['.github/workflows/g20-bookkeeping.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  bookkeeping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: g20/genus2-multicurve
+      - name: Record measured G20 rejection
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          doc = Path('docs/55-g20-genus2-multicurve.md')
+          text = doc.read_text()
+          text = text.replace(
+              '**G20 is an attack calibration in progress. No hardness or security conclusion is permitted until exact-head CI records A-047.**',
+              '**G20 is rejected by A-047 on the measured generated distribution.**'
+          )
+          if '## Measured A-047 result' not in text:
+              text = text.rstrip() + '''\n\n## Measured A-047 result\n\nExact-head Python 3.12 `g20-6x9`:\n\n~~~text\nsuccessful flips / generation retries:      428 / 1\npublic V/E/F:                               105 / 321 / 214\nEuler characteristic:                       -2\nedge triangle incidence min/max:            2 / 2\nH^1(F2) dimension:                          4\nalpha / beta weights:                       17 / 29\npublic alpha / beta bounds:                  6 / 4\nreference alpha / beta lengths:              6 / 4\narticulation points / 2-vertex separators:   0 / 0\nseparating primal triangles:                31\nfour-sheet states:                          420\nalpha roots / queue pops / edge scans:      105 / 25411 / 158345\nalpha exact-signature candidates:            33\nalpha candidates attempted:                   1\nbeta stage calls:                             1\nbeta roots / reachable roots:              101 / 101\nbeta queue pops / edge scans:              21178 / 122384\nbeta exact-signature candidates:             12\nselected alpha / beta lengths:                4 / 3\nselected signatures:                       (1,0) / (0,1)\nselected shared vertices:                     0\nexact verifier accepted:                     yes\nselected pair matches reference:             no\nindependent fundamental cycles alpha/beta:   25 / 22\nindependent pair tests:                       1\nindependent pair found / accepted:           yes / yes\n~~~\n\nPython 3.12 sweep over `g20-4x4`, `g20-6x6`, `g20-6x9` x eight deterministic seeds gives **24/24** primary four-sheet delete-and-recover attacks accepted by the exact verifier. All selected pairs have exact signatures `(1,0)` / `(0,1)` and zero shared vertices. **23/24** primary pairs are non-reference; one measured `g20-4x4` instance happens to recover the reference pair.\n\nAcross the same sweep, articulation points and two-vertex separators are absent in every instance. Separating primal triangles are common but not universal, so the A-047 rejection does not rely on recovering a planted connected-sum seam. Generation retries remain bounded (maximum 0, 5 and 3 for the three sizes).\n\nThe independent canonical fundamental-cycle pair scan is deliberately preserved as weaker evidence: it finds and verifies the required bounded disjoint pair on only **5/24** measured instances. This incompleteness is not used to support rejection.\n\n### Result\n\n**G20 rejected by A-047.** Moving to genus two and requiring two different public cohomology signatures does not prevent sequential public recovery. A four-sheet parity cover finds a short exact `(1,0)` representative; deleting its vertices still leaves an exact `(0,1)` representative accessible by the same finite-state shortest-path machinery on every measured instance.\n\nThis rejects the measured G20 family and bound-generation rule, not arbitrary genus-two multicurve search. Increasing handle size or flip count is not a repair while the class-aware delete-and-recover reduction remains effective.\n\nG21 must couple several global representatives so they cannot be recovered as independent finite-state class searches followed by deletion. A useful next control should prescribe a multi-cycle symplectic intersection/disjointness pattern and immediately face symplectic-basis algorithms, disjoint paths/flow/matching, shortest-cycle methods, ILP/SAT/CP-SAT, separator/treewidth, normalization and equivalent-witness enumeration.\n\nNo security claim.\n'''
+          doc.write_text(text)
+
+          ledger = Path('docs/05-cryptanalysis.md')
+          text = ledger.read_text()
+          anchor = '| A-046 | Delete-one-cycle parity-cover recovery of bounded vertex-disjoint odd-cycle pair | **Fatal to G19 generated distribution** | Implemented |'
+          row = '| A-047 | Four-sheet distinct-class delete-and-recover multicurve recovery | **Fatal to G20 generated distribution** | Implemented |'
+          if row not in text:
+              if anchor not in text:
+                  raise SystemExit('A-046 ledger anchor missing')
+              text = text.replace(anchor, anchor + '\n' + row, 1)
+          heading = '## A-047 — four-sheet distinct-class delete-and-recover multicurve recovery'
+          if heading not in text:
+              text = text.rstrip() + '''\n\n## A-047 — four-sheet distinct-class delete-and-recover multicurve recovery\n\n### Target\n\nG20 flip-mixed genus-two multicurve negative control. The public witness contains two vertex-disjoint simple primal cycles with distinct public cohomology signatures `(1,0)` and `(0,1)` against two independent canonical cocycles on a measured genus-two carrier.\n\n### Public attack\n\nA-047 first audits low-order separators, then labels every primal edge by its two-bit `(alpha,beta)` value and searches a four-sheet cover. It recovers an exact `(1,0)` simple cycle, deletes every vertex of that cycle and its incident edges, then recovers an exact `(0,1)` cycle in the remaining graph. The pair is submitted to the exact verifier. No reference data participates in recovery.\n\n### Fixed Python 3.12 `g20-6x9`\n\n~~~text\nV/E/F = 105/321/214, chi=-2, H1=4\nalpha/beta public bounds = 6/4\narticulations / 2-vertex separators = 0/0\nseparating triangles = 31\nfour-sheet states = 420\nalpha roots/pops/scans = 105/25411/158345\nalpha candidates / attempted = 33/1\nbeta calls = 1\nbeta roots/reachable/pops/scans = 101/101/21178/122384\nbeta candidates = 12\nselected lengths = 4/3\nsignatures = (1,0)/(0,1)\nshared vertices = 0\naccepted = yes\nreference equality = no\n~~~\n\nAcross all three sizes x eight seeds, **24/24** primary attacks are accepted with zero shared vertices and exact required signatures; **23/24** are non-reference. The independent canonical fundamental-cycle pair scan succeeds on only **5/24**, and that incompleteness is preserved rather than promoted into evidence.\n\n### Result\n\n**G20 rejected by A-047.** Distinct cohomology classes on genus two still factor operationally into finite-state shortest-path recovery plus deletion on this generated distribution. No asymptotic claim about arbitrary multicurve problems is made.\n'''
+          ledger.write_text(text)
+
+          log = Path('notes/research-log.md')
+          text = log.read_text()
+          heading = '## 2026-09-11 — G20 rejected by A-047'
+          if heading not in text:
+              text = text.rstrip() + '''\n\n## 2026-09-11 — G20 rejected by A-047\n\nG20 moved from one torus handle to a flip-mixed genus-two connected sum with measured `H^1(F2)=4`. The verifier requires vertex-disjoint simple cycles of two distinct public signatures `(1,0)` and `(0,1)` under independent generation-derived length bounds.\n\nA-047 still wins publicly: four-sheet parity-cover recovery finds an alpha-class cycle, deletes its vertices, then finds the beta-class cycle in the remaining graph. Fixed `g20-6x9` recovers an accepted non-reference `4/3` pair inside `6/4` bounds after one beta-stage call. Across three sizes x eight seeds, **24/24** primary attacks verify, all have zero shared vertices and exact signatures, and **23/24** are non-reference.\n\nNo articulation or two-vertex separator appears in the measured sweep; separating triangles are variable and the primary attack does not depend on them. The independent canonical fundamental-cycle pair scan succeeds on only 5/24, so it is recorded as an incomplete cross-check rather than part of the rejection argument.\n\n**G20 rejected by A-047.** Genus and distinct public classes are not sufficient while the relation decomposes into finite-state class recovery plus deletion. G21 must couple several cycles simultaneously through a prescribed intersection/disjointness pattern. No security claim.\n'''
+              log.write_text(text)
+
+          readme = Path('README.md')
+          text = readme.read_text()
+          text = text.replace('HGES controls G0–G19 are implemented and rejected.', 'HGES controls G0–G20 are implemented and rejected.')
+          if '## G20 — genus-two distinct-class multicurve control' not in text:
+              marker = '\n## Research discipline\n'
+              section = '''\n## G20 — genus-two distinct-class multicurve control\n\nG20 moves to a flip-mixed genus-two carrier and requires two vertex-disjoint simple cycles in different public cohomology signatures `(1,0)` and `(0,1)`.\n\n**G20 is rejected by A-047.** A public four-sheet parity-cover attack finds the first class, deletes its vertices and recovers the second class in the remaining graph. Across three sizes x eight seeds, **24/24** primary attacks pass the exact verifier with zero shared vertices; **23/24** are non-reference. Fixed `g20-6x9` recovers a `4/3` pair inside public `6/4` bounds.\n\nThe independent canonical fundamental-cycle pair scan succeeds on only 5/24 and is preserved as incomplete negative evidence. No articulation or two-vertex separator is needed for the primary break.\n\nSee `docs/55-g20-genus2-multicurve.md`.\n'''
+              if marker not in text:
+                  raise SystemExit('README research discipline marker missing')
+              text = text.replace(marker, section + marker, 1)
+          key_anchor = '- `docs/54-g19-disjoint-cohomology-pair.md` — measured G19/A-046 disjoint-cycle rejection'
+          key_row = '- `docs/55-g20-genus2-multicurve.md` — measured G20/A-047 genus-two multicurve rejection'
+          if key_row not in text:
+              if key_anchor not in text:
+                  raise SystemExit('README G19 key anchor missing')
+              text = text.replace(key_anchor, key_anchor + '\n' + key_row, 1)
+          old = '''The next controlled HGES experiment is **G20**, not a trapdoor construction. G19 shows that requiring two bounded vertex-disjoint global representatives in one torus class is still insufficient: public parity-cover recovery can find one representative, delete it, and recover another on every measured instance.\n\nG20 must prevent repeated recovery of parallel representatives on a single handle. The next useful control should expose multiple independent homology directions—for example a genus-two carrier with several cycles constrained to distinct public cohomology classes and a prescribed disjointness/intersection pattern. It must immediately face symplectic-basis algorithms, vertex-splitting/max-flow and disjoint-path reductions, matching, shortest-cycle methods, ILP/SAT/CP-SAT, separator/treewidth, normalization and equivalent-witness enumeration.\n\nNo trapdoor/KEM work begins before such a multicurve relation survives these attacks.\n'''
+          new = '''The next controlled HGES experiment is **G21**, not a trapdoor construction. G20 shows that moving to genus two and requiring two different public cohomology classes is still insufficient when each class can be recovered by a finite-state cover search and disjointness can be enforced by deletion.\n\nG21 must couple several global representatives simultaneously so the relation does not factor into independent class searches. The next control should prescribe a multi-cycle symplectic intersection/disjointness matrix, then immediately face public symplectic-basis construction, disjoint paths/flow/matching, shortest-cycle algorithms, ILP/SAT/CP-SAT, separator/treewidth, normalization and equivalent-witness enumeration.\n\nNo trapdoor/KEM work begins before such a coupled multicurve relation survives these attacks.\n'''
+          if old not in text:
+              raise SystemExit('README G20 next gate block missing')
+          text = text.replace(old, new, 1)
+          readme.write_text(text)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/55-g20-genus2-multicurve.md docs/05-cryptanalysis.md notes/research-log.md README.md
+          git diff --cached --quiet && exit 0
+          git commit -m 'G20: record A-047 multicurve rejection'
+          git push origin HEAD:g20/genus2-multicurve
