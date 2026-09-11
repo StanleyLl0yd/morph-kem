@@ -570,3 +570,13 @@ Attack-first analysis found a stronger break than generic bilinear solving. A pu
 The independent full-cycle-basis crossing matrix is 145×73 on the fixed baseline, has weight 550 and GF(2) rank exactly two. Across all three sizes × eight seeds, **24/24** primary exact-one-crossing pairs and **24/24** full-basis cross-check pairs pass the exact verifier; all primary witnesses differ from the reference.
 
 **G17 rejected by A-044.** Lesson: bilinear homological intersection is still publicly constructive on an explicitly embedded surface. G18 must impose geometry not fixed by the homology intersection form and face flow/matching/disjoint-path and generic solver attacks immediately. No security claim.
+
+## 2026-09-11 — G18 rejected by A-045
+
+G18 added genuine geometric constraints to the G17 global cycle-pair verifier: exact crossing count one plus public primal/dual length bounds derived from a separate hidden tree-cotree reference. Fixed `g18-8x9` bounds are 11/20. The old canonical G17 tree-cotree pair is 9/21 and therefore fails the new dual bound.
+
+A-045 nevertheless recovers a public 6/15 pair with exactly one crossing. It searches a two-sheet cocycle parity cover (72 roots, 9913 queue pops, 59311 edge scans), then needs only six constrained-dual connector attempts / 2406 dual edge scans. The recovered pair passes the exact verifier and differs from the reference.
+
+Across `g18-6x6`, `g18-6x9`, `g18-8x9` × eight seeds, **24/24** public attacks succeed within the generation-derived bounds and **24/24** selected pairs are non-reference. The older canonical tree-cotree pair fits the bounds only 0/8, 2/8 and 2/8 times, so A-045 is a distinct stronger break rather than a restatement of A-044.
+
+**G18 rejected by A-045.** Length-bounded geometric topology still reduces to cheap public shortest-path constructions on this distribution. G19 must couple multiple representatives so one shortest noncontractible cycle plus one connector is insufficient. No security claim.

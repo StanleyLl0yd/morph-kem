@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G17 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G18 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -337,6 +337,14 @@ G17 is the first explicitly bilinear global-witness control. A witness is a simp
 
 See `docs/52-g17-symplectic-cycle-pair.md`.
 
+## G18 — length-bounded exact-one-crossing cycle-pair control
+
+G18 strengthens G17 with public geometric length bounds in addition to an exact-one-crossing primal/dual simple-cycle verifier. On fixed `g18-8x9`, the old canonical tree-cotree pair is `9/21` and fails the public `11/20` bound.
+
+**G18 is rejected by A-045.** A public two-sheet cocycle parity-cover search plus constrained dual BFS finds a shorter `6/15` exact-one-crossing pair. Across all three sizes × eight seeds, **24/24** attacks succeed inside the generated bounds and every selected pair is non-reference. The old canonical tree-cotree construction fits the same bounds only 4/24 times, so the new break genuinely handles the geometric gate rather than bypassing it.
+
+See `docs/53-g18-length-bounded-cycle-pair.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -386,16 +394,17 @@ See `docs/52-g17-symplectic-cycle-pair.md`.
 - `docs/50-g15-flip-mixed-sphere-hypercover.md` — measured G15/A-042 carrier/witness separation rejection
 - `docs/51-g16-cohomology-cycle.md` — measured G16/A-043 nonlocal cohomology-cycle rejection
 - `docs/52-g17-symplectic-cycle-pair.md` — measured G17/A-044 tree-cotree intersection rejection
+- `docs/53-g18-length-bounded-cycle-pair.md` — measured G18/A-045 length-bounded geometric rejection
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G18**, not a trapdoor construction. G17 shows that moving from affine cohomology to a bilinear homology-intersection predicate is still insufficient: public tree-cotree decomposition constructs an accepted exact-one-crossing pair directly.
+The next controlled HGES experiment is **G19**, not a trapdoor construction. G18 shows that adding exact geometric crossing and generation-derived length bounds is still insufficient: public parity-cover shortest paths plus a constrained dual connector recover accepted non-reference witnesses on every measured instance.
 
-G18 must therefore require geometric information not determined only by homology classes or their mod-2 intersection form—for example internally vertex-disjoint representatives, constrained-length representatives, or a prescribed geometric-intersection pattern not automatically supplied by tree-cotree. It must immediately face disjoint-path/flow/matching reductions, surface shortest-cycle algorithms, ILP/SAT/CP-SAT, separator/treewidth methods, normalization and equivalent-witness enumeration.
+G19 must couple multiple global representatives so that one shortest noncontractible cycle plus one connector is not enough—for example two internally vertex-disjoint representatives in a prescribed nontrivial class, or several cycles with pairwise geometric constraints. It must immediately face vertex-splitting max-flow, disjoint-path algorithms, matching, ILP/SAT/CP-SAT, separator/treewidth methods, shortest-cycle algorithms, normalization and equivalent-witness enumeration.
 
-No trapdoor/KEM work begins before such a geometric global relation survives these attacks.
+No trapdoor/KEM work begins before such a coupled geometric relation survives these attacks.
 
 No security or post-quantum claim exists.
 

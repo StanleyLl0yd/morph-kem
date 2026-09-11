@@ -1,0 +1,50 @@
+name: G18 HGES length-bounded exact-one-crossing negative control
+
+on:
+  push:
+    paths:
+      - 'src/morph_kem/gluing_length_bounded_pair.py'
+      - 'tests/test_gluing_length_bounded_pair.py'
+      - 'scripts/gluing_length_bounded_pair_*.py'
+      - '.github/workflows/g18.yml'
+      - 'docs/53-g18-length-bounded-cycle-pair.md'
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_length_bounded_pair.py'
+      - 'tests/test_gluing_length_bounded_pair.py'
+      - 'scripts/gluing_length_bounded_pair_*.py'
+      - '.github/workflows/g18.yml'
+      - 'docs/53-g18-length-bounded-cycle-pair.md'
+
+permissions:
+  contents: read
+
+jobs:
+  g18:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G18
+        run: >-
+          python -m compileall -q
+          src/morph_kem/gluing_length_bounded_pair.py
+          tests/test_gluing_length_bounded_pair.py
+          scripts/gluing_length_bounded_pair_baseline.py
+          scripts/gluing_length_bounded_pair_sweep.py
+      - name: G18 unit tests
+        run: python -m unittest tests.test_gluing_length_bounded_pair -v
+      - name: G18 fixed baseline
+        run: python scripts/gluing_length_bounded_pair_baseline.py --params g18-8x9
+      - name: G18 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/gluing_length_bounded_pair_sweep.py --seeds 8
