@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G14 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G15 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -313,6 +313,14 @@ G14 uses guaranteed-valid random stacked/Apollonian 2-spheres to avoid G13's rej
 
 The failure is carrier-structural, so heavier P3 exact-cover/SAT is unnecessary. See `docs/49-g14-stacked-sphere-normalization.md`.
 
+## G15 — flip-mixed icosahedral sphere hypercover control
+
+G15 starts from an icosahedral sphere, grows it constructively, and applies a long legal edge-flip mixing walk before publication. This removes the complete G14 reverse-stacking path on the fixed baseline and all 24 official sweep instances.
+
+**G15 is rejected by A-042.** Fixed `g15-72` still exposes 186 public P3 candidates; exact cover reaches 64/64 accepted non-reference solutions in 467 nodes / 148 decisions / 188 backtracks. Across all three sizes x eight seeds, **24/24** instances hit cap 32 with every returned witness non-reference. Independent MiniSat solves 186 variables / 2034 clauses in about 0.004 s and returns an accepted non-reference cover.
+
+One auxiliary seed remains completely reverse-stackable, so no universal carrier-hardness claim is made. The main conclusion is stronger: changing only the carrier is not a repair while P3 witness validity stays a bounded-radius public motif. See `docs/50-g15-flip-mixed-sphere-hypercover.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -359,16 +367,17 @@ The failure is carrier-structural, so heavier P3 exact-cover/SAT is unnecessary.
 - `docs/47-g12-irregular-torus-hypercover.md` — measured G12/A-039 negative control
 - `docs/48-g13-random-pairing-generator.md` — measured G13/A-040 generator-conditioning rejection
 - `docs/49-g14-stacked-sphere-normalization.md` — measured G14/A-041 reverse-normalization rejection
+- `docs/50-g15-flip-mixed-sphere-hypercover.md` — measured G15/A-042 carrier/witness separation rejection
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G15**, not a trapdoor construction. G14 shows that guaranteed-valid constructive randomness is still useless when the construction exposes a bounded-local public inverse.
+The next controlled HGES experiment is **G16**, not a trapdoor construction. G15 shows that even when carrier mixing substantially defeats the previous local inverse, the bounded-radius P3 witness relation still collapses to a tiny public exact-cover/SAT problem with many equivalent witnesses.
 
-G15 must use a constructive non-toroidal carrier without degree-three stellar-center ancestry. A first control should start from a non-stacked sphere such as the icosahedral triangulation and apply a long deterministic legal bistellar/edge-flip mixing walk, then immediately attack public simplification, canonicalization, separator/treewidth structure, candidate extraction, exact cover/CSP/SAT, equivalent witnesses and generated-role leakage.
+G16 must therefore change the witness predicate rather than keep redesigning only the carrier. Candidate validity must depend on genuinely nonlocal topological information and immediately face public quotient/canonicalization, topology-to-CSP compilation, generic SAT/CP-SAT, separator/treewidth and low-width algorithms, normalization, equivalent-witness enumeration and generated-role leakage.
 
-No trapdoor/KEM work begins before both carrier normalization and the witness relation survive these attacks.
+No trapdoor/KEM work begins before such a nonlocal relation survives these attacks.
 
 No security or post-quantum claim exists.
 

@@ -540,3 +540,13 @@ Fixed Python 3.12 `g14-72`: 38/108/72 public V/E/F, chi 2, degree histogram `((3
 Across `g14-36`, `g14-54`, `g14-72` x eight seeds, **24/24** instances normalize completely in exactly 16/25/34 moves. Maximum simultaneous candidates are 8/12/17.
 
 **G14 rejected by A-041.** Generator validity by construction is not useful when the construction has a public bounded-local inverse. P3/SAT is not run after the cheaper structural break. No security claim.
+
+## 2026-09-11 — G15 rejected by A-042
+
+G15 starts from a non-stacked icosahedral sphere, grows it to 36/54/72 triangles, then performs 720/1080/1440 successful legal edge flips. This largely defeats the G14 complete reverse-stacking failure: fixed `g15-72` stalls after 20 reverse moves at 18/48/32 rather than reaching the tetrahedron. All 24 official sweep instances likewise stall before the tetrahedron.
+
+The witness relation nevertheless remains fatal. Fixed `g15-72` exposes 186 public P3 candidates; exact cover reaches 64/64 solutions in 467 nodes / 148 decisions / 188 backtracks, all accepted and non-reference. Across all three sizes x eight seeds, **24/24** runs hit cap 32 and every returned witness is non-reference; maximum nodes are 202/260/427. MiniSat solves the fixed 186-variable / 2034-clause instance in about 0.004 s and returns an accepted non-reference cover.
+
+One auxiliary direct-byte seed still fully reverse-stacks after mixing, so no universal defeat of A-041 is claimed.
+
+**G15 rejected by A-042.** This separates carrier hardness from witness hardness: changing the carrier is no longer a justified next move while P3 validity remains a fixed-radius public motif. G16 must change the witness predicate and immediately face topology-to-CSP, SAT/CP-SAT, low-width, normalization and equivalent-witness attacks. No security claim.

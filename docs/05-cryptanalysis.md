@@ -45,6 +45,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-039 | Public irregular-carrier P3 extraction + exact-cover / SAT recovery | **Fatal to G12 generated distribution** | Implemented |
 | A-040 | Configuration-pairing generator-conditioning audit | **Fatal to G13 carrier distribution** | Implemented |
 | A-041 | Public reverse-stacking / stellar-center normalization | **Fatal to G14 carrier distribution** | Implemented |
+| A-042 | Flip-mixed sphere normalization + P3 exact-cover / SAT recovery | **Fatal to G15 generated distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -830,3 +831,51 @@ Python 3.12 tested `g14-36`, `g14-54`, `g14-72` over eight deterministic seeds e
 **G14 is rejected by A-041.** Constructive generation solved G13's invalid-sampler problem but exposed a bounded-local public inverse. Increasing the stacking depth cannot repair a relation that can always be peeled back to the tetrahedron boundary. P3 exact-cover/SAT is not run because a cheaper structural carrier break already decides the experiment.
 
 G15 must use a constructive non-toroidal carrier without degree-three stellar-center ancestry and immediately face bistellar normalization, canonicalization, separator/treewidth, candidate extraction, exact cover/CSP/SAT, equivalent-witness and generated-role attacks. No security claim.
+
+## A-042 — flip-mixed sphere normalization + P3 exact-cover / SAT recovery
+
+### Target
+
+G15 constructive non-toroidal sphere carrier. It starts from the icosahedron, grows to the target triangle count, performs 20 successful legal edge flips per final triangle, then globally relabels. Unlike G14, the measured main distribution no longer exposes a complete reverse-stacking path.
+
+### Public attacks
+
+A-042 runs the exact G14 reverse-stacking regression, a public degree-profile flip-normalization probe, deterministic MRV P3 exact cover, and an independent MiniSat encoding. Reference cover data is used only after public acceptance.
+
+### Exact Python 3.12 `g15-72` result
+
+~~~text
+growth steps:                               26
+successful flips / rejected proposals:      1440/558
+generation retries:                         0
+public V/E/F:                               38/108/72
+Euler characteristic:                       2
+primal vertex-degree histogram:             ((3,10),(4,8),(5,6),(6,4),(7,3),(8,1),(9,2),(11,1),(12,2),(18,1))
+initial reverse candidates:                 10
+reverse-stacking moves:                     20
+reverse terminal V/E/F:                     18/48/32
+reached tetrahedron boundary:               no
+normalization-improving legal flips:        39
+dual vertices / edges:                      72/108
+dual bipartite:                             no
+bridges / articulation points:              0/0
+local signature classes:                    64
+P3 public candidates:                       186
+candidate/triangle incidence:               558
+exact-cover solutions / cap:                64/64
+exact-cover nodes / decisions / backtracks: 467/148/188
+accepted public solutions:                  64
+accepted non-reference solutions:           64
+~~~
+
+Independent MiniSat uses 186 variables / 2034 clauses and returns SAT in 0.004067 seconds with 55 conflicts, 234 decisions and 1224 propagations. Its decoded 24-piece witness passes the exact verifier and differs from the reference.
+
+### Deterministic sweep
+
+Python 3.12 tested `g15-36`, `g15-54`, `g15-72` over eight independently derived seeds each. All **24/24** official sweep instances require zero generation retries, fail to reverse-stack completely to the tetrahedron boundary, hit the `32/32` exact-cover cap, and return 32 accepted non-reference covers. Maximum exact-cover nodes by size are 202, 260 and 427.
+
+An auxiliary direct-byte regression seed outside the official sweep still fully reverse-stacks after mixing. That result is retained: G15 does not establish that flip mixing universally defeats A-041, and generation never filters on this property.
+
+### Result
+
+**G15 is rejected by A-042.** Long flip mixing can substantially remove the obvious carrier inverse on the measured main distribution, but the unchanged bounded-radius P3 witness predicate remains a tiny, highly multiply-solvable public hypergraph relation. Further carrier-only redesign is not justified. G16 must change the witness predicate itself and immediately face topology-to-CSP compilation, generic SAT/CP-SAT, low-width methods, normalization and equivalent-witness attacks. No security claim.
