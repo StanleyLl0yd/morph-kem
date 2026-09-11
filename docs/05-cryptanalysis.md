@@ -42,6 +42,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-036 | Public overlapping-piece enumeration + exact cover / cycle DP | **Fatal to G9 generated distribution** | Implemented |
 | A-037 | Public toroidal bipartite perfect-matching recovery | **Fatal to G10 generated distribution** | Implemented |
 | A-038 | Public toroidal P3 hypergraph exact-cover + SAT recovery | **Fatal to G11 generated distribution** | Implemented |
+| A-039 | Public irregular-carrier P3 extraction + exact-cover / SAT recovery | **Fatal to G12 generated distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -715,3 +716,49 @@ Python 3.12 tested `g11-3x6`, `g11-6x6`, and `g11-6x9` over eight deterministic 
 Do not scale the periodic torus. G12 must test whether breaking translation symmetry/repeated local roles changes candidate-extraction or exact-cover behavior, while immediately facing automorphism/role leakage, separators/treewidth, exact cover/set packing, SAT/CP-SAT, simplification and equivalent-witness enumeration.
 
 This is a generated-distribution falsification, not a theorem that arbitrary hypergraph exact cover or HGES is easy. No security claim.
+
+## A-039 — public irregular-carrier P3 extraction + exact-cover / SAT recovery
+
+### Target
+
+G12 edge-flipped irregular-torus P3 hypercover negative control. G12 applies many legal `2 <-> 2` flips before reference-cover selection, destroying G11's periodic translation pattern and uniform local roles.
+
+### Public attack
+
+A-039 derives only the final public edge/triangle incidence, enumerates every exact P3-surface candidate, solves the candidate/triangle hypergraph with deterministic MRV exact cover, and independently encodes the same relation to DIMACS for MiniSat. Reference data is consulted only after public acceptance.
+
+### Exact Python 3.12 `g12-8x9` result
+
+~~~text
+successful flips / generation retries:      72/0
+public V/E/F:                               72/216/144
+Euler characteristic:                       0
+edge triangle incidence min/max:            2/2
+primal vertex-degree classes:               9
+dual vertices / edges:                      144/216
+dual degree histogram:                      ((3,144),)
+dual bipartite:                             no
+bridges / articulation points:              0/0
+dual triangle / four-cycle counts:          8/9
+local signature classes:                    82
+normalization-improving legal flips:         59
+P3 public candidates:                       408
+candidate memberships:                      6:24 / 9:120
+candidate/triangle incidence:               1224
+exact-cover solutions / cap:                64/64
+exact-cover nodes / decisions / backtracks: 456/119/119
+accepted public solutions:                  64
+accepted non-reference solutions:          64
+~~~
+
+Independent MiniSat uses 408 variables / 4824 clauses and reports SAT with 105 conflicts, 807 decisions and 4699 propagations in 0.005333 s. The decoded 48-piece witness passes the exact verifier and differs from the reference.
+
+### Deterministic sweep
+
+Python 3.12 tested `g12-6x6`, `g12-6x9`, `g12-8x9` over eight deterministic seeds each. All **24/24** instances require zero generation retries, become non-bipartite and publicly irregular, reach the 32-solution exact-cover cap, and return 32/32 accepted non-reference covers. Maximum exact-cover nodes are 276, 366 and 761 respectively.
+
+### Result
+
+**G12 is rejected by A-039.** Destroying periodic translation symmetry and uniform local roles does not make the generated P3 hypercover hard: generic candidate extraction, exact cover and SAT remain cheap. The public normalization probe also finds many degree-regularizing legal flips. Do not increase flip count, torus size or retry depth as a repair.
+
+G13 must leave the periodic-torus-plus-local-flips family and immediately face canonicalization/isomorphism, separators/treewidth, candidate extraction, exact cover/set packing, SAT/CP-SAT, simplification/normalization, equivalent witnesses and generated-role leakage. No security claim.
