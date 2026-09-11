@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G18 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G19 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -345,6 +345,16 @@ G18 strengthens G17 with public geometric length bounds in addition to an exact-
 
 See `docs/53-g18-length-bounded-cycle-pair.md`.
 
+## G19 — vertex-disjoint cohomology-cycle pair control
+
+G19 requires two simultaneously global simple primal cycles: both must pair oddly with one public nontrivial cocycle, be vertex-disjoint, and fit generation-derived sorted length bounds.
+
+**G19 is rejected by A-046.** The public attack finds one short odd cycle with the parity-cover method, deletes all its vertices and incident edges, and repeats the same search on the remaining graph. Fixed `g19-8x9` has bounds `8/9` and yields an accepted non-reference `5/6` pair with zero shared vertices. Across all three sizes × eight seeds, **24/24** primary attacks succeed and all returned pairs are non-reference.
+
+A separate canonical fundamental-cycle pair scan succeeds on only 4/24 instances; that weaker cross-check is preserved but is not needed for rejection.
+
+See `docs/54-g19-disjoint-cohomology-pair.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -395,16 +405,17 @@ See `docs/53-g18-length-bounded-cycle-pair.md`.
 - `docs/51-g16-cohomology-cycle.md` — measured G16/A-043 nonlocal cohomology-cycle rejection
 - `docs/52-g17-symplectic-cycle-pair.md` — measured G17/A-044 tree-cotree intersection rejection
 - `docs/53-g18-length-bounded-cycle-pair.md` — measured G18/A-045 length-bounded geometric rejection
+- `docs/54-g19-disjoint-cohomology-pair.md` — measured G19/A-046 disjoint-cycle rejection
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G19**, not a trapdoor construction. G18 shows that adding exact geometric crossing and generation-derived length bounds is still insufficient: public parity-cover shortest paths plus a constrained dual connector recover accepted non-reference witnesses on every measured instance.
+The next controlled HGES experiment is **G20**, not a trapdoor construction. G19 shows that requiring two bounded vertex-disjoint global representatives in one torus class is still insufficient: public parity-cover recovery can find one representative, delete it, and recover another on every measured instance.
 
-G19 must couple multiple global representatives so that one shortest noncontractible cycle plus one connector is not enough—for example two internally vertex-disjoint representatives in a prescribed nontrivial class, or several cycles with pairwise geometric constraints. It must immediately face vertex-splitting max-flow, disjoint-path algorithms, matching, ILP/SAT/CP-SAT, separator/treewidth methods, shortest-cycle algorithms, normalization and equivalent-witness enumeration.
+G20 must prevent repeated recovery of parallel representatives on a single handle. The next useful control should expose multiple independent homology directions—for example a genus-two carrier with several cycles constrained to distinct public cohomology classes and a prescribed disjointness/intersection pattern. It must immediately face symplectic-basis algorithms, vertex-splitting/max-flow and disjoint-path reductions, matching, shortest-cycle methods, ILP/SAT/CP-SAT, separator/treewidth, normalization and equivalent-witness enumeration.
 
-No trapdoor/KEM work begins before such a coupled geometric relation survives these attacks.
+No trapdoor/KEM work begins before such a multicurve relation survives these attacks.
 
 No security or post-quantum claim exists.
 
