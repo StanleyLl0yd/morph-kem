@@ -2,17 +2,19 @@
 
 ## Status
 
-**G13 first tests its carrier generator before any P3 hardness experiment.** No P3 exact-cover result is interpreted unless the raw configuration-pairing distribution produces honest simplicial closed surfaces at a healthy measured rate.
+**G13 is rejected at the carrier-generator gate by A-040.** Across every measured raw configuration-pairing attempt, the proposed distribution produced zero honest simplicial closed surfaces.
+
+No P3 exact-cover experiment is run on a generator whose valid output would require extreme hidden rejection conditioning.
 
 G13 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
 ## Motivation
 
-G12 showed that heavily irregularizing a periodic torus by legal edge flips does not make the public P3 hypercover hard. The obvious next idea is to abandon torus ancestry entirely and generate a closed surface from a random cubic triangle-dual graph.
+G12 showed that heavily irregularizing a periodic torus by legal edge flips does not make the public P3 hypercover hard. The obvious next idea was to abandon torus ancestry entirely and generate a closed surface from a random cubic triangle-dual graph.
 
-That idea has a generator problem of its own. A generic random pairing of abstract triangle sides defines a random orientable map, not automatically an honest finite simplicial complex. Corner identifications can collapse vertices inside a triangle, duplicate quotient triangles, identify multiple abstract edges into one quotient edge, or create singular vertex links.
+That idea has a generator problem of its own. A generic random pairing of abstract triangle sides defines a random orientable map, not automatically an honest finite simplicial complex. Corner identifications can collapse vertices inside a triangle before later surface checks are even reached.
 
-G13 therefore audits this conditioning **before** adding a witness relation. Silently rejection-sampling until a rare simplicial quotient appears would itself define a strongly conditioned public-key distribution and is not accepted as neutral setup.
+G13 therefore audits this conditioning **before** adding a witness relation. Silently rejection-sampling until a rare simplicial quotient appears is not accepted as neutral setup.
 
 ## Raw distribution
 
@@ -26,52 +28,56 @@ For `F` abstract triangles:
 6. quotient all abstract triangle corners by the side identifications;
 7. validate the quotient as an honest closed simplicial surface.
 
-The final quotient gate requires:
+The quotient gate requires every triangle to have three distinct quotient vertices, distinct quotient facets, exact two-face edge incidence, connected cyclic vertex links, and a nonnegative integral orientable genus.
 
-- every triangle has three distinct quotient vertices;
-- all quotient triangles are distinct;
-- exactly `3F/2` quotient edges exist and every edge belongs to exactly two triangles;
-- every quotient vertex link is one connected degree-two cycle;
-- Euler characteristic corresponds to a nonnegative integral orientable genus.
-
-Every attempt stops at its first failure class. No failed sample is silently retried inside one attempt.
-
-Toy sets:
-
-```text
-g13-36: F = 36
-g13-54: F = 54
-g13-72: F = 72
-```
+Toy sets are `g13-36`, `g13-54`, and `g13-72`.
 
 ## A-040 — configuration-pairing generator-conditioning audit
 
-The dedicated Python 3.12 audit runs 4096 deterministic attempts for each toy size. A second sweep uses eight independently derived seeds with 1024 attempts per seed and size.
+### Fixed Python 3.12 audit
 
-Measured counters are:
+4096 deterministic attempts per size:
 
-```text
-dual_loop
-dual_parallel
-dual_disconnected
-degenerate_triangle
-duplicate_triangle
-bad_edge_incidence
-bad_vertex_link
-bad_genus
-success
-```
+| Set | Attempts | Dual loops | Dual parallel | Degenerate quotient triangle | Success | Rule-of-three upper scale |
+|---|---:|---:|---:|---:|---:|---:|
+| g13-36 | 4096 | 2027 | 1493 | 576 | **0** | 0.000732422 |
+| g13-54 | 4096 | 2077 | 1459 | 560 | **0** | 0.000732422 |
+| g13-72 | 4096 | 2119 | 1439 | 538 | **0** | 0.000732422 |
 
-When an audit observes zero successes, it also records the elementary rule-of-three upper confidence proxy `3/N`. This is not a formal cryptographic bound; it makes the scale of an unobserved success probability explicit.
+No attempt reached duplicate-triangle, bad-edge-incidence, bad-vertex-link, or genus rejection: every pairing that survived the simple-cubic dual checks already collapsed at least one abstract triangle to fewer than three quotient vertices.
 
-## Rejection gate
+### Multi-seed audit
 
-If no or only a vanishing fraction of raw attempts produce honest simplicial closed surfaces, the proposed G13 configuration-model carrier is rejected **at generation time**. The experiment must not proceed by hiding an unbounded rejection sampler.
+Python 3.12 additionally tested eight independently derived seeds with 1024 attempts each for every size. All **24/24 audit batches** again observed zero successes. Per batch, the only terminal classes were dual loop, dual parallel edge, and degenerate quotient triangle.
 
-If a healthy success rate is observed instead, G13 proceeds to the conditional P3 relation described in issue #86: public P3 candidate extraction, exact cover, and independent MiniSat.
+Combining the fixed and multi-seed attempt budgets **within each size** gives 12,288 measured raw attempts per distribution:
 
-## Successor gate
+| Set | Total attempts | Dual loops | Dual parallel | Degenerate triangle | Success | `3/N` scale |
+|---|---:|---:|---:|---:|---:|---:|
+| g13-36 | 12288 | 6170 | 4477 | 1641 | **0** | 0.000244141 |
+| g13-54 | 12288 | 6234 | 4395 | 1659 | **0** | 0.000244141 |
+| g13-72 | 12288 | 6308 | 4387 | 1593 | **0** | 0.000244141 |
 
-If the raw generator is rejected, G14 should switch to a constructive non-toroidal random simplicial-surface family whose validity is guaranteed by construction rather than rare conditioning. A natural negative control is a random stacked/Apollonian sphere, followed immediately by degree-three/canonical simplification attacks and the same P3 exact-cover/SAT recovery.
+The elementary `3/N` value is reported only as a scale for an unobserved raw success probability, not as a cryptographic theorem or rigorous asymptotic statement.
+
+## Interpretation
+
+**G13 fails before cryptanalysis of any witness relation begins.** The naive configuration-model idea is not a usable public-key carrier distribution under the repository's standards.
+
+Roughly half of raw pairings already contain a cubic-dual loop; a large additional fraction contains a parallel dual edge; and every measured simple surviving pairing collapses triangle corners enough to make at least one quotient triangle degenerate.
+
+It would be methodologically invalid to hide this behind an unbounded rejection loop and then study only the rare conditioned outputs as though they were generic random cubic surfaces.
+
+No P3/Exact-Cover continuation is executed because the generator rejection gate has already fired.
+
+## Result
+
+**G13 random cubic-dual configuration pairing is rejected by A-040 at generation time.** This is a generated-distribution failure, not a theorem that random maps or random triangulations cannot be sampled efficiently by better constructive methods.
+
+## G14 gate
+
+G14 must use a constructive non-toroidal random simplicial-surface family whose validity is guaranteed by construction rather than rare conditioning. The next controlled baseline is a random stacked/Apollonian sphere: start from the tetrahedron boundary and repeatedly subdivide a randomly selected triangular face by a fresh vertex.
+
+That family must immediately face its obvious public inverse—degree-three vertex / stellar-center contraction—plus canonicalization, P3 candidate extraction, exact cover, SAT, equivalent-witness multiplicity and generated-role leakage. If the stacked history is publicly reversible, reject before scaling.
 
 No security claim.
