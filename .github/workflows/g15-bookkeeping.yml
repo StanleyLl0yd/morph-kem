@@ -1,0 +1,70 @@
+name: G15 one-shot A-042 result bookkeeping
+
+on:
+  push:
+    branches: ['g15/flip-mixed-icosahedral-hypercover']
+    paths: ['.github/workflows/g15-bookkeeping.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  bookkeeping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: g15/flip-mixed-icosahedral-hypercover
+      - name: Record measured G15 rejection
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          ledger = Path('docs/05-cryptanalysis.md')
+          text = ledger.read_text()
+          anchor = '| A-041 | Public reverse-stacking / stellar-center normalization | **Fatal to G14 carrier distribution** | Implemented |'
+          row = '| A-042 | Flip-mixed sphere normalization + P3 exact-cover / SAT recovery | **Fatal to G15 generated distribution** | Implemented |'
+          if row not in text:
+              if anchor not in text:
+                  raise SystemExit('A-041 ledger anchor missing')
+              text = text.replace(anchor, anchor + '\n' + row, 1)
+          heading = '## A-042 — flip-mixed sphere normalization + P3 exact-cover / SAT recovery'
+          if heading not in text:
+              text = text.rstrip() + '''\n\n## A-042 — flip-mixed sphere normalization + P3 exact-cover / SAT recovery\n\n### Target\n\nG15 constructive non-toroidal sphere carrier. It starts from the icosahedron, grows to the target triangle count, performs 20 successful legal edge flips per final triangle, then globally relabels. Unlike G14, the measured main distribution no longer exposes a complete reverse-stacking path.\n\n### Public attacks\n\nA-042 runs the exact G14 reverse-stacking regression, a public degree-profile flip-normalization probe, deterministic MRV P3 exact cover, and an independent MiniSat encoding. Reference cover data is used only after public acceptance.\n\n### Exact Python 3.12 `g15-72` result\n\n~~~text\ngrowth steps:                               26\nsuccessful flips / rejected proposals:      1440/558\ngeneration retries:                         0\npublic V/E/F:                               38/108/72\nEuler characteristic:                       2\nprimal vertex-degree histogram:             ((3,10),(4,8),(5,6),(6,4),(7,3),(8,1),(9,2),(11,1),(12,2),(18,1))\ninitial reverse candidates:                 10\nreverse-stacking moves:                     20\nreverse terminal V/E/F:                     18/48/32\nreached tetrahedron boundary:               no\nnormalization-improving legal flips:        39\ndual vertices / edges:                      72/108\ndual bipartite:                             no\nbridges / articulation points:              0/0\nlocal signature classes:                    64\nP3 public candidates:                       186\ncandidate/triangle incidence:               558\nexact-cover solutions / cap:                64/64\nexact-cover nodes / decisions / backtracks: 467/148/188\naccepted public solutions:                  64\naccepted non-reference solutions:           64\n~~~\n\nIndependent MiniSat uses 186 variables / 2034 clauses and returns SAT in 0.004067 seconds with 55 conflicts, 234 decisions and 1224 propagations. Its decoded 24-piece witness passes the exact verifier and differs from the reference.\n\n### Deterministic sweep\n\nPython 3.12 tested `g15-36`, `g15-54`, `g15-72` over eight independently derived seeds each. All **24/24** official sweep instances require zero generation retries, fail to reverse-stack completely to the tetrahedron boundary, hit the `32/32` exact-cover cap, and return 32 accepted non-reference covers. Maximum exact-cover nodes by size are 202, 260 and 427.\n\nAn auxiliary direct-byte regression seed outside the official sweep still fully reverse-stacks after mixing. That result is retained: G15 does not establish that flip mixing universally defeats A-041, and generation never filters on this property.\n\n### Result\n\n**G15 is rejected by A-042.** Long flip mixing can substantially remove the obvious carrier inverse on the measured main distribution, but the unchanged bounded-radius P3 witness predicate remains a tiny, highly multiply-solvable public hypergraph relation. Further carrier-only redesign is not justified. G16 must change the witness predicate itself and immediately face topology-to-CSP compilation, generic SAT/CP-SAT, low-width methods, normalization and equivalent-witness attacks. No security claim.\n'''
+          ledger.write_text(text)
+
+          log = Path('notes/research-log.md')
+          text = log.read_text()
+          heading = '## 2026-09-11 — G15 rejected by A-042'
+          if heading not in text:
+              text = text.rstrip() + '''\n\n## 2026-09-11 — G15 rejected by A-042\n\nG15 starts from a non-stacked icosahedral sphere, grows it to 36/54/72 triangles, then performs 720/1080/1440 successful legal edge flips. This largely defeats the G14 complete reverse-stacking failure: fixed `g15-72` stalls after 20 reverse moves at 18/48/32 rather than reaching the tetrahedron. All 24 official sweep instances likewise stall before the tetrahedron.\n\nThe witness relation nevertheless remains fatal. Fixed `g15-72` exposes 186 public P3 candidates; exact cover reaches 64/64 solutions in 467 nodes / 148 decisions / 188 backtracks, all accepted and non-reference. Across all three sizes x eight seeds, **24/24** runs hit cap 32 and every returned witness is non-reference; maximum nodes are 202/260/427. MiniSat solves the fixed 186-variable / 2034-clause instance in about 0.004 s and returns an accepted non-reference cover.\n\nOne auxiliary direct-byte seed still fully reverse-stacks after mixing, so no universal defeat of A-041 is claimed.\n\n**G15 rejected by A-042.** This separates carrier hardness from witness hardness: changing the carrier is no longer a justified next move while P3 validity remains a fixed-radius public motif. G16 must change the witness predicate and immediately face topology-to-CSP, SAT/CP-SAT, low-width, normalization and equivalent-witness attacks. No security claim.\n'''
+              log.write_text(text)
+
+          readme = Path('README.md')
+          text = readme.read_text()
+          text = text.replace('HGES controls G0–G14 are implemented and rejected.', 'HGES controls G0–G15 are implemented and rejected.')
+          if '## G15 — flip-mixed icosahedral sphere hypercover control' not in text:
+              marker = '\n## Research discipline\n'
+              if marker not in text:
+                  raise SystemExit('README research-discipline anchor missing')
+              section = '''\n## G15 — flip-mixed icosahedral sphere hypercover control\n\nG15 starts from an icosahedral sphere, grows it constructively, and applies a long legal edge-flip mixing walk before publication. This removes the complete G14 reverse-stacking path on the fixed baseline and all 24 official sweep instances.\n\n**G15 is rejected by A-042.** Fixed `g15-72` still exposes 186 public P3 candidates; exact cover reaches 64/64 accepted non-reference solutions in 467 nodes / 148 decisions / 188 backtracks. Across all three sizes x eight seeds, **24/24** instances hit cap 32 with every returned witness non-reference. Independent MiniSat solves 186 variables / 2034 clauses in about 0.004 s and returns an accepted non-reference cover.\n\nOne auxiliary seed remains completely reverse-stackable, so no universal carrier-hardness claim is made. The main conclusion is stronger: changing only the carrier is not a repair while P3 witness validity stays a bounded-radius public motif. See `docs/50-g15-flip-mixed-sphere-hypercover.md`.\n'''
+              text = text.replace(marker, section + marker, 1)
+          key_anchor = '- `docs/49-g14-stacked-sphere-normalization.md` — measured G14/A-041 reverse-normalization rejection'
+          key_row = '- `docs/50-g15-flip-mixed-sphere-hypercover.md` — measured G15/A-042 carrier/witness separation rejection'
+          if key_row not in text:
+              if key_anchor not in text:
+                  raise SystemExit('README key-file anchor missing')
+              text = text.replace(key_anchor, key_anchor + '\n' + key_row, 1)
+          old = '''The next controlled HGES experiment is **G15**, not a trapdoor construction. G14 shows that guaranteed-valid constructive randomness is still useless when the construction exposes a bounded-local public inverse.\n\nG15 must use a constructive non-toroidal carrier without degree-three stellar-center ancestry. A first control should start from a non-stacked sphere such as the icosahedral triangulation and apply a long deterministic legal bistellar/edge-flip mixing walk, then immediately attack public simplification, canonicalization, separator/treewidth structure, candidate extraction, exact cover/CSP/SAT, equivalent witnesses and generated-role leakage.\n\nNo trapdoor/KEM work begins before both carrier normalization and the witness relation survive these attacks.\n'''
+          new = '''The next controlled HGES experiment is **G16**, not a trapdoor construction. G15 shows that even when carrier mixing substantially defeats the previous local inverse, the bounded-radius P3 witness relation still collapses to a tiny public exact-cover/SAT problem with many equivalent witnesses.\n\nG16 must therefore change the witness predicate rather than keep redesigning only the carrier. Candidate validity must depend on genuinely nonlocal topological information and immediately face public quotient/canonicalization, topology-to-CSP compilation, generic SAT/CP-SAT, separator/treewidth and low-width algorithms, normalization, equivalent-witness enumeration and generated-role leakage.\n\nNo trapdoor/KEM work begins before such a nonlocal relation survives these attacks.\n'''
+          if old not in text:
+              raise SystemExit('README G15 next-gate block missing')
+          text = text.replace(old, new, 1)
+          readme.write_text(text)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/05-cryptanalysis.md notes/research-log.md README.md
+          git diff --cached --quiet && exit 0
+          git commit -m 'G15: record carrier-witness separation rejection'
+          git push origin HEAD:g15/flip-mixed-icosahedral-hypercover
