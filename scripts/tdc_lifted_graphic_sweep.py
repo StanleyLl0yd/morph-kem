@@ -27,7 +27,12 @@ def main() -> None:
             instance = generate_tdc1_instance(params, seed)
             lifted = graphic_code_metrics(instance.lifted)
             random_control = graphic_code_metrics(instance.matched_random)
-            quotient_attempted = params.lift_factor <= 12
+
+            # Exact quotient coloring is a secondary structural probe.  Run it
+            # across the complete eight-seed L8 calibration set; larger lifts are
+            # measured by the independent graphic-code decoding gate instead of
+            # converting CI runtime into a pseudo-hardness signal.
+            quotient_attempted = params.lift_factor == 8
             if quotient_attempted:
                 quotient = recover_k4_quotient(instance.lifted, params.lift_factor)
                 quotient_found = int(quotient.found)
