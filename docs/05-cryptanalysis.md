@@ -49,6 +49,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-043 | Public fundamental-cycle cohomology-pairing recovery | **Fatal to G16 generated distribution** | Implemented |
 | A-044 | Public tree-cotree primal-dual one-crossing recovery | **Fatal to G17 generated distribution** | Implemented |
 | A-045 | Public shortest odd-cocycle cycle + constrained exact-one-crossing connector | **Fatal to G18 generated distribution** | Implemented |
+| A-046 | Delete-one-cycle parity-cover recovery of bounded vertex-disjoint odd-cycle pair | **Fatal to G19 generated distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -974,3 +975,50 @@ Measured primary work remains small. Maximum selected primal/dual lengths are `5
 **G18 is rejected by A-045.** Adding public geometric length bounds and exact geometric crossing does not create an inversion barrier on this generated distribution. The public problem still reduces to shortest paths in a two-sheet parity cover plus a constrained dual connector.
 
 Do not repair by increasing torus dimensions while bounds continue to come from generated reference lengths and the same public shortest-path construction remains effective. G19 must add a coupling not reducible to one noncontractible cycle plus one connector and must immediately face disjoint-path/flow/matching, ILP/SAT/CP-SAT, separator/treewidth, shortest-cycle, normalization and equivalent-witness attacks. No security claim.
+
+## A-046 — delete-one-cycle parity-cover recovery of bounded vertex-disjoint odd-cycle pair
+
+### Target
+
+G19 requires two vertex-disjoint simple primal cycles. Both must pair oddly with the same public nontrivial GF(2) cocycle, and their sorted lengths must fit generation-derived public bounds. This couples two simultaneously global geometric representatives rather than one cycle plus one connector.
+
+### Public attack
+
+A-046 first runs the public two-sheet cocycle parity-cover search on the full primal graph. For each short odd simple cycle candidate it deletes every vertex of that cycle and all incident edges, then repeats the parity-cover search on the remaining graph. Any second odd simple cycle is automatically vertex-disjoint from the first. Canonical pairs are submitted to the exact public verifier; reference data is consulted only after public success.
+
+### Fixed Python 3.12 `g19-8x9` result
+
+~~~text
+successful carrier flips / generation retries: 72/0
+public V/E/F:                                  72/216/144
+public alpha weight / H1 dimension:            21/2
+public short/long bounds:                       8/9
+reference short/long lengths:                   8/9
+reference seeded-tree attempts:                12
+first-stage roots / queue pops / edge scans:   72/9740/58574
+first-stage distinct candidates:               52
+first candidates attempted:                     1
+second-stage calls:                             1
+second-stage roots / reachable roots:          67/67
+second-stage queue pops / edge scans:          8232/43580
+second-stage candidates:                       44
+selected deleted vertices / edges:              5/41
+selected short/long lengths:                    5/6
+selected cocycle pairings / shared vertices:    1/1/0
+selected accepted:                             yes
+selected matches reference:                    no
+~~~
+
+### Deterministic sweep
+
+Python 3.12 tested `g19-6x6`, `g19-6x9`, `g19-8x9` over eight deterministic seeds each. All **24/24** carriers require zero generation retries. All **24/24** primary attacks accept the first first-stage candidate, make one second-stage call, recover pairings `1/1` with zero shared vertices, fit the public bounds and pass the exact verifier. Every selected pair is non-reference.
+
+Maximum selected lengths are `4/6`, `6/6`, and `6/7`; maximum second-stage edge scans are `9450`, `23146`, and `43485`.
+
+The independent canonical spanning-tree fundamental-cycle cross-check is strictly weaker: it finds a bounded disjoint pair on only **4/24** measured instances (`1/8`, `3/8`, `0/8`). That incompleteness is preserved and is not used to support the rejection claim.
+
+### Result
+
+**G19 is rejected by A-046.** On this generated torus family, one short public odd cycle can be removed completely and the remaining graph still exposes a second bounded odd cycle through the same parity-cover machinery. Coupling two disjoint global representatives therefore does not create inversion hardness here.
+
+This is a generated-distribution falsification, not a theorem about arbitrary disjoint noncontractible-cycle problems. Do not scale torus dimensions while the same delete-and-recover reduction remains effective. G20 must move beyond repeated parallel representatives on one handle. No security claim.

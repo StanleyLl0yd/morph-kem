@@ -580,3 +580,15 @@ A-045 nevertheless recovers a public 6/15 pair with exactly one crossing. It sea
 Across `g18-6x6`, `g18-6x9`, `g18-8x9` × eight seeds, **24/24** public attacks succeed within the generation-derived bounds and **24/24** selected pairs are non-reference. The older canonical tree-cotree pair fits the bounds only 0/8, 2/8 and 2/8 times, so A-045 is a distinct stronger break rather than a restatement of A-044.
 
 **G18 rejected by A-045.** Length-bounded geometric topology still reduces to cheap public shortest-path constructions on this distribution. G19 must couple multiple representatives so one shortest noncontractible cycle plus one connector is insufficient. No security claim.
+
+## 2026-09-11 — G19 rejected by A-046
+
+G19 strengthened G18 by requiring two vertex-disjoint simple primal cycles, both odd against the same public nontrivial cocycle and both inside generation-derived sorted length bounds. Reference generation is independent and explicit; no measured carrier required a generation retry.
+
+A-046 breaks the measured family by repeated public parity-cover recovery. Find one short odd cycle, delete all its vertices and incident edges, then run the same odd-cycle recovery on the remaining graph. Fixed `g19-8x9` uses public bounds `8/9` but returns a `5/6` accepted non-reference pair after one first candidate and one second-stage call; the second stage scans 43,580 edges.
+
+Across all three sizes × eight seeds, **24/24** primary attacks recover accepted bounded pairs with cocycle pairings `1/1`, zero shared vertices and non-reference identity. Maximum selected lengths are `4/6`, `6/6`, `6/7`; maximum second-stage scans are `9450`, `23146`, `43485`.
+
+The independent canonical fundamental-cycle pair scan succeeds only 4/24 times. This weaker result is preserved separately and does not weaken the primary break.
+
+**G19 rejected by A-046.** G20 must prevent repeated recovery of parallel representatives on a single torus handle, likely by moving to multiple independent homology directions and a prescribed multicurve relation. No security claim.
