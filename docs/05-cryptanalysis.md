@@ -43,6 +43,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-037 | Public toroidal bipartite perfect-matching recovery | **Fatal to G10 generated distribution** | Implemented |
 | A-038 | Public toroidal P3 hypergraph exact-cover + SAT recovery | **Fatal to G11 generated distribution** | Implemented |
 | A-039 | Public irregular-carrier P3 extraction + exact-cover / SAT recovery | **Fatal to G12 generated distribution** | Implemented |
+| A-040 | Configuration-pairing generator-conditioning audit | **Fatal to G13 carrier distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -762,3 +763,33 @@ Python 3.12 tested `g12-6x6`, `g12-6x9`, `g12-8x9` over eight deterministic seed
 **G12 is rejected by A-039.** Destroying periodic translation symmetry and uniform local roles does not make the generated P3 hypercover hard: generic candidate extraction, exact cover and SAT remain cheap. The public normalization probe also finds many degree-regularizing legal flips. Do not increase flip count, torus size or retry depth as a repair.
 
 G13 must leave the periodic-torus-plus-local-flips family and immediately face canonicalization/isomorphism, separators/treewidth, candidate extraction, exact cover/set packing, SAT/CP-SAT, simplification/normalization, equivalent witnesses and generated-role leakage. No security claim.
+
+## A-040 — configuration-pairing generator-conditioning audit
+
+### Target
+
+G13 proposed a non-toroidal carrier built by randomly pairing oriented sides of abstract triangles so the triangle dual would be a random simple cubic graph. Before adding any P3 witness relation, A-040 audits whether the raw distribution actually produces honest finite simplicial closed surfaces without severe hidden rejection conditioning.
+
+### Public/generator audit
+
+Each deterministic attempt pairs all triangle side stubs, rejects cubic-dual loops/parallel edges/disconnection, glues paired sides orientation-reversingly, quotients triangle corners, then checks distinct nondegenerate quotient triangles, exact two-face edge incidence, connected cyclic vertex links and integral orientable genus. Every attempt has one explicit terminal reason.
+
+### Fixed Python 3.12 audit
+
+| Set | Attempts | Dual loops | Dual parallel | Degenerate triangle | Success | 3/N scale |
+|---|---:|---:|---:|---:|---:|---:|
+| g13-36 | 4096 | 2027 | 1493 | 576 | 0 | 0.000732422 |
+| g13-54 | 4096 | 2077 | 1459 | 560 | 0 | 0.000732422 |
+| g13-72 | 4096 | 2119 | 1439 | 538 | 0 | 0.000732422 |
+
+The Python 3.12 multi-seed audit adds eight independently derived 1024-attempt batches for each size. All **24/24 batches** again observe zero successes. Combining fixed and multi-seed budgets within each size gives 12,288 raw attempts and zero valid carriers for every distribution; the corresponding elementary `3/N` scale is `0.000244141`.
+
+Every attempt that survived the loop/parallel checks failed immediately because at least one quotient triangle had fewer than three distinct vertices. No sample reached later duplicate-triangle, bad-edge-incidence, bad-link or genus failure classes.
+
+### Result
+
+**G13 is rejected by A-040 at the generator gate.** The naive random configuration pairing is a random-map distribution, not a healthy simplicial-surface sampler at these sizes. Hiding the failure behind unbounded rejection sampling would create a strongly conditioned public-key distribution and is not accepted as neutral setup.
+
+No P3 exact-cover continuation is run because the declared generator rejection gate already fired. This is not a theorem that better constructive random-triangulation samplers do not exist.
+
+G14 must use a constructive non-toroidal simplicial-surface family. The next negative control is a random stacked/Apollonian sphere, with immediate degree-three/stellar-center contraction, canonicalization, P3 exact-cover, SAT and equivalent-witness attacks. No security claim.
