@@ -2,7 +2,7 @@
 
 ## Status
 
-**G21 is an attack calibration in progress. No hardness or security conclusion is permitted until exact-head CI measures A-048.**
+**G21 is rejected by A-048: the full simultaneous 4x4 crossing-matrix witness is publicly constructed by tree-cotree decomposition.**
 
 G21 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -95,5 +95,45 @@ If A-048 routinely constructs the complete exact identity crossing family public
 A successor must impose constraints not automatically satisfied by a tree-cotree basis. In particular, it should couple cycles on the same side through vertex-disjointness, exact geometric intersections, shared avoidance regions or length constraints, rather than only prescribe primal-dual pairings.
 
 It must immediately face symplectic-basis algorithms, disjoint paths and vertex-splitting/max-flow, matching, shortest-cycle methods, ILP/SAT/CP-SAT, separator/treewidth, normalization and equivalent-witness enumeration.
+
+No security claim.
+
+## Measured A-048 result
+
+Exact-head Python 3.12 `g21-6x9`:
+
+~~~text
+successful flips:                           428
+public V/E/F:                               105/321/214
+Euler characteristic:                       -2
+edge triangle incidence min/max:            2/2
+H1 dimension:                               4
+primal degree histogram:                    ((3,18),(4,23),(5,12),(6,14),(7,5),(8,12),(9,11),(10,4),(11,1),(13,1),(14,3),(16,1))
+dual degree histogram:                      ((3,214),)
+normalization-improving legal flips:         114
+primal tree / forbidden dual / dual tree:    104/104/213
+tree-cotree leftovers:                       4
+primal / dual path scans:                    25/63
+primal cycle lengths:                        (7,7,9,6)
+dual cycle lengths:                          (6,31,10,20)
+exact crossing matrix:                       I4
+off-diagonal nonzero entries:                0
+exact verifier accepted:                     yes
+full primal / dual basis cycles:             217/108
+full primal / dual path scans:               923/1104
+full crossing matrix weight:                 632
+full crossing matrix GF(2) rank:             4
+full crossing matrix row XORs:               65
+~~~
+
+Python 3.12 sweep over `g21-4x4`, `g21-6x6`, `g21-6x9` x eight deterministic seeds gives **24/24** public tree-cotree decompositions with exactly four leftovers, **24/24** exact identity crossing matrices, zero off-diagonal crossings in every instance, and **24/24** exact-verifier accepted eight-cycle families. The independent full primal/dual basis crossing matrix has GF(2) rank exactly four on all **24/24** instances.
+
+Measured primary path work remains small. Maximum total primal/dual path scans are `23/55`, `30/82`, and `34/126` for the three sizes. The full basis sizes are seed-invariant: `65x32`, `145x72`, and `217x108`.
+
+### Result
+
+**G21 rejected by A-048.** Simultaneously prescribing the complete primal-dual identity crossing matrix does not create a joint inversion barrier. A public tree-cotree decomposition exposes all `2g=4` leftover edges at once, and their paired primal/dual fundamental cycles satisfy every exact diagonal and off-diagonal verifier constraint mechanically.
+
+This is a structural cellular-topology break. Increasing carrier size or flip count is not a repair while the public embedding exposes the same tree-cotree basis. G22 must constrain cycles on the same side or otherwise impose geometry not supplied automatically by a tree-cotree decomposition.
 
 No security claim.

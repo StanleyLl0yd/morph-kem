@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G20 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G21 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -365,6 +365,14 @@ The independent canonical fundamental-cycle pair scan succeeds on only 5/24 and 
 
 See `docs/55-g20-genus2-multicurve.md`.
 
+## G21 — genus-two full crossing-matrix control
+
+G21 requires four primal and four dual simple cycles simultaneously, with exact geometric crossing-count matrix equal to `I4`.
+
+**G21 is rejected by A-048.** Public tree-cotree decomposition exposes the four genus-two leftover edges and mechanically constructs all eight cycles. Across three sizes x eight seeds, **24/24** instances produce exact `I4`, zero off-diagonal crossings and accepted verifier witnesses. The independent full crossing matrices have GF(2) rank four throughout.
+
+See `docs/56-g21-genus2-crossing-basis.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -417,16 +425,17 @@ See `docs/55-g20-genus2-multicurve.md`.
 - `docs/53-g18-length-bounded-cycle-pair.md` — measured G18/A-045 length-bounded geometric rejection
 - `docs/54-g19-disjoint-cohomology-pair.md` — measured G19/A-046 disjoint-cycle rejection
 - `docs/55-g20-genus2-multicurve.md` — measured G20/A-047 genus-two multicurve rejection
+- `docs/56-g21-genus2-crossing-basis.md` — measured G21/A-048 exact crossing-matrix rejection
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G21**, not a trapdoor construction. G20 shows that moving to genus two and requiring two different public cohomology classes is still insufficient when each class can be recovered by a finite-state cover search and disjointness can be enforced by deletion.
+The next controlled HGES experiment is **G22**, not a trapdoor construction. G21 shows that even a simultaneous complete primal-dual crossing matrix is not enough when a public tree-cotree decomposition mechanically supplies the required family.
 
-G21 must couple several global representatives simultaneously so the relation does not factor into independent class searches. The next control should prescribe a multi-cycle symplectic intersection/disjointness matrix, then immediately face public symplectic-basis construction, disjoint paths/flow/matching, shortest-cycle algorithms, ILP/SAT/CP-SAT, separator/treewidth, normalization and equivalent-witness enumeration.
+G22 must impose geometry not automatic from a tree-cotree basis, especially relations among cycles on the same side: vertex-disjointness, prescribed same-side intersections, shared avoidance regions, or meaningful public length constraints. It must immediately face symplectic-basis algorithms, disjoint paths/vertex splitting/max-flow, matching, shortest-cycle methods, ILP/SAT/CP-SAT, separator/treewidth, normalization and equivalent-witness enumeration.
 
-No trapdoor/KEM work begins before such a coupled multicurve relation survives these attacks.
+No trapdoor/KEM work begins before such a coupled geometric multicurve relation survives these attacks.
 
 No security or post-quantum claim exists.
 

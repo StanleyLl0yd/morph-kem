@@ -602,3 +602,13 @@ A-047 still wins publicly: four-sheet parity-cover recovery finds an alpha-class
 No articulation or two-vertex separator appears in the measured sweep; separating triangles are variable and the primary attack does not depend on them. The independent canonical fundamental-cycle pair scan succeeds on only 5/24, so it is recorded as an incomplete cross-check rather than part of the rejection argument.
 
 **G20 rejected by A-047.** Genus and distinct public classes are not sufficient while the relation decomposes into finite-state class recovery plus deletion. G21 must couple several cycles simultaneously through a prescribed intersection/disjointness pattern. No security claim.
+
+## 2026-09-11 — G21 rejected by A-048
+
+G21 removed G20's sequential verifier structure and required eight global cycles simultaneously: four primal and four dual, with exact geometric crossing matrix `I4`.
+
+A-048 constructs the whole family publicly in one tree-cotree decomposition. Fixed `g21-6x9`: four leftovers, 25/63 primal/dual path scans, primal lengths `7/7/9/6`, dual lengths `6/31/10/20`, exact identity matrix, exact-verifier accepted. The independent `217x108` full crossing matrix has GF(2) rank four.
+
+Across three sizes x eight seeds, **24/24** instances expose exactly four leftovers, exact `I4`, zero off-diagonal crossings and accepted witnesses; full-basis rank is four throughout.
+
+**G21 rejected by A-048.** Simultaneous primal-dual coupling alone is not enough when public tree-cotree topology mechanically supplies the complete symplectic-style family. G22 must add same-side geometric coupling such as vertex-disjointness/intersection/avoidance or bounds that tree-cotree does not automatically satisfy. No security claim.

@@ -51,6 +51,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-045 | Public shortest odd-cocycle cycle + constrained exact-one-crossing connector | **Fatal to G18 generated distribution** | Implemented |
 | A-046 | Delete-one-cycle parity-cover recovery of bounded vertex-disjoint odd-cycle pair | **Fatal to G19 generated distribution** | Implemented |
 | A-047 | Four-sheet distinct-class delete-and-recover multicurve recovery | **Fatal to G20 generated distribution** | Implemented |
+| A-048 | Full genus-two tree-cotree exact crossing-matrix recovery | **Structural break of G21 generated relation** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -1059,3 +1060,23 @@ Across all three sizes x eight seeds, **24/24** primary attacks are accepted wit
 ### Result
 
 **G20 rejected by A-047.** Distinct cohomology classes on genus two still factor operationally into finite-state shortest-path recovery plus deletion on this generated distribution. No asymptotic claim about arbitrary multicurve problems is made.
+
+## A-048 — full genus-two tree-cotree exact crossing-matrix recovery
+
+### Target
+
+G21 simultaneously requires four simple primal and four simple dual cycles whose exact geometric crossing-count matrix is the 4x4 identity on a flip-mixed genus-two carrier.
+
+### Public attack
+
+A-048 builds a public primal spanning tree, a dual spanning tree using no dual edge crossing the primal tree, and obtains the four genus-two leftover edges. Each leftover defines one primal fundamental cycle and its paired dual fundamental cycle. Because the dual tree never crosses a primal-tree edge, the paired cycles cross exactly once on the diagonal and zero times off diagonal.
+
+### Evidence
+
+Fixed `g21-6x9` uses only 25 primal and 63 dual tree-path edge scans to build the full eight-cycle witness. The exact crossing matrix is `I4` and the verifier accepts. Independent full-basis crossing matrix dimensions are `217x108`, weight 632 and GF(2) rank 4.
+
+Across all three sizes x eight seeds, **24/24** tree-cotree constructions expose four leftovers, produce exact `I4`, have zero off-diagonal crossings and pass the exact verifier. Full-basis rank is four in all 24 cases.
+
+### Result
+
+**G21 rejected by A-048.** This is structural for the proposed cellular relation, not an asymptotic claim about arbitrary multicurve problems.
