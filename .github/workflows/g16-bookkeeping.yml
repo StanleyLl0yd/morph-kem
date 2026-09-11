@@ -33,7 +33,7 @@ jobs:
 
           ledger = Path('docs/05-cryptanalysis.md')
           text = ledger.read_text()
-          anchor = '| A-042 | Flip-mixed sphere simplification + P3 exact-cover / SAT recovery | **Fatal to G15 generated distribution** | Implemented |'
+          anchor = '| A-042 | Flip-mixed sphere normalization + P3 exact-cover / SAT recovery | **Fatal to G15 generated distribution** | Implemented |'
           row = '| A-043 | Public fundamental-cycle cohomology-pairing recovery | **Fatal to G16 generated distribution** | Implemented |'
           if row not in text:
               if anchor not in text:
