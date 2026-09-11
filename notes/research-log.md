@@ -500,3 +500,13 @@ A-037 nevertheless reduces the exact public witness relation to ordinary biparti
 Across `g10-4x4`, `g10-6x6`, `g10-8x8` × eight seeds, **24/24** base public matchings verify and every instance yields a non-reference witness. All eight `g10-8x8` runs hit the 64-solution cap.
 
 **G10 rejected by A-037.** Lesson: increasing geometric dimension/overlap width is irrelevant when the witness relation still collapses to a known polynomial graph problem. G11 must use pieces of size greater than two so candidate selection becomes genuinely hypergraphic, then attack exact cover/set packing, toroidal special structure, low-width methods and SAT/CP-SAT before any positive interpretation. No security claim.
+
+## 2026-09-10 — G11 rejected by A-038
+
+G11 replaced G10's adjacent-pair pieces by three-triangle `P3` disks on the periodic torus. This makes the public decomposition relation genuinely 3-uniform hypergraph exact cover: `g11-6x9` exposes 324 candidates over 108 triangles, each triangle belongs to 9 candidates, and every candidate overlaps 18 others.
+
+A-038 still breaks the generated family cheaply. Fixed Python 3.12 `g11-6x9` reaches 64/64 capped exact covers in 292 nodes / 71 decisions / 10 backtracks; all 64 returned witnesses are non-reference. Across all three sizes × eight seeds, **24/24** runs reach cap 32 and every returned witness is accepted and non-reference.
+
+Independent MiniSat cross-check on the same largest candidate hypergraph uses 324 variables / 3996 clauses and returns SAT with 2 conflicts, 137 decisions and 574 propagations. Its decoded 36-piece cover passes the exact verifier and differs from reference.
+
+**G11 rejected by A-038.** Lesson: leaving graph matching for generic hypergraph exact cover is not enough when the public generated carrier is highly regular and exposes a dense family of equivalent local covers. G12 must break the periodic/repeated-role carrier structure before any solver growth is interpreted. No security claim.

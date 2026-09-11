@@ -41,6 +41,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-035 | Public local-phase extraction and topology-to-CSP factorization | **Structural break of G4–G7 design line** | Implemented |
 | A-036 | Public overlapping-piece enumeration + exact cover / cycle DP | **Fatal to G9 generated distribution** | Implemented |
 | A-037 | Public toroidal bipartite perfect-matching recovery | **Fatal to G10 generated distribution** | Implemented |
+| A-038 | Public toroidal P3 hypergraph exact-cover + SAT recovery | **Fatal to G11 generated distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -666,3 +667,51 @@ Python 3.12 tested `g10-4x4`, `g10-6x6`, and `g10-8x8` over eight independently 
 **G10 is rejected by A-037.** The two-dimensional toroidal overlap is genuine, but the accepted relation itself is exactly bipartite perfect matching. Increasing torus width, treewidth, or vertex count cannot repair a polynomial matching reduction. Equivalent-witness multiplicity further helps the attacker.
 
 This is a generated-relation falsification, not a theorem that arbitrary HGES or hypergraph decomposition is easy. G11 must move beyond pairwise pieces to a genuinely hypergraphic candidate-selection relation and immediately attack its special toroidal structure. No security claim.
+
+## A-038 — public toroidal P3 hypergraph exact-cover + SAT recovery
+
+### Target
+
+G11 toroidal P3-triomino HGES negative control.
+
+G11 moves beyond G10's pairwise graph-matching relation. Each public candidate is a three-triangle disk whose induced triangle-dual graph is `P3`, so candidate selection is a genuine 3-uniform hypergraph exact-cover problem.
+
+### Public attack
+
+A-038 enumerates every induced public dual-`P3`, filters it with the exact simplicial disk predicate, builds candidate/triangle incidence, and runs deterministic MRV Algorithm-X-style exact cover. Independently, the same candidate hypergraph is encoded to DIMACS with exactly-one constraints per public triangle and solved by MiniSat. Neither path uses the generation reference before public success.
+
+### Exact Python 3.12 `g11-6x9` result
+
+~~~text
+public V/E/F:                         54/162/108
+Euler characteristic:                0
+edge triangle incidence min/max:     2/2
+dual vertices/edges:                 108/162
+dual degree histogram:               ((3,108),)
+bridges / articulation points:       0/0
+public bipartition sizes:             54/54
+P3 public candidates:                324
+candidate memberships per triangle: ((9,108),)
+candidate overlap degree histogram:  ((18,324),)
+candidate/triangle incidence size:   972
+exact-cover solutions / cap:         64/64
+exact-cover nodes/decisions/backtracks: 292/71/10
+accepted public solutions:           64
+accepted non-reference solutions:    64
+SAT variables / clauses:             324/3996
+MiniSat conflicts / decisions / propagations: 2/137/574
+MiniSat decoded witness accepted:    yes
+MiniSat witness matches reference:   no
+~~~
+
+### Deterministic sweep
+
+Python 3.12 tested `g11-3x6`, `g11-6x6`, and `g11-6x9` over eight deterministic public relabel seeds each with cap 32. All **24/24** attacks reach the cap; every returned witness is accepted and every returned witness is non-reference. Search remains small: at most 224 nodes on `g11-6x6` and 225 nodes on `g11-6x9` in the measured sweep.
+
+### Result
+
+**G11 is rejected by A-038.** The graph-matching shortcut is genuinely gone, but the highly regular toroidal 3-uniform candidate family remains easy for generic exact cover and SAT. Equivalent-witness multiplicity is severe and helps the attacker.
+
+Do not scale the periodic torus. G12 must test whether breaking translation symmetry/repeated local roles changes candidate-extraction or exact-cover behavior, while immediately facing automorphism/role leakage, separators/treewidth, exact cover/set packing, SAT/CP-SAT, simplification and equivalent-witness enumeration.
+
+This is a generated-distribution falsification, not a theorem that arbitrary hypergraph exact cover or HGES is easy. No security claim.
