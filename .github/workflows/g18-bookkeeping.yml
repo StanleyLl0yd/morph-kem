@@ -1,0 +1,81 @@
+name: G18 one-shot result bookkeeping
+
+on:
+  push:
+    branches: ['g18/length-bounded-one-crossing']
+    paths: ['.github/workflows/g18-bookkeeping.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  bookkeeping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: g18/length-bounded-one-crossing
+      - name: Record measured G18 rejection
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          ledger = Path('docs/05-cryptanalysis.md')
+          text = ledger.read_text()
+          anchor = '| A-044 | Public tree-cotree primal-dual one-crossing recovery | **Fatal to G17 generated distribution** | Implemented |'
+          row = '| A-045 | Public shortest odd-cocycle cycle + constrained exact-one-crossing connector | **Fatal to G18 generated distribution** | Implemented |'
+          if row not in text:
+              if anchor not in text:
+                  raise SystemExit('A-044 ledger anchor missing')
+              text = text.replace(anchor, anchor + '\n' + row, 1)
+          heading = '## A-045 — public shortest odd-cocycle cycle + constrained exact-one-crossing connector'
+          if heading not in text:
+              text = text.rstrip() + '''\n\n## A-045 — public shortest odd-cocycle cycle + constrained exact-one-crossing connector\n\n### Target\n\nG18 strengthens G17 by requiring an exact-one-crossing primal/dual simple-cycle pair to satisfy public generation-derived length bounds. On the fixed largest instance the old canonical tree-cotree witness no longer fits the bounds, so this gate genuinely adds geometric information beyond the G17 rejection.\n\n### Public attack\n\nA-045 computes a canonical public nontrivial GF(2) cocycle, builds the two-sheet parity cover of the primal graph, and runs BFS from `(r,0)` to `(r,1)` for every public root. XOR-cancelled supports are decomposed to simple odd-pairing cycles. For each bounded primal candidate and anchor edge, all dual edges crossing the primal cycle are forbidden; a dual BFS reconnects the anchor dual-edge endpoints, and the anchor is then restored to form a simple dual cycle with exactly one crossing. Reference generation data is not consulted.\n\n### Fixed Python 3.12 `g18-8x9` result\n\n~~~text\npublic V/E/F:                              72/216/144\nEuler characteristic / edge incidence:     0 / 2..2\npublic primal/dual bounds:                 11/20\nreference primal/dual lengths:             11/20\npublic alpha weight / H1 dimension:        38/2\nparity-cover vertices/directed arcs:        144/864\nroots attempted:                           72\nparity-cover queue pops / edge scans:       9913/59311\nminimum odd walk / support edges:           6/6\nsupport decomposition cycles/path scans:   72/476\ndistinct primal candidates / within bound: 53/53\ndual connector calls:                      6\ndual connector queue pops / edge scans:    824/2406\nselected primal/dual lengths:              6/15\nselected exact crossing count:             1\nselected accepted:                         yes\nselected matches reference:                no\ncanonical tree-cotree lengths:             9/21\ncanonical tree-cotree within bounds:       no\n~~~\n\nThe final comparison matters: G18's length gate blocks the old canonical G17 witness on this fixed instance, but the new public shortest-cycle/connector construction still recovers a substantially shorter accepted pair.\n\n### Deterministic sweep\n\nPython 3.12 tested `g18-6x6`, `g18-6x9`, `g18-8x9` over eight independently derived seeds each. All **24/24** A-045 attacks recover an accepted exact-one-crossing pair within the public generation-derived bounds, and all **24/24** selected pairs differ from the hidden reference after public success.\n\nMeasured primary work remains small. Maximum selected primal/dual lengths are `5/11`, `6/16`, and `7/16` by size. Maximum dual-connector calls are `5`, `6`, and `7`; maximum connector edge scans are `858`, `1698`, and `2759`. The older canonical tree-cotree witness satisfies the public bounds only 0/8, 2/8, and 2/8 times respectively, confirming that A-045 is not merely replaying A-044.\n\n### Result\n\n**G18 is rejected by A-045.** Adding public geometric length bounds and exact geometric crossing does not create an inversion barrier on this generated distribution. The public problem still reduces to shortest paths in a two-sheet parity cover plus a constrained dual connector.\n\nDo not repair by increasing torus dimensions while bounds continue to come from generated reference lengths and the same public shortest-path construction remains effective. G19 must add a coupling not reducible to one noncontractible cycle plus one connector and must immediately face disjoint-path/flow/matching, ILP/SAT/CP-SAT, separator/treewidth, shortest-cycle, normalization and equivalent-witness attacks. No security claim.\n'''
+          ledger.write_text(text)
+
+          log = Path('notes/research-log.md')
+          text = log.read_text()
+          log_heading = '## 2026-09-11 — G18 rejected by A-045'
+          if log_heading not in text:
+              text = text.rstrip() + '''\n\n## 2026-09-11 — G18 rejected by A-045\n\nG18 added genuine geometric constraints to the G17 global cycle-pair verifier: exact crossing count one plus public primal/dual length bounds derived from a separate hidden tree-cotree reference. Fixed `g18-8x9` bounds are 11/20. The old canonical G17 tree-cotree pair is 9/21 and therefore fails the new dual bound.\n\nA-045 nevertheless recovers a public 6/15 pair with exactly one crossing. It searches a two-sheet cocycle parity cover (72 roots, 9913 queue pops, 59311 edge scans), then needs only six constrained-dual connector attempts / 2406 dual edge scans. The recovered pair passes the exact verifier and differs from the reference.\n\nAcross `g18-6x6`, `g18-6x9`, `g18-8x9` × eight seeds, **24/24** public attacks succeed within the generation-derived bounds and **24/24** selected pairs are non-reference. The older canonical tree-cotree pair fits the bounds only 0/8, 2/8 and 2/8 times, so A-045 is a distinct stronger break rather than a restatement of A-044.\n\n**G18 rejected by A-045.** Length-bounded geometric topology still reduces to cheap public shortest-path constructions on this distribution. G19 must couple multiple representatives so one shortest noncontractible cycle plus one connector is insufficient. No security claim.\n'''
+              log.write_text(text)
+
+          doc = Path('docs/53-g18-length-bounded-cycle-pair.md')
+          text = doc.read_text()
+          text = text.replace(
+              '**G18 is an attack calibration in progress. No hardness or security conclusion is permitted until exact-head CI records A-045.**',
+              '**G18 is rejected by A-045. Public parity-cover shortest-cycle recovery plus constrained dual BFS succeeds within the generation-derived length bounds across the measured distribution.**'
+          )
+          measured = '''\n## Measured A-045 result\n\nFixed Python 3.12 `g18-8x9` has public bounds `11/20`. The hidden reference has those same lengths. The old canonical tree-cotree pair is `9/21`, so it fails the new dual bound; the new A-045 public attack instead recovers a `6/15` exact-one-crossing pair.\n\nThe parity-cover phase uses 72 roots, 9913 queue pops and 59311 edge scans, producing 53 distinct primal candidates, all within the primal bound. The selected witness needs six constrained dual connector calls and 2406 dual edge scans. It passes the exact verifier and is non-reference.\n\nAcross all three sizes and eight deterministic seeds each, A-045 succeeds **24/24** within the public bounds and every selected witness is non-reference. The canonical G17 tree-cotree witness fits the G18 bounds only 4/24 times total.\n\n**Conclusion: G18 rejected.** The geometric length gate is real but still collapses to public shortest paths in a parity cover plus a constrained connector.\n'''
+          if '## Measured A-045 result' not in text:
+              text = text.rstrip() + measured
+          doc.write_text(text)
+
+          readme = Path('README.md')
+          text = readme.read_text()
+          text = text.replace('HGES controls G0–G17 are implemented and rejected.', 'HGES controls G0–G18 are implemented and rejected.')
+          if '## G18 — length-bounded exact-one-crossing cycle-pair control' not in text:
+              marker = '\n## Research discipline\n'
+              if marker not in text:
+                  raise SystemExit('README research-discipline anchor missing')
+              section = '''\n## G18 — length-bounded exact-one-crossing cycle-pair control\n\nG18 strengthens G17 with public geometric length bounds in addition to an exact-one-crossing primal/dual simple-cycle verifier. On fixed `g18-8x9`, the old canonical tree-cotree pair is `9/21` and fails the public `11/20` bound.\n\n**G18 is rejected by A-045.** A public two-sheet cocycle parity-cover search plus constrained dual BFS finds a shorter `6/15` exact-one-crossing pair. Across all three sizes × eight seeds, **24/24** attacks succeed inside the generated bounds and every selected pair is non-reference. The old canonical tree-cotree construction fits the same bounds only 4/24 times, so the new break genuinely handles the geometric gate rather than bypassing it.\n\nSee `docs/53-g18-length-bounded-cycle-pair.md`.\n'''
+              text = text.replace(marker, section + marker, 1)
+          key_anchor = '- `docs/52-g17-symplectic-cycle-pair.md` — measured G17/A-044 tree-cotree intersection rejection'
+          key_row = '- `docs/53-g18-length-bounded-cycle-pair.md` — measured G18/A-045 length-bounded geometric rejection'
+          if key_row not in text:
+              if key_anchor not in text:
+                  raise SystemExit('README key-file anchor missing')
+              text = text.replace(key_anchor, key_anchor + '\n' + key_row, 1)
+          old = '''The next controlled HGES experiment is **G18**, not a trapdoor construction. G17 shows that moving from affine cohomology to a bilinear homology-intersection predicate is still insufficient: public tree-cotree decomposition constructs an accepted exact-one-crossing pair directly.\n\nG18 must therefore require geometric information not determined only by homology classes or their mod-2 intersection form—for example internally vertex-disjoint representatives, constrained-length representatives, or a prescribed geometric-intersection pattern not automatically supplied by tree-cotree. It must immediately face disjoint-path/flow/matching reductions, surface shortest-cycle algorithms, ILP/SAT/CP-SAT, separator/treewidth methods, normalization and equivalent-witness enumeration.\n\nNo trapdoor/KEM work begins before such a geometric global relation survives these attacks.\n'''
+          new = '''The next controlled HGES experiment is **G19**, not a trapdoor construction. G18 shows that adding exact geometric crossing and generation-derived length bounds is still insufficient: public parity-cover shortest paths plus a constrained dual connector recover accepted non-reference witnesses on every measured instance.\n\nG19 must couple multiple global representatives so that one shortest noncontractible cycle plus one connector is not enough—for example two internally vertex-disjoint representatives in a prescribed nontrivial class, or several cycles with pairwise geometric constraints. It must immediately face vertex-splitting max-flow, disjoint-path algorithms, matching, ILP/SAT/CP-SAT, separator/treewidth methods, shortest-cycle algorithms, normalization and equivalent-witness enumeration.\n\nNo trapdoor/KEM work begins before such a coupled geometric relation survives these attacks.\n'''
+          if old not in text:
+              raise SystemExit('README G18 next-gate block missing')
+          text = text.replace(old, new, 1)
+          readme.write_text(text)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/05-cryptanalysis.md notes/research-log.md docs/53-g18-length-bounded-cycle-pair.md README.md
+          git diff --cached --quiet && exit 0
+          git commit -m 'G18: record A-045 length-bounded rejection'
+          git push origin HEAD:g18/length-bounded-one-crossing
