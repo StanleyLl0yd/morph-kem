@@ -2,7 +2,7 @@
 
 ## Status
 
-**G16 is an attack calibration in progress.** It is the first post-G15 control that changes the witness predicate itself from bounded-radius local pieces to a globally defined simple cycle with nontrivial cohomological pairing.
+**G16 is rejected by A-043.** It is the first post-G15 control that changes the witness predicate itself from bounded-radius local pieces to a globally defined simple cycle with nontrivial cohomological pairing, and the measured relation collapses to a public fundamental-cycle basis scan.
 
 G16 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -108,3 +108,49 @@ If G16 fails, G17 must require more than affine membership in homology/cohomolog
 No trapdoor/KEM work begins before those gates survive.
 
 No security claim.
+
+## Measured A-043 result
+
+Fixed Python 3.12 `g16-8x9`:
+
+```text
+successful carrier flips:                72
+public V/E/F:                             72/216/144
+Euler characteristic / edge incidence:   0 / 2..2
+primal degree histogram:                 ((3,6),(4,12),(5,14),(6,13),(7,12),(8,5),(9,6),(10,4))
+normalization-improving legal flips:      57
+cycle equations / variables:             72/216
+cycle rank / nullity:                    71/145
+cycle-space row XORs:                    394
+cocycle equations / rank:                144/143
+cocycle dimension:                       73
+coboundary rank / H1 dimension:          71/2
+cocycle row XORs:                        649
+public alpha weight:                     24
+tree / non-tree edges:                   71/145
+fundamental cycles tested:               4
+fundamental path-edge scans:             24
+selected odd cycle length:               9
+selected cycle accepted:                 yes
+selected cycle = reference:              no
+affine rank / nullity:                   72/144
+affine row XORs:                         406
+affine support edges:                    11
+affine support cycles tested:            1
+affine selected cycle length:            11
+affine selected cycle accepted:          yes
+```
+
+Python 3.12 sweep over `g16-6x6`, `g16-6x9`, `g16-8x9` × eight deterministic seeds gives **24/24** accepted public fundamental-cycle witnesses and **24/24** accepted independent affine-cross-check witnesses. All 24 primary public cycles differ from the hidden reference after public success.
+
+Maximum primary public work by size is tiny:
+
+```text
+g16-6x6: cycles tested <= 8,  path-edge scans <= 26
+g16-6x9: cycles tested <= 15, path-edge scans <= 53
+g16-8x9: cycles tested <= 22, path-edge scans <= 85
+```
+
+Chain/cochain dimensions are seed-invariant in the measured sweep: cycle rank/nullity `35/73`, `53/109`, `71/145`; cocycle rank/dimension `71/37`, `107/55`, `143/73`; coboundary rank `35`, `53`, `71`; `dim H^1 = 2` throughout; affine rank/nullity `36/72`, `54/108`, `72/144`.
+
+**G16 is rejected by A-043.** The verifier is genuinely global and cohomological, but nontriviality of the public cocycle guarantees an odd member of every public cycle basis. A standard spanning tree therefore exposes a verifier-valid simple cycle before generic SAT or heavy topology is relevant. The independent affine path confirms the same relation. No security claim.

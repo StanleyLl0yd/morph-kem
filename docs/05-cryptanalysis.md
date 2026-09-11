@@ -46,6 +46,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-040 | Configuration-pairing generator-conditioning audit | **Fatal to G13 carrier distribution** | Implemented |
 | A-041 | Public reverse-stacking / stellar-center normalization | **Fatal to G14 carrier distribution** | Implemented |
 | A-042 | Flip-mixed sphere normalization + P3 exact-cover / SAT recovery | **Fatal to G15 generated distribution** | Implemented |
+| A-043 | Public fundamental-cycle cohomology-pairing recovery | **Fatal to G16 generated distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -879,3 +880,25 @@ An auxiliary direct-byte regression seed outside the official sweep still fully 
 ### Result
 
 **G15 is rejected by A-042.** Long flip mixing can substantially remove the obvious carrier inverse on the measured main distribution, but the unchanged bounded-radius P3 witness predicate remains a tiny, highly multiply-solvable public hypergraph relation. Further carrier-only redesign is not justified. G16 must change the witness predicate itself and immediately face topology-to-CSP compilation, generic SAT/CP-SAT, low-width methods, normalization and equivalent-witness attacks. No security claim.
+
+## A-043 — public fundamental-cycle cohomology-pairing recovery
+
+### Target
+
+G16 replaces bounded-radius P3 witnesses by a genuinely nonlocal simple primal cycle whose pairing with a public nontrivial GF(2) 1-cocycle is odd.
+
+### Cheapest public attack
+
+Build any deterministic public spanning tree. Its non-tree edges define a basis of simple fundamental cycles. If the public cocycle paired evenly with every basis cycle, it would vanish on the whole cycle space and therefore be a coboundary, contradicting its measured nontrivial `H^1` class. Scan the basis and submit the first odd cycle to the exact verifier.
+
+### Exact Python 3.12 `g16-8x9` result
+
+The 72/216/144 closed torus has cycle rank/nullity 71/145, cocycle rank/dimension 143/73, coboundary rank 71 and measured `H^1` dimension two. Public `alpha` has weight 24. A-043 tests only four fundamental cycles / 24 tree-path edges before finding an accepted 9-edge cycle; it differs from the hidden reference.
+
+An independent affine solve has rank/nullity 72/144, uses 406 row XORs, returns an 11-edge Eulerian support, and one support fundamental cycle is an accepted 11-edge odd cycle.
+
+Across all three sizes × eight seeds, **24/24** primary basis attacks and **24/24** affine cross-checks succeed; all 24 primary witnesses are non-reference. Maximum basis cycles tested are 8, 15 and 22 for the three sizes.
+
+### Result
+
+**G16 is rejected by A-043.** Nonlocal cohomological syntax is not enough when verifier acceptance is affine on the public cycle space. Do not repair by increasing torus dimensions or flip counts. G17 must leave affine homology/cohomology membership and immediately face symplectic-basis, flow/matching, ILP/SAT/CP-SAT, low-width, normalization and equivalent-witness attacks. No security claim.
