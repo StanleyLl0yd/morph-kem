@@ -530,3 +530,13 @@ Fixed Python 3.12 audit: 4096 attempts at each of 36/54/72 triangles give zero s
 All samples that survive dual loops/parallel edges already fail by collapsing at least one quotient triangle to fewer than three distinct vertices. No sample reaches the later simplicial edge/link/genus gates.
 
 **G13 rejected by A-040 before P3 cryptanalysis.** An unbounded rejection sampler would hide a severe generated-distribution conditioning problem. G14 must use a constructive non-toroidal simplicial family, beginning with a random stacked/Apollonian sphere and immediate public reverse-subdivision plus exact-cover/SAT attacks. No security claim.
+
+## 2026-09-11 — G14 rejected by A-041
+
+G14 replaced G13's unhealthy random-map sampler with guaranteed-valid random stacked/Apollonian 2-spheres. The carrier is globally relabelled, but public degree-three stellar centers remain a complete inverse.
+
+Fixed Python 3.12 `g14-72`: 38/108/72 public V/E/F, chi 2, degree histogram `((3,15),(4,8),(5,2),(6,4),(7,2),(8,1),(10,2),(12,2),(15,1),(24,1))`. A-041 performs exactly 34 reverse-stacking moves and reaches 4/6/4, chi 2. Up to 15 reverse candidates coexist on the baseline.
+
+Across `g14-36`, `g14-54`, `g14-72` x eight seeds, **24/24** instances normalize completely in exactly 16/25/34 moves. Maximum simultaneous candidates are 8/12/17.
+
+**G14 rejected by A-041.** Generator validity by construction is not useful when the construction has a public bounded-local inverse. P3/SAT is not run after the cheaper structural break. No security claim.
