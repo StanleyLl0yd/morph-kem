@@ -2,7 +2,7 @@
 
 ## Status
 
-**NAT0 is an attack-harness calibration in progress.** Both controls deliberately add noise but are designed to remain publicly recoverable. They must fail before any stronger noisy-topology candidate is interpreted.
+**NAT0 calibration succeeds by rejecting both deliberately weak noisy constructions.** A single noisy edge is removed by public triangle syndrome localization, while repeated sparse noise is removed exactly by public majority. This validates the first NAT denoising gates; it is not evidence that a stronger noisy relation is hard.
 
 NAT0 is not a KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -42,21 +42,45 @@ Toy sets:
 
 This control validates the multi-sample correlation attack before any stronger noise model is considered.
 
-## NAT-A001 calibration gate
+## Measured NAT-A001 calibration
 
-Across deterministic public relabeling seeds require:
+Exact Python 3.12 fixed `nat0-8x8`:
 
-- the one-edge control always exposes exactly two violated public triangles;
-- their pair always identifies one public edge;
-- clean coboundary recovery always verifies;
-- repeated-sample majority always returns a valid public coboundary;
-- recovered clean data differs from every repeated sample by exactly the public noise weight;
-- normalized hidden vertex data matches reference only after public success.
+```text
+public V/E/F:                              64/192/128
+single violated triangles:                (17,113)
+single recovered noise edge:              182
+single accepted:                          yes
+single matches reference after success:   yes
+repeated samples:                         7
+public repeated noise weight:             4
+repeated sample distances:                (4,4,4,4,4,4,4)
+majority edge votes:                      1344
+repeated accepted:                        yes
+repeated matches reference after success: yes
+```
 
-If either weak noisy construction survives this harness, NAT0 is not ready for stronger candidates.
+Python 3.12 sweep over all three sets × eight deterministic seeds gives:
+
+- single-noise control: **24/24** runs expose exactly two violated triangles, recover the unique noisy edge, reconstruct a valid clean coboundary and match normalized reference only after public success;
+- repeated-noise control: **24/24** runs recover the clean coboundary exactly by majority;
+- `nat0-4x4`: 7 samples, noise weight 2, `336` majority edge votes;
+- `nat0-6x6`: 7 samples, noise weight 3, `756` votes;
+- `nat0-8x8`: 7 samples, noise weight 4, `1344` votes;
+- every recovered clean vector lies at exactly the configured public noise weight from each corresponding noisy sample.
+
+The dedicated NAT0 workflow passes on Python 3.11, 3.12 and 3.13.
+
+## Result
+
+**Both NAT0 controls are rejected as intended.** Adding noise alone does not repair the exact-witness failure modes. Noise that produces a local public syndrome locator is removable, and repeated samples sharing one clean object can make denoising easier through correlation.
+
+Future NAT candidates must therefore make two properties explicit: a non-local noise distribution with meaningful entropy, and a publication model that does not hand the attacker many correlated samples unless that exposure is part of the intended assumption.
 
 ## Next NAT gate
 
 NAT1 must use a noise distribution that is not removable by a local syndrome locator or repeated-sample majority. It must immediately face quotient leakage, sparse recovery, syndrome decoding, belief propagation, spectral diagnostics, multi-sample correlation and matched-random controls.
+
+A suitable next control should publish one sample per hidden object, use multiple nonadjacent errors drawn without an exposed local locator, and measure recovery curves as noise weight increases rather than selecting one favorable point.
 
 No security claim.
