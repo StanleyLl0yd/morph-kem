@@ -218,7 +218,8 @@ def _connected_sum_tori(
         raise GluingExperimentError("G20 connected sum does not have Euler characteristic -2")
     if incidence.min_triangles_per_edge != 2 or incidence.max_triangles_per_edge != 2:
         raise GluingExperimentError("G20 connected sum is not closed")
-    return target
+    dense_labels = {vertex: index for index, vertex in enumerate(target.vertices)}
+    return target.relabel(dense_labels)
 
 
 def _cohomology_basis(
