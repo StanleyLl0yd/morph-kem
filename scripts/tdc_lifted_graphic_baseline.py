@@ -21,7 +21,6 @@ def main() -> None:
     instance = generate_tdc1_instance(params, seed)
     lifted = graphic_code_metrics(instance.lifted)
     random_control = graphic_code_metrics(instance.matched_random)
-    quotient = recover_k4_quotient(instance.lifted, params.lift_factor)
 
     print(f"parameters: {params.name}")
     print(f"lift factor: {params.lift_factor}")
@@ -31,9 +30,22 @@ def main() -> None:
     print(f"random V/E/rank/dimension/rate: {random_control.vertices}/{random_control.edges}/{random_control.parity_rank}/{random_control.code_dimension}/{random_control.rate:.9f}")
     print(f"lift girth / triangles / four-cycles: {lifted.girth}/{lifted.triangle_count}/{lifted.four_cycle_count}")
     print(f"random girth / triangles / four-cycles: {random_control.girth}/{random_control.triangle_count}/{random_control.four_cycle_count}")
-    print(f"public K4 quotient recovered: {quotient.found}")
-    print(f"quotient search nodes / backtracks: {quotient.search_nodes}/{quotient.backtracks}")
-    print(f"quotient color-class sizes: {quotient.color_class_sizes}")
+
+    # Quotient recovery is a secondary structural diagnostic, not the decoding gate.
+    # The naive exact coloring probe grows rapidly by L, so run it only on the
+    # calibration sizes where it is an intentionally cheap attack.  L18 remains
+    # covered by the independent graphic-code decoder below.
+    if params.lift_factor <= 12:
+        quotient = recover_k4_quotient(instance.lifted, params.lift_factor)
+        print(f"public K4 quotient probe attempted: True")
+        print(f"public K4 quotient recovered: {quotient.found}")
+        print(f"quotient search nodes / backtracks: {quotient.search_nodes}/{quotient.backtracks}")
+        print(f"quotient color-class sizes: {quotient.color_class_sizes}")
+    else:
+        print("public K4 quotient probe attempted: False")
+        print("public K4 quotient recovered: n/a")
+        print("quotient search nodes / backtracks: 0/0")
+        print("quotient color-class sizes: ()")
 
     for weight in params.error_weights:
         error = planted_error_mask(instance.lifted, weight, seed + weight.to_bytes(2, "big"))
