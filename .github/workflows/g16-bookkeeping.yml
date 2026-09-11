@@ -1,0 +1,81 @@
+name: G16 one-shot measured-result bookkeeping
+
+on:
+  push:
+    branches: ['g16/cohomology-paired-cycle']
+    paths: ['.github/workflows/g16-bookkeeping.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  bookkeeping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: g16/cohomology-paired-cycle
+      - name: Record measured G16 rejection
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          doc = Path('docs/51-g16-cohomology-cycle.md')
+          text = doc.read_text()
+          text = text.replace(
+              '**G16 is an attack calibration in progress.** It is the first post-G15 control that changes the witness predicate itself from bounded-radius local pieces to a globally defined simple cycle with nontrivial cohomological pairing.',
+              '**G16 is rejected by A-043.** It is the first post-G15 control that changes the witness predicate itself from bounded-radius local pieces to a globally defined simple cycle with nontrivial cohomological pairing, and the measured relation collapses to a public fundamental-cycle basis scan.'
+          )
+          heading = '## Measured A-043 result'
+          if heading not in text:
+              text = text.rstrip() + '''\n\n## Measured A-043 result\n\nFixed Python 3.12 `g16-8x9`:\n\n```text\nsuccessful carrier flips:                72\npublic V/E/F:                             72/216/144\nEuler characteristic / edge incidence:   0 / 2..2\nprimal degree histogram:                 ((3,6),(4,12),(5,14),(6,13),(7,12),(8,5),(9,6),(10,4))\nnormalization-improving legal flips:      57\ncycle equations / variables:             72/216\ncycle rank / nullity:                    71/145\ncycle-space row XORs:                    394\ncocycle equations / rank:                144/143\ncocycle dimension:                       73\ncoboundary rank / H1 dimension:          71/2\ncocycle row XORs:                        649\npublic alpha weight:                     24\ntree / non-tree edges:                   71/145\nfundamental cycles tested:               4\nfundamental path-edge scans:             24\nselected odd cycle length:               9\nselected cycle accepted:                 yes\nselected cycle = reference:              no\naffine rank / nullity:                   72/144\naffine row XORs:                         406\naffine support edges:                    11\naffine support cycles tested:            1\naffine selected cycle length:            11\naffine selected cycle accepted:          yes\n```\n\nPython 3.12 sweep over `g16-6x6`, `g16-6x9`, `g16-8x9` × eight deterministic seeds gives **24/24** accepted public fundamental-cycle witnesses and **24/24** accepted independent affine-cross-check witnesses. All 24 primary public cycles differ from the hidden reference after public success.\n\nMaximum primary public work by size is tiny:\n\n```text\ng16-6x6: cycles tested <= 8,  path-edge scans <= 26\ng16-6x9: cycles tested <= 15, path-edge scans <= 53\ng16-8x9: cycles tested <= 22, path-edge scans <= 85\n```\n\nChain/cochain dimensions are seed-invariant in the measured sweep: cycle rank/nullity `35/73`, `53/109`, `71/145`; cocycle rank/dimension `71/37`, `107/55`, `143/73`; coboundary rank `35`, `53`, `71`; `dim H^1 = 2` throughout; affine rank/nullity `36/72`, `54/108`, `72/144`.\n\n**G16 is rejected by A-043.** The verifier is genuinely global and cohomological, but nontriviality of the public cocycle guarantees an odd member of every public cycle basis. A standard spanning tree therefore exposes a verifier-valid simple cycle before generic SAT or heavy topology is relevant. The independent affine path confirms the same relation. No security claim.\n'''
+          doc.write_text(text)
+
+          ledger = Path('docs/05-cryptanalysis.md')
+          text = ledger.read_text()
+          anchor = '| A-042 | Flip-mixed sphere simplification + P3 exact-cover / SAT recovery | **Fatal to G15 generated distribution** | Implemented |'
+          row = '| A-043 | Public fundamental-cycle cohomology-pairing recovery | **Fatal to G16 generated distribution** | Implemented |'
+          if row not in text:
+              if anchor not in text:
+                  raise SystemExit('A-042 ledger anchor missing')
+              text = text.replace(anchor, anchor + '\n' + row, 1)
+          ledger_heading = '## A-043 — public fundamental-cycle cohomology-pairing recovery'
+          if ledger_heading not in text:
+              text = text.rstrip() + '''\n\n## A-043 — public fundamental-cycle cohomology-pairing recovery\n\n### Target\n\nG16 replaces bounded-radius P3 witnesses by a genuinely nonlocal simple primal cycle whose pairing with a public nontrivial GF(2) 1-cocycle is odd.\n\n### Cheapest public attack\n\nBuild any deterministic public spanning tree. Its non-tree edges define a basis of simple fundamental cycles. If the public cocycle paired evenly with every basis cycle, it would vanish on the whole cycle space and therefore be a coboundary, contradicting its measured nontrivial `H^1` class. Scan the basis and submit the first odd cycle to the exact verifier.\n\n### Exact Python 3.12 `g16-8x9` result\n\nThe 72/216/144 closed torus has cycle rank/nullity 71/145, cocycle rank/dimension 143/73, coboundary rank 71 and measured `H^1` dimension two. Public `alpha` has weight 24. A-043 tests only four fundamental cycles / 24 tree-path edges before finding an accepted 9-edge cycle; it differs from the hidden reference.\n\nAn independent affine solve has rank/nullity 72/144, uses 406 row XORs, returns an 11-edge Eulerian support, and one support fundamental cycle is an accepted 11-edge odd cycle.\n\nAcross all three sizes × eight seeds, **24/24** primary basis attacks and **24/24** affine cross-checks succeed; all 24 primary witnesses are non-reference. Maximum basis cycles tested are 8, 15 and 22 for the three sizes.\n\n### Result\n\n**G16 is rejected by A-043.** Nonlocal cohomological syntax is not enough when verifier acceptance is affine on the public cycle space. Do not repair by increasing torus dimensions or flip counts. G17 must leave affine homology/cohomology membership and immediately face symplectic-basis, flow/matching, ILP/SAT/CP-SAT, low-width, normalization and equivalent-witness attacks. No security claim.\n'''
+          ledger.write_text(text)
+
+          log = Path('notes/research-log.md')
+          text = log.read_text()
+          log_heading = '## 2026-09-11 — G16 rejected by A-043'
+          if log_heading not in text:
+              text = text.rstrip() + '''\n\n## 2026-09-11 — G16 rejected by A-043\n\nG16 changed the witness predicate itself: the verifier accepts a simple primal cycle with odd pairing against a public nontrivial GF(2) cocycle on an irregular torus. This is genuinely global and no local P3 dictionary is involved.\n\nAttack-first analysis improved the planned affine solve to a cheaper theorem-driven attack: fundamental cycles of any public spanning tree form the cycle-space basis, so a non-coboundary cocycle must pair oddly with at least one of them. Fixed `g16-8x9` needs only 4 cycle tests / 24 tree-path edge scans to find an accepted 9-edge non-reference cycle. The independent affine cross-check also produces an accepted simple odd cycle.\n\nAcross `g16-6x6`, `g16-6x9`, `g16-8x9` × eight seeds, both paths succeed **24/24**, and all primary recovered witnesses differ from the hidden reference. Measured `H^1` dimension is exactly two throughout.\n\n**G16 rejected by A-043.** Lesson: nonlocal topology does not create hardness when the accepted relation remains affine on a public chain/cycle space. G17 must introduce a genuinely nonlinear relation among multiple global cycles and attack it immediately with symplectic bases, flow/matching, ILP/SAT/CP-SAT and equivalent-witness search. No security claim.\n'''
+              log.write_text(text)
+
+          readme = Path('README.md')
+          text = readme.read_text()
+          text = text.replace('HGES controls G0–G15 are implemented and rejected.', 'HGES controls G0–G16 are implemented and rejected.')
+          if '## G16 — nonlocal cohomology-paired cycle control' not in text:
+              marker = '\n## Research discipline\n'
+              if marker not in text:
+                  raise SystemExit('README research-discipline anchor missing')
+              section = '''\n## G16 — nonlocal cohomology-paired cycle control\n\nG16 changes the witness predicate itself: a witness is a simple public primal cycle with odd pairing against a public nontrivial GF(2) 1-cocycle on an irregular torus.\n\n**G16 is rejected by A-043.** A public spanning tree exposes a fundamental-cycle basis; nontriviality of the cocycle guarantees at least one basis cycle has odd pairing. Fixed `g16-8x9` tests only 4 of 145 basis cycles and 24 tree-path edges before finding an accepted 9-edge non-reference witness. An independent affine GF(2) solve also produces an accepted simple cycle. Across all three sizes × eight seeds, **24/24** attacks succeed by both paths and every primary public witness is non-reference.\n\nSee `docs/51-g16-cohomology-cycle.md`.\n'''
+              text = text.replace(marker, section + marker, 1)
+          key_anchor = '- `docs/50-g15-flip-mixed-sphere-hypercover.md` — measured G15/A-042 carrier/witness separation rejection'
+          key_row = '- `docs/51-g16-cohomology-cycle.md` — measured G16/A-043 nonlocal cohomology-cycle rejection'
+          if key_row not in text:
+              if key_anchor not in text:
+                  raise SystemExit('README key-file anchor missing')
+              text = text.replace(key_anchor, key_anchor + '\n' + key_row, 1)
+          old = '''The next controlled HGES experiment is **G16**, not a trapdoor construction. G15 shows that even when carrier mixing substantially defeats the previous local inverse, the bounded-radius P3 witness relation still collapses to a tiny public exact-cover/SAT problem with many equivalent witnesses.\n\nG16 must therefore change the witness predicate rather than keep redesigning only the carrier. Candidate validity must depend on genuinely nonlocal topological information and immediately face public quotient/canonicalization, topology-to-CSP compilation, generic SAT/CP-SAT, separator/treewidth and low-width algorithms, normalization, equivalent-witness enumeration and generated-role leakage.\n\nNo trapdoor/KEM work begins before such a nonlocal relation survives these attacks.\n'''
+          new = '''The next controlled HGES experiment is **G17**, not a trapdoor construction. G16 shows that even a genuinely nonlocal cohomological verifier is trivial when acceptance is affine on a public cycle space.\n\nG17 must therefore leave affine homology/cohomology membership and couple multiple global cycles through a nonlinear geometric condition such as disjointness or intersection. It must immediately face public symplectic homology bases, flow/matching reductions, ILP/SAT/CP-SAT, separator/treewidth and low-width methods, normalization, equivalent-witness enumeration and generated-role leakage.\n\nNo trapdoor/KEM work begins before such a nonlinear global relation survives these attacks.\n'''
+          if old not in text:
+              raise SystemExit('README G16 next-gate block missing')
+          text = text.replace(old, new, 1)
+          readme.write_text(text)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/51-g16-cohomology-cycle.md docs/05-cryptanalysis.md notes/research-log.md README.md
+          git diff --cached --quiet && exit 0
+          git commit -m 'G16: record cohomology-cycle rejection'
+          git push origin HEAD:g16/cohomology-paired-cycle
