@@ -48,6 +48,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-042 | Flip-mixed sphere normalization + P3 exact-cover / SAT recovery | **Fatal to G15 generated distribution** | Implemented |
 | A-043 | Public fundamental-cycle cohomology-pairing recovery | **Fatal to G16 generated distribution** | Implemented |
 | A-044 | Public tree-cotree primal-dual one-crossing recovery | **Fatal to G17 generated distribution** | Implemented |
+| A-045 | Public shortest odd-cocycle cycle + constrained exact-one-crossing connector | **Fatal to G18 generated distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -925,3 +926,51 @@ Across `g17-6x6`, `g17-6x9`, `g17-8x9` × eight seeds, **24/24** tree-cotree dec
 ### Result
 
 **G17 is rejected by A-044.** The bilinear topological predicate still has a direct public construction supplied by standard tree-cotree decomposition. Increasing dimensions or carrier mixing cannot repair the public intersection-form exposure. G18 must require geometric information not determined by homology intersection and must immediately face disjoint-path/flow/matching, shortest-cycle, ILP/SAT/CP-SAT, separator/treewidth, normalization and equivalent-witness attacks. No security claim.
+
+## A-045 — public shortest odd-cocycle cycle + constrained exact-one-crossing connector
+
+### Target
+
+G18 strengthens G17 by requiring an exact-one-crossing primal/dual simple-cycle pair to satisfy public generation-derived length bounds. On the fixed largest instance the old canonical tree-cotree witness no longer fits the bounds, so this gate genuinely adds geometric information beyond the G17 rejection.
+
+### Public attack
+
+A-045 computes a canonical public nontrivial GF(2) cocycle, builds the two-sheet parity cover of the primal graph, and runs BFS from `(r,0)` to `(r,1)` for every public root. XOR-cancelled supports are decomposed to simple odd-pairing cycles. For each bounded primal candidate and anchor edge, all dual edges crossing the primal cycle are forbidden; a dual BFS reconnects the anchor dual-edge endpoints, and the anchor is then restored to form a simple dual cycle with exactly one crossing. Reference generation data is not consulted.
+
+### Fixed Python 3.12 `g18-8x9` result
+
+~~~text
+public V/E/F:                              72/216/144
+Euler characteristic / edge incidence:     0 / 2..2
+public primal/dual bounds:                 11/20
+reference primal/dual lengths:             11/20
+public alpha weight / H1 dimension:        38/2
+parity-cover vertices/directed arcs:        144/864
+roots attempted:                           72
+parity-cover queue pops / edge scans:       9913/59311
+minimum odd walk / support edges:           6/6
+support decomposition cycles/path scans:   72/476
+distinct primal candidates / within bound: 53/53
+dual connector calls:                      6
+dual connector queue pops / edge scans:    824/2406
+selected primal/dual lengths:              6/15
+selected exact crossing count:             1
+selected accepted:                         yes
+selected matches reference:                no
+canonical tree-cotree lengths:             9/21
+canonical tree-cotree within bounds:       no
+~~~
+
+The final comparison matters: G18's length gate blocks the old canonical G17 witness on this fixed instance, but the new public shortest-cycle/connector construction still recovers a substantially shorter accepted pair.
+
+### Deterministic sweep
+
+Python 3.12 tested `g18-6x6`, `g18-6x9`, `g18-8x9` over eight independently derived seeds each. All **24/24** A-045 attacks recover an accepted exact-one-crossing pair within the public generation-derived bounds, and all **24/24** selected pairs differ from the hidden reference after public success.
+
+Measured primary work remains small. Maximum selected primal/dual lengths are `5/11`, `6/16`, and `7/16` by size. Maximum dual-connector calls are `5`, `6`, and `7`; maximum connector edge scans are `858`, `1698`, and `2759`. The older canonical tree-cotree witness satisfies the public bounds only 0/8, 2/8, and 2/8 times respectively, confirming that A-045 is not merely replaying A-044.
+
+### Result
+
+**G18 is rejected by A-045.** Adding public geometric length bounds and exact geometric crossing does not create an inversion barrier on this generated distribution. The public problem still reduces to shortest paths in a two-sheet parity cover plus a constrained dual connector.
+
+Do not repair by increasing torus dimensions while bounds continue to come from generated reference lengths and the same public shortest-path construction remains effective. G19 must add a coupling not reducible to one noncontractible cycle plus one connector and must immediately face disjoint-path/flow/matching, ILP/SAT/CP-SAT, separator/treewidth, shortest-cycle, normalization and equivalent-witness attacks. No security claim.

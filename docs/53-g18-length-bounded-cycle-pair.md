@@ -2,7 +2,7 @@
 
 ## Status
 
-**G18 is an attack calibration in progress. No hardness or security conclusion is permitted until exact-head CI records A-045.**
+**G18 is rejected by A-045. Public parity-cover shortest-cycle recovery plus constrained dual BFS succeeds within the generation-derived length bounds across the measured distribution.**
 
 G18 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -103,3 +103,12 @@ Do not repair by merely increasing torus dimensions while the same generated-bou
 If G18 fails, G19 must add a coupling that is not reducible to one noncontractible shortest cycle plus one connector. The next controlled direction is multiple internally vertex-disjoint representatives with prescribed homology/geometric constraints, immediately attacked by vertex-splitting max-flow, disjoint-path algorithms, matching, ILP/SAT/CP-SAT, separator/treewidth methods, shortest-cycle algorithms, normalization and equivalent-witness enumeration.
 
 No security claim.
+## Measured A-045 result
+
+Fixed Python 3.12 `g18-8x9` has public bounds `11/20`. The hidden reference has those same lengths. The old canonical tree-cotree pair is `9/21`, so it fails the new dual bound; the new A-045 public attack instead recovers a `6/15` exact-one-crossing pair.
+
+The parity-cover phase uses 72 roots, 9913 queue pops and 59311 edge scans, producing 53 distinct primal candidates, all within the primal bound. The selected witness needs six constrained dual connector calls and 2406 dual edge scans. It passes the exact verifier and is non-reference.
+
+Across all three sizes and eight deterministic seeds each, A-045 succeeds **24/24** within the public bounds and every selected witness is non-reference. The canonical G17 tree-cotree witness fits the G18 bounds only 4/24 times total.
+
+**Conclusion: G18 rejected.** The geometric length gate is real but still collapses to public shortest paths in a parity cover plus a constrained connector.
