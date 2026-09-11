@@ -520,3 +520,13 @@ The irregularity gate is real: fixed `g12-8x9` has nine primal vertex-degree cla
 A-039 still breaks the relation cheaply. Fixed `g12-8x9`: 408 candidates, exact cover 64/64 accepted non-reference solutions in 456 nodes / 119 decisions / 119 backtracks. MiniSat on 408 variables / 4824 clauses returns an accepted non-reference witness with 105 conflicts / 807 decisions / 4699 propagations. Across all three sizes × eight seeds, **24/24** runs hit the 32-solution cap and every returned cover is non-reference; max exact-cover work is 761 nodes.
 
 **G12 rejected by A-039.** Lesson: local edge-flip irregularization is cosmetic with respect to this candidate-extraction relation. G13 must abandon the periodic-torus/local-flip carrier family rather than add more disorder. No security claim.
+
+## 2026-09-11 — G13 rejected by A-040 at generator gate
+
+G13 tried to leave torus ancestry entirely by sampling random simple cubic triangle-dual pairings and gluing oriented triangle sides. Before adding any witness relation, A-040 audited whether this raw random-map distribution yields honest simplicial closed surfaces without severe rejection conditioning.
+
+Fixed Python 3.12 audit: 4096 attempts at each of 36/54/72 triangles give zero successes. Eight additional 1024-attempt seeds per size also give zero successes in all 24/24 batches. Aggregated per size: 12,288 attempts, zero valid carriers, elementary `3/N = 0.000244141`.
+
+All samples that survive dual loops/parallel edges already fail by collapsing at least one quotient triangle to fewer than three distinct vertices. No sample reaches the later simplicial edge/link/genus gates.
+
+**G13 rejected by A-040 before P3 cryptanalysis.** An unbounded rejection sampler would hide a severe generated-distribution conditioning problem. G14 must use a constructive non-toroidal simplicial family, beginning with a random stacked/Apollonian sphere and immediate public reverse-subdivision plus exact-cover/SAT attacks. No security claim.
