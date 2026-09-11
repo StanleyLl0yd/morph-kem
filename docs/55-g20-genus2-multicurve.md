@@ -2,7 +2,7 @@
 
 ## Status
 
-**G20 is an attack calibration in progress. No hardness or security conclusion is permitted until exact-head CI records A-047.**
+**G20 is rejected by A-047 on the measured generated distribution.**
 
 G20 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -62,5 +62,54 @@ A separate canonical spanning-tree fundamental-cycle scan supplies an independen
 Reject G20 if either the connected-sum seam remains cheaply public or the class-aware four-sheet delete-and-recover attack routinely constructs accepted bounded pairs.
 
 Do not scale dimensions or flip counts while either reduction remains effective.
+
+No security claim.
+
+## Measured A-047 result
+
+Exact-head Python 3.12 `g20-6x9`:
+
+~~~text
+successful flips / generation retries:      428 / 1
+public V/E/F:                               105 / 321 / 214
+Euler characteristic:                       -2
+edge triangle incidence min/max:            2 / 2
+H^1(F2) dimension:                          4
+alpha / beta weights:                       17 / 29
+public alpha / beta bounds:                  6 / 4
+reference alpha / beta lengths:              6 / 4
+articulation points / 2-vertex separators:   0 / 0
+separating primal triangles:                31
+four-sheet states:                          420
+alpha roots / queue pops / edge scans:      105 / 25411 / 158345
+alpha exact-signature candidates:            33
+alpha candidates attempted:                   1
+beta stage calls:                             1
+beta roots / reachable roots:              101 / 101
+beta queue pops / edge scans:              21178 / 122384
+beta exact-signature candidates:             12
+selected alpha / beta lengths:                4 / 3
+selected signatures:                       (1,0) / (0,1)
+selected shared vertices:                     0
+exact verifier accepted:                     yes
+selected pair matches reference:             no
+independent fundamental cycles alpha/beta:   25 / 22
+independent pair tests:                       1
+independent pair found / accepted:           yes / yes
+~~~
+
+Python 3.12 sweep over `g20-4x4`, `g20-6x6`, `g20-6x9` x eight deterministic seeds gives **24/24** primary four-sheet delete-and-recover attacks accepted by the exact verifier. All selected pairs have exact signatures `(1,0)` / `(0,1)` and zero shared vertices. **23/24** primary pairs are non-reference; one measured `g20-4x4` instance happens to recover the reference pair.
+
+Across the same sweep, articulation points and two-vertex separators are absent in every instance. Separating primal triangles are common but not universal, so the A-047 rejection does not rely on recovering a planted connected-sum seam. Generation retries remain bounded (maximum 0, 5 and 3 for the three sizes).
+
+The independent canonical fundamental-cycle pair scan is deliberately preserved as weaker evidence: it finds and verifies the required bounded disjoint pair on only **5/24** measured instances. This incompleteness is not used to support rejection.
+
+### Result
+
+**G20 rejected by A-047.** Moving to genus two and requiring two different public cohomology signatures does not prevent sequential public recovery. A four-sheet parity cover finds a short exact `(1,0)` representative; deleting its vertices still leaves an exact `(0,1)` representative accessible by the same finite-state shortest-path machinery on every measured instance.
+
+This rejects the measured G20 family and bound-generation rule, not arbitrary genus-two multicurve search. Increasing handle size or flip count is not a repair while the class-aware delete-and-recover reduction remains effective.
+
+G21 must couple several global representatives so they cannot be recovered as independent finite-state class searches followed by deletion. A useful next control should prescribe a multi-cycle symplectic intersection/disjointness pattern and immediately face symplectic-basis algorithms, disjoint paths/flow/matching, shortest-cycle methods, ILP/SAT/CP-SAT, separator/treewidth, normalization and equivalent-witness enumeration.
 
 No security claim.

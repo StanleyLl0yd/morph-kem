@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G19 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G20 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -355,6 +355,16 @@ A separate canonical fundamental-cycle pair scan succeeds on only 4/24 instances
 
 See `docs/54-g19-disjoint-cohomology-pair.md`.
 
+## G20 — genus-two distinct-class multicurve control
+
+G20 moves to a flip-mixed genus-two carrier and requires two vertex-disjoint simple cycles in different public cohomology signatures `(1,0)` and `(0,1)`.
+
+**G20 is rejected by A-047.** A public four-sheet parity-cover attack finds the first class, deletes its vertices and recovers the second class in the remaining graph. Across three sizes x eight seeds, **24/24** primary attacks pass the exact verifier with zero shared vertices; **23/24** are non-reference. Fixed `g20-6x9` recovers a `4/3` pair inside public `6/4` bounds.
+
+The independent canonical fundamental-cycle pair scan succeeds on only 5/24 and is preserved as incomplete negative evidence. No articulation or two-vertex separator is needed for the primary break.
+
+See `docs/55-g20-genus2-multicurve.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -406,16 +416,17 @@ See `docs/54-g19-disjoint-cohomology-pair.md`.
 - `docs/52-g17-symplectic-cycle-pair.md` — measured G17/A-044 tree-cotree intersection rejection
 - `docs/53-g18-length-bounded-cycle-pair.md` — measured G18/A-045 length-bounded geometric rejection
 - `docs/54-g19-disjoint-cohomology-pair.md` — measured G19/A-046 disjoint-cycle rejection
+- `docs/55-g20-genus2-multicurve.md` — measured G20/A-047 genus-two multicurve rejection
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G20**, not a trapdoor construction. G19 shows that requiring two bounded vertex-disjoint global representatives in one torus class is still insufficient: public parity-cover recovery can find one representative, delete it, and recover another on every measured instance.
+The next controlled HGES experiment is **G21**, not a trapdoor construction. G20 shows that moving to genus two and requiring two different public cohomology classes is still insufficient when each class can be recovered by a finite-state cover search and disjointness can be enforced by deletion.
 
-G20 must prevent repeated recovery of parallel representatives on a single handle. The next useful control should expose multiple independent homology directions—for example a genus-two carrier with several cycles constrained to distinct public cohomology classes and a prescribed disjointness/intersection pattern. It must immediately face symplectic-basis algorithms, vertex-splitting/max-flow and disjoint-path reductions, matching, shortest-cycle methods, ILP/SAT/CP-SAT, separator/treewidth, normalization and equivalent-witness enumeration.
+G21 must couple several global representatives simultaneously so the relation does not factor into independent class searches. The next control should prescribe a multi-cycle symplectic intersection/disjointness matrix, then immediately face public symplectic-basis construction, disjoint paths/flow/matching, shortest-cycle algorithms, ILP/SAT/CP-SAT, separator/treewidth, normalization and equivalent-witness enumeration.
 
-No trapdoor/KEM work begins before such a multicurve relation survives these attacks.
+No trapdoor/KEM work begins before such a coupled multicurve relation survives these attacks.
 
 No security or post-quantum claim exists.
 

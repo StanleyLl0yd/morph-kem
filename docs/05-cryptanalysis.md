@@ -50,6 +50,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-044 | Public tree-cotree primal-dual one-crossing recovery | **Fatal to G17 generated distribution** | Implemented |
 | A-045 | Public shortest odd-cocycle cycle + constrained exact-one-crossing connector | **Fatal to G18 generated distribution** | Implemented |
 | A-046 | Delete-one-cycle parity-cover recovery of bounded vertex-disjoint odd-cycle pair | **Fatal to G19 generated distribution** | Implemented |
+| A-047 | Four-sheet distinct-class delete-and-recover multicurve recovery | **Fatal to G20 generated distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -1022,3 +1023,39 @@ The independent canonical spanning-tree fundamental-cycle cross-check is strictl
 **G19 is rejected by A-046.** On this generated torus family, one short public odd cycle can be removed completely and the remaining graph still exposes a second bounded odd cycle through the same parity-cover machinery. Coupling two disjoint global representatives therefore does not create inversion hardness here.
 
 This is a generated-distribution falsification, not a theorem about arbitrary disjoint noncontractible-cycle problems. Do not scale torus dimensions while the same delete-and-recover reduction remains effective. G20 must move beyond repeated parallel representatives on one handle. No security claim.
+
+## A-047 — four-sheet distinct-class delete-and-recover multicurve recovery
+
+### Target
+
+G20 flip-mixed genus-two multicurve negative control. The public witness contains two vertex-disjoint simple primal cycles with distinct public cohomology signatures `(1,0)` and `(0,1)` against two independent canonical cocycles on a measured genus-two carrier.
+
+### Public attack
+
+A-047 first audits low-order separators, then labels every primal edge by its two-bit `(alpha,beta)` value and searches a four-sheet cover. It recovers an exact `(1,0)` simple cycle, deletes every vertex of that cycle and its incident edges, then recovers an exact `(0,1)` cycle in the remaining graph. The pair is submitted to the exact verifier. No reference data participates in recovery.
+
+### Fixed Python 3.12 `g20-6x9`
+
+~~~text
+V/E/F = 105/321/214, chi=-2, H1=4
+alpha/beta public bounds = 6/4
+articulations / 2-vertex separators = 0/0
+separating triangles = 31
+four-sheet states = 420
+alpha roots/pops/scans = 105/25411/158345
+alpha candidates / attempted = 33/1
+beta calls = 1
+beta roots/reachable/pops/scans = 101/101/21178/122384
+beta candidates = 12
+selected lengths = 4/3
+signatures = (1,0)/(0,1)
+shared vertices = 0
+accepted = yes
+reference equality = no
+~~~
+
+Across all three sizes x eight seeds, **24/24** primary attacks are accepted with zero shared vertices and exact required signatures; **23/24** are non-reference. The independent canonical fundamental-cycle pair scan succeeds on only **5/24**, and that incompleteness is preserved rather than promoted into evidence.
+
+### Result
+
+**G20 rejected by A-047.** Distinct cohomology classes on genus two still factor operationally into finite-state shortest-path recovery plus deletion on this generated distribution. No asymptotic claim about arbitrary multicurve problems is made.
