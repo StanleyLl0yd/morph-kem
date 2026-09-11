@@ -1,0 +1,52 @@
+name: NAT0 noisy coboundary controls
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/nat_coboundary.py'
+      - 'tests/test_nat_coboundary.py'
+      - 'scripts/nat_coboundary_*.py'
+      - 'docs/59-nat0-noisy-coboundary-controls.md'
+      - '.github/workflows/nat0.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/nat_coboundary.py'
+      - 'tests/test_nat_coboundary.py'
+      - 'scripts/nat_coboundary_*.py'
+      - 'docs/59-nat0-noisy-coboundary-controls.md'
+      - '.github/workflows/nat0.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  nat0:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile NAT0
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/nat_coboundary.py tests/test_nat_coboundary.py scripts/nat_coboundary_baseline.py scripts/nat_coboundary_sweep.py
+      - name: NAT0 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_nat_coboundary -v
+      - name: NAT0 fixed baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/nat_coboundary_baseline.py --params nat0-8x8
+      - name: NAT0 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/nat_coboundary_sweep.py --seeds 8
