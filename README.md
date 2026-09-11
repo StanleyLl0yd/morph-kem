@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G11 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G12 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -289,6 +289,14 @@ The graph-matching reduction is gone, but the regular periodic hypergraph is sti
 
 See `docs/46-g11-toroidal-hypercover.md`.
 
+## G12 — irregular-torus P3 hypercover control
+
+G12 destroys G11's periodic local-role symmetry with many legal edge flips before reference-cover selection. The fixed `g12-8x9` carrier has nine primal degree classes, is dual-non-bipartite, exposes 82 public local signature classes, and has nonuniform P3 candidate memberships.
+
+**G12 is rejected by A-039.** Public exact cover still reaches 64/64 accepted covers in 456 nodes / 119 decisions / 119 backtracks, all non-reference. Independent MiniSat solves the 408-variable / 4824-clause candidate hypergraph in about 0.005 s and its decoded witness passes the exact verifier. Across `g12-6x6`, `g12-6x9`, `g12-8x9` × eight seeds, **24/24** instances hit the 32-solution cap with every returned cover non-reference and no generation retries.
+
+See `docs/47-g12-irregular-torus-hypercover.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -332,16 +340,17 @@ See `docs/46-g11-toroidal-hypercover.md`.
 - `docs/44-g9-overlapping-exact-cover.md` — measured G9/A-036 negative control
 - `docs/45-g10-toroidal-matching.md` — measured G10/A-037 negative control
 - `docs/46-g11-toroidal-hypercover.md` — measured G11/A-038 negative control
+- `docs/47-g12-irregular-torus-hypercover.md` — measured G12/A-039 negative control
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G12**, not a trapdoor construction. G11 shows that moving from graph matching to a genuine 3-uniform exact-cover relation is still insufficient when the public carrier is highly periodic and exposes many equivalent local covers.
+The next controlled HGES experiment is **G13**, not a trapdoor construction. G12 shows that destroying periodic translation symmetry with many local edge flips is still insufficient: the public P3 candidate hypergraph remains easy for exact cover and SAT.
 
-G12 must break the repeated torus translation/local-role structure without reintroducing canonical separators. Before any positive interpretation it must test automorphism and planted-role leakage, candidate-subcomplex extraction, separator/treewidth structure, exact cover/set packing, low-width algorithms, generic CSP/SAT/CP-SAT, simplification/normalization and equivalent-witness multiplicity.
+G13 must abandon the periodic-torus-plus-local-flips carrier family rather than stack more cosmetic irregularization. Before any positive interpretation it must face canonicalization/isomorphism, separator/treewidth analysis, candidate-subcomplex extraction, exact cover/set packing, generic CSP/SAT/CP-SAT, simplification/normalization, equivalent-witness multiplicity and generated-role leakage.
 
-Only a distribution where public candidate extraction and the resulting irregular hypergraph both resist these attacks could justify asking whether a secret decomposition provides a recovery advantage. No trapdoor/KEM work begins before that.
+Only a relation where both the carrier and its induced candidate hypergraph survive these attacks could justify asking whether a secret decomposition provides a recovery advantage. No trapdoor/KEM work begins before that.
 
 No security or post-quantum claim exists.
 

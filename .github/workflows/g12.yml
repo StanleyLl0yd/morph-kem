@@ -1,0 +1,69 @@
+name: G12 HGES irregular torus hypercover negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_irregular_hypercover.py'
+      - 'tests/test_gluing_irregular_hypercover.py'
+      - 'scripts/gluing_irregular_hypercover_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/47-g12-irregular-torus-hypercover.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g12.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_irregular_hypercover.py'
+      - 'tests/test_gluing_irregular_hypercover.py'
+      - 'scripts/gluing_irregular_hypercover_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/47-g12-irregular-torus-hypercover.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g12.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  g12:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G12
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/gluing_irregular_hypercover.py tests/test_gluing_irregular_hypercover.py scripts/gluing_irregular_hypercover_baseline.py scripts/gluing_irregular_hypercover_sweep.py scripts/gluing_irregular_hypercover_sat.py
+      - name: G12 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_gluing_irregular_hypercover -v
+      - name: G12 irregular hypercover baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_irregular_hypercover_baseline.py --params g12-8x9 --solution-cap 64
+      - name: G12 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_irregular_hypercover_sweep.py --seeds 8 --solution-cap 32
+      - name: Install MiniSat for G12 cross-check
+        if: matrix.python-version == '3.12'
+        run: |
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends minisat
+      - name: G12 independent MiniSat cross-check
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_irregular_hypercover_sat.py --params g12-8x9 --solver minisat

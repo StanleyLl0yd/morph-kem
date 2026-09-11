@@ -510,3 +510,13 @@ A-038 still breaks the generated family cheaply. Fixed Python 3.12 `g11-6x9` rea
 Independent MiniSat cross-check on the same largest candidate hypergraph uses 324 variables / 3996 clauses and returns SAT with 2 conflicts, 137 decisions and 574 propagations. Its decoded 36-piece cover passes the exact verifier and differs from reference.
 
 **G11 rejected by A-038.** Lesson: leaving graph matching for generic hypergraph exact cover is not enough when the public generated carrier is highly regular and exposes a dense family of equivalent local covers. G12 must break the periodic/repeated-role carrier structure before any solver growth is interpreted. No security claim.
+
+## 2026-09-11 — G12 rejected by A-039
+
+G12 tested whether G11 failed only because of periodic torus symmetry. The carrier is first irregularized by 36/54/72 deterministic legal edge flips and only then conditioned on existence of a public P3 exact cover. All 24 measured instances required zero generation retries.
+
+The irregularity gate is real: fixed `g12-8x9` has nine primal vertex-degree classes, a non-bipartite 3-regular dual, 82 combined local signature classes, nonuniform P3 candidate memberships, and 59 legal public flips that move the degree profile toward the regular torus.
+
+A-039 still breaks the relation cheaply. Fixed `g12-8x9`: 408 candidates, exact cover 64/64 accepted non-reference solutions in 456 nodes / 119 decisions / 119 backtracks. MiniSat on 408 variables / 4824 clauses returns an accepted non-reference witness with 105 conflicts / 807 decisions / 4699 propagations. Across all three sizes × eight seeds, **24/24** runs hit the 32-solution cap and every returned cover is non-reference; max exact-cover work is 761 nodes.
+
+**G12 rejected by A-039.** Lesson: local edge-flip irregularization is cosmetic with respect to this candidate-extraction relation. G13 must abandon the periodic-torus/local-flip carrier family rather than add more disorder. No security claim.
