@@ -1,0 +1,51 @@
+name: HGA2 PSL2Z rational-action negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/hga_modular.py'
+      - 'tests/test_hga_modular.py'
+      - 'scripts/hga_modular_*.py'
+      - '.github/workflows/hga2.yml'
+      - 'docs/64-hga2-modular-rational-action.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/hga_modular.py'
+      - 'tests/test_hga_modular.py'
+      - 'scripts/hga_modular_*.py'
+      - '.github/workflows/hga2.yml'
+      - 'docs/64-hga2-modular-rational-action.md'
+
+permissions:
+  contents: read
+
+jobs:
+  hga2:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile HGA2
+        run: >-
+          python -m compileall -q
+          src/morph_kem/hga_modular.py
+          tests/test_hga_modular.py
+          scripts/hga_modular_baseline.py
+          scripts/hga_modular_sweep.py
+      - name: HGA2 unit tests
+        run: python -m unittest tests.test_hga_modular -v
+      - name: HGA2 fixed baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/hga_modular_baseline.py --params hga2-32
+      - name: HGA2 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/hga_modular_sweep.py --seeds 8
