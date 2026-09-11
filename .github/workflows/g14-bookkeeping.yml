@@ -1,0 +1,70 @@
+name: G14 one-shot normalization rejection bookkeeping
+
+on:
+  push:
+    branches: ['g14/stacked-sphere-hypercover']
+    paths: ['.github/workflows/g14-bookkeeping.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  bookkeeping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: g14/stacked-sphere-hypercover
+      - name: Record measured G14 rejection
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          ledger = Path('docs/05-cryptanalysis.md')
+          text = ledger.read_text()
+          anchor = '| A-040 | Configuration-pairing generator-conditioning audit | **Fatal to G13 carrier distribution** | Implemented |'
+          row = '| A-041 | Public reverse-stacking / stellar-center normalization | **Fatal to G14 carrier distribution** | Implemented |'
+          if row not in text:
+              if anchor not in text:
+                  raise SystemExit('A-040 ledger anchor missing')
+              text = text.replace(anchor, anchor + '\n' + row, 1)
+          heading = '## A-041 — public reverse-stacking / stellar-center normalization'
+          if heading not in text:
+              text = text.rstrip() + '''\n\n## A-041 — public reverse-stacking / stellar-center normalization\n\n### Target\n\nG14 constructive random stacked/Apollonian 2-sphere carrier. G14 fixes G13's generator-conditioning failure by using only valid face-stacking moves, then globally relabels public vertices.\n\n### Public attack\n\nA-041 repeatedly enumerates degree-three public vertices whose link is exactly one missing triangle, removes the candidate vertex and its three incident triangles, restores the link triangle, and continues with deterministic public-label tie-breaking. The attack uses no planted stacking order.\n\n### Exact Python 3.12 `g14-72` result\n\n~~~text\nstacking steps:                         34\npublic V/E/F:                           38/108/72\nEuler characteristic:                   2\nedge triangle incidence min/max:        2/2\nprimal vertex-degree histogram:         ((3,15),(4,8),(5,2),(6,4),(7,2),(8,1),(10,2),(12,2),(15,1),(24,1))\nreverse-stacking moves:                 34\nmaximum simultaneous reverse candidates: 15\nterminal V/E/F/chi:                     4/6/4/2\nreached tetrahedron boundary:           yes\n~~~\n\nThe full public candidate-count histogram on this baseline is `2:5 / 3:5 / 4:1 / 5:2 / 6:4 / 7:2 / 8:1 / 9:2 / 10:5 / 11:1 / 12:2 / 13:1 / 14:1 / 15:2`. The reverse history is therefore far from unique, but uniqueness is irrelevant: every deterministic public route still removes the whole generated ancestry.\n\n### Deterministic sweep\n\nPython 3.12 tested `g14-36`, `g14-54`, `g14-72` over eight deterministic seeds each. All **24/24** instances reach the tetrahedron boundary with exactly 16, 25 and 34 reverse moves respectively. Maximum simultaneous candidate counts over the measured sets are 8, 12 and 17.\n\n### Result\n\n**G14 is rejected by A-041.** Constructive generation solved G13's invalid-sampler problem but exposed a bounded-local public inverse. Increasing the stacking depth cannot repair a relation that can always be peeled back to the tetrahedron boundary. P3 exact-cover/SAT is not run because a cheaper structural carrier break already decides the experiment.\n\nG15 must use a constructive non-toroidal carrier without degree-three stellar-center ancestry and immediately face bistellar normalization, canonicalization, separator/treewidth, candidate extraction, exact cover/CSP/SAT, equivalent-witness and generated-role attacks. No security claim.\n'''
+          ledger.write_text(text)
+
+          log = Path('notes/research-log.md')
+          text = log.read_text()
+          heading = '## 2026-09-11 — G14 rejected by A-041'
+          if heading not in text:
+              text = text.rstrip() + '''\n\n## 2026-09-11 — G14 rejected by A-041\n\nG14 replaced G13's unhealthy random-map sampler with guaranteed-valid random stacked/Apollonian 2-spheres. The carrier is globally relabelled, but public degree-three stellar centers remain a complete inverse.\n\nFixed Python 3.12 `g14-72`: 38/108/72 public V/E/F, chi 2, degree histogram `((3,15),(4,8),(5,2),(6,4),(7,2),(8,1),(10,2),(12,2),(15,1),(24,1))`. A-041 performs exactly 34 reverse-stacking moves and reaches 4/6/4, chi 2. Up to 15 reverse candidates coexist on the baseline.\n\nAcross `g14-36`, `g14-54`, `g14-72` x eight seeds, **24/24** instances normalize completely in exactly 16/25/34 moves. Maximum simultaneous candidates are 8/12/17.\n\n**G14 rejected by A-041.** Generator validity by construction is not useful when the construction has a public bounded-local inverse. P3/SAT is not run after the cheaper structural break. No security claim.\n'''
+              log.write_text(text)
+
+          readme = Path('README.md')
+          text = readme.read_text()
+          text = text.replace('HGES controls G0–G13 are implemented and rejected.', 'HGES controls G0–G14 are implemented and rejected.')
+          if '## G14 — stacked-sphere reverse-normalization control' not in text:
+              marker = '\n## Research discipline\n'
+              if marker not in text:
+                  raise SystemExit('README research-discipline anchor missing')
+              section = '''\n## G14 — stacked-sphere reverse-normalization control\n\nG14 uses guaranteed-valid random stacked/Apollonian 2-spheres to avoid G13's rejection-conditioned generator.\n\n**G14 is rejected by A-041.** Public degree-three stellar-center contraction removes every stacking step and returns the tetrahedron boundary. On `g14-72`, 34/34 public reverse moves take `38/108/72` to `4/6/4`; up to 15 legal reverse candidates coexist. Across all three sizes x eight seeds, **24/24** carriers fully normalize, with exact move counts 16/25/34.\n\nThe failure is carrier-structural, so heavier P3 exact-cover/SAT is unnecessary. See `docs/49-g14-stacked-sphere-normalization.md`.\n'''
+              text = text.replace(marker, section + marker, 1)
+          key_anchor = '- `docs/48-g13-random-pairing-generator.md` — measured G13/A-040 generator-conditioning rejection'
+          key_row = '- `docs/49-g14-stacked-sphere-normalization.md` — measured G14/A-041 reverse-normalization rejection'
+          if key_row not in text:
+              if key_anchor not in text:
+                  raise SystemExit('README key-file anchor missing')
+              text = text.replace(key_anchor, key_anchor + '\n' + key_row, 1)
+          old = '''The next controlled HGES experiment is **G14**, not a trapdoor construction. G13 shows that a naive random cubic-dual configuration model is not even a healthy simplicial-surface sampler without extreme rejection conditioning.\n\nG14 therefore uses a constructive non-toroidal family: random stacked/Apollonian 2-spheres generated by repeated face subdivision. Because this construction has an obvious potential public inverse, the first attack must enumerate degree-three vertices / stellar centers and contract them, alongside canonicalization, P3 candidate extraction, exact cover, SAT, equivalent-witness multiplicity and generated-role leakage.\n\nNo trapdoor/KEM work begins before a constructive carrier and its witness relation survive these public attacks.\n'''
+          new = '''The next controlled HGES experiment is **G15**, not a trapdoor construction. G14 shows that guaranteed-valid constructive randomness is still useless when the construction exposes a bounded-local public inverse.\n\nG15 must use a constructive non-toroidal carrier without degree-three stellar-center ancestry. A first control should start from a non-stacked sphere such as the icosahedral triangulation and apply a long deterministic legal bistellar/edge-flip mixing walk, then immediately attack public simplification, canonicalization, separator/treewidth structure, candidate extraction, exact cover/CSP/SAT, equivalent witnesses and generated-role leakage.\n\nNo trapdoor/KEM work begins before both carrier normalization and the witness relation survive these attacks.\n'''
+          if old not in text:
+              raise SystemExit('README G14 next-gate block missing')
+          text = text.replace(old, new, 1)
+          readme.write_text(text)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/05-cryptanalysis.md notes/research-log.md README.md
+          git diff --cached --quiet && exit 0
+          git commit -m 'G14: record reverse-normalization rejection'
+          git push origin HEAD:g14/stacked-sphere-hypercover
