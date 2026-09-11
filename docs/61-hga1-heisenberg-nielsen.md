@@ -2,7 +2,7 @@
 
 ## Status
 
-**HGA1 is an attack calibration in progress.** It is the first HGA candidate whose public objects and action are genuinely noncommutative. No hardness conclusion is permitted until exact-head CI measures HGA-A002.
+**HGA1 is rejected by HGA-A002.** The first genuinely noncommutative HGA action remains publicly invertible on the generated distribution by a small abelianized quotient plus bounded bidirectional endpoint search.
 
 HGA1 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -38,7 +38,7 @@ The verifier is simply public endpoint equality after applying a submitted actio
 
 ## Public quotient
 
-Abelianization forgets the central `z` coordinates. The four public endpoint coordinates `(gx,gy,hx,hy)` evolve under the same elementary row/column-style Nielsen moves.
+Abelianization forgets the central `z` coordinates. The four public endpoint coordinates `(gx,gy,hx,hy)` evolve under the same elementary Nielsen moves.
 
 The generated source lies in the determinant-one orbit. The attack enumerates this entire public quotient orbit and records its size and shortest quotient connector length.
 
@@ -46,7 +46,7 @@ This is not itself enough to recover the central residual, but it measures how m
 
 ## HGA-A002 — quotient + bidirectional endpoint recovery
 
-The primary endpoint attack is public bidirectional search:
+The public endpoint attack is:
 
 1. enumerate the full abelianized quotient orbit and shortest quotient distance;
 2. BFS from the full nonabelian source to half the public planted-word bound;
@@ -57,29 +57,58 @@ The primary endpoint attack is public bidirectional search:
 
 The recovered word is **not required to match the planted word**. Equality is recorded only after public success.
 
-## Measurements
+## Measured HGA-A002 result
 
-Record at least:
+Exact Python 3.12 fixed `hga1-p11`:
 
-- `p` and group size `p^3`;
-- planted word length;
-- abelianized orbit size and BFS transitions;
-- shortest quotient connector length;
-- forward/backward full-state counts;
-- MITM transitions and meet-state multiplicity;
-- recovered connector length;
-- exact public endpoint verification;
-- post-success planted-word equality;
-- deterministic all-size / multi-seed sweep.
+```text
+prime / group size:                    11 / 1331
+planted word length:                   12
+abelianized quotient orbit size:       1320
+quotient BFS transitions:              5280
+quotient shortest connector length:       6
+MITM forward / backward states:        532 / 532
+MITM transitions:                      2088
+MITM meet states:                       221
+recovered connector length:               6
+recovered connector:                    Lrrrrl
+public endpoint verification:          yes
+matches planted word after success:    no
+```
 
-## Rejection gate
+Python 3.12 sweep over all three primes × eight deterministic seeds gives **24/24** accepted public connectors within the planted public word bound.
 
-If bounded public MITM routinely recovers any valid connector within the public word bound, **reject HGA1**. A mismatch with the planted word is not a defense; it is evidence of equivalent-action multiplicity.
+Measured orbit/search structure is highly stable:
 
-Do not repair by increasing only the word length while the finite orbit and quotient remain publicly enumerable.
+- `p=5`: quotient orbit `120`, forward/backward full-state tables `91/91`, `344` MITM transitions, recovered lengths `2–6` versus planted length `8`;
+- `p=7`: quotient orbit `336`, tables `221/221`, `888` transitions, recovered lengths `4–6` versus planted `10`;
+- `p=11`: quotient orbit `1320`, tables `532/532`, `2088` transitions, recovered lengths `6–9` versus planted `12`.
+
+Every recovered connector differs from the planted generation word: **0/24 planted-word matches after public success**. Meet-state multiplicity is already large (65–72 for `p=5`, 136–170 for `p=7`, 167–228 for `p=11`).
+
+The dedicated HGA1 workflow passes on Python 3.11, 3.12 and 3.13.
+
+## Result
+
+**HGA1 is rejected by HGA-A002.** Noncommutativity at the object level is not enough when the action factors through a small enumerable quotient and the full endpoint orbit is shallow under the public generators.
+
+The especially important negative result is equivalent-action multiplicity: the public attacker never recovered the planted word in the measured sweep, yet every alternate connector mapped the exact public source to the exact public target. Therefore hiding one action word is not a useful primitive when many short equivalent connectors exist.
+
+Increasing only the secret word length would be cosmetic while the finite quotient/orbit and shallow Cayley/Schreier geometry remain publicly enumerable.
 
 ## Advancement gate
 
-HGA2 must move beyond a small finite Nielsen orbit or provide a structural reason why canonical quotients and MITM do not dominate. Any next candidate must still face abelianization, character/trace-style invariants where applicable, stabilizers, finite quotient representations, canonical forms, endpoint MITM and quantum hidden-shift/subgroup screening.
+HGA2 must move beyond a small finite Nielsen orbit or provide a structural reason why canonical quotients and MITM do not dominate. A next candidate should have a substantially larger or effectively infinite public orbit, while still exposing efficient public action evaluation.
+
+Any HGA2 candidate must immediately face:
+
+- abelianization and low-dimensional quotient representations;
+- character/trace-style invariants where applicable;
+- stabilizers and equivalent-action multiplicity;
+- normal forms/canonicalization;
+- bidirectional endpoint search and generic MITM;
+- finite quotient projections;
+- generated-role leakage;
+- quantum hidden-shift/hidden-subgroup reducibility screening.
 
 No security claim.
