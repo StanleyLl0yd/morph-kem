@@ -1,0 +1,58 @@
+name: G20 HGES genus-two multicurve negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_genus2_multicurve.py'
+      - 'tests/test_gluing_genus2_multicurve.py'
+      - 'scripts/gluing_genus2_multicurve_*.py'
+      - 'docs/55-g20-genus2-multicurve.md'
+      - 'docs/05-cryptanalysis.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g20.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_genus2_multicurve.py'
+      - 'tests/test_gluing_genus2_multicurve.py'
+      - 'scripts/gluing_genus2_multicurve_*.py'
+      - 'docs/55-g20-genus2-multicurve.md'
+      - 'docs/05-cryptanalysis.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g20.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  g20:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G20
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/gluing_genus2_multicurve.py tests/test_gluing_genus2_multicurve.py scripts/gluing_genus2_multicurve_baseline.py scripts/gluing_genus2_multicurve_sweep.py
+      - name: G20 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_gluing_genus2_multicurve -v
+      - name: G20 fixed baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_genus2_multicurve_baseline.py --params g20-6x9
+      - name: G20 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_genus2_multicurve_sweep.py --seeds 8

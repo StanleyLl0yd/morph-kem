@@ -592,3 +592,13 @@ Across all three sizes × eight seeds, **24/24** primary attacks recover accepte
 The independent canonical fundamental-cycle pair scan succeeds only 4/24 times. This weaker result is preserved separately and does not weaken the primary break.
 
 **G19 rejected by A-046.** G20 must prevent repeated recovery of parallel representatives on a single torus handle, likely by moving to multiple independent homology directions and a prescribed multicurve relation. No security claim.
+
+## 2026-09-11 — G20 rejected by A-047
+
+G20 moved from one torus handle to a flip-mixed genus-two connected sum with measured `H^1(F2)=4`. The verifier requires vertex-disjoint simple cycles of two distinct public signatures `(1,0)` and `(0,1)` under independent generation-derived length bounds.
+
+A-047 still wins publicly: four-sheet parity-cover recovery finds an alpha-class cycle, deletes its vertices, then finds the beta-class cycle in the remaining graph. Fixed `g20-6x9` recovers an accepted non-reference `4/3` pair inside `6/4` bounds after one beta-stage call. Across three sizes x eight seeds, **24/24** primary attacks verify, all have zero shared vertices and exact signatures, and **23/24** are non-reference.
+
+No articulation or two-vertex separator appears in the measured sweep; separating triangles are variable and the primary attack does not depend on them. The independent canonical fundamental-cycle pair scan succeeds on only 5/24, so it is recorded as an incomplete cross-check rather than part of the rejection argument.
+
+**G20 rejected by A-047.** Genus and distinct public classes are not sufficient while the relation decomposes into finite-state class recovery plus deletion. G21 must couple several cycles simultaneously through a prescribed intersection/disjointness pattern. No security claim.
