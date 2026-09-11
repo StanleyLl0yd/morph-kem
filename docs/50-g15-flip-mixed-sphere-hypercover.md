@@ -2,7 +2,7 @@
 
 ## Status
 
-**G15 is an attack calibration in progress.** It tests a constructive non-toroidal sphere carrier after a long bistellar/edge-flip mixing walk, with both the G14 local-inverse regression and the public P3 exact-cover/SAT attack enabled.
+**G15 is rejected by A-042.** Long flip mixing changes the carrier enough that the fixed baselines and the official 24-instance sweep no longer completely reverse-stack to the tetrahedron boundary, but the unchanged P3 witness relation remains trivial for public exact cover and independent MiniSat.
 
 G15 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -13,7 +13,7 @@ G14 fixed G13's unhealthy generator by using stacked spheres, but the constructi
 1. can a long legal flip walk destroy that bounded-local reverse-stacking ancestry?;
 2. if so, does the witness relation nevertheless remain an ordinary easy public P3 hypergraph exact-cover problem?
 
-This distinction matters. Defeating A-041 is not positive hardness evidence if A-042 still constructs equivalent accepted witnesses cheaply.
+The measured answer is yes to both. This is stronger evidence against further carrier-only redesign while retaining a fixed-radius P3 witness predicate.
 
 ## Carrier
 
@@ -35,15 +35,13 @@ g15-54: 17 growth steps, 1080 successful flips
 g15-72: 26 growth steps, 1440 successful flips
 ```
 
-Each mixing proposal chooses an actual current public edge uniformly from a deterministic seeded stream. Illegal proposed flips are counted explicitly. Generation records both successful flips and rejected proposals.
-
-After mixing, an independent global relabel is applied.
+Each mixing proposal chooses an actual current public edge uniformly from a deterministic seeded stream. Illegal proposed flips are counted explicitly. Generation records both successful flips and rejected proposals. After mixing, an independent global relabel is applied.
 
 ## Bounded P3-cover conditioning
 
-A P3 witness relation requires at least one exact cover. The final mixed carrier is therefore tested for a public P3 exact cover after mixing. If absent, only the mixing/relabel attempt is retried, under a fixed bounded attempt cap. `generation_retries` is part of the measured output.
+A P3 witness relation requires at least one exact cover. The final mixed carrier is tested for a public P3 exact cover after mixing. If absent, only the mixing/relabel attempt is retried, under a fixed bounded attempt cap. `generation_retries` is part of the measured output.
 
-This conditioning is never hidden or interpreted as security evidence.
+All measured fixed/sweep instances required **zero** generation retries.
 
 ## Public relation
 
@@ -53,62 +51,104 @@ The verifier never asks for the icosahedral coordinates, growth history, flip hi
 
 ## A-042 — mixed-sphere normalization + exact-cover / SAT recovery
 
-### G14 regression
+### Fixed Python 3.12 `g15-72` result
 
-Run the exact public A-041 reverse-stacking attack on the final mixed carrier. Record initial degree-three vertices, legal reverse candidates, reverse move count, terminal complex, and whether the tetrahedron boundary is reached.
+```text
+growth steps:                              26
+successful flips / rejected proposals:     1440 / 558
+generation retries:                        0
+public V/E/F:                              38 / 108 / 72
+Euler characteristic:                      2
+edge triangle incidence min/max:           2 / 2
+primal degree histogram:                   ((3,10),(4,8),(5,6),(6,4),(7,3),
+                                            (8,1),(9,2),(11,1),(12,2),(18,1))
+initial degree-three vertices:              10
+initial reverse-stacking candidates:       10
+reverse-stacking moves:                    20
+reverse terminal V/E/F:                    18 / 48 / 32
+reached tetrahedron boundary:              no
+normalization-improving legal flips:        39
+dual vertices / edges:                     72 / 108
+dual degree histogram:                     ((3,72),)
+dual bipartite:                            no
+bridges / articulation points:             0 / 0
+dual triangle / four-cycle counts:         10 / 8
+local signature classes:                   64
+P3 public candidates:                      186
+candidate memberships:                     6:30 / 9:42
+candidate/triangle incidence:              558
+exact-cover solutions / cap:               64 / 64
+exact-cover nodes / decisions / backtracks:467 / 148 / 188
+accepted public solutions:                 64
+accepted non-reference solutions:          64
+```
 
-G15 only establishes a meaningful carrier change if A-041 no longer completely peels the sphere.
+Thus the fixed carrier does what G15 intended structurally: A-041 is no longer a complete inverse. It stalls after 20 public reverse moves with 32 triangles still present. However, A-042 immediately finds 64 accepted alternative P3 covers.
 
-### Normalization probe
+### Deterministic sweep
 
-Enumerate all legal public `2 <-> 2` flips and count those that strictly reduce the squared deviation of primal vertex degrees from six. This is a cheap public normalization direction probe, not a security metric.
+Python 3.12 tested `g15-36`, `g15-54`, and `g15-72` over eight independently derived deterministic seeds each.
 
-### Exact-cover path
+All **24/24** official sweep carriers:
 
-1. derive public edge/triangle incidence;
-2. enumerate every exact P3 disk candidate;
-3. construct candidate/triangle incidence and overlap metrics;
-4. run deterministic MRV Algorithm-X-style exact cover;
-5. enumerate accepted covers up to an explicit cap;
-6. submit every recovered cover to the exact verifier;
-7. compare with reference evidence only after public acceptance.
+- require zero P3-cover generation retries;
+- do **not** reverse-stack completely to the tetrahedron boundary;
+- reach the exact-cover cap `32/32`;
+- return 32 accepted public covers;
+- return 32 non-reference covers.
 
-### Independent SAT path
+Maximum exact-cover work by size:
 
-Use one Boolean variable per public P3 candidate. For every triangle encode exactly one incident candidate with one at-least-one clause plus pairwise at-most-one clauses. Run MiniSat on the fixed Python 3.12 baseline, decode the model, and check it again with the repository verifier.
+| Set | Max nodes | Max decisions | Max backtracks |
+|---|---:|---:|---:|
+| g15-36 | 202 | 56 | 86 |
+| g15-54 | 260 | 84 | 125 |
+| g15-72 | 427 | 128 | 288 |
 
-## Rejection gate
+Measured reverse terminal triangle counts range from 12–28 (`g15-36`), 20–40 (`g15-54`), and 42–54 (`g15-72`). Mixing therefore disrupts the complete stacked ancestry substantially on this sweep without making the witness relation difficult.
 
-Reject G15 if either:
+An auxiliary direct-byte regression seed outside the official sweep still completely reverse-stacks after mixing. That negative result is intentionally preserved: G15 does **not** establish that long flip walks universally defeat A-041. The generator never filters on this property.
 
-- public normalization exposes a cheap canonical carrier reduction; or
-- exact cover / MiniSat routinely recovers any accepted P3 witness.
+### Independent MiniSat
 
-If A-041 is defeated but A-042 exact cover remains cheap, that is a particularly important negative result: it shows that changing carriers further is unlikely to help while witness validity remains a fixed-radius P3 motif.
+Fixed `g15-72` public encoding:
 
-Do not repair by increasing only the number of mixing flips or sphere size.
+```text
+SAT variables / clauses:                  186 / 2034
+DIMACS bytes:                             23382
+restarts:                                 1
+conflicts:                                55
+decisions:                                234
+propagations:                             1224
+solver elapsed seconds:                   0.004067
+selected candidate pieces:                24
+decoded accepted witness:                 yes
+matches reference after public success:   no
+```
 
-## Measurements
+MiniSat independently confirms that the mixed-sphere candidate relation is easy and returns an accepted equivalent witness.
 
-Record at least:
+## Result
 
-- growth steps, successful mixing flips, rejected proposals and generation retries;
-- public `V/E/F`, Euler characteristic and edge incidence range;
-- primal degree histogram;
-- initial degree-three/reverse candidate counts;
-- A-041 reverse moves and terminal complex;
-- normalization-improving legal flips;
-- dual graph edges/degree histogram, bridges, articulations, bipartiteness and short cycles;
-- local signature classes;
-- P3 candidate count, membership and overlap histograms, candidate incidence;
-- exact-cover nodes/decisions/backtracks, solution cap and cap-hit;
-- accepted/non-reference covers;
-- SAT variables/clauses, MiniSat conflicts/decisions/propagations and decoded verifier outcome;
-- deterministic all-size/eight-seed sweep.
+**G15 is rejected by A-042.**
+
+This is the cleanest carrier/witness separation in the current G-series. Long bistellar mixing can defeat the obvious complete reverse-stacking attack on the measured main distribution, yet the bounded-radius P3 witness predicate still compiles to a tiny, highly multiply-solvable public exact-cover/SAT instance.
+
+Further changes that only make the carrier more irregular are therefore not a justified repair. The next experiment must change what constitutes a valid witness.
 
 ## G16 gate
 
-If G15 confirms that flip mixing defeats the local carrier inverse but P3 exact cover remains fatal, G16 must change the **witness predicate**, not the carrier. Candidate validity should depend on genuinely nonlocal topological information rather than a bounded-radius dual motif, and must immediately face quotient/canonicalization, generic CSP/SAT/CP-SAT, separator/treewidth, normalization, equivalent-witness and generated-distribution attacks.
+G16 must change the **witness predicate**, not merely the carrier. Candidate validity should depend on genuinely nonlocal topological information rather than a fixed-radius P3 motif.
+
+Before any positive interpretation, the new relation must face:
+
+- public quotient/normalization and canonicalization;
+- compilation to generic finite-domain CSP;
+- SAT/CP-SAT/exact-cover formulations where applicable;
+- separator/treewidth and low-width dynamic programming;
+- equivalent-witness enumeration;
+- generated-role/statistical leakage;
+- comparison of topology-aware and topology-free solver representations.
 
 No trapdoor/KEM work begins before those gates survive.
 
