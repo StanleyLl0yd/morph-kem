@@ -1,0 +1,58 @@
+name: G16 HGES nonlocal cohomology-cycle negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_cohomology_cycle.py'
+      - 'tests/test_gluing_cohomology_cycle.py'
+      - 'scripts/gluing_cohomology_cycle_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/51-g16-cohomology-cycle.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g16.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_cohomology_cycle.py'
+      - 'tests/test_gluing_cohomology_cycle.py'
+      - 'scripts/gluing_cohomology_cycle_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/51-g16-cohomology-cycle.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g16.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  g16:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G16
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/gluing_cohomology_cycle.py tests/test_gluing_cohomology_cycle.py scripts/gluing_cohomology_cycle_baseline.py scripts/gluing_cohomology_cycle_sweep.py
+      - name: G16 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_gluing_cohomology_cycle -v
+      - name: G16 fixed baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_cohomology_cycle_baseline.py --params g16-8x9
+      - name: G16 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_cohomology_cycle_sweep.py --seeds 8

@@ -550,3 +550,13 @@ The witness relation nevertheless remains fatal. Fixed `g15-72` exposes 186 publ
 One auxiliary direct-byte seed still fully reverse-stacks after mixing, so no universal defeat of A-041 is claimed.
 
 **G15 rejected by A-042.** This separates carrier hardness from witness hardness: changing the carrier is no longer a justified next move while P3 validity remains a fixed-radius public motif. G16 must change the witness predicate and immediately face topology-to-CSP, SAT/CP-SAT, low-width, normalization and equivalent-witness attacks. No security claim.
+
+## 2026-09-11 — G16 rejected by A-043
+
+G16 changed the witness predicate itself: the verifier accepts a simple primal cycle with odd pairing against a public nontrivial GF(2) cocycle on an irregular torus. This is genuinely global and no local P3 dictionary is involved.
+
+Attack-first analysis improved the planned affine solve to a cheaper theorem-driven attack: fundamental cycles of any public spanning tree form the cycle-space basis, so a non-coboundary cocycle must pair oddly with at least one of them. Fixed `g16-8x9` needs only 4 cycle tests / 24 tree-path edge scans to find an accepted 9-edge non-reference cycle. The independent affine cross-check also produces an accepted simple odd cycle.
+
+Across `g16-6x6`, `g16-6x9`, `g16-8x9` × eight seeds, both paths succeed **24/24**, and all primary recovered witnesses differ from the hidden reference. Measured `H^1` dimension is exactly two throughout.
+
+**G16 rejected by A-043.** Lesson: nonlocal topology does not create hardness when the accepted relation remains affine on a public chain/cycle space. G17 must introduce a genuinely nonlinear relation among multiple global cycles and attack it immediately with symplectic bases, flow/matching, ILP/SAT/CP-SAT and equivalent-witness search. No security claim.

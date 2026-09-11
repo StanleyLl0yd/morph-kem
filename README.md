@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G15 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G16 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -321,6 +321,14 @@ G15 starts from an icosahedral sphere, grows it constructively, and applies a lo
 
 One auxiliary seed remains completely reverse-stackable, so no universal carrier-hardness claim is made. The main conclusion is stronger: changing only the carrier is not a repair while P3 witness validity stays a bounded-radius public motif. See `docs/50-g15-flip-mixed-sphere-hypercover.md`.
 
+## G16 — nonlocal cohomology-paired cycle control
+
+G16 changes the witness predicate itself: a witness is a simple public primal cycle with odd pairing against a public nontrivial GF(2) 1-cocycle on an irregular torus.
+
+**G16 is rejected by A-043.** A public spanning tree exposes a fundamental-cycle basis; nontriviality of the cocycle guarantees at least one basis cycle has odd pairing. Fixed `g16-8x9` tests only 4 of 145 basis cycles and 24 tree-path edges before finding an accepted 9-edge non-reference witness. An independent affine GF(2) solve also produces an accepted simple cycle. Across all three sizes × eight seeds, **24/24** attacks succeed by both paths and every primary public witness is non-reference.
+
+See `docs/51-g16-cohomology-cycle.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -368,16 +376,17 @@ One auxiliary seed remains completely reverse-stackable, so no universal carrier
 - `docs/48-g13-random-pairing-generator.md` — measured G13/A-040 generator-conditioning rejection
 - `docs/49-g14-stacked-sphere-normalization.md` — measured G14/A-041 reverse-normalization rejection
 - `docs/50-g15-flip-mixed-sphere-hypercover.md` — measured G15/A-042 carrier/witness separation rejection
+- `docs/51-g16-cohomology-cycle.md` — measured G16/A-043 nonlocal cohomology-cycle rejection
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G16**, not a trapdoor construction. G15 shows that even when carrier mixing substantially defeats the previous local inverse, the bounded-radius P3 witness relation still collapses to a tiny public exact-cover/SAT problem with many equivalent witnesses.
+The next controlled HGES experiment is **G17**, not a trapdoor construction. G16 shows that even a genuinely nonlocal cohomological verifier is trivial when acceptance is affine on a public cycle space.
 
-G16 must therefore change the witness predicate rather than keep redesigning only the carrier. Candidate validity must depend on genuinely nonlocal topological information and immediately face public quotient/canonicalization, topology-to-CSP compilation, generic SAT/CP-SAT, separator/treewidth and low-width algorithms, normalization, equivalent-witness enumeration and generated-role leakage.
+G17 must therefore leave affine homology/cohomology membership and couple multiple global cycles through a nonlinear geometric condition such as disjointness or intersection. It must immediately face public symplectic homology bases, flow/matching reductions, ILP/SAT/CP-SAT, separator/treewidth and low-width methods, normalization, equivalent-witness enumeration and generated-role leakage.
 
-No trapdoor/KEM work begins before such a nonlocal relation survives these attacks.
+No trapdoor/KEM work begins before such a nonlinear global relation survives these attacks.
 
 No security or post-quantum claim exists.
 
