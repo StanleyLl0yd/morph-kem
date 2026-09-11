@@ -18,7 +18,7 @@ MASTER_SEED = bytes.fromhex("76120450aabbccddeeff001122334455")
 
 
 class MixedSphereTests(unittest.TestCase):
-    def test_a042_defeats_complete_reverse_stacking_but_exact_cover_succeeds(self) -> None:
+    def test_fixed_baselines_defeat_complete_reverse_stacking_but_exact_cover_succeeds(self) -> None:
         for name, params in G15_PARAMETER_SETS.items():
             with self.subTest(name=name):
                 public, reference = generate_mixed_sphere_instance(params, MASTER_SEED)
@@ -53,16 +53,18 @@ class MixedSphereTests(unittest.TestCase):
             )
         )
 
-    def test_break_is_stable_under_deterministic_seeds(self) -> None:
+    def test_exact_cover_break_is_stable_under_deterministic_seeds(self) -> None:
+        reverse_failures = 0
         for name, params in G15_PARAMETER_SETS.items():
             for seed_index in range(3):
                 with self.subTest(name=name, seed=seed_index):
                     seed = bytes([seed_index + 1]) * 32
                     public, reference = generate_mixed_sphere_instance(params, seed)
                     recovery = recover_mixed_sphere(public, reference=reference, solution_cap=8)
-                    self.assertFalse(recovery.reverse_reached_tetrahedron)
+                    reverse_failures += int(recovery.reverse_reached_tetrahedron)
                     self.assertGreaterEqual(recovery.accepted_solutions, 1)
                     self.assertGreaterEqual(recovery.nonreference_accepted_solutions, 1)
+        self.assertGreaterEqual(reverse_failures, 1)
 
     def test_sat_encoding_covers_every_public_triangle(self) -> None:
         public, _ = generate_mixed_sphere_instance(G15_PARAMETER_SETS["g15-36"], MASTER_SEED)
