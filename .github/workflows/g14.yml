@@ -1,0 +1,69 @@
+name: G14 HGES stacked-sphere reverse-normalization control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_stacked_sphere.py'
+      - 'tests/test_gluing_stacked_sphere.py'
+      - 'scripts/gluing_stacked_sphere_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/49-g14-stacked-sphere-normalization.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g14.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_stacked_sphere.py'
+      - 'tests/test_gluing_stacked_sphere.py'
+      - 'scripts/gluing_stacked_sphere_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/49-g14-stacked-sphere-normalization.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g14.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  g14:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G14
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/gluing_stacked_sphere.py tests/test_gluing_stacked_sphere.py scripts/gluing_stacked_sphere_baseline.py scripts/gluing_stacked_sphere_sweep.py scripts/gluing_stacked_sphere_sat.py
+      - name: G14 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_gluing_stacked_sphere -v
+      - name: G14 fixed baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_stacked_sphere_baseline.py --params g14-72 --solution-cap 16
+      - name: G14 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_stacked_sphere_sweep.py --seeds 8 --solution-cap 16
+      - name: Install MiniSat for G14 cross-check
+        if: matrix.python-version == '3.12'
+        run: |
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends minisat
+      - name: G14 independent MiniSat cross-check
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_stacked_sphere_sat.py --params g14-72 --solver minisat
