@@ -8,7 +8,7 @@
 
 ## Current status
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G16 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G17 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
 
 Core M-series:
 
@@ -329,6 +329,14 @@ G16 changes the witness predicate itself: a witness is a simple public primal cy
 
 See `docs/51-g16-cohomology-cycle.md`.
 
+## G17 — primal-dual symplectic cycle-pair control
+
+G17 is the first explicitly bilinear global-witness control. A witness is a simple public primal cycle and a simple public dual cycle with odd mod-2 crossing number.
+
+**G17 is rejected by A-044.** A standard public tree-cotree decomposition leaves exactly two edges on the torus; either leftover edge directly yields primal and dual fundamental cycles with exactly one crossing. Fixed `g17-8x9` constructs a 10/24-edge accepted pair after only 9/23 tree-path scans. Across all three sizes × eight seeds, **24/24** primary pairs have exact crossing count one and pass the verifier. An independent full-basis crossing matrix has GF(2) rank two in every measured instance and also yields accepted witnesses.
+
+See `docs/52-g17-symplectic-cycle-pair.md`.
+
 ## Research discipline
 
 - Any equivalent accepted witness counts as attacker success.
@@ -377,16 +385,17 @@ See `docs/51-g16-cohomology-cycle.md`.
 - `docs/49-g14-stacked-sphere-normalization.md` — measured G14/A-041 reverse-normalization rejection
 - `docs/50-g15-flip-mixed-sphere-hypercover.md` — measured G15/A-042 carrier/witness separation rejection
 - `docs/51-g16-cohomology-cycle.md` — measured G16/A-043 nonlocal cohomology-cycle rejection
+- `docs/52-g17-symplectic-cycle-pair.md` — measured G17/A-044 tree-cotree intersection rejection
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
 ## Next gate
 
-The next controlled HGES experiment is **G17**, not a trapdoor construction. G16 shows that even a genuinely nonlocal cohomological verifier is trivial when acceptance is affine on a public cycle space.
+The next controlled HGES experiment is **G18**, not a trapdoor construction. G17 shows that moving from affine cohomology to a bilinear homology-intersection predicate is still insufficient: public tree-cotree decomposition constructs an accepted exact-one-crossing pair directly.
 
-G17 must therefore leave affine homology/cohomology membership and couple multiple global cycles through a nonlinear geometric condition such as disjointness or intersection. It must immediately face public symplectic homology bases, flow/matching reductions, ILP/SAT/CP-SAT, separator/treewidth and low-width methods, normalization, equivalent-witness enumeration and generated-role leakage.
+G18 must therefore require geometric information not determined only by homology classes or their mod-2 intersection form—for example internally vertex-disjoint representatives, constrained-length representatives, or a prescribed geometric-intersection pattern not automatically supplied by tree-cotree. It must immediately face disjoint-path/flow/matching reductions, surface shortest-cycle algorithms, ILP/SAT/CP-SAT, separator/treewidth methods, normalization and equivalent-witness enumeration.
 
-No trapdoor/KEM work begins before such a nonlinear global relation survives these attacks.
+No trapdoor/KEM work begins before such a geometric global relation survives these attacks.
 
 No security or post-quantum claim exists.
 

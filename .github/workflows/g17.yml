@@ -1,0 +1,49 @@
+name: G17 HGES primal-dual symplectic cycle-pair negative control
+
+on:
+  push:
+    paths:
+      - 'src/morph_kem/gluing_symplectic_cycle_pair.py'
+      - 'tests/test_gluing_symplectic_cycle_pair.py'
+      - 'scripts/gluing_symplectic_cycle_pair_*.py'
+      - '.github/workflows/g17.yml'
+      - 'docs/52-g17-symplectic-cycle-pair.md'
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_symplectic_cycle_pair.py'
+      - 'tests/test_gluing_symplectic_cycle_pair.py'
+      - 'scripts/gluing_symplectic_cycle_pair_*.py'
+      - '.github/workflows/g17.yml'
+      - 'docs/52-g17-symplectic-cycle-pair.md'
+
+permissions:
+  contents: read
+
+jobs:
+  g17:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G17
+        run: >-
+          python -m compileall -q
+          src/morph_kem/gluing_symplectic_cycle_pair.py
+          tests/test_gluing_symplectic_cycle_pair.py
+          scripts/gluing_symplectic_cycle_pair_baseline.py
+          scripts/gluing_symplectic_cycle_pair_sweep.py
+      - name: G17 unit tests
+        run: python -m unittest tests.test_gluing_symplectic_cycle_pair -v
+      - name: G17 fixed baseline
+        run: python scripts/gluing_symplectic_cycle_pair_baseline.py --params g17-8x9
+      - name: G17 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/gluing_symplectic_cycle_pair_sweep.py --seeds 8

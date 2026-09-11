@@ -47,6 +47,7 @@ Detailed attack records through A-024 are preserved verbatim in `docs/05-cryptan
 | A-041 | Public reverse-stacking / stellar-center normalization | **Fatal to G14 carrier distribution** | Implemented |
 | A-042 | Flip-mixed sphere normalization + P3 exact-cover / SAT recovery | **Fatal to G15 generated distribution** | Implemented |
 | A-043 | Public fundamental-cycle cohomology-pairing recovery | **Fatal to G16 generated distribution** | Implemented |
+| A-044 | Public tree-cotree primal-dual one-crossing recovery | **Fatal to G17 generated distribution** | Implemented |
 
 A-025 through A-027 are reserved cross-cutting frontier attacks, not yet implemented ledger entries: cover/subgroup/monodromy factorization, normal-form/geodesic/mapping-class canonicalization, and group-action/hidden-shift quantum reduction. Their definitions are maintained in `docs/29-k2-topological-hard-problem-frontier.md`.
 
@@ -902,3 +903,25 @@ Across all three sizes × eight seeds, **24/24** primary basis attacks and **24/
 ### Result
 
 **G16 is rejected by A-043.** Nonlocal cohomological syntax is not enough when verifier acceptance is affine on the public cycle space. Do not repair by increasing torus dimensions or flip counts. G17 must leave affine homology/cohomology membership and immediately face symplectic-basis, flow/matching, ILP/SAT/CP-SAT, low-width, normalization and equivalent-witness attacks. No security claim.
+
+## A-044 — public tree-cotree primal-dual one-crossing recovery
+
+### Target
+
+G17 is the first explicitly bilinear global HGES relation: the verifier accepts a pair of simple cycles, one in the public primal graph and one in the public triangle-dual graph, when their mod-2 crossing number is odd.
+
+### Public attack
+
+Build a public primal spanning tree `T`. In the dual graph forbid every edge crossing `T`, then build a public dual spanning tree `T*`. On the torus exactly two primal edges remain outside both structures. For either leftover edge `e`, the primal fundamental cycle of `e` relative to `T` and the dual fundamental cycle of `e*` relative to `T*` cross exactly once: the primal path lies in `T`, while `T*` contains no dual edge crossing `T`.
+
+### Fixed Python 3.12 `g17-8x9` result
+
+The 72/216/144 carrier has 71 primal-tree edges, 143 dual-cotree edges and exactly two leftovers. The first leftover produces primal/dual cycle lengths 10/24 after 9/23 path-edge scans, exact crossing count one and exact-verifier acceptance. It differs from the second-leftover reference pair.
+
+An independent full-basis check constructs 145 primal and 73 dual fundamental cycles. Their 145×73 crossing matrix has weight 550, GF(2) rank two and requires 48 row XORs. The first odd entry reached after 230 row-major pair tests gives 8/19-edge cycles with one crossing and passes the verifier.
+
+Across `g17-6x6`, `g17-6x9`, `g17-8x9` × eight seeds, **24/24** tree-cotree decompositions expose exactly two leftovers, **24/24** primary pairs have exact crossing count one and pass the verifier, and all 24 differ from the reference. Every full-basis matrix has rank two and every independent basis witness is accepted.
+
+### Result
+
+**G17 is rejected by A-044.** The bilinear topological predicate still has a direct public construction supplied by standard tree-cotree decomposition. Increasing dimensions or carrier mixing cannot repair the public intersection-form exposure. G18 must require geometric information not determined by homology intersection and must immediately face disjoint-path/flow/matching, shortest-cycle, ILP/SAT/CP-SAT, separator/treewidth, normalization and equivalent-witness attacks. No security claim.
