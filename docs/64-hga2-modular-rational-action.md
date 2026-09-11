@@ -2,7 +2,7 @@
 
 ## Status
 
-**HGA2 is a falsification experiment in progress.** It removes HGA1's small finite-orbit failure mode by using an infinite modular-group action, then attacks canonical reduction directly.
+**HGA2 is rejected by HGA-A003.** Moving from HGA1's finite orbit to the infinite modular-group action does not help because public endpoints admit a direct Euclidean/continued-fraction connector construction.
 
 HGA2 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -16,83 +16,66 @@ t: x -> x - 1
 S: x -> -1/x
 ```
 
-with matrices
+Generation samples a primitive public source rational and a locally reduced planted word. The verifier accepts **any** word taking the public source exactly to the public target. It never compares against the planted word.
 
-```text
-T = [[1, 1], [0, 1]]
-t = [[1,-1], [0, 1]]
-S = [[0,-1], [1, 0]].
-```
-
-Generation samples a primitive public source rational and a locally reduced planted word with no immediate inverse cancellation. The public target is the exact endpoint after applying the planted word.
-
-Toy sets:
-
-```text
-hga2-12: planted length 12, source coordinates <= 31
-hga2-20: planted length 20, source coordinates <= 63
-hga2-32: planted length 32, source coordinates <= 127
-```
-
-The orbit is infinite. The verifier accepts any word taking the public source exactly to the public target. It never compares against the planted word.
+Toy sets use planted lengths 12, 20 and 32 with source-coordinate bounds 31, 63 and 127.
 
 ## HGA-A003 — Euclidean canonical connector
 
-Every primitive rational `p/q` has a public Euclidean/continued-fraction reduction to the cusp at infinity.
-
-For a public endpoint `(p,q)`, repeatedly:
-
-1. compute `a = floor(p/q)`;
-2. apply `T^-a`, replacing `(p,q)` by `(p-aq,q)`;
-3. apply `S`, swapping the Euclidean remainder into the denominator;
-4. continue until the denominator is zero.
-
-This yields a deterministic public reduction word `R(x)` with
-
-```text
-R(x) * x = infinity.
-```
-
-Given public source `x` and target `y`, the attacker returns
+Every primitive rational has a public Euclidean/continued-fraction reduction to the cusp at infinity. For source `x` and target `y`, the attacker computes public reduction words `R(x)` and `R(y)` and returns
 
 ```text
 R(x) || inverse(R(y)).
 ```
 
-The word is checked in two independent ways:
+The connector is verified both by direct generator action and by a determinant-one integer matrix canonicalized up to PSL sign. Modular matrix fingerprints modulo 5, 7 and 11 are retained as cheap quotient diagnostics.
 
-- direct generator-by-generator endpoint action;
-- compilation to a determinant-one integer matrix, canonicalized up to the central sign of `PSL(2,Z)`.
+The recovered connector is not required to be short and is not required to equal the planted action. The attack succeeds because it is deterministically computable from the public endpoints without secret search.
 
-The recovered connector need not equal the planted word or planted matrix. Endpoint equality alone is attacker success.
+## Fixed Python 3.12 result
 
-## Finite quotient diagnostics
+For `hga2-32`:
 
-The recovered integer matrix is also reduced modulo `5`, `7`, and `11`. These fingerprints do not constitute the primary attack; they are cheap diagnostics showing what finite quotient information remains public even after moving to an infinite action.
+```text
+source:                         69/109
+target:                         146969/111862
+source / target bit lengths:    7 / 18
+planted word length:            32
+source / target Euclid steps:   8 / 17
+recovered connector length:     86
+recovered matrix:               (674,-1775,513,-1351)
+matrix entry bit length:        11
+endpoint verified:              yes
+matches planted word:           no
+same PSL matrix as planted:     yes
+mod-5 fingerprint:              (4,0,3,4)
+mod-7 fingerprint:              (2,3,2,0)
+mod-11 fingerprint:             (3,7,7,2)
+```
 
-## Measurements
+The recovered connector is longer than the planted word. That is irrelevant to the inversion criterion: it is still an accepted connector constructed directly from public data.
 
-Record at least:
+## Deterministic sweep
 
-- source and target rational coordinates;
-- source/target numerator-denominator bit lengths;
-- planted word length;
-- Euclidean division counts;
-- continued-fraction quotient sequences;
-- recovered connector length;
-- recovered integer matrix and maximum entry bit length;
-- exact endpoint verification;
-- post-success planted-word equality;
-- post-success planted-matrix equality;
-- modular fingerprints for primes 5, 7 and 11;
-- deterministic all-size / multi-seed sweep.
+Python 3.12 tested all three parameter sets over eight deterministic seeds each.
 
-## Rejection gate
+- **24/24** public endpoint pairs receive an accepted Euclidean connector.
+- **0/24** recovered connector words equal the planted word.
+- In **23/24** cases the recovered connector induces the same PSL matrix as the planted action.
+- In **1/24** cases (`hga2-32`, seed 1) even the PSL matrix differs while the public endpoint still verifies. This exposes a nontrivial endpoint stabilizer/equivalent-action phenomenon rather than a failure of the attack.
+- Recovered connector lengths range from 28 to 272; planted lengths are only 12/20/32.
+- Endpoint coordinate sizes remain toy-small (up to 19 bits in the measured sweep), and recovery is ordinary Euclidean reduction rather than orbit enumeration.
 
-Reject HGA2 if public Euclidean reduction routinely yields an accepted connector with work polynomial in endpoint bit length and small measured constants. Do not repair by increasing only planted word length while endpoint normal forms remain efficiently computable.
+Dedicated HGA2 CI passes on Python 3.11, 3.12 and 3.13.
 
-## Advancement gate
+## Result
 
-HGA3 may proceed only to an action for which public endpoints do not admit an obvious Euclidean, Garside, linear, or other canonical normal form that directly constructs a connector. It must still face finite-dimensional representations, quotient reductions, invariants, stabilizers, bounded-ball MITM and quantum hidden-shift/subgroup screening.
+**HGA2 is rejected by HGA-A003.** Infinite orbit size alone is not useful when public endpoints possess an efficient canonical reduction that directly manufactures a connector. Scaling the planted word length cannot repair this family.
+
+The result also preserves the key HGA semantics: the planted action itself need not be recoverable. In one measured case a genuinely different PSL element reaches the same public endpoint. Any such connector is attacker success.
+
+## HGA3 gate
+
+HGA3 must move to an action where public endpoints do not admit an obvious Euclidean, Garside, linear, or other canonical normal form that constructs a connector. It must still face finite-dimensional and finite-quotient representations, public invariants, stabilizers/equivalent actions, bounded-ball MITM, generated-distribution leakage and quantum hidden-shift/subgroup screening.
 
 No security claim.
