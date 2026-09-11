@@ -104,14 +104,11 @@ def _cycle_vertices(cycle: Cycle) -> frozenset[int]:
     return frozenset(vertices)
 
 
-def _cycle_signature(cocycles: tuple[int, ...], indices: tuple[int, ...]) -> int:
-    value = 0
-    for bit, cocycle in enumerate(cocycles):
-        value |= _pairing(tuple((cocycle >> i) & 1 for i in range(cocycle.bit_length() + 1)), indices) << bit
-    return value
-
-
-def _signature_with_width(cocycles: tuple[int, ...], edge_count: int, indices: tuple[int, ...]) -> int:
+def _signature_with_width(
+    cocycles: tuple[int, ...],
+    edge_count: int,
+    indices: tuple[int, ...],
+) -> int:
     value = 0
     for bit, cocycle in enumerate(cocycles):
         cochain = tuple((cocycle >> index) & 1 for index in range(edge_count))
@@ -133,7 +130,12 @@ def _intersection_matrix(cycles: tuple[Cycle, ...]) -> tuple[tuple[int, ...], ..
 
 def _enumerate_candidates(
     public: SameSidePublicInstance,
-) -> tuple[tuple[tuple[int, ...], int, frozenset[int]], ...], int, int, tuple[tuple[int, int], ...]]:
+) -> tuple[
+    tuple[tuple[tuple[int, ...], int, frozenset[int]], ...],
+    int,
+    int,
+    tuple[tuple[int, int], ...],
+]:
     edges, cocycles, h1_dimension = _cohomology_basis(public.target)
     if h1_dimension != 4 or len(cocycles) != 4:
         raise GluingExperimentError("G22 carrier must expose four public cohomology basis vectors")
