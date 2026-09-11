@@ -1,0 +1,59 @@
+name: G13 random cubic-dual generator audit
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_random_pairing.py'
+      - 'tests/test_gluing_random_pairing.py'
+      - 'scripts/gluing_random_pairing_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/48-g13-random-pairing-generator.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g13.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_random_pairing.py'
+      - 'tests/test_gluing_random_pairing.py'
+      - 'scripts/gluing_random_pairing_*.py'
+      - 'docs/05-cryptanalysis.md'
+      - 'docs/48-g13-random-pairing-generator.md'
+      - 'notes/research-log.md'
+      - 'README.md'
+      - '.github/workflows/g13.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  g13:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G13
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/gluing_random_pairing.py tests/test_gluing_random_pairing.py scripts/gluing_random_pairing_audit.py scripts/gluing_random_pairing_sweep.py
+      - name: G13 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_gluing_random_pairing -v
+      - name: G13 fixed generator audit
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_random_pairing_audit.py --attempts 4096
+      - name: G13 multi-seed generator sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_random_pairing_sweep.py --seeds 8 --attempts 1024
