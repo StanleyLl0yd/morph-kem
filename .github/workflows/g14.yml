@@ -1,0 +1,50 @@
+name: G14 stacked-sphere normalization negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_stacked_sphere.py'
+      - 'tests/test_gluing_stacked_sphere.py'
+      - 'scripts/gluing_stacked_sphere_*.py'
+      - '.github/workflows/g14.yml'
+      - 'docs/49-g14-stacked-sphere-normalization.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_stacked_sphere.py'
+      - 'tests/test_gluing_stacked_sphere.py'
+      - 'scripts/gluing_stacked_sphere_*.py'
+      - '.github/workflows/g14.yml'
+      - 'docs/49-g14-stacked-sphere-normalization.md'
+
+permissions:
+  contents: read
+
+jobs:
+  g14:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G14
+        run: >-
+          python -m compileall -q
+          src/morph_kem/gluing_stacked_sphere.py
+          tests/test_gluing_stacked_sphere.py
+          scripts/gluing_stacked_sphere_baseline.py
+          scripts/gluing_stacked_sphere_sweep.py
+      - name: G14 unit tests
+        run: python -m unittest tests.test_gluing_stacked_sphere -v
+      - name: G14 stacked-sphere baseline
+        run: python scripts/gluing_stacked_sphere_baseline.py --params g14-72
+      - name: G14 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/gluing_stacked_sphere_sweep.py --seeds 8
