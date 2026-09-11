@@ -1,0 +1,51 @@
+name: TDC2 non-graphic boundary-2 code control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/tdc_boundary2.py'
+      - 'tests/test_tdc_boundary2.py'
+      - 'scripts/tdc_boundary2_*.py'
+      - '.github/workflows/tdc2.yml'
+      - 'docs/66-tdc2-boundary2-code.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/tdc_boundary2.py'
+      - 'tests/test_tdc_boundary2.py'
+      - 'scripts/tdc_boundary2_*.py'
+      - '.github/workflows/tdc2.yml'
+      - 'docs/66-tdc2-boundary2-code.md'
+
+permissions:
+  contents: read
+
+jobs:
+  tdc2:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile TDC2
+        run: >-
+          python -m compileall -q
+          src/morph_kem/tdc_boundary2.py
+          tests/test_tdc_boundary2.py
+          scripts/tdc_boundary2_baseline.py
+          scripts/tdc_boundary2_sweep.py
+      - name: TDC2 unit tests
+        run: python -m unittest tests.test_tdc_boundary2 -v
+      - name: TDC2 fixed structural baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_boundary2_baseline.py --params tdc2-n8
+      - name: TDC2 multi-seed structural sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_boundary2_sweep.py --seeds 8
