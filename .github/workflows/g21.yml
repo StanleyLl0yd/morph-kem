@@ -1,0 +1,57 @@
+name: G21 HGES genus-two full crossing-matrix negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_genus2_crossing_basis.py'
+      - 'tests/test_gluing_genus2_crossing_basis.py'
+      - 'scripts/gluing_genus2_crossing_basis_*.py'
+      - 'docs/56-g21-genus2-crossing-basis.md'
+      - '.github/workflows/g21.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_genus2_crossing_basis.py'
+      - 'tests/test_gluing_genus2_crossing_basis.py'
+      - 'scripts/gluing_genus2_crossing_basis_*.py'
+      - 'docs/56-g21-genus2-crossing-basis.md'
+      - '.github/workflows/g21.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  g21:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G21
+        env:
+          PYTHONPATH: src
+        run: >-
+          python -m compileall -q
+          src/morph_kem/gluing_genus2_crossing_basis.py
+          tests/test_gluing_genus2_crossing_basis.py
+          scripts/gluing_genus2_crossing_basis_baseline.py
+          scripts/gluing_genus2_crossing_basis_sweep.py
+      - name: G21 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_gluing_genus2_crossing_basis -v
+      - name: G21 fixed baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_genus2_crossing_basis_baseline.py --params g21-6x9
+      - name: G21 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/gluing_genus2_crossing_basis_sweep.py --seeds 8
