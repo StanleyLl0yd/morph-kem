@@ -80,6 +80,18 @@ The implementation records:
 - canonical tree-cotree lengths and whether that older attack also fits the bounds;
 - deterministic all-size / multi-seed regression.
 
+## Exact-head gate
+
+The current branch must pass all of the following before any result is recorded:
+
+- Python 3.11/3.12/3.13 compile + unit tests;
+- fixed `g18-8x9` baseline;
+- Python 3.12 all-size/eight-seed sweep;
+- full repository CI on the exact PR head;
+- no unresolved review threads.
+
+If any seed produces no public bounded witness, that failure is evidence against A-045 and must be preserved rather than hidden by changing the bounds after generation.
+
 ## Rejection gate
 
 If A-045 routinely constructs an accepted exact-one-crossing pair within the public bounds using cheap parity-cover BFS plus constrained dual BFS, **reject G18**.
