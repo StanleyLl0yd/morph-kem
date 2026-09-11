@@ -1,0 +1,61 @@
+name: G15 flip-mixed sphere hypercover negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/gluing_mixed_sphere.py'
+      - 'tests/test_gluing_mixed_sphere.py'
+      - 'scripts/gluing_mixed_sphere_*.py'
+      - '.github/workflows/g15.yml'
+      - 'docs/50-g15-flip-mixed-sphere-hypercover.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/gluing_mixed_sphere.py'
+      - 'tests/test_gluing_mixed_sphere.py'
+      - 'scripts/gluing_mixed_sphere_*.py'
+      - '.github/workflows/g15.yml'
+      - 'docs/50-g15-flip-mixed-sphere-hypercover.md'
+
+permissions:
+  contents: read
+
+jobs:
+  g15:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile G15
+        run: >-
+          python -m compileall -q
+          src/morph_kem/gluing_mixed_sphere.py
+          tests/test_gluing_mixed_sphere.py
+          scripts/gluing_mixed_sphere_baseline.py
+          scripts/gluing_mixed_sphere_sweep.py
+          scripts/gluing_mixed_sphere_sat.py
+      - name: G15 unit tests
+        run: python -m unittest tests.test_gluing_mixed_sphere -v
+      - name: G15 flip-mixed sphere baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/gluing_mixed_sphere_baseline.py --params g15-72 --solution-cap 64
+      - name: G15 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/gluing_mixed_sphere_sweep.py --seeds 8 --solution-cap 32
+      - name: Install MiniSat for G15 cross-check
+        if: matrix.python-version == '3.12'
+        run: |
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends minisat
+      - name: G15 independent MiniSat cross-check
+        if: matrix.python-version == '3.12'
+        run: python scripts/gluing_mixed_sphere_sat.py --params g15-72 --solver minisat
