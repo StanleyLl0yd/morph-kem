@@ -2,7 +2,7 @@
 
 ## Status
 
-**HGA3 is a falsification experiment in progress.** It removes HGA1's small finite-orbit failure and HGA2's Euclidean endpoint normal form, then tests whether the action itself linearizes.
+**HGA3 is rejected by HGA-A004.** Simultaneous matrix conjugacy looks nonlinear through `X^-1`, but the public endpoint relation linearizes exactly to an intertwiner nullspace problem.
 
 HGA3 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -32,51 +32,59 @@ hga3-p11-n5: p=11, n=5, k=3
 
 ## HGA-A004 — public intertwiner-space recovery
 
-Although simultaneous conjugacy looks nonlinear when written with `X^-1`, the endpoint relation is equivalent to
+The endpoint relation is equivalent to
 
 ```text
-X A_i = B_i X.
+X A_i = B_i X,
 ```
 
-For fixed public `A_i,B_i`, these are homogeneous linear equations in the `n^2` unknown entries of `X`.
+which gives `k n^2` homogeneous linear equations in the `n^2` unknown entries of `X`.
 
-The attack:
+The attack performs exact modular RREF, extracts the public nullspace, tests deterministic linear combinations for invertibility, and verifies simultaneous conjugacy directly. A scalar multiple or any other valid conjugator is attacker success.
 
-1. constructs all `k n^2` public linear equations over `F_p`;
-2. performs exact modular RREF;
-3. extracts a basis for the public nullspace/intertwiner space;
-4. deterministically enumerates sparse linear combinations of basis vectors;
-5. stops at the first full-rank/invertible matrix;
-6. verifies all simultaneous conjugacy equations directly;
-7. compares with planted `S` only after public success.
+## Fixed Python 3.12 result
 
-A recovered conjugator that differs from `S` is attacker success. Scalar multiples or other centralizer-induced alternatives are explicitly expected and measured.
+For `hga3-p11-n5`:
 
-## Independent invariant cross-check
+```text
+prime / n / tuple length:          11 / 5 / 3
+linear variables / equations:      25 / 75
+system rank / nullity:             24 / 1
+RREF row eliminations:             1399
+invertible combinations tested:    1
+recovered rank / determinant:      5 / 10
+endpoint verified:                 yes
+scalar-equivalent to planted S:    yes
+exactly equals planted S:          no
+trace fingerprint:                 (8,1,9,3,10)
+```
 
-Conjugacy preserves traces. The implementation records traces of every tuple component plus short trace-word fingerprints such as `tr(A1 A2)` and `tr(A1 A2 A3)` on both public endpoints. These are diagnostics, not the inversion attack.
+The one-dimensional public intertwiner space already contains an invertible basis vector, so no meaningful combinatorial search remains.
 
-## Measurements
+## Deterministic sweep
 
-Record at least:
+Python 3.12 tested all three toy sets over eight deterministic seeds each:
 
-- prime `p`, matrix dimension `n`, tuple length `k`;
-- public variable/equation counts;
-- RREF rank/nullity and row-elimination work;
-- nullspace dimension;
-- invertible linear-combination candidates tested;
-- recovered matrix rank/determinant;
-- exact public endpoint verification;
-- post-success scalar equivalence and exact equality to planted `S`;
-- source/target trace fingerprints;
-- deterministic all-size / multi-seed sweep.
+- **24/24** systems have nullity exactly `1`;
+- **24/24** recover an invertible public intertwiner on the **first** tested nullspace vector;
+- **24/24** recovered matrices pass exact simultaneous-conjugacy verification;
+- **24/24** are scalar-equivalent to the planted conjugator;
+- only **5/24** equal the planted matrix literally, while **19/24** are different nonzero scalar representatives;
+- RREF ranks are exactly `8/15/24` for dimensions `3/4/5`, leaving the expected one-dimensional intertwiner line;
+- measured row-elimination work ranges from roughly 119 to 1496 operations across the toy sets.
 
-## Rejection gate
+Source and target trace-word fingerprints agree on every instance. Dedicated HGA3 CI passes on Python 3.11, 3.12 and 3.13.
 
-Reject HGA3 if public linear algebra routinely yields an invertible intertwiner with small work. Do not repair by increasing only `n`: the relation remains a public `n^2`-variable homogeneous linear system.
+## Result
 
-## Advancement gate
+**HGA3 is rejected by HGA-A004.** The action family is not repaired by lacking a finite orbit or Euclidean endpoint normal form: public inversion is simply linear algebra in `n^2` variables.
 
-HGA4 may proceed only to an action whose endpoint inversion does not immediately linearize to an intertwiner/kernel problem. It must still face finite-dimensional representations, quotient actions, invariant theory, stabilizers/equivalent actions, canonical forms, bounded-ball MITM and quantum hidden-shift/subgroup screening.
+The measured scalar multiplicity is also semantically important. Recovering planted `S` exactly is unnecessary; any invertible point on the public intertwiner line gives the same conjugation action and is attacker success.
+
+Increasing only `n` is not a justified repair while the same homogeneous intertwiner system exists.
+
+## HGA4 gate
+
+HGA4 may proceed only to an action whose endpoint inversion does not immediately linearize to an intertwiner/kernel problem. It must still face finite-dimensional and finite-quotient representations, invariant theory, stabilizers/equivalent actions, canonical forms, bounded-ball MITM, generated-distribution leakage and quantum hidden-shift/subgroup screening.
 
 No security claim.
