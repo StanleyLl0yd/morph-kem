@@ -1,0 +1,52 @@
+name: HGA0 hidden-action trivialization controls
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/hga_actions.py'
+      - 'tests/test_hga_actions.py'
+      - 'scripts/hga_action_*.py'
+      - 'docs/57-hga0-action-trivialization.md'
+      - '.github/workflows/hga0.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/hga_actions.py'
+      - 'tests/test_hga_actions.py'
+      - 'scripts/hga_action_*.py'
+      - 'docs/57-hga0-action-trivialization.md'
+      - '.github/workflows/hga0.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  hga0:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile HGA0
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/hga_actions.py tests/test_hga_actions.py scripts/hga_action_baseline.py scripts/hga_action_sweep.py
+      - name: HGA0 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_hga_actions -v
+      - name: HGA0 fixed baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/hga_action_baseline.py --linear hga0-linear-24 --dihedral hga0-dihedral-25
+      - name: HGA0 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/hga_action_sweep.py --seeds 8
