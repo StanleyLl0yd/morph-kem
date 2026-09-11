@@ -2,7 +2,7 @@
 
 ## Status
 
-**HGA0 is an attack-harness calibration in progress.** The two families in this document are deliberately weak and must be rejected publicly before any less trivial hidden-action candidate is interpreted.
+**HGA0 calibration succeeds by rejecting both deliberately weak action families.** The public trivialization harness recovers every generated control instance across the measured sweep. This validates the first HGA attack gates; it is not evidence that a stronger HGA candidate is hard.
 
 HGA0 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -28,7 +28,7 @@ Public objects are `n`-bit vectors. The secret is a sparse translation mask `s` 
 y = x XOR s.
 ```
 
-This control must be rejected immediately because the public representation is faithful and linear:
+This control is rejected immediately because the public representation is faithful and linear:
 
 ```text
 s = x XOR y.
@@ -58,24 +58,56 @@ Toy sets:
 
 This control represents a candidate family with a tiny canonical normal-form/orbit search.
 
-## HGA-A001 calibration gate
+## Measured HGA-A001 calibration
 
-The harness must show across deterministic multi-seed sweeps that:
+Exact Python 3.12 fixed baseline:
 
-1. the linear control is recovered exactly with one XOR;
-2. the dihedral control is recovered by at most `2n` tested group elements;
-3. the recovered public element verifies without reference data;
-4. reference comparison is performed only after public success;
-5. the dihedral public stabilizer remains one for the generated controls.
+```text
+linear parameters:                         hga0-linear-24
+linear dimension:                          24
+linear recovered word weight:              7
+linear representation rank:                24
+linear XOR operations:                     1
+linear accepted:                           yes
+linear matches reference after success:    yes
 
-If these deliberately weak families do not fail deterministically, HGA0 must not proceed to more interesting geometric actions.
+dihedral parameters:                       hga0-dihedral-25
+dihedral polygon size:                     25
+dihedral candidate elements tested:        50
+dihedral label checks:                     75
+dihedral matching elements:                1
+dihedral stabilizer size:                  1
+dihedral recovered element:                rotation=8, reflected=0
+dihedral accepted:                         yes
+dihedral matches reference after success:  yes
+```
+
+Python 3.12 deterministic sweep covers all six toy sets × eight seeds:
+
+- linear controls: **24/24** exact public recoveries with exactly one XOR; recovered weights are always the configured `3/5/7`;
+- dihedral controls: **24/24** exact public recoveries; sizes `9/17/25` require exactly `18/34/50` tested group elements and `27/51/75` label checks respectively;
+- every dihedral instance has exactly one matching public action element and stabilizer size one;
+- all **48/48** recovered actions verify, and all match the generation reference only in post-success comparison.
+
+The dedicated HGA0 workflow passes on Python 3.11, 3.12 and 3.13.
+
+## Result
+
+**Both HGA0 controls are rejected as intended.** The calibration establishes two mandatory kill-gates for future hidden-action candidates:
+
+1. a faithful low-dimensional public representation that exposes the acting element is fatal;
+2. a small public orbit with a canonical/cheap normal-form search is fatal.
+
+A later HGA candidate receives no positive interpretation unless both attacks fail for structural reasons rather than parameter size.
 
 ## Next HGA candidate gate
 
-After calibration, HGA1 should test a nontrivial action whose public endpoints do not admit either:
+HGA1 should test a nontrivial nonabelian action whose public endpoints do not admit either:
 
 - a faithful low-dimensional linear quotient recovering the action, or
 - a small canonical orbit search / short normal form.
+
+A suitable first control is a Nielsen/automorphism action on a small nonabelian representation tuple, with mandatory attacks through abelianization, trace/character-style invariants where available, quotient representations, stabilizers, and meet-in-the-middle endpoint recovery.
 
 Candidate families remain subject to canonicalization, stabilizer/equivalent-secret multiplicity, quotient representations, abelianization, MITM/BFS, generated-role leakage and quantum hidden-shift/subgroup screening.
 
