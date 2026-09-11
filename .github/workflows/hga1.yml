@@ -1,0 +1,52 @@
+name: HGA1 Heisenberg Nielsen-action negative control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/hga_heisenberg.py'
+      - 'tests/test_hga_heisenberg.py'
+      - 'scripts/hga_heisenberg_*.py'
+      - 'docs/61-hga1-heisenberg-nielsen.md'
+      - '.github/workflows/hga1.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/hga_heisenberg.py'
+      - 'tests/test_hga_heisenberg.py'
+      - 'scripts/hga_heisenberg_*.py'
+      - 'docs/61-hga1-heisenberg-nielsen.md'
+      - '.github/workflows/hga1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  hga1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile HGA1
+        env:
+          PYTHONPATH: src
+        run: python -m compileall -q src/morph_kem/hga_heisenberg.py tests/test_hga_heisenberg.py scripts/hga_heisenberg_baseline.py scripts/hga_heisenberg_sweep.py
+      - name: HGA1 unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest tests.test_hga_heisenberg -v
+      - name: HGA1 fixed baseline
+        env:
+          PYTHONPATH: src
+        run: python scripts/hga_heisenberg_baseline.py --params hga1-p11
+      - name: HGA1 multi-seed sweep
+        if: matrix.python-version == '3.12'
+        env:
+          PYTHONPATH: src
+        run: python scripts/hga_heisenberg_sweep.py --seeds 8
