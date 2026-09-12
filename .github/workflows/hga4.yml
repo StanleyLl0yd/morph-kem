@@ -1,0 +1,51 @@
+name: HGA4 Hurwitz free-group action control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/hga_hurwitz.py'
+      - 'tests/test_hga_hurwitz.py'
+      - 'scripts/hga_hurwitz_*.py'
+      - '.github/workflows/hga4.yml'
+      - 'docs/67-hga4-hurwitz-free-group.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/hga_hurwitz.py'
+      - 'tests/test_hga_hurwitz.py'
+      - 'scripts/hga_hurwitz_*.py'
+      - '.github/workflows/hga4.yml'
+      - 'docs/67-hga4-hurwitz-free-group.md'
+
+permissions:
+  contents: read
+
+jobs:
+  hga4:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile HGA4
+        run: >-
+          python -m compileall -q
+          src/morph_kem/hga_hurwitz.py
+          tests/test_hga_hurwitz.py
+          scripts/hga_hurwitz_baseline.py
+          scripts/hga_hurwitz_sweep.py
+      - name: HGA4 unit tests
+        run: python -m unittest tests.test_hga_hurwitz -v
+      - name: HGA4 fixed baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/hga_hurwitz_baseline.py --params hga4-L16
+      - name: HGA4 multi-seed growth sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/hga_hurwitz_sweep.py --seeds 8
