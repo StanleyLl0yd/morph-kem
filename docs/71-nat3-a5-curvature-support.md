@@ -2,7 +2,7 @@
 
 ## Status
 
-**NAT3 is a falsification/calibration experiment in progress.** NAT2 failed because the public sign quotient `S3 -> C2` exposed sparse corruption support on 76/80 measured instances. NAT3 removes that specific quotient by moving hidden states and sparse noise into the perfect simple group `A5`.
+**NAT3 is rejected by NAT-A004.** Moving from `S3` to the perfect simple group `A5` removes NAT2's sign/abelian quotient, but the sparse edge-noise distribution remains locally visible through exact public nonabelian face curvature.
 
 NAT3 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -24,7 +24,7 @@ The verifier accepts any normalized vertex assignment for which exactly `t` edge
 
 `A5` has trivial abelianization, so the NAT2 sign/T-join attack is absent by construction. All hidden states, clean edge labels and allowed noise elements remain inside `A5`.
 
-This does not imply hardness. NAT3 immediately attacks the full nonabelian local relation.
+This removes the previous failure mechanism but does not hide local nonabelian curvature.
 
 ## NAT-A004 — curvature-support attack
 
@@ -36,7 +36,7 @@ H_abc = observed_ab * observed_bc * observed_ac^-1.
 
 If all three boundary edges are clean, `H_abc = 1`. Therefore every public face with nonidentity holonomy must contain at least one noisy edge.
 
-The attack then:
+The attack:
 
 1. enumerates all public size-`t` edge supports;
 2. keeps only supports hitting every nonidentity-curvature face;
@@ -45,31 +45,62 @@ The attack then:
 5. rejects disconnected or path-inconsistent candidates;
 6. submits every completed state to the exact verifier.
 
-This attack uses no planted data. Post-success support/state equality is reference-only.
+The support enumeration is used only to measure how strongly curvature localizes the support. Generic fixed-`t` enumeration alone is not the rejection criterion.
 
-## Interpretation rule
+## Fixed Python 3.12 result
 
-Exact fixed-`t` support enumeration is only a toy/FPT baseline and is **not** by itself a structural rejection. The measured question is whether public nonabelian curvature shrinks the support space to a tiny or unique family routinely.
+For `nat3-F36`:
 
-If curvature leaves many candidates and work scales essentially like generic `E^t`, NAT3 survives this specific gate only. If curvature almost directly localizes sparse corruption and clean-subgraph propagation finishes recovery, reject the generated noise distribution.
+```text
+t=1: V/E/F=20/54/36, curvature defects=2,
+     C(E,t)=54,    curvature-hitting supports=1,
+     consistent=1, accepted=1, planted support/state match=yes
 
-## Measurements
+t=2: V/E/F=20/54/36, curvature defects=4,
+     C(E,t)=1431,  curvature-hitting supports=1,
+     consistent=1, accepted=1, planted support/state match=yes
 
-Record at least:
+t=3: V/E/F=20/54/36, curvature defects=6,
+     C(E,t)=24804, curvature-hitting supports=1,
+     consistent=1, accepted=1, planted support/state match=yes
+```
 
-- public `V/E/F` and noise weight;
-- nonidentity face-curvature count and nonidentity conjugacy/cycle-type histogram;
-- total `C(E,t)` support combinations;
-- support count after exact curvature hitting constraints;
-- propagated and connected/consistent support counts;
-- accepted normalized states and cap;
-- first exact verifier acceptance;
-- post-success planted support/state equality;
-- whether planted support necessarily hits every public defect face;
-- deterministic all-size/multi-seed curve.
+All fixed nonidentity face holonomies are 3-cycles. The largest fixed support space therefore collapses from 24,804 candidates to exactly one using only public curvature incidence before any group-state propagation.
 
-## Advancement gate
+## Eight-seed sweep
 
-A surviving NAT3 must next face message passing, sparse synchronization algorithms, generic SAT/ILP/CP-SAT, equivalent-state enumeration and explicit noise-scaling experiments. A rejected NAT3 must change the noise relation so local curvature no longer reveals corruption locations.
+The official sweep contains `F=24,30,36` × eight seeds × three noise weights = **72** public instances.
 
-No security claim.
+Measured Python 3.12 result:
+
+- **72/72** planted supports satisfy the public curvature-hitting constraints;
+- **64/72** instances have exactly **one** size-`t` curvature-hitting support;
+- the remaining **8/72** have only **2, 5, or 7** curvature-hitting supports;
+- the maximum measured candidate family after curvature filtering is **7**;
+- deterministic clean-subgraph propagation leaves exactly **one** connected/path-consistent accepted state on **72/72** instances;
+- the first accepted inferred support matches the planted support on **72/72** after public success;
+- the first accepted normalized `A5` state matches the planted normalized state on **72/72** after public success;
+- no accepted-state cap is hit.
+
+The eight non-unique curvature-support cases are preserved rather than hidden; propagation resolves each of them without reference data.
+
+## Interpretation
+
+NAT3 demonstrates that removing easy abelian quotients is insufficient. The noise model is still structurally exposed because an isolated corrupted edge creates nontrivial curvature on adjacent public faces. Sparse supports are therefore localized by a public hypergraph hitting constraint before the nonabelian synchronization problem is meaningfully engaged.
+
+This is not a claim that generic noisy `A5` synchronization is easy. It is a rejection of this generated noise relation/distribution.
+
+Increasing only carrier size or replacing `A5` by a larger perfect group is not a justified repair while local face curvature continues to reveal corruption locations.
+
+## Successor gate
+
+NAT4 must make local face curvature intentionally uninformative about individual corruption support—for example through coupled locally-flat gauge deformations or edge/face noise satisfying zero local curvature—then immediately face:
+
+- global synchronization and quotient/representation attacks;
+- message passing / belief propagation;
+- sparse recovery and matching/flow reductions where applicable;
+- generic SAT / ILP / CP-SAT;
+- equivalent-state enumeration;
+- explicit noise-scaling and generated-distribution tests.
+
+No trapdoor primitive, KEM, one-wayness, post-quantum, IND-CPA/CCA, or production-security claim exists.
