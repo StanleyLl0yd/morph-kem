@@ -5,6 +5,7 @@ import unittest
 
 from morph_kem.hga_hurwitz import apply_braid_word, generate_hga4_instance
 from morph_kem.hga_hurwitz_self_avoiding import (
+    HGA4BDeadEnd,
     HGA4BError,
     HGA4BParameters,
     HGA4B_PARAMETER_SETS,
@@ -46,6 +47,16 @@ class HGA4BSelfAvoidingTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertEqual(first[1].dead_end_count, 0)
 
+    def test_official_sweep_dead_end_is_explicit(self) -> None:
+        params = HGA4B_PARAMETER_SETS["hga4b-L12"]
+        seed = seed_for("MORPH-KEM HGA4b sweep hga4b-L12 seed 7 v1")
+        with self.assertRaises(HGA4BDeadEnd) as context:
+            generate_hga4b_instance(params, seed)
+        self.assertEqual(context.exception.step, 5)
+        self.assertEqual(len(context.exception.partial_word), 5)
+        self.assertEqual(len(context.exception.path_states), 6)
+        self.assertEqual(len(set(context.exception.path_states)), 6)
+
     def test_paired_control_preserves_source_state(self) -> None:
         params = HGA4B_PARAMETER_SETS["hga4b-L12"]
         seed = seed_for("hga4b-paired-source")
@@ -63,7 +74,7 @@ class HGA4BSelfAvoidingTests(unittest.TestCase):
         self.assertIsNone(recovery.matches_planted_word_after_public_success)
         self.assertIsNone(recovery.quotient_matches_planted)
 
-    def test_generation_stays_self_avoiding_across_declared_sets(self) -> None:
+    def test_generation_stays_self_avoiding_across_successful_declared_samples(self) -> None:
         for params in HGA4B_PARAMETER_SETS.values():
             for index in range(8):
                 _, reference = generate_hga4b_instance(
