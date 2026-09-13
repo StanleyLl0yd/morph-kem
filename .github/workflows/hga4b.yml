@@ -1,0 +1,51 @@
+name: HGA4b self-avoiding Hurwitz generator control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/hga_hurwitz_self_avoiding.py'
+      - 'tests/test_hga_hurwitz_self_avoiding.py'
+      - 'scripts/hga_hurwitz_self_avoiding_*.py'
+      - '.github/workflows/hga4b.yml'
+      - 'docs/70-hga4b-self-avoiding-hurwitz.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/hga_hurwitz_self_avoiding.py'
+      - 'tests/test_hga_hurwitz_self_avoiding.py'
+      - 'scripts/hga_hurwitz_self_avoiding_*.py'
+      - '.github/workflows/hga4b.yml'
+      - 'docs/70-hga4b-self-avoiding-hurwitz.md'
+
+permissions:
+  contents: read
+
+jobs:
+  hga4b:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile HGA4b
+        run: >-
+          python -m compileall -q
+          src/morph_kem/hga_hurwitz_self_avoiding.py
+          tests/test_hga_hurwitz_self_avoiding.py
+          scripts/hga_hurwitz_self_avoiding_baseline.py
+          scripts/hga_hurwitz_self_avoiding_sweep.py
+      - name: HGA4b unit tests
+        run: python -m unittest tests.test_hga_hurwitz_self_avoiding -v
+      - name: HGA4b fixed paired baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/hga_hurwitz_self_avoiding_baseline.py --params hga4b-L20
+      - name: HGA4b paired multi-seed sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/hga_hurwitz_self_avoiding_sweep.py --seeds 8
