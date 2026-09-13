@@ -1,0 +1,51 @@
+name: TDC2e sparse variable-mixing control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/tdc_sparse_mixing.py'
+      - 'tests/test_tdc_sparse_mixing.py'
+      - 'scripts/tdc_sparse_mixing_*.py'
+      - '.github/workflows/tdc2e.yml'
+      - 'docs/79-tdc2e-sparse-variable-mixing.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/tdc_sparse_mixing.py'
+      - 'tests/test_tdc_sparse_mixing.py'
+      - 'scripts/tdc_sparse_mixing_*.py'
+      - '.github/workflows/tdc2e.yml'
+      - 'docs/79-tdc2e-sparse-variable-mixing.md'
+
+permissions:
+  contents: read
+
+jobs:
+  tdc2e:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile TDC2e
+        run: >-
+          python -m compileall -q
+          src/morph_kem/tdc_sparse_mixing.py
+          tests/test_tdc_sparse_mixing.py
+          scripts/tdc_sparse_mixing_baseline.py
+          scripts/tdc_sparse_mixing_sweep.py
+      - name: TDC2e unit tests
+        run: python -m unittest tests.test_tdc_sparse_mixing -v
+      - name: TDC2e fixed sparse-mixing baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_sparse_mixing_baseline.py --params tdc2e-n10
+      - name: TDC2e multi-seed sparse-mixing sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_sparse_mixing_sweep.py --seeds 8
