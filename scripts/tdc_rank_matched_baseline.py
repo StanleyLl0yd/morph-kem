@@ -52,6 +52,16 @@ def main() -> None:
         print(f"{label} column weights: {metrics.column_weight_histogram}")
         print(f"{label} minimum weight <=6: {metrics.minimum_weight_leq6}")
         print(f"{label} minimum-weight multiplicity: {metrics.minimum_weight_multiplicity}")
+        print(f"{label} minimum weight <=8: {metrics.minimum_weight_leq8}")
+        print(f"{label} <=8 witness support: {metrics.weight8_witness_support}")
+        print(
+            f"{label} <=8 triple/four subsets: "
+            f"{metrics.triple_subsets_indexed}/{metrics.four_subsets_scanned}"
+        )
+        print(
+            f"{label} <=8 collision candidates tested: "
+            f"{metrics.collision_candidates_tested}"
+        )
         print(
             f"{label} pair/triple collision buckets: "
             f"{metrics.pair_syndrome_collision_buckets}/"
