@@ -247,6 +247,8 @@ def generate_hga4d_instance(
     master_seed: bytes,
 ) -> tuple[HGA4Public, HGA4DReference]:
     params.validate()
+    if len(master_seed) < 16:
+        raise HGA4DError("HGA4d master seed must contain at least 128 bits")
     public, reference = generate_hga4c_instance(
         HGA4CParameters(params.name, params.exact_distance), master_seed
     )
