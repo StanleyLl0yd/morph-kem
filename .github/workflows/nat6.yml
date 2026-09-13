@@ -1,0 +1,51 @@
+name: NAT6 flat torus A5 holonomy control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/nat_a5_torus_flat.py'
+      - 'tests/test_nat_a5_torus_flat.py'
+      - 'scripts/nat_a5_torus_flat_*.py'
+      - '.github/workflows/nat6.yml'
+      - 'docs/78-nat6-flat-torus-holonomy.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/nat_a5_torus_flat.py'
+      - 'tests/test_nat_a5_torus_flat.py'
+      - 'scripts/nat_a5_torus_flat_*.py'
+      - '.github/workflows/nat6.yml'
+      - 'docs/78-nat6-flat-torus-holonomy.md'
+
+permissions:
+  contents: read
+
+jobs:
+  nat6:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile NAT6
+        run: >-
+          python -m compileall -q
+          src/morph_kem/nat_a5_torus_flat.py
+          tests/test_nat_a5_torus_flat.py
+          scripts/nat_a5_torus_flat_baseline.py
+          scripts/nat_a5_torus_flat_sweep.py
+      - name: NAT6 unit tests
+        run: python -m unittest tests.test_nat_a5_torus_flat -v
+      - name: NAT6 fixed flat-torus baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_a5_torus_flat_baseline.py --params nat6-8x9
+      - name: NAT6 multi-seed flat-torus sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_a5_torus_flat_sweep.py --seeds 8
