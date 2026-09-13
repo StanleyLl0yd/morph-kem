@@ -2,9 +2,9 @@
 
 ## Status
 
-**HGA4b is a falsification/calibration experiment in progress.** HGA4 did not expose a new polynomial/canonical inversion of the infinite Hurwitz action, but its locally reduced planted-word generator was rejected because materially shorter equivalent connectors were routine.
+**HGA4b is rejected as a planted-history generator by HGA-A006.** Exact self-avoidance removes literal repeated action states, but it does not make generated histories reliably near-geodesic. In addition, the declared greedy generator has an explicit deterministic dead-end on one official sweep sample.
 
-HGA4b keeps the action, source distribution, verifier and attack unchanged. It changes only the planted-history generator.
+HGA4b keeps the HGA4 infinite Hurwitz/free-group action, source distribution, public verifier and exact MITM attack unchanged. It changes only the planted-history generator.
 
 HGA4b is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -19,20 +19,11 @@ Reuse the HGA4 action of `B3` on triples of reduced words in `F(a,b)`. For reque
 5. if no successor exists, fail explicitly at that step; do not restart or inspect an attack result;
 6. publish the endpoint after exactly `L` successful self-avoiding steps.
 
-The generator does not query MITM distance, shortest connectors, canonical forms, quotient output, or any other attack result.
-
-## Paired control
-
-For every `(L,seed)`, construct both:
-
-- the HGA4b self-avoiding endpoint;
-- the original HGA4 locally reduced planted-word endpoint;
-
-from the exact same public source state and the same requested length. Run the unchanged HGA4 public attack against both.
+The generator never queries MITM distance, shortest connectors, canonical forms, quotient output, or any attack result.
 
 ## HGA-A006
 
-The attack remains:
+The public attack is unchanged from HGA4:
 
 - exact invariant total free-group product;
 - free-abelianization quotient exposing the induced `S3` strand permutation;
@@ -42,27 +33,51 @@ The attack remains:
 
 Planted-word equality is reference-only. Any equivalent connector is attacker success.
 
-## Measurements
+## Fixed Python 3.12 result
 
-Record at least:
+For `hga4b-L20`:
 
-- requested/achieved path length;
-- exact distinct generated path-state count;
-- explicit generator dead-end count;
-- target reduced-word size;
-- forward/backward MITM states and transitions;
-- meet-state count;
-- shortest recovered connector length;
-- whether the recovered connector is at least 25% shorter than the planted path;
-- exact endpoint verification;
-- post-success planted-word equality;
-- paired locally reduced HGA4 values at the same source/length/seed;
-- deterministic multi-seed curve including one longer `L=20` calibration.
+```text
+requested / achieved length:             20 / 20
+distinct planted path states:                 21
+generator dead ends:                           0
+source component lengths:                 (4,1,2)
+target component lengths:          (968,709,1680)
+forward / backward MITM depth:              10 / 10
+forward / backward states:           11047 / 11047
+forward / backward transitions:      21484 / 21484
+meet states:                                  51
+recovered connector length:                   16
+endpoint verified:                           yes
+matches planted word:                         no
+>=25% shorter than planted:                   no
+```
 
-## Gate
+The fixed longer calibration therefore does **not** itself trigger the 25% shortening gate; its recovered connector is 20% shorter than planted.
 
-Reject HGA4b if substantial equivalent shortening remains routine. In that case simple self-avoidance removes literal path loops but does not make planted histories close to geodesic under braid/action relations.
+## Eight-seed paired sweep
 
-If material shortening largely disappears while exact MITM state balls continue to grow with depth, record only survival of this generated-distribution gate on toy sizes. That is not evidence of one-wayness, asymptotic hardness, or post-quantum security.
+Across lengths 8/12/16/20 and eight declared seeds:
 
-No security claim.
+- **31/32** HGA4b samples generate the requested self-avoiding path successfully;
+- `hga4b-L12`, seed 7 deterministically reaches a genuine generator dead end at **step 5**; this is preserved explicitly and no restart is allowed;
+- all **31/31** successfully generated endpoints receive verifier-accepted public MITM connectors;
+- **19/31** successful self-avoiding samples still have an equivalent connector at least **25% shorter** than the planted history;
+- by length, material shortening occurs on `5/8`, `3/7`, `5/8`, and `6/8` successful HGA4b samples for L=8/12/16/20 respectively;
+- every successful recovered connector is allowed to differ from the planted word; that is attacker success, not a mismatch failure;
+- the paired original locally-reduced HGA4 control has material shortening on **21/32** measured samples.
+
+Thus self-avoidance improves some endpoints but does not qualitatively remove non-geodesic planted histories. At L20 the exact half-ball reaches roughly 11,047 states per side on the full-depth samples, so the repository also preserves the fact that generic MITM state growth is becoming nontrivial on these toy calibrations. That growth is **not** a hardness claim.
+
+## Interpretation
+
+HGA4b fails for two independent generated-distribution reasons:
+
+1. a deterministic local greedy self-avoiding rule can terminate early even though the underlying action orbit continues;
+2. among successful samples, substantial equivalent shortening remains routine (`19/31`).
+
+This does **not** structurally reject the infinite Hurwitz action family itself. It rejects this simple planted-history mechanism as a basis for advancing toward a primitive.
+
+A successor must condition on a public constructive notion stronger than path self-avoidance without secretly querying the attack target. Candidate gates should include exact-distance shell construction on bounded calibrations, stabilizer/canonical-form probes, finite representation quotients and equivalent-connector multiplicity. Simply increasing `L` is not a repair.
+
+No one-wayness, asymptotic hardness, post-quantum security, IND-CPA/CCA, or production-security claim exists.
