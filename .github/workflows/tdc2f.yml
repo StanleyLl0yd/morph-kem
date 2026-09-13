@@ -49,3 +49,6 @@ jobs:
       - name: TDC2f multi-seed rank-matched sweep
         if: matrix.python-version == '3.12'
         run: python scripts/tdc_rank_matched_sweep.py --seeds 8
+      - name: TDC2f extended n10 weight-eight screen
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_rank_matched_sweep.py --params tdc2f-n10 --seeds 32
