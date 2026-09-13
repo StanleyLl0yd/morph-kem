@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass
 import hashlib
+from itertools import combinations
 
 from .tdc_cycle_code import _gf2_rank
 from .tdc_sparse_faces import (
@@ -67,6 +68,15 @@ class TDC2FInstance:
 
 
 @dataclass(frozen=True, slots=True)
+class BoundedKernel8:
+    minimum_weight_leq8: int | None
+    witness_support: tuple[int, ...]
+    triple_subsets_indexed: int
+    four_subsets_scanned: int
+    collision_candidates_tested: int
+
+
+@dataclass(frozen=True, slots=True)
 class TDC2FMetrics:
     rows: int
     columns: int
@@ -81,6 +91,11 @@ class TDC2FMetrics:
     column_weight_histogram: tuple[tuple[int, int], ...]
     minimum_weight_leq6: int | None
     minimum_weight_multiplicity: int
+    minimum_weight_leq8: int | None
+    weight8_witness_support: tuple[int, ...]
+    triple_subsets_indexed: int
+    four_subsets_scanned: int
+    collision_candidates_tested: int
     pair_syndrome_collision_buckets: int
     triple_syndrome_collision_buckets: int
     tanner_four_cycles: int
@@ -164,8 +179,7 @@ def _row_scramble(
                 source += 1
             updated: list[int] = []
             for column in columns:
-                source_bit = (column >> source) & 1
-                if source_bit:
+                if (column >> source) & 1:
                     column ^= 1 << target
                 updated.append(column)
             columns = updated
@@ -295,12 +309,91 @@ def generate_tdc2f_instance(
     return TDC2FInstance(topology, random, target_rank)
 
 
+def _support_mask(indices: tuple[int, ...]) -> int:
+    mask = 0
+    for index in indices:
+        mask |= 1 << index
+    return mask
+
+
+def _mask_support(mask: int) -> tuple[int, ...]:
+    return tuple(index for index in range(mask.bit_length()) if (mask >> index) & 1)
+
+
+def _verify_kernel_support(columns: tuple[int, ...], support: tuple[int, ...]) -> None:
+    syndrome = 0
+    for index in support:
+        syndrome ^= columns[index]
+    if syndrome != 0:
+        raise TDC2FError("TDC2f bounded-kernel attack produced an invalid support")
+
+
+def _minimum_weight_leq8(
+    columns: tuple[int, ...],
+    minimum_leq6: int | None,
+) -> BoundedKernel8:
+    if minimum_leq6 is not None:
+        return BoundedKernel8(minimum_leq6, (), 0, 0, 0)
+
+    triple_buckets: dict[int, list[int]] = {}
+    triple_count = 0
+    for triple in combinations(range(len(columns)), 3):
+        syndrome = columns[triple[0]] ^ columns[triple[1]] ^ columns[triple[2]]
+        triple_buckets.setdefault(syndrome, []).append(_support_mask(triple))
+        triple_count += 1
+
+    four_buckets: dict[int, list[int]] = {}
+    four_count = 0
+    collision_checks = 0
+    first_weight8_mask: int | None = None
+
+    for four in combinations(range(len(columns)), 4):
+        four_mask = _support_mask(four)
+        syndrome = (
+            columns[four[0]]
+            ^ columns[four[1]]
+            ^ columns[four[2]]
+            ^ columns[four[3]]
+        )
+        four_count += 1
+
+        for triple_mask in triple_buckets.get(syndrome, ()):
+            collision_checks += 1
+            if triple_mask & four_mask:
+                continue
+            support = _mask_support(triple_mask | four_mask)
+            if len(support) != 7:
+                raise TDC2FError("TDC2f weight-seven support accounting failed")
+            _verify_kernel_support(columns, support)
+            return BoundedKernel8(7, support, triple_count, four_count, collision_checks)
+
+        if first_weight8_mask is None:
+            previous = four_buckets.setdefault(syndrome, [])
+            for other_mask in previous:
+                collision_checks += 1
+                if other_mask & four_mask:
+                    continue
+                first_weight8_mask = other_mask | four_mask
+                break
+            previous.append(four_mask)
+
+    if first_weight8_mask is not None:
+        support = _mask_support(first_weight8_mask)
+        if len(support) != 8:
+            raise TDC2FError("TDC2f weight-eight support accounting failed")
+        _verify_kernel_support(columns, support)
+        return BoundedKernel8(8, support, triple_count, four_count, collision_checks)
+
+    return BoundedKernel8(None, (), triple_count, four_count, collision_checks)
+
+
 def _metrics(item: RankMatchedCode) -> TDC2FMetrics:
     code = item.code
     rank = _gf2_rank(list(code.columns))
     minimum, multiplicity, pair_collisions, triple_collisions = _low_weight_leq6(
         code.columns
     )
+    bounded8 = _minimum_weight_leq8(code.columns, minimum)
     dimension = len(code.columns) - rank
     return TDC2FMetrics(
         rows=code.row_count,
@@ -318,6 +411,11 @@ def _metrics(item: RankMatchedCode) -> TDC2FMetrics:
         ),
         minimum_weight_leq6=minimum,
         minimum_weight_multiplicity=multiplicity,
+        minimum_weight_leq8=bounded8.minimum_weight_leq8,
+        weight8_witness_support=bounded8.witness_support,
+        triple_subsets_indexed=bounded8.triple_subsets_indexed,
+        four_subsets_scanned=bounded8.four_subsets_scanned,
+        collision_candidates_tested=bounded8.collision_candidates_tested,
         pair_syndrome_collision_buckets=pair_collisions,
         triple_syndrome_collision_buckets=triple_collisions,
         tanner_four_cycles=_tanner_four_cycles(code),
