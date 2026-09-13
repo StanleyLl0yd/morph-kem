@@ -1,0 +1,51 @@
+name: TDC2c cyclic Tanner-lift control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/tdc_cyclic_lift.py'
+      - 'tests/test_tdc_cyclic_lift.py'
+      - 'scripts/tdc_cyclic_lift_*.py'
+      - '.github/workflows/tdc2c.yml'
+      - 'docs/73-tdc2c-cyclic-tanner-lift.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/tdc_cyclic_lift.py'
+      - 'tests/test_tdc_cyclic_lift.py'
+      - 'scripts/tdc_cyclic_lift_*.py'
+      - '.github/workflows/tdc2c.yml'
+      - 'docs/73-tdc2c-cyclic-tanner-lift.md'
+
+permissions:
+  contents: read
+
+jobs:
+  tdc2c:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile TDC2c
+        run: >-
+          python -m compileall -q
+          src/morph_kem/tdc_cyclic_lift.py
+          tests/test_tdc_cyclic_lift.py
+          scripts/tdc_cyclic_lift_baseline.py
+          scripts/tdc_cyclic_lift_sweep.py
+      - name: TDC2c unit tests
+        run: python -m unittest tests.test_tdc_cyclic_lift -v
+      - name: TDC2c fixed quotient baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_cyclic_lift_baseline.py --params tdc2c-n10-L4
+      - name: TDC2c multi-seed quotient sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_cyclic_lift_sweep.py --seeds 8
