@@ -25,8 +25,9 @@ def main() -> None:
 
     print(
         "set,seed,kind,rows,cols,rank,dimension,rate,row_ops,col_ops,rejected,"
-        "control_attempts,min_le6,min_mult,pair_buckets,triple_buckets,four_cycles,"
-        "rank_equal,dimension_equal,column_weights"
+        "control_attempts,min_le6,min_mult,min_le8,witness8,triple_indexed,four_scanned,"
+        "collision_checks,pair_buckets,triple_buckets,four_cycles,rank_equal,"
+        "dimension_equal,column_weights"
     )
     for params in TDC2F_PARAMETER_SETS.values():
         for index in range(args.seeds):
@@ -36,13 +37,16 @@ def main() -> None:
                 ("topology", recovery.topology),
                 ("random", recovery.matched_random),
             ):
+                support = "-".join(str(value) for value in metrics.weight8_witness_support)
                 print(
                     f"{params.name},{index},{kind},{metrics.rows},{metrics.columns},"
                     f"{metrics.rank},{metrics.dimension},{metrics.rate:.9f},"
                     f"{metrics.row_scramble_operations},{metrics.column_mixing_operations},"
                     f"{metrics.rejected_column_mixing_candidates},"
                     f"{metrics.control_generation_attempts},{metrics.minimum_weight_leq6},"
-                    f"{metrics.minimum_weight_multiplicity},"
+                    f"{metrics.minimum_weight_multiplicity},{metrics.minimum_weight_leq8},"
+                    f'"{support}",{metrics.triple_subsets_indexed},'
+                    f"{metrics.four_subsets_scanned},{metrics.collision_candidates_tested},"
                     f"{metrics.pair_syndrome_collision_buckets},"
                     f"{metrics.triple_syndrome_collision_buckets},"
                     f"{metrics.tanner_four_cycles},"
