@@ -19,17 +19,23 @@ def seed_for(name: str, index: int) -> bytes:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--seeds", type=int, default=8)
+    parser.add_argument("--params", choices=sorted(TDC2F_PARAMETER_SETS), default=None)
     args = parser.parse_args()
     if args.seeds < 1 or args.seeds > 64:
         raise SystemExit("--seeds must be in 1..64")
 
+    selected = (
+        (TDC2F_PARAMETER_SETS[args.params],)
+        if args.params is not None
+        else tuple(TDC2F_PARAMETER_SETS.values())
+    )
     print(
         "set,seed,kind,rows,cols,rank,dimension,rate,row_ops,col_ops,rejected,"
         "control_attempts,min_le6,min_mult,min_le8,witness8,triple_indexed,four_scanned,"
         "collision_checks,pair_buckets,triple_buckets,four_cycles,rank_equal,"
         "dimension_equal,column_weights"
     )
-    for params in TDC2F_PARAMETER_SETS.values():
+    for params in selected:
         for index in range(args.seeds):
             instance = generate_tdc2f_instance(params, seed_for(params.name, index))
             recovery = recover_tdc2f(instance)
