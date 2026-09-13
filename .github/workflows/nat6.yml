@@ -4,16 +4,22 @@ on:
   pull_request:
     paths:
       - 'src/morph_kem/nat_a5_torus_flat.py'
+      - 'src/morph_kem/nat_a5_torus_direct.py'
       - 'tests/test_nat_a5_torus_flat.py'
+      - 'tests/test_nat_a5_torus_direct.py'
       - 'scripts/nat_a5_torus_flat_*.py'
+      - 'scripts/nat_a5_torus_direct_*.py'
       - '.github/workflows/nat6.yml'
       - 'docs/78-nat6-flat-torus-holonomy.md'
   push:
     branches: [main]
     paths:
       - 'src/morph_kem/nat_a5_torus_flat.py'
+      - 'src/morph_kem/nat_a5_torus_direct.py'
       - 'tests/test_nat_a5_torus_flat.py'
+      - 'tests/test_nat_a5_torus_direct.py'
       - 'scripts/nat_a5_torus_flat_*.py'
+      - 'scripts/nat_a5_torus_direct_*.py'
       - '.github/workflows/nat6.yml'
       - 'docs/78-nat6-flat-torus-holonomy.md'
 
@@ -38,14 +44,27 @@ jobs:
         run: >-
           python -m compileall -q
           src/morph_kem/nat_a5_torus_flat.py
+          src/morph_kem/nat_a5_torus_direct.py
           tests/test_nat_a5_torus_flat.py
+          tests/test_nat_a5_torus_direct.py
           scripts/nat_a5_torus_flat_baseline.py
           scripts/nat_a5_torus_flat_sweep.py
+          scripts/nat_a5_torus_direct_baseline.py
+          scripts/nat_a5_torus_direct_sweep.py
       - name: NAT6 unit tests
-        run: python -m unittest tests.test_nat_a5_torus_flat -v
+        run: >-
+          python -m unittest
+          tests.test_nat_a5_torus_flat
+          tests.test_nat_a5_torus_direct -v
       - name: NAT6 fixed flat-torus baseline
         if: matrix.python-version == '3.12'
         run: python scripts/nat_a5_torus_flat_baseline.py --params nat6-8x9
       - name: NAT6 multi-seed flat-torus sweep
         if: matrix.python-version == '3.12'
         run: python scripts/nat_a5_torus_flat_sweep.py --seeds 8
+      - name: NAT6 direct holonomy baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_a5_torus_direct_baseline.py --params nat6-8x9
+      - name: NAT6 direct holonomy sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_a5_torus_direct_sweep.py --seeds 8
