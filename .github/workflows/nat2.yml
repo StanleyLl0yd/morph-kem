@@ -1,0 +1,61 @@
+name: NAT2 S3 coupled-noise control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/nat_s3.py'
+      - 'src/morph_kem/nat_s3_support.py'
+      - 'tests/test_nat_s3.py'
+      - 'tests/test_nat_s3_support.py'
+      - 'scripts/nat_s3_*.py'
+      - '.github/workflows/nat2.yml'
+      - 'docs/68-nat2-s3-coupled-noise.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/nat_s3.py'
+      - 'src/morph_kem/nat_s3_support.py'
+      - 'tests/test_nat_s3.py'
+      - 'tests/test_nat_s3_support.py'
+      - 'scripts/nat_s3_*.py'
+      - '.github/workflows/nat2.yml'
+      - 'docs/68-nat2-s3-coupled-noise.md'
+
+permissions:
+  contents: read
+
+jobs:
+  nat2:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile NAT2
+        run: >-
+          python -m compileall -q
+          src/morph_kem/nat_s3.py
+          src/morph_kem/nat_s3_support.py
+          tests/test_nat_s3.py
+          tests/test_nat_s3_support.py
+          scripts/nat_s3_baseline.py
+          scripts/nat_s3_sweep.py
+          scripts/nat_s3_support_sweep.py
+      - name: NAT2 unit tests
+        run: python -m unittest tests.test_nat_s3 tests.test_nat_s3_support -v
+      - name: NAT2 fixed quotient + CSP curve
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_s3_baseline.py --params nat2-F36
+      - name: NAT2 multi-seed quotient + CSP sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_s3_sweep.py --seeds 8
+      - name: NAT2 sign-support propagation sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_s3_support_sweep.py --seeds 8
