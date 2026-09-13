@@ -1,0 +1,51 @@
+name: TDC2d irregular Tanner-expansion control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/tdc_irregular_expansion.py'
+      - 'tests/test_tdc_irregular_expansion.py'
+      - 'scripts/tdc_irregular_expansion_*.py'
+      - '.github/workflows/tdc2d.yml'
+      - 'docs/76-tdc2d-irregular-role-mixed-expansion.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/tdc_irregular_expansion.py'
+      - 'tests/test_tdc_irregular_expansion.py'
+      - 'scripts/tdc_irregular_expansion_*.py'
+      - '.github/workflows/tdc2d.yml'
+      - 'docs/76-tdc2d-irregular-role-mixed-expansion.md'
+
+permissions:
+  contents: read
+
+jobs:
+  tdc2d:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile TDC2d
+        run: >-
+          python -m compileall -q
+          src/morph_kem/tdc_irregular_expansion.py
+          tests/test_tdc_irregular_expansion.py
+          scripts/tdc_irregular_expansion_baseline.py
+          scripts/tdc_irregular_expansion_sweep.py
+      - name: TDC2d unit tests
+        run: python -m unittest tests.test_tdc_irregular_expansion -v
+      - name: TDC2d fixed irregular-expansion baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_irregular_expansion_baseline.py --params tdc2d-n10
+      - name: TDC2d multi-seed irregular-expansion sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_irregular_expansion_sweep.py --seeds 8
