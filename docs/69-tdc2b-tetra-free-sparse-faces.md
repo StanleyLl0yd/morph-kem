@@ -58,9 +58,9 @@ Across `n=8,9,10` × eight deterministic seeds:
 - all **24/24** topology matrices contain no tetrahedron boundary;
 - all **24/24** topology matrices have first detected kernel weight exactly **6**;
 - topology weight-six multiplicity ranges from **13 to 77**;
-- only **5/24** matched-random controls contain any codeword of weight at most six;
-- every one of those random low-weight cases has multiplicity exactly **1**;
-- the other **19/24** matched-random controls have no codeword through weight six.
+- exactly **6/24** matched-random controls contain a codeword of weight at most six;
+- every one of those six random low-weight cases has multiplicity exactly **1**;
+- the other **18/24** matched-random controls have no codeword through weight six.
 
 By size, topology multiplicities are:
 
