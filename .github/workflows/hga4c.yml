@@ -1,0 +1,51 @@
+name: HGA4c exact-distance Hurwitz shell control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/hga_hurwitz_distance_shell.py'
+      - 'tests/test_hga_hurwitz_distance_shell.py'
+      - 'scripts/hga_hurwitz_distance_shell_*.py'
+      - '.github/workflows/hga4c.yml'
+      - 'docs/74-hga4c-exact-distance-shell.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/hga_hurwitz_distance_shell.py'
+      - 'tests/test_hga_hurwitz_distance_shell.py'
+      - 'scripts/hga_hurwitz_distance_shell_*.py'
+      - '.github/workflows/hga4c.yml'
+      - 'docs/74-hga4c-exact-distance-shell.md'
+
+permissions:
+  contents: read
+
+jobs:
+  hga4c:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile HGA4c
+        run: >-
+          python -m compileall -q
+          src/morph_kem/hga_hurwitz_distance_shell.py
+          tests/test_hga_hurwitz_distance_shell.py
+          scripts/hga_hurwitz_distance_shell_baseline.py
+          scripts/hga_hurwitz_distance_shell_sweep.py
+      - name: HGA4c unit tests
+        run: python -m unittest tests.test_hga_hurwitz_distance_shell -v
+      - name: HGA4c fixed exact-distance baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/hga_hurwitz_distance_shell_baseline.py --params hga4c-D8
+      - name: HGA4c multi-seed exact-distance sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/hga_hurwitz_distance_shell_sweep.py --seeds 8
