@@ -1,0 +1,51 @@
+name: HGA4d finite quotient pruning control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/hga_hurwitz_finite_quotient.py'
+      - 'tests/test_hga_hurwitz_finite_quotient.py'
+      - 'scripts/hga_hurwitz_finite_quotient_*.py'
+      - '.github/workflows/hga4d.yml'
+      - 'docs/77-hga4d-finite-quotient-pruning.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/hga_hurwitz_finite_quotient.py'
+      - 'tests/test_hga_hurwitz_finite_quotient.py'
+      - 'scripts/hga_hurwitz_finite_quotient_*.py'
+      - '.github/workflows/hga4d.yml'
+      - 'docs/77-hga4d-finite-quotient-pruning.md'
+
+permissions:
+  contents: read
+
+jobs:
+  hga4d:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile HGA4d
+        run: >-
+          python -m compileall -q
+          src/morph_kem/hga_hurwitz_finite_quotient.py
+          tests/test_hga_hurwitz_finite_quotient.py
+          scripts/hga_hurwitz_finite_quotient_baseline.py
+          scripts/hga_hurwitz_finite_quotient_sweep.py
+      - name: HGA4d unit tests
+        run: python -m unittest tests.test_hga_hurwitz_finite_quotient -v
+      - name: HGA4d fixed quotient baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/hga_hurwitz_finite_quotient_baseline.py --params hga4d-D8
+      - name: HGA4d multi-seed quotient sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/hga_hurwitz_finite_quotient_sweep.py --seeds 8
