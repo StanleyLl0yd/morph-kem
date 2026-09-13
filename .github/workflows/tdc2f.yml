@@ -1,0 +1,51 @@
+name: TDC2f rank-matched kernel control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/tdc_rank_matched.py'
+      - 'tests/test_tdc_rank_matched.py'
+      - 'scripts/tdc_rank_matched_*.py'
+      - '.github/workflows/tdc2f.yml'
+      - 'docs/80-tdc2f-rank-matched-kernel-control.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/tdc_rank_matched.py'
+      - 'tests/test_tdc_rank_matched.py'
+      - 'scripts/tdc_rank_matched_*.py'
+      - '.github/workflows/tdc2f.yml'
+      - 'docs/80-tdc2f-rank-matched-kernel-control.md'
+
+permissions:
+  contents: read
+
+jobs:
+  tdc2f:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile TDC2f
+        run: >-
+          python -m compileall -q
+          src/morph_kem/tdc_rank_matched.py
+          tests/test_tdc_rank_matched.py
+          scripts/tdc_rank_matched_baseline.py
+          scripts/tdc_rank_matched_sweep.py
+      - name: TDC2f unit tests
+        run: python -m unittest tests.test_tdc_rank_matched -v
+      - name: TDC2f fixed rank-matched baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_rank_matched_baseline.py --params tdc2f-n10
+      - name: TDC2f multi-seed rank-matched sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_rank_matched_sweep.py --seeds 8
