@@ -1,0 +1,51 @@
+name: NAT5 coupled A5 cycle-noise control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/nat_a5_cycle_noise.py'
+      - 'tests/test_nat_a5_cycle_noise.py'
+      - 'scripts/nat_a5_cycle_noise_*.py'
+      - '.github/workflows/nat5.yml'
+      - 'docs/75-nat5-coupled-cycle-noise.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/nat_a5_cycle_noise.py'
+      - 'tests/test_nat_a5_cycle_noise.py'
+      - 'scripts/nat_a5_cycle_noise_*.py'
+      - '.github/workflows/nat5.yml'
+      - 'docs/75-nat5-coupled-cycle-noise.md'
+
+permissions:
+  contents: read
+
+jobs:
+  nat5:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile NAT5
+        run: >-
+          python -m compileall -q
+          src/morph_kem/nat_a5_cycle_noise.py
+          tests/test_nat_a5_cycle_noise.py
+          scripts/nat_a5_cycle_noise_baseline.py
+          scripts/nat_a5_cycle_noise_sweep.py
+      - name: NAT5 unit tests
+        run: python -m unittest tests.test_nat_a5_cycle_noise -v
+      - name: NAT5 fixed coupled-cycle baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_a5_cycle_noise_baseline.py --params nat5-F36
+      - name: NAT5 multi-seed coupled-cycle sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_a5_cycle_noise_sweep.py --seeds 8
