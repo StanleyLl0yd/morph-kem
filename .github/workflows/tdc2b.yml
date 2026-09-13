@@ -1,0 +1,51 @@
+name: TDC2b tetrahedron-free sparse-face control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/tdc_sparse_faces.py'
+      - 'tests/test_tdc_sparse_faces.py'
+      - 'scripts/tdc_sparse_faces_*.py'
+      - '.github/workflows/tdc2b.yml'
+      - 'docs/69-tdc2b-tetra-free-sparse-faces.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/tdc_sparse_faces.py'
+      - 'tests/test_tdc_sparse_faces.py'
+      - 'scripts/tdc_sparse_faces_*.py'
+      - '.github/workflows/tdc2b.yml'
+      - 'docs/69-tdc2b-tetra-free-sparse-faces.md'
+
+permissions:
+  contents: read
+
+jobs:
+  tdc2b:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile TDC2b
+        run: >-
+          python -m compileall -q
+          src/morph_kem/tdc_sparse_faces.py
+          tests/test_tdc_sparse_faces.py
+          scripts/tdc_sparse_faces_baseline.py
+          scripts/tdc_sparse_faces_sweep.py
+      - name: TDC2b unit tests
+        run: python -m unittest tests.test_tdc_sparse_faces -v
+      - name: TDC2b fixed low-weight baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_sparse_faces_baseline.py --params tdc2b-n10
+      - name: TDC2b multi-seed low-weight sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_sparse_faces_sweep.py --seeds 8
