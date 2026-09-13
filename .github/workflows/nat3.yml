@@ -1,0 +1,51 @@
+name: NAT3 A5 curvature-support control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/nat_a5.py'
+      - 'tests/test_nat_a5.py'
+      - 'scripts/nat_a5_*.py'
+      - '.github/workflows/nat3.yml'
+      - 'docs/71-nat3-a5-curvature-support.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/nat_a5.py'
+      - 'tests/test_nat_a5.py'
+      - 'scripts/nat_a5_*.py'
+      - '.github/workflows/nat3.yml'
+      - 'docs/71-nat3-a5-curvature-support.md'
+
+permissions:
+  contents: read
+
+jobs:
+  nat3:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile NAT3
+        run: >-
+          python -m compileall -q
+          src/morph_kem/nat_a5.py
+          tests/test_nat_a5.py
+          scripts/nat_a5_baseline.py
+          scripts/nat_a5_sweep.py
+      - name: NAT3 unit tests
+        run: python -m unittest tests.test_nat_a5 -v
+      - name: NAT3 fixed curvature-support baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_a5_baseline.py --params nat3-F36
+      - name: NAT3 multi-seed curvature-support sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_a5_sweep.py --seeds 8
