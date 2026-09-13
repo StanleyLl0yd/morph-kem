@@ -24,6 +24,21 @@ class HGA4BError(HGA4Error):
     """Raised when the HGA4b self-avoiding toy generator is malformed."""
 
 
+class HGA4BDeadEnd(HGA4BError):
+    """Explicit bounded generator failure; no hidden retry is permitted."""
+
+    def __init__(
+        self,
+        step: int,
+        partial_word: str,
+        path_states: tuple[FreeState, ...],
+    ) -> None:
+        super().__init__(f"HGA4b self-avoiding generator reached a dead end at step {step}")
+        self.step = step
+        self.partial_word = partial_word
+        self.path_states = path_states
+
+
 @dataclass(frozen=True, slots=True)
 class HGA4BParameters:
     name: str
@@ -113,9 +128,7 @@ def _self_avoiding_word(
             chosen_state = candidate
             break
         if chosen_generator is None or chosen_state is None:
-            raise HGA4BError(
-                f"HGA4b self-avoiding generator reached a dead end at step {step}"
-            )
+            raise HGA4BDeadEnd(step, "".join(word), tuple(states))
         word.append(chosen_generator)
         current = chosen_state
         states.append(current)
