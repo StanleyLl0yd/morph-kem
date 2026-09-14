@@ -13,7 +13,7 @@ from morph_kem.hga_markoff_action import (
 
 def seed_for(name: str, index: int) -> bytes:
     return hashlib.sha256(
-        f"MORPH-KEM HGA1 sweep {name} seed {index} v1".encode("ascii")
+        f"MORPH-KEM HGA-R1 sweep {name} seed {index} v1".encode("ascii")
     ).digest()
 
 
