@@ -2,7 +2,7 @@
 
 ## Status
 
-**NAT7 is an architecture-level falsification/control experiment.** It formalizes the generic part of the NAT6 break: on a public connected carrier, an arbitrary normalized vertex gauge is removable by deterministic public spanning-tree integration. The statement does **not** require face flatness.
+**NAT7 closes normalized vertex gauge on a public connected carrier as a hardness source.** Deterministic public spanning-tree integration removes that gauge exactly. The algebraic identity does **not** require flatness; the executable NAT6 regression confirms exact normalization, reconstruction and gauge invariance over the declared 24-instance sweep.
 
 NAT7 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -68,37 +68,48 @@ This is stronger than NAT6: **hidden vertex gauge cannot itself supply hardness 
 - inverse;
 - equality of elements.
 
-It provides:
+It provides deterministic BFS tree integration, public residual normalization, exact reconstruction, normalized vertex-regauging for invariance tests, and explicit tree/non-tree work counters. It receives no NAT6 reference witness.
 
-1. deterministic BFS spanning-tree integration;
-2. public residual normalization;
-3. exact reconstruction;
-4. normalized vertex-gauge transformation for invariance tests;
-5. tree/non-tree and residual-work measurements.
+## Fixed Python 3.12 regression
 
-The implementation does not inspect NAT6 secret/reference data.
+Using the already merged `nat6-8x9` irregular-torus public connection:
 
-## NAT6 regression
+```text
+vertices / edges:                              72 / 216
+tree / non-tree edges:                         71 / 145
+tree assignments:                                     71
+tree identity residuals:                              71
+nonidentity residuals:                                36
+distinct nonidentity residuals:                        3
+exact reconstruction:                               yes
+independently regauged reconstruction:               yes
+same deterministic tree after normalized gauge:      yes
+identical complete residual vector after regauge:     yes
+```
 
-The first executable regression uses the already merged irregular-torus `A5` public connections because they contain genuine nontrivial global holonomy.
+The generic residual vector also matches NAT6's earlier specialized tree-normalization implementation in the unit regression.
 
-For each `6x6`, `6x9`, and `8x9` public instance:
+## Deterministic 24-instance sweep
 
-- normalize the original public edge connection;
-- independently sample a second normalized vertex gauge and regauge the same public connection;
-- normalize the regauged presentation;
-- require the same public spanning tree and **identical complete residual vector**;
-- reconstruct both presentations exactly;
-- compare the generic residual vector against NAT6's earlier specialized tree-normalization implementation.
+Python 3.12 tests `nat6-6x6`, `nat6-6x9`, and `nat6-8x9` over eight seeds each. For **24/24** public connections:
 
-The comparison gauge is test instrumentation only; the normalizer itself receives no reference witness.
+- tree assignments equal exactly `V-1`;
+- every tree residual is identity;
+- the original connection reconstructs exactly;
+- an independently sampled normalized vertex regauge reconstructs exactly;
+- the deterministic public spanning tree is unchanged;
+- the **entire residual-label vector is identical** before and after regauging.
 
-## Gate / architectural closure
+Tree/non-tree sizes are respectively `35/73`, `53/109`, and `71/145`. The number of distinct nonidentity residual group elements is three on every measured NAT6 torus instance; that final fact is NAT6-family-specific and is not required by the generic normalization theorem.
 
-If the generic harness passes these exact identities on the declared sweep, retire **vertex gauge on a public connected carrier** as a hardness source.
+Dedicated NAT7 CI passes on Python 3.11, 3.12 and 3.13 on the measured head.
 
-Future NAT work may still investigate a hard residual representation/noisy global-holonomy inversion problem, but must not claim secrecy from the gauge variables themselves. Increasing group size, genus, vertex count, or changing the local gauge distribution cannot repair this normalization identity.
+## Architectural closure
 
-This closure does not claim that arbitrary residual global representations are easy to invert. NAT6's direct `H^1` solve remains a family-specific attack on its particular residual representation.
+**Retire vertex gauge on a public connected carrier as a hardness source.** Future NAT work may still investigate a hard residual representation/noisy global-holonomy inversion problem, but must not claim secrecy from the gauge variables themselves.
+
+Increasing group size, genus, vertex count, or changing the local gauge distribution cannot repair this normalization identity. The public gauge degrees of freedom are canonically removable before attacking the residual problem.
+
+This closure does **not** claim that arbitrary residual global representations are easy to invert. NAT6's direct `H^1` solve remains a family-specific attack on its particular residual representation.
 
 No security claim.
