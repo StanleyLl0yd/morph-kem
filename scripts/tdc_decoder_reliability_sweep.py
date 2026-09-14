@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+from collections import defaultdict
 
 from morph_kem.tdc_decoder_reliability import reliability_guided_decode_leq6
 from morph_kem.tdc_decoder_work import (
@@ -36,6 +37,8 @@ def main() -> None:
         "set,seed,weight,top_accept,top_recovered_weight,top_planted_in_pool,top_pairs,top_collisions,"
         "rnd_accept,rnd_recovered_weight,rnd_planted_in_pool,rnd_pairs,rnd_collisions"
     )
+    summary: dict[tuple[str, int], list[int]] = defaultdict(lambda: [0, 0, 0, 0, 0])
+    totals: dict[str, list[int]] = defaultdict(lambda: [0, 0, 0])
     for params in params_list:
         for index in range(args.seeds):
             instance = generate_tdc3_instance(params, seed_for(params.name, index))
@@ -60,6 +63,26 @@ def main() -> None:
                     f"{int(top.accepted)},{top.recovered_weight},{top_in_pool},{top.candidate_pairs_tested},{top.syndrome_bucket_collisions},"
                     f"{int(rnd.accepted)},{rnd.recovered_weight},{rnd_in_pool},{rnd.candidate_pairs_tested},{rnd.syndrome_bucket_collisions}"
                 )
+                row = summary[(params.name, weight)]
+                row[0] += int(top.accepted)
+                row[1] += int(rnd.accepted)
+                row[2] += top_in_pool
+                row[3] += rnd_in_pool
+                row[4] += 1
+                total = totals[params.name]
+                total[0] += int(top.accepted)
+                total[1] += int(rnd.accepted)
+                total[2] += 1
+
+    print("summary,set,weight,top_accept,rnd_accept,delta,top_planted_in_pool,rnd_planted_in_pool,cases")
+    for (name, weight), row in sorted(summary.items()):
+        print(
+            f"summary,{name},{weight},{row[0]},{row[1]},{row[0]-row[1]},"
+            f"{row[2]},{row[3]},{row[4]}"
+        )
+    print("total,set,top_accept,rnd_accept,delta,cases")
+    for name, row in sorted(totals.items()):
+        print(f"total,{name},{row[0]},{row[1]},{row[0]-row[1]},{row[2]}")
 
 
 if __name__ == "__main__":
