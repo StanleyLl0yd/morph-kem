@@ -2,9 +2,11 @@
 
 ## Status
 
-**NAT9 is a falsification experiment in progress.** NAT7/NAT8 close exact public edge-connections: after deterministic tree normalization, exact edge labels expose the residual global representation itself. NAT9 therefore changes the publication model and hides the exact residual generator images.
+**NAT9 is rejected by NAT-A011 on the measured toy distribution.** Hiding the exact residual generator images behind coarse `A5` cycle-type observables does hide the planted quadruple, but it creates a large verifier-equivalent solution set that a small public pair-join CSP recovers on every declared instance.
 
-This experiment does not make a hardness or security claim.
+This is a falsification result, not a claim about arbitrary noisy representation problems or cryptographic hardness.
+
+NAT9 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
 ## Hidden object
 
@@ -14,23 +16,17 @@ Use a genus-two surface-group presentation
 <a,b,c,d | [a,b][c,d] = 1>
 ```
 
-and a hidden representation into `A5` specified by the four exact generator images
+and a hidden representation into `A5` specified by four exact nonidentity generator images.
 
-```text
-rho(a), rho(b), rho(c), rho(d) in A5.
-```
-
-Generation deterministically samples nonidentity `A5` quadruples until the public surface relator holds exactly.
-
-The planted exact quadruple is reference-only.
+Generation deterministically samples quadruples until the surface relator holds. The planted exact quadruple is reference-only.
 
 ## Lossy public observable
 
-The public object does **not** contain the four exact `A5` elements. It contains only their permutation cycle types plus a fixed subset of product cycle types.
+The public object omits all four exact `A5` elements. It contains only their permutation cycle types plus a fixed subset of product cycle types.
 
-Important terminology: this is intentionally **coarser than an A5 conjugacy class observable**. In particular, `A5` splits the five-cycles into two conjugacy classes, while permutation cycle type merges them. The experiment therefore calls these values **cycle-type classes**.
+This is intentionally **coarser than an A5 conjugacy-class observable**. In particular, `A5` splits five-cycles into two conjugacy classes, whereas permutation cycle type merges them. We therefore call the public values **cycle-type classes**.
 
-Three fixed public levels are tested:
+Three levels were fixed before measurement:
 
 ```text
 nat9-C4: four generator cycle types only
@@ -38,7 +34,7 @@ nat9-P2: generator types + types of ab and cd
 nat9-X4: generator types + types of ab, cd, ac and bd
 ```
 
-No level is selected after seeing attack output.
+The generator never queries recovery output.
 
 ## Verification semantics
 
@@ -51,50 +47,89 @@ A recovered quadruple is accepted if:
 
 **Any accepted quadruple is attacker success.** Equality with the planted representation is checked only after public success and has no role in verification.
 
-This semantic point is central: a lossy observable may hide the planted representation while simultaneously creating many verifier-equivalent representations for the attacker.
+This semantic rule is decisive here: lossiness hides the planted representation but simultaneously permits many alternative accepted representations.
 
 ## NAT-A011 public CSP
 
-The attack receives only the public observable.
+The attacker:
 
-1. Enumerate the `A5` elements matching each public generator cycle type.
-2. Enumerate `(a,b)` pairs, pruning by the public `ab` product type when present, and compute `[a,b]`.
-3. Enumerate `(c,d)` pairs, pruning by `cd` when present, and bucket them by `[c,d]`.
-4. Join left/right pairs requiring
+1. enumerates the `A5` elements matching each public generator cycle type;
+2. enumerates `(a,b)` pairs, pruning by `ab` when available, and computes `[a,b]`;
+3. enumerates `(c,d)` pairs, pruning by `cd` when available, and buckets them by `[c,d]`;
+4. joins pairs requiring `[c,d] = [a,b]^-1`;
+5. applies `ac`/`bd` filters when published;
+6. runs the exact public verifier;
+7. counts all accepted representations.
 
-```text
-[c,d] = [a,b]^-1.
-```
+No reference witness is used by recovery.
 
-5. Apply `ac`/`bd` product-type filters when present.
-6. Run the exact public verifier on every remaining candidate.
-7. Record the total number of accepted representations rather than stopping at the planted one.
-
-The implementation records class-candidate sizes, pair counts, relator joins, verifier tests, accepted multiplicity, and reference equality only after success.
-
-## Declared measurement
-
-Run a deterministic eight-seed sweep for all three public levels:
+## Fixed Python 3.12 `nat9-X4`
 
 ```text
-C4 / P2 / X4 × 8 seeds
+generation attempts:                         17
+generator cycle types:              3 / 5 / 5 / 5
+candidate class sizes:              20 / 24 / 24 / 24
+left pairs considered / retained:         480 / 240
+right pairs considered / retained:        576 / 240
+relator join candidates:                        1320
+verifier candidates tested:                      480
+accepted representations:                        480
+public recovery accepted:                        yes
+first recovered equals planted:                   no
 ```
 
-The gate asks:
+Even the most informative fixed observable therefore leaves hundreds of verifier-equivalent solutions on the fixed instance.
 
-- whether public recovery succeeds;
-- how many verifier-equivalent representations remain;
-- whether additional coarse product observables materially reduce CSP work;
-- how often the first accepted representation happens to equal the planted one.
+## Declared `C4/P2/X4 × 8` sweep
 
-## Rejection gate
+Public recovery succeeds on **24/24** instances. The first deterministic accepted representation equals the planted quadruple on **0/24** instances.
 
-Reject this NAT9 family if the public pair-join CSP routinely finds a verifier-accepted representation with small explicit work, regardless of whether it recovers the planted quadruple.
+Per observable level:
 
-Do not repair such a failure by changing the verifier to demand planted equality: that would require publishing information that identifies the secret and would contradict the intended equivalent-representation semantics.
+```text
+level   recovered   planted-first   accepted representations / seed
+C4        8/8           0/8          1740 .. 5280
+P2        8/8           0/8           360 ..  960
+X4        8/8           0/8           120 ..  480
+```
 
-## Survival gate
+Aggregate accepted-representation counts across eight seeds are:
 
-Only if the fixed lossy observable leaves measurable residual uncertainty **and** the declared public CSP fails under an explicit work bound should a successor add controlled noise or larger targets. Survival would still be toy evidence only.
+```text
+C4: 21165
+P2:  5640
+X4:  1800
+```
 
-No trapdoor primitive, KEM, one-wayness, post-quantum, IND-CPA/CCA, or production-security claim exists.
+The maximum explicit work observed was:
+
+```text
+C4: relator joins 5280, verifier tests 5280
+P2: relator joins  960, verifier tests  960
+X4: relator joins 5784, verifier tests  480
+```
+
+`X4` can have many relator-compatible joins before the cross-product filters, but its final verifier set remains tiny on an absolute scale and still contains at least 120 accepted representations on every measured seed.
+
+## Interpretation
+
+NAT9 demonstrates a specific failure mode distinct from NAT7/NAT8:
+
+> **Making the public observable lossy can hide the planted secret while making the verifier-inversion objective easier, because equivalent accepted solutions proliferate.**
+
+The planted quadruple is genuinely not recovered first on any declared instance, yet the attacker succeeds on every instance under the actual verifier semantics.
+
+Demanding planted equality is not a valid repair: doing so would change the public verification problem and require enough identifying information to distinguish the planted representation from its current equivalence class.
+
+Likewise, simply adding a few more exact cycle-type/product coordinates risks walking back toward the exact-publication failure already closed by NAT8.
+
+## Successor direction
+
+A meaningful NAT successor must introduce a noisy/probabilistic observable whose acceptance semantics do **not** collapse into a large cheap equivalence class. It must explicitly measure both:
+
+- residual uncertainty about the hidden representation; and
+- multiplicity/cost of verifier-accepted alternative representations.
+
+Noise alone is not automatically helpful; the next gate must attack quotient/character information, relator propagation, CSP/SAT and equivalent-solution multiplicity before any scale-up.
+
+No security claim.
