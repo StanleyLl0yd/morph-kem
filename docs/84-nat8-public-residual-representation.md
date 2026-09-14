@@ -57,19 +57,48 @@ Thus an exact public flat connection determines a public representation of the 2
 
 The harness uses only the minimal NAT7 group interface: identity, multiplication, inverse and equality.
 
-## Calibration
+## Fixed Python 3.12 regression
 
-A synthetic non-flat `Z/5Z` triangle demonstrates that extraction/reconstruction does not depend on flatness: the one public free-generator image reconstructs the exact connection even though the face relator is nonidentity.
+Using the merged NAT6 `nat6-8x9` flat `A5` connection:
 
-The NAT6 irregular-torus family is retained only as a flat nonabelian regression. For its public `A5` connections:
+```text
+vertices / edges / triangles:          72 / 216 / 144
+tree / generator edges:                71 / 145
+free rank E-V+1:                             145
+public generator images:                     145
+nonidentity generator images:                 36
+tree identity residuals:                      71
+public triangular relators:                  144
+nonidentity triangular relators:               0
+residual vector reconstructed:                yes
+exact connection reconstructed:               yes
+```
 
-- the free-basis size is exactly `E-V+1`;
-- every non-tree generator image is public;
-- all triangular relators evaluate to identity;
+The public generator-image count equals the free rank exactly. No hidden reference witness is used by extraction or reconstruction.
+
+## Deterministic 24-instance flat-torus regression
+
+Python 3.12 tests NAT6 `6x6/6x9/8x9 × 8` deterministic seeds. On **24/24** instances:
+
+- public generator-image count equals `E-V+1` exactly;
+- tree residual count equals `V-1` and every tree residual is identity;
+- all public triangular relators evaluate to identity;
 - the complete residual vector reconstructs exactly;
-- the exact edge connection reconstructs exactly.
+- the exact public edge connection reconstructs exactly.
 
-The declared NAT6 `6x6/6x9/8x9 × 8` sweep is used only to demonstrate stable executable agreement with the generic identity.
+The free ranks are:
+
+```text
+6x6:   E-V+1 = 73
+6x9:   E-V+1 = 109
+8x9:   E-V+1 = 145
+```
+
+Measured nonidentity public generator-image counts vary by seed as expected (`21..26`, `28..34`, `32..43` for the three sizes); this variation is irrelevant to the closure because the entire generator-image tuple is public in every case.
+
+A synthetic non-flat `Z/5Z` triangle additionally demonstrates that extraction/reconstruction does not depend on flatness: the one public free-generator image reconstructs the exact connection even though the face relator is nonidentity.
+
+Dedicated NAT8 CI passes on Python 3.11, 3.12 and 3.13 on the measured head.
 
 ## Architectural closure
 
