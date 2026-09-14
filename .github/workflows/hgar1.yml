@@ -1,0 +1,52 @@
+name: HGA-R1 finite Markoff navigation control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/hga_markoff_action.py'
+      - 'tests/test_hga_markoff_action.py'
+      - 'scripts/hga_markoff_*.py'
+      - '.github/workflows/hgar1.yml'
+      - 'docs/92-hgar1-markoff-navigation.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/hga_markoff_action.py'
+      - 'tests/test_hga_markoff_action.py'
+      - 'scripts/hga_markoff_*.py'
+      - '.github/workflows/hgar1.yml'
+      - 'docs/92-hgar1-markoff-navigation.md'
+
+permissions:
+  contents: read
+
+jobs:
+  hgar1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile HGA-R1
+        run: >-
+          python -m compileall -q
+          src/morph_kem/hga_markoff_action.py
+          tests/test_hga_markoff_action.py
+          scripts/hga_markoff_baseline.py
+          scripts/hga_markoff_sweep.py
+      - name: HGA-R1 unit tests
+        run: python -m unittest tests.test_hga_markoff_action -v
+      - name: HGA-R1 fixed p59 L24 baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/hga_markoff_baseline.py --params hga1-p59-L24
+      - name: HGA-R1 declared 72-instance sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/hga_markoff_sweep.py --seeds 8
