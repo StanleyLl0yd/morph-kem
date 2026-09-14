@@ -49,3 +49,6 @@ jobs:
       - name: TDC3b all-size Prange sweep
         if: matrix.python-version == '3.12'
         run: python scripts/tdc_prange_isd_sweep.py --seeds 8
+      - name: TDC3b predeclared n10 validation extension
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_prange_isd_sweep.py --params tdc3b-n10 --seeds 32
