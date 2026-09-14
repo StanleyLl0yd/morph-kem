@@ -2,7 +2,7 @@
 
 ## Status
 
-**NAT10 is a falsification experiment in progress.** NAT9 shows that an exact but lossy coarse `A5` observable hides the planted representation while creating many cheap verifier-equivalent solutions. NAT10 therefore introduces actual bounded noise and a larger matrix-group target while preserving the same equivalent-solution attack semantics.
+**NAT10 is rejected by NAT-A012 on the declared toy distribution.** Bounded noisy trace sketches hide the planted exact `SL(2,p)` representation, but the public verifier admits very large families of alternative representations that a direct trace-window / surface-relator CSP recovers on every declared instance.
 
 NAT10 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -20,9 +20,7 @@ with a hidden quadruple
 A, B, C, D in SL(2, F_p).
 ```
 
-Generation deterministically samples nonidentity matrices until the exact surface relator holds.
-
-The exact matrices are never published and are reference-only after public recovery.
+Generation deterministically samples nonidentity matrices until the exact surface relator holds. The exact matrices are never published and are reference-only after public recovery.
 
 ## Noisy public trace sketch
 
@@ -35,7 +33,7 @@ e_w in {-1,0,+1}.
 
 The noise radius is fixed at one before measurement. The verifier accepts a recovered representation when the surface relator holds exactly and every recovered trace is within cyclic modular distance one of the public center.
 
-Three parameter sets are fixed:
+The three predeclared parameter sets are
 
 ```text
 nat10-p5-G4: p=5, traces A/B/C/D
@@ -43,7 +41,7 @@ nat10-p5-X8: p=5, traces A/B/C/D/AB/CD/AC/BD
 nat10-p7-X8: p=7, traces A/B/C/D/AB/CD/AC/BD
 ```
 
-No parameter set is chosen after observing recovery.
+No parameter set was selected after observing recovery.
 
 ## NAT-A012 public attack
 
@@ -62,9 +60,7 @@ Any accepted representation is attacker success. Equality with the planted quadr
 
 ## Simultaneous-conjugacy multiplicity
 
-Raw accepted quadruples include simultaneous-conjugacy copies. To avoid overstating solution multiplicity, NAT10 also records a rigorous lower bound on the number of simultaneous-conjugacy orbits.
-
-For odd `p`, the center `{±I}` of `SL(2,p)` acts trivially by conjugation, so any simultaneous-conjugacy orbit has size at most
+Raw accepted quadruples include simultaneous-conjugacy copies. For odd `p`, the center `{±I}` of `SL(2,p)` acts trivially by conjugation, so any simultaneous-conjugacy orbit has size at most
 
 ```text
 |PSL(2,p)| = |SL(2,p)| / 2.
@@ -76,29 +72,58 @@ Therefore
 ceil(accepted quadruples / |PSL(2,p)|)
 ```
 
-is a public lower bound on the number of inequivalent orbits. This does not require expensive full canonicalization.
+is a rigorous public lower bound on the number of inequivalent simultaneous-conjugacy orbits.
 
-## Declared measurement
+## Fixed `nat10-p7-X8` baseline
 
-Run all three parameter sets over eight deterministic seeds. Record:
+The declared fixed baseline produced
 
-- generation attempts;
-- generator trace-window candidate sizes;
-- pair enumeration and pruning;
-- relator joins;
-- verifier tests;
-- accepted-representation multiplicity;
-- conjugacy-orbit lower bound;
-- first-recovered/planted equality only after public success.
+```text
+prime / group size:                 7 / 336
+noise radius:                       1
+generation attempts:                1044
+generator candidate sizes:          147 / 147 / 147 / 146
+left pairs considered / retained:   21609 / 9709
+right pairs considered / retained:  21462 / 8442
+relator join candidates:            269346
+verifier candidates tested:         62202
+accepted representations:           62202
+conjugacy-orbit lower bound:         371
+public recovery:                     yes
+first recovered equals planted:      no
+```
 
-## Rejection gate
+Thus even after all eight noisy trace constraints, one small public CSP produces tens of thousands of verifier-accepted quadruples and at least hundreds of inequivalent simultaneous-conjugacy orbits.
 
-Reject a NAT10 parameter set if the trace-filter/relator CSP routinely produces a verifier-accepted representation with small explicit public work, even if the planted representation remains hidden.
+## Declared three-set × eight-seed sweep
 
-Noise is not considered beneficial merely because planted equality becomes rarer. The actual inversion objective is the public verifier.
+All 24 declared instances were publicly inverted:
 
-## Survival gate
+```text
+set             recovery   first=planted   accepted reps / seed    orbit lower bound / seed
+nat10-p5-G4       8/8          0/8           278580 .. 678321       4643 .. 11306
+nat10-p5-X8       8/8          0/8            23520 ..  86760        392 ..  1446
+nat10-p7-X8       8/8          0/8            46032 .. 134484        274 ..   801
+```
 
-Only if increasing `p` and the fixed noisy sketch produces measurable public attack-work growth while accepted-solution multiplicity remains controlled should a successor investigate larger targets or non-exhaustive trace algebra attacks.
+Aggregate accepted-representation counts were
+
+```text
+nat10-p5-G4: 3,276,783
+nat10-p5-X8:   455,340
+nat10-p7-X8:   692,524
+```
+
+Overall public recovery is **24/24** and the first recovered representation equals the planted quadruple on **0/24**.
+
+Increasing from `p=5` to `p=7` does increase raw pair/join work, but it does not control verifier-equivalent multiplicity: the strongest declared `p7-X8` sketch still leaves at least 274–801 inequivalent orbits per seed under the rigorous lower bound.
+
+## Interpretation
+
+NAT10 falsifies the idea that simply adding bounded noise to a lossy residual representation fixes NAT9. The noise does hide the planted exact representation, but the verifier itself becomes permissive enough that finding *some* accepted representation remains easy on the toy instances.
+
+This is a stronger failure than planted-recovery failure alone: even after quotienting by simultaneous conjugation, the accepted-solution set remains provably large.
+
+A successor must therefore change the semantics, not merely enlarge `p`, increase the word list, or widen/narrow the same trace windows. Any future noisy residual construction must predeclare and measure both attacker work and verifier-equivalent solution multiplicity. If multiplicity grows with noise, that is attacker freedom, not evidence of hardness.
 
 No security claim.
