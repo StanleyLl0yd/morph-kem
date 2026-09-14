@@ -1,0 +1,51 @@
+name: NAT10 noisy SL2 trace sketch
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/nat_noisy_sl2_trace.py'
+      - 'tests/test_nat_noisy_sl2_trace.py'
+      - 'scripts/nat_noisy_sl2_trace_*.py'
+      - '.github/workflows/nat10.yml'
+      - 'docs/89-nat10-noisy-sl2-trace.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/nat_noisy_sl2_trace.py'
+      - 'tests/test_nat_noisy_sl2_trace.py'
+      - 'scripts/nat_noisy_sl2_trace_*.py'
+      - '.github/workflows/nat10.yml'
+      - 'docs/89-nat10-noisy-sl2-trace.md'
+
+permissions:
+  contents: read
+
+jobs:
+  nat10:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile NAT10
+        run: >-
+          python -m compileall -q
+          src/morph_kem/nat_noisy_sl2_trace.py
+          tests/test_nat_noisy_sl2_trace.py
+          scripts/nat_noisy_sl2_trace_baseline.py
+          scripts/nat_noisy_sl2_trace_sweep.py
+      - name: NAT10 unit tests
+        run: python -m unittest tests.test_nat_noisy_sl2_trace -v
+      - name: NAT10 fixed p7 noisy-trace baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_noisy_sl2_trace_baseline.py --params nat10-p7-X8
+      - name: NAT10 multi-seed noisy-trace sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_noisy_sl2_trace_sweep.py --seeds 8
