@@ -12,7 +12,7 @@ from morph_kem.hga_markoff_action import (
 
 def seed_for(name: str) -> bytes:
     return hashlib.sha256(
-        f"MORPH-KEM HGA1 baseline {name} v1".encode("ascii")
+        f"MORPH-KEM HGA-R1 baseline {name} v1".encode("ascii")
     ).digest()
 
 
@@ -21,7 +21,7 @@ def main() -> None:
     parser.add_argument(
         "--params",
         choices=sorted(HGA1_PARAMETER_SETS),
-        default="hga1-p59-L24",
+        default="hgar1-p59-L24",
     )
     args = parser.parse_args()
 
