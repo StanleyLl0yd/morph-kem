@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import unittest
 
+from morph_kem.tdc_cycle_code import _gf2_rank
 from morph_kem.tdc_prange_isd import (
     TDC3BError,
     TDC3BParameters,
@@ -26,6 +27,14 @@ class TDC3BPrangeISDTests(unittest.TestCase):
         with self.assertRaises(TDC3BError):
             TDC3BParameters("bad", "missing").validate()
 
+    def test_fixed_ensemble_is_full_row_rank(self) -> None:
+        for name, params in TDC3B_PARAMETER_SETS.items():
+            instance = generate_tdc3b_instance(
+                params, digest(f"TDC3b full row rank {name} unit v1")
+            )
+            for code in (instance.pair.topology, instance.pair.matched_random):
+                self.assertEqual(_gf2_rank(list(code.columns)), code.row_count)
+
     def test_information_set_is_deterministic_and_sized_to_rank(self) -> None:
         params = TDC3B_PARAMETER_SETS["tdc3b-n8"]
         instance = generate_tdc3b_instance(params, digest("TDC3b information set unit v1"))
@@ -34,7 +43,9 @@ class TDC3BPrangeISDTests(unittest.TestCase):
         first = information_set(instance.pair.topology, target, 0)
         second = information_set(instance.pair.topology, target, 0)
         self.assertEqual(first, second)
-        self.assertEqual(len(first), instance.pair.topology.row_count)
+        actual_rank = _gf2_rank(list(instance.pair.topology.columns))
+        self.assertEqual(len(first), actual_rank)
+        self.assertEqual(actual_rank, instance.pair.topology.row_count)
         self.assertEqual(len(set(first)), len(first))
 
     def test_public_recovery_verifies_when_accepted(self) -> None:
