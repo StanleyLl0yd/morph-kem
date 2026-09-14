@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
 
+from .tdc_cycle_code import _gf2_rank
 from .tdc_decoder_work import (
     TDC3Instance,
     TDC3_PARAMETER_SETS,
@@ -70,9 +71,25 @@ class PrangePairRecovery:
     random_matches_planted_after_public_success: bool
 
 
+def _public_rank(code: SparseFaceCode) -> int:
+    return _gf2_rank(list(code.columns))
+
+
+def _require_full_row_rank(code: SparseFaceCode) -> int:
+    rank = _public_rank(code)
+    if rank != code.row_count:
+        raise TDC3BError(
+            "TDC3b fixed Prange gate requires full-row-rank public matrices"
+        )
+    return rank
+
+
 def generate_tdc3b_instance(params: TDC3BParameters, master_seed: bytes) -> TDC3Instance:
     params.validate()
-    return generate_tdc3_instance(TDC3_PARAMETER_SETS[params.base_name], master_seed)
+    instance = generate_tdc3_instance(TDC3_PARAMETER_SETS[params.base_name], master_seed)
+    _require_full_row_rank(instance.pair.topology)
+    _require_full_row_rank(instance.pair.matched_random)
+    return instance
 
 
 def _code_digest(code: SparseFaceCode) -> bytes:
@@ -93,8 +110,9 @@ def information_set(
 ) -> tuple[int, ...]:
     if trial_index < 0:
         raise TDC3BError("TDC3b trial index must be nonnegative")
-    if code.row_count > len(code.columns):
-        raise TDC3BError("TDC3b code has fewer columns than rows")
+    rank = _require_full_row_rank(code)
+    if rank > len(code.columns):
+        raise TDC3BError("TDC3b code has fewer columns than rank")
     code_hash = _code_digest(code)
     syndrome_width = max(1, (code.row_count + 7) // 8)
     syndrome_bytes = target_syndrome.to_bytes(syndrome_width, "big")
@@ -109,7 +127,7 @@ def information_set(
         ).digest()
         ranked.append((score, index))
     ranked.sort()
-    return tuple(index for _, index in ranked[: code.row_count])
+    return tuple(index for _, index in ranked[:rank])
 
 
 def solve_information_set(
@@ -117,7 +135,7 @@ def solve_information_set(
     selected: tuple[int, ...],
     target_syndrome: int,
 ) -> LinearSolveResult:
-    rank = code.row_count
+    rank = _require_full_row_rank(code)
     if len(selected) != rank or len(set(selected)) != rank:
         raise TDC3BError("TDC3b information set has wrong size")
 
@@ -181,6 +199,7 @@ def prange_decode(
         raise TDC3BError("TDC3b max weight must be positive")
     if trial_budgets != (8, 32, 128):
         raise TDC3BError("TDC3b decoder requires fixed 8/32/128 budgets")
+    _require_full_row_rank(code)
 
     maximum = trial_budgets[-1]
     deficient = 0
