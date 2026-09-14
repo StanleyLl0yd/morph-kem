@@ -1,0 +1,51 @@
+name: TDC3 matched decoder-work control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/tdc_decoder_work.py'
+      - 'tests/test_tdc_decoder_work.py'
+      - 'scripts/tdc_decoder_work_*.py'
+      - '.github/workflows/tdc3.yml'
+      - 'docs/87-tdc3-matched-decoder-work.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/tdc_decoder_work.py'
+      - 'tests/test_tdc_decoder_work.py'
+      - 'scripts/tdc_decoder_work_*.py'
+      - '.github/workflows/tdc3.yml'
+      - 'docs/87-tdc3-matched-decoder-work.md'
+
+permissions:
+  contents: read
+
+jobs:
+  tdc3:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile TDC3
+        run: >-
+          python -m compileall -q
+          src/morph_kem/tdc_decoder_work.py
+          tests/test_tdc_decoder_work.py
+          scripts/tdc_decoder_work_baseline.py
+          scripts/tdc_decoder_work_sweep.py
+      - name: TDC3 unit tests
+        run: python -m unittest tests.test_tdc_decoder_work -v
+      - name: TDC3 fixed decoder baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_decoder_work_baseline.py --params tdc3-n10
+      - name: TDC3 all-size matched decoder sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_decoder_work_sweep.py --seeds 8
