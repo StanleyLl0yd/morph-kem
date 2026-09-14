@@ -1,0 +1,58 @@
+name: TDC3c Lee-Brickell order-2 matched control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/tdc_lee_brickell.py'
+      - 'tests/test_tdc_lee_brickell.py'
+      - 'scripts/tdc_lee_brickell_*.py'
+      - '.github/workflows/tdc3c.yml'
+      - 'docs/93-tdc3c-lee-brickell.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/tdc_lee_brickell.py'
+      - 'tests/test_tdc_lee_brickell.py'
+      - 'scripts/tdc_lee_brickell_*.py'
+      - '.github/workflows/tdc3c.yml'
+      - 'docs/93-tdc3c-lee-brickell.md'
+
+permissions:
+  contents: read
+
+jobs:
+  tdc3c:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile TDC3c
+        run: >-
+          python -m compileall -q
+          src/morph_kem/tdc_lee_brickell.py
+          tests/test_tdc_lee_brickell.py
+          scripts/tdc_lee_brickell_baseline.py
+          scripts/tdc_lee_brickell_sweep.py
+      - name: TDC3c unit tests
+        run: python -m unittest tests.test_tdc_lee_brickell -v
+      - name: TDC3c fixed n10 baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_lee_brickell_baseline.py --params tdc3c-n10
+      - name: TDC3c n8 declared sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_lee_brickell_sweep.py --params tdc3c-n8 --seeds 8
+      - name: TDC3c n9 declared sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_lee_brickell_sweep.py --params tdc3c-n9 --seeds 8
+      - name: TDC3c mandatory n10x32 validation
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_lee_brickell_sweep.py --params tdc3c-n10 --seeds 32
