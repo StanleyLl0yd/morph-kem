@@ -2,11 +2,13 @@
 
 ## Status
 
-**TDC3c is a predeclared falsification experiment in progress.** It strengthens TDC3b without changing the merged TDC2g-derived generator, parity overlay, matched controls or planted error schedule.
+**TDC3c rejects the current TDC2g-derived ensemble under its predeclared gate.**
 
-TDC3b survived bounded Prange/ISD on the declared toy distribution. TDC3c therefore allows a bounded number of error positions outside each candidate basis, following the basic Lee–Brickell idea.
+The aggregate mandatory `n10 × 32` curves are mixed rather than uniformly topology-easier, and the strongest fixed attack actually succeeds slightly more often on matched controls. However, the gate was fixed before measurement at the **same error weight and fixed `(max_order,budget)` checkpoint** level. A clear topology-easier early-budget window appears inside that declared grid. Averaging over weights after observing it would weaken the gate post hoc, so the current ensemble does not advance.
 
-This is not a decoding-hardness or security claim.
+This result is deliberately narrow: it does **not** establish a universal weakness of topology-derived codes, Lee–Brickell decoding, or sparse codes. It says only that this exact TDC2g-derived generator/distribution failed its own predeclared matched-control falsification rule.
+
+No decoding-hardness or security claim exists.
 
 ## Fixed ensemble
 
@@ -18,6 +20,8 @@ TDC3c reuses exactly:
 - public error weights `1..6`.
 
 Any syndrome-equivalent error of weight at most the declared bound is attacker success. Planted equality is measured only after public success.
+
+No generator parameter was tuned after observing TDC3c output.
 
 ## TDC-A012 — bounded Lee–Brickell-style ISD
 
@@ -34,9 +38,11 @@ For a full-row-rank public parity-check matrix `H` and public target syndrome `s
 
 Order zero is the Prange special case. Orders one and two strictly enlarge the public attack search.
 
+An exact outside order larger than the public weight bound is skipped because no accepted candidate can contain that many outside errors. This optimization was made before reading the final measurement run and avoids inflating attack work with publicly impossible subsets.
+
 ## Fixed checkpoints
 
-Before measurement, the cumulative information-set budgets are fixed at
+Before measurement, cumulative information-set budgets were fixed at
 
 ```text
 1
@@ -44,7 +50,7 @@ Before measurement, the cumulative information-set budgets are fixed at
 16
 ```
 
-and cumulative outside orders are fixed at
+and cumulative outside orders were fixed at
 
 ```text
 0
@@ -52,13 +58,13 @@ and cumulative outside orders are fixed at
 2.
 ```
 
-The implementation evaluates the same sixteen public information sets once and records success for all nine `(max_order,budget)` checkpoints. Work snapshots at `1/4/16` are fixed-budget exhaustion costs, independent of whether an earlier accepted candidate exists. A separate snapshot records work up to the first strongest-attack accepted candidate.
+The implementation evaluates the same sixteen public information sets once and records success for all nine `(max_order,budget)` checkpoints. Work snapshots at `1/4/16` are fixed-budget exhaustion costs, independent of early success. A separate snapshot records work accumulated to the first strongest-attack accepted candidate.
 
-No trial budget or outside order may be increased inside TDC3c after measurement.
+No trial budget or outside order was increased after measurement.
 
 ## Exact GF(2) coordinate map
 
-For selected basis matrix `M`, Gauss–Jordan elimination is run on
+For selected basis matrix `M`, Gauss–Jordan elimination runs on
 
 ```text
 [M | I]
@@ -72,33 +78,11 @@ to obtain
 
 The right block maps any public syndrome to selected-column coordinates. Linearity then allows every outside subset to be compensated without repeating elimination.
 
-Unit tests verify the coordinate map by reconstructing public unit syndromes and checking them through the same exact syndrome function used by the verifier.
-
-## Work accounting
-
-At each fixed trial checkpoint record:
-
-- information sets attempted;
-- rank-deficient sets;
-- full-rank coordinate maps;
-- pivot scans;
-- row swaps;
-- GF(2) row XORs;
-- outside subsets enumerated at exact orders `0/1/2`;
-- candidate weight tests;
-- exact verifier calls.
-
-For the strongest `(order<=2,budget<=16)` attack also record:
-
-- first successful trial;
-- outside order of the first accepted candidate;
-- recovered weight;
-- work accumulated at that first success;
-- planted equality only after public success.
+Unit tests reconstruct public unit syndromes and verify them through the same exact syndrome function used by the attack verifier.
 
 ## Declared measurement
 
-Unlike TDC3b, the larger `n10` validation is mandatory from the start:
+The larger `n10` validation was mandatory from the start:
 
 ```text
 n8  ×  8 seeds × weights 1..6
@@ -106,18 +90,157 @@ n9  ×  8 seeds × weights 1..6
 n10 × 32 seeds × weights 1..6
 ```
 
-The `n10×32` distribution is not triggered by an observed signal. This avoids repeating the small-sample fluctuation seen in the TDC3b `n10×8` slice.
+Thus the mandatory `n10` comparison contains 192 paired weight-cases per family. The `n10×32` distribution was not activated in response to an observed signal.
 
-## Rejection gate
+## Mandatory n10 × 32 aggregate picture
 
-Reject the current topology-derived ensemble if topology instances show a reproducible easier-decoding signal than matched controls on the mandatory `n10×32` distribution at any fixed `(max_order,budget)` checkpoint, or materially lower exact public work for comparable recovery.
+Across all six weights, the nine fixed checkpoints are:
 
-Do not repair a failed gate by adding overlay rows, changing error weights or altering the current generator.
+```text
+max order   budget    topology   control   delta
+    0          1         12         12        0
+    0          4         50         49       +1
+    0         16        120        116       +4
 
-## Survival gate
+    1          1         38         33       +5
+    1          4        107        104       +3
+    1         16        172        176       -4
 
-If topology/control success and work curves remain overlapping or topology is not easier under all predeclared checkpoints, record only survival of this bounded Lee–Brickell-style toy gate.
+    2          1         49         46       +3
+    2          4        135        136       -1
+    2         16        187        191       -4
+```
 
-A successor would still need a stronger independent attack family — for example a bounded Stern/collision-style decoder or a more advanced ISD variant — before any trapdoor or KEM interface could be considered.
+The sign changes with attack budget. In particular, the strongest declared attack succeeds on
+
+```text
+topology: 187 / 192
+control:  191 / 192
+```
+
+so there is no family-wide claim that topology is generally easier under this attack.
+
+Paired all-weight discordance says the same thing. For `(max_order=2,budget=16)`:
+
+```text
+topology-only:   1
+control-only:    5
+both:          186
+neither:         0
+```
+
+while at `(max_order=1,budget=1)` it is
+
+```text
+topology-only:  30
+control-only:   25
+both:            8
+neither:       129
+```
+
+The aggregate signal is therefore mixed rather than monotone.
+
+## The predeclared local gate that fails
+
+The rejection rule was not defined only on the all-weight aggregate. It explicitly compared matched families at the same dimensions/rank/rate/**error weight** and any fixed `(max_order,budget)` checkpoint.
+
+At `n10`, weight `2`, one public information-set trial gives:
+
+```text
+                         topology   control
+order <= 0                  5          1
+order <= 1                 13          5
+order <= 2                 14          5
+```
+
+For the strongest of those one-trial checkpoints, the paired decomposition is:
+
+```text
+weight=2, order<=2, budget=1
+
+topology-only:  10
+control-only:    1
+both:            4
+neither:        17
+```
+
+This is not an artifact of comparing independent counts: ten paired seeds are solved only on the topology instance while one is solved only on its matched control.
+
+A second topology-easier window appears at weight `4`, `order<=2`, budget `4`:
+
+```text
+success:         26 / 32 topology
+                 20 / 32 control
+paired:
+  topology-only: 11
+  control-only:   5
+  both:          15
+  neither:        1
+```
+
+There are also reverse windows where controls are easier, notably weight `5`, `order<=1`, budget `4` (`11/32` vs `17/32`) and weight `6`, `order<=2`, budget `4` (`17/32` vs `21/32`). This is why the result is **not** generalized into a theorem that topology makes decoding easier.
+
+Nevertheless, the experiment's rule was deliberately conservative: a reproducible topology-easier checkpoint at matched public parameters is enough to stop cryptographic progression of the current ensemble. Redefining the rule now to require a favorable all-weight average would be post-measurement rescue.
+
+## Smaller-size context
+
+The smaller declared slices also fluctuate rather than establishing a clean scaling law.
+
+For example, at weight `3`, `order<=1`, budget `1`:
+
+```text
+n8:   topology 3/8   control 1/8
+n9:   topology 4/8   control 0/8
+n10:  topology 9/32  control 6/32
+```
+
+while other checkpoints reverse sign. These observations are retained as diagnostics, not promoted into an asymptotic claim.
+
+## Exact public work at n10 × 32
+
+At the full 16-information-set budget, summed over all 192 weight-cases:
+
+```text
+                              topology      control
+information sets                3072         3072
+rank-deficient sets             2151         2208
+full-rank maps                   921          864
+GF(2) row XORs               2473924      2486692
+pivot scans                   252066       247918
+row swaps                      61666        61019
+candidate weight tests        261343       246808
+verifier calls                   783          742
+```
+
+Gaussian-elimination work is extremely close. Topology produces more full-rank information sets, so it also performs more outside-subset/candidate work. These totals do not rescue or independently condemn the ensemble; the rejection is driven by the predeclared matched checkpoint criterion above.
+
+Work to first strongest-attack success is likewise mixed by weight:
+
+```text
+weight   top success/control   top trials   ctl trials   top XORs   ctl XORs
+  1          31 / 32              94          115         76071      92812
+  2          31 / 32              78          103         62889      82957
+  3          32 / 32             116          114         93911      92702
+  4          32 / 32             108          127         86467     103069
+  5          31 / 32             122          117         97980      94516
+  6          30 / 31             166          151        133598     122396
+```
+
+Again, no single global work ordering is claimed.
+
+## Verdict
+
+Under the rule written before measurement, **TDC3c fails the current TDC2g-derived ensemble**.
+
+The scientifically conservative consequence is:
+
+1. do not call TDC3c a survival;
+2. do not average away the failed same-weight checkpoint after seeing it;
+3. do not tune overlay rows, error weights, seeds, trial budgets or the same generator to recover a pass;
+4. freeze cryptographic progression of this exact TDC2g-derived family;
+5. preserve TDC0–TDC3c as a matched-control/negative-calibration corpus;
+6. if TDC research continues, redesign the ensemble and make low-order ISD checkpoints part of the gate from the beginning.
+
+This rejection does **not** prove a structural decoding attack on all topology-derived codes. It only prevents this measured toy family from being promoted past its own falsification standard.
 
 No trapdoor primitive, KEM, one-wayness, post-quantum, IND-CPA/CCA or production-security claim exists.
