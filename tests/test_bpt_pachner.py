@@ -13,6 +13,7 @@ from morph_kem.bpt_pachner import (
     inverse_move,
     isomorphic,
     recover_bpt_weak,
+    recover_tetrahedral_isomorphism,
     verify_path,
 )
 
@@ -33,7 +34,6 @@ class BPTPachnerWeakTests(unittest.TestCase):
     def test_one_four_inverse_round_trip(self) -> None:
         params = BPT_WEAK_PARAMETER_SETS["bptw0-d1"]
         public, reference = generate_bpt_weak_instance(params, b"BPT-W0 inverse unit seed v1")
-        # The first half of the planted path collapses source to the common root.
         first = reference.planted_path[0]
         root = apply_move(public.source, first)
         self.assertEqual(root, boundary_of_4_simplex())
@@ -54,15 +54,22 @@ class BPTPachnerWeakTests(unittest.TestCase):
             canonical_tetrahedral_signature(sphere),
             canonical_tetrahedral_signature(relabelled),
         )
+        recovered = recover_tetrahedral_isomorphism(relabelled, sphere)
+        self.assertIsNotNone(recovered)
+        assert recovered is not None
+        self.assertEqual(relabelled.relabel(dict(recovered)), sphere)
 
-    def test_greedy_public_attack_recovers_accepted_path_without_reference(self) -> None:
+    def test_greedy_public_attack_splices_isomorphic_nonidentical_roots(self) -> None:
         params = BPT_WEAK_PARAMETER_SETS["bptw0-d3"]
         public, _ = generate_bpt_weak_instance(params, b"BPT-W0 public recovery unit seed v1")
         recovery = recover_bpt_weak(public)
         self.assertTrue(recovery.accepted)
         self.assertEqual(recovery.recovered_length, public.move_bound)
-        self.assertTrue(recovery.common_root_exact)
+        self.assertFalse(recovery.common_root_exact)
+        self.assertTrue(recovery.common_root_isomorphic)
         self.assertIsNone(recovery.matches_planted_after_public_success)
+        self.assertGreaterEqual(recovery.source_simplification_paths, 1)
+        self.assertGreaterEqual(recovery.target_simplification_paths, 1)
         self.assertGreaterEqual(recovery.accepted_path_multiplicity_lower_bound, 1)
 
     def test_break_is_stable_across_seeds(self) -> None:
@@ -75,6 +82,9 @@ class BPTPachnerWeakTests(unittest.TestCase):
             self.assertLessEqual(recovery.recovered_length, public.move_bound)
             self.assertEqual(recovery.source_simplification_steps, params.stack_depth)
             self.assertEqual(recovery.target_simplification_steps, params.stack_depth)
+            self.assertTrue(recovery.common_root_isomorphic)
+            self.assertGreaterEqual(recovery.source_simplification_paths, 1)
+            self.assertGreaterEqual(recovery.target_simplification_paths, 1)
 
 
 if __name__ == "__main__":
