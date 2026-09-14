@@ -2,7 +2,7 @@
 
 ## Status
 
-**HGA4f is a falsification experiment in progress.** HGA4e shows that conditioning endpoint generation against two known finite quotients overfits those maps. HGA4f returns to the unconditioned exact-distance HGA4c distribution and instead strengthens the attacker: a fixed public library of independent small representations is evaluated after the endpoint is published.
+**HGA4f is rejected by HGA-A010 on the measured toy distribution.** HGA4e showed that conditioning endpoint generation against two known finite quotients merely overfits those maps. HGA4f returns to the unconditioned exact-distance HGA4c distribution and instead strengthens the attacker with a fixed endpoint-independent library of small public representations.
 
 HGA4f is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -37,32 +37,62 @@ For every public endpoint:
 5. choose the best product by the same public rule;
 6. accept only if the recovered braid connector reproduces the original exact free-group endpoint.
 
-A quotient state is never accepted as a witness. Quotient collisions can only weaken pruning.
+A quotient state is never accepted as a witness. Quotient collisions can only weaken pruning. Ordinary balanced MITM is measured on the same endpoint as an independent exact baseline.
 
-The attack also records ordinary balanced MITM on the same endpoint.
+## Fixed Python 3.12 result
 
-## Measurements
+For `hga4f-D8`:
 
-Record:
+```text
+exact distance:                         8
+generator ball / shell:             2589 / 1356
+generator transitions:                 4932
+ordinary MITM states / transitions:    230 / 376
+representation library size:             8
 
-- exact generator ball/shell and generation transitions;
-- ordinary MITM states/transitions;
-- library size;
-- every single-map retained state count/fraction;
-- selected top-three labels;
-- all three product retained state counts/fractions;
-- best-single and best-product results;
-- exact connector length/verification;
-- frequency with which the best product retains <20% of the generator ball;
-- frequency with which it retains fewer exact states than ordinary MITM;
-- deterministic `D=4/6/8 x 8` sweep and per-distance summaries.
+best single:                         A5-d
+best single exact states:              98
 
-## Gate
+best product:                    A5-d + A5-a
+best product exact states:             53
+best product / generator ball:  0.020471224
+best product / MITM states:     0.230434783
+exact endpoint verified:              yes
+```
 
-Reject the current HGA4c endpoint family more broadly if this modest fixed public library routinely yields a very small exact admissible set while preserving verifier-correct recovery, especially if adaptive products retain fewer exact states than ordinary MITM on most endpoints.
+The best product therefore keeps only 53 exact states from a 2589-state generator ball while preserving a verifier-correct length-eight connector.
 
-If the library is weak, record that result without adding more maps post hoc. Larger representations, stabilizers, canonical forms and generic search remain separate gates.
+## Deterministic sweep
 
-Do not repair a failure by conditioning generation against this library: HGA4e already demonstrates that finite training sets lead to a representation-overfitting loop.
+Python 3.12 tested `D=4/6/8 × 8` deterministic seeds: **24 public exact-distance endpoints**.
+
+- exact endpoint recovery succeeds on **24/24**;
+- best product retains <20% of the generator ball on **24/24**;
+- best product retains fewer exact states than ordinary balanced MITM on **24/24**;
+- retained fraction of generator ball is `0.012131716 .. 0.092182891`, mean `0.034809637`;
+- D4 retained fraction: `0.043478261 .. 0.073529412`, mean `0.047234655`;
+- D6 retained fraction: `0.012131716 .. 0.028662420`, mean `0.020263912`;
+- D8 retained fraction: `0.012746234 .. 0.092182891`, mean `0.036930346`.
+
+The selected-single frequency is dominated by the four independent `A5` maps, but the public rule is representation-agnostic and the generator never sees any member of the library.
+
+## Result
+
+**HGA4f is rejected by HGA-A010.** A modest fixed public representation library, evaluated only after endpoint publication and combined by a deterministic public rule, systematically produces a much smaller exact admissible set than both the full generator ball and ordinary MITM state count while preserving exact endpoint recovery.
+
+This strengthens HGA4d/HGA4e. The measured leakage is not tied to one hand-picked quotient and cannot be repaired by training generation against a finite list of known maps without repeating the overfitting loop already exposed by HGA4e.
+
+This result does **not** prove that the infinite Hurwitz action is asymptotically easy. It rejects the current exact-distance endpoint family and its finite-quotient-conditioning repair strategy on the measured distribution.
+
+## Successor gate
+
+A successor HGA action/distribution must not merely add the current library to a generation objective. It should change the relation so independently chosen finite representations do not routinely leave a tiny admissible subset. Any successor must still face:
+
+- a held-out library of finite representations fixed before measurement;
+- adaptive products of independently chosen public maps;
+- ordinary balanced MITM;
+- stabilizer/equivalent-action analysis;
+- canonical and linear representations;
+- quantum hidden-shift/subgroup screening where applicable.
 
 No security claim.
