@@ -1,0 +1,51 @@
+name: TDC3b bounded Prange ISD control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/tdc_prange_isd.py'
+      - 'tests/test_tdc_prange_isd.py'
+      - 'scripts/tdc_prange_isd_*.py'
+      - '.github/workflows/tdc3b.yml'
+      - 'docs/90-tdc3b-prange-isd.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/tdc_prange_isd.py'
+      - 'tests/test_tdc_prange_isd.py'
+      - 'scripts/tdc_prange_isd_*.py'
+      - '.github/workflows/tdc3b.yml'
+      - 'docs/90-tdc3b-prange-isd.md'
+
+permissions:
+  contents: read
+
+jobs:
+  tdc3b:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile TDC3b
+        run: >-
+          python -m compileall -q
+          src/morph_kem/tdc_prange_isd.py
+          tests/test_tdc_prange_isd.py
+          scripts/tdc_prange_isd_baseline.py
+          scripts/tdc_prange_isd_sweep.py
+      - name: TDC3b unit tests
+        run: python -m unittest tests.test_tdc_prange_isd -v
+      - name: TDC3b fixed Prange baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_prange_isd_baseline.py --params tdc3b-n10
+      - name: TDC3b all-size Prange sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_prange_isd_sweep.py --seeds 8
