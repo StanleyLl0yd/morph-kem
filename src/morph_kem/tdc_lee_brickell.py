@@ -114,8 +114,8 @@ def build_basis_coordinate_map(
     if len(selected) != rank or len(set(selected)) != rank:
         raise TDC3CError("TDC3c information set has wrong size")
 
-    # Low r bits are the selected-column coefficient matrix M.  High r bits
-    # start as I.  Gauss-Jordan row operations produce [I | M^-1].
+    # Low r bits are the selected-column coefficient matrix M. High r bits
+    # start as I. Gauss-Jordan row operations produce [I | M^-1].
     rows: list[int] = []
     for equation in range(rank):
         left = 0
@@ -250,6 +250,8 @@ def lee_brickell_decode(
             }
 
             for exact_order in outside_orders:
+                if exact_order > max_weight:
+                    continue
                 for subset in combinations(outside, exact_order):
                     outside_counts[exact_order] += 1
                     weight_tests += 1
@@ -300,7 +302,7 @@ def lee_brickell_decode(
     success_grid: list[tuple[int, int, bool]] = []
     for max_order in outside_orders:
         candidate_trials = [
-            trial for order, trial in enumerate(first_exact[: max_order + 1]) if trial is not None
+            trial for trial in first_exact[: max_order + 1] if trial is not None
         ]
         first_cumulative = min(candidate_trials) if candidate_trials else None
         for budget in trial_budgets:
