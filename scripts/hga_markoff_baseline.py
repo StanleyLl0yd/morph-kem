@@ -21,7 +21,7 @@ def main() -> None:
     parser.add_argument(
         "--params",
         choices=sorted(HGA1_PARAMETER_SETS),
-        default="hgar1-p59-L24",
+        default="hga1-p59-L24",
     )
     args = parser.parse_args()
 
