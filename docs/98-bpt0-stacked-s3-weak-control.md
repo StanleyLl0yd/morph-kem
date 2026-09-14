@@ -10,9 +10,9 @@ No one-wayness, novelty, post-quantum, KEM, IND-CPA/CCA or production-security c
 
 ## Public objects
 
-The common root is the boundary of the 4-simplex: five tetrahedra triangulating `S^3`.
+The common root type is the boundary of the 4-simplex: five tetrahedra triangulating `S^3`.
 
-For stack depth `d`, generation independently applies `d` deterministic seeded 1–4 moves to the common root to obtain public endpoints `T0,T1`.
+For stack depth `d`, generation independently applies `d` deterministic seeded 1–4 moves to the same labelled root to obtain public endpoints `T0,T1`.
 
 Toy sets:
 
@@ -36,24 +36,29 @@ The toy isomorphism checker is an exact exhaustive relabeling of at most eight v
 
 Any accepted path is attacker success. The planted path is reference-only.
 
-## BPT-A000 — greedy common-root simplification
+## BPT-A000 — greedy simplification plus public root transport
 
 The public attack repeatedly applies the lexicographically first legal 4–1 move to each endpoint until no such move remains.
 
-For this weak stacked family the expected behavior is:
+A subtle but important calibration fact is that lexicographic greedy simplification need not undo the planted 1–4 history. It can legally collapse one of the original root vertices after earlier simplifications. Therefore the two greedy outputs are not required to have identical vertex labels.
+
+The required weak-control behavior is instead:
 
 ```text
-T0 --public 4-1 simplification--> boundary(4-simplex)
-T1 --public 4-1 simplification--> boundary(4-simplex)
+T0 --public 4-1 simplification--> R0 ~= boundary(4-simplex)
+T1 --public 4-1 simplification--> R1 ~= boundary(4-simplex)
+R0 ~= R1
 ```
 
-The attacker then concatenates the source simplification path with the inverse of the target simplification path.
+The attacker recovers a deterministic exact public vertex isomorphism `R1 -> R0`. Vertices removed from the target during simplification are assigned fresh labels not present in `R0`. The inverse target simplification path is transported through this map and concatenated with the source simplification path.
 
-If the resulting path is within the public bound and verifies, BPT-W0 is rejected as intended.
+The resulting endpoint only needs to be combinatorially isomorphic to the public target, exactly matching verifier semantics. Requiring literal root equality would incorrectly make the attack depend on generator labels rather than the public relation.
+
+If the transported path is within the public bound and verifies, BPT-W0 is rejected as intended.
 
 ## Equivalent-path accounting
 
-The implementation also recursively counts all public 4–1 simplification sequences from each endpoint to the common root, capped at one million. Their product is a lower bound on verifier-accepted common-root paths between the endpoints.
+The implementation recursively counts all public 4–1 simplification sequences from each endpoint that reach **any** five-tetrahedron root combinatorially isomorphic to the boundary of the 4-simplex, capped at one million. Their product is a lower bound on verifier-accepted simplification/splice paths between the endpoints.
 
 This is not used to make the attack succeed. It records the same lesson preserved elsewhere in MORPH: planted-path equality is irrelevant when multiple accepted public paths exist.
 
@@ -66,6 +71,7 @@ Record at least:
 - public move bound and recovered length;
 - simplification steps on both endpoints;
 - public vertex scans and number of legal 4–1 choices observed;
+- whether greedy roots are literally equal and whether they are isomorphic;
 - exact source/target simplification-path counts in the toy range;
 - accepted-path multiplicity lower bound;
 - exact verifier acceptance;
@@ -76,7 +82,7 @@ Record at least:
 
 BPT-W0 must be rejected on the declared distribution before any stronger BPT experiment is interpreted.
 
-If public greedy simplification fails to recover accepted paths on this intentionally stacked family, stop and repair the harness rather than constructing a harder generator.
+If public greedy simplification plus exact root-isomorphism transport fails to recover accepted paths on this intentionally stacked family, stop and repair the harness rather than constructing a harder generator.
 
 ## What BPT-W0 does not test
 
