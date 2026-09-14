@@ -1,0 +1,51 @@
+name: NAT7 public tree-gauge normalization closure
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/nat_tree_gauge.py'
+      - 'tests/test_nat_tree_gauge.py'
+      - 'scripts/nat_tree_gauge_*.py'
+      - '.github/workflows/nat7.yml'
+      - 'docs/82-nat7-public-tree-gauge-normalization.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/nat_tree_gauge.py'
+      - 'tests/test_nat_tree_gauge.py'
+      - 'scripts/nat_tree_gauge_*.py'
+      - '.github/workflows/nat7.yml'
+      - 'docs/82-nat7-public-tree-gauge-normalization.md'
+
+permissions:
+  contents: read
+
+jobs:
+  nat7:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile NAT7
+        run: >-
+          python -m compileall -q
+          src/morph_kem/nat_tree_gauge.py
+          tests/test_nat_tree_gauge.py
+          scripts/nat_tree_gauge_baseline.py
+          scripts/nat_tree_gauge_sweep.py
+      - name: NAT7 unit tests
+        run: python -m unittest tests.test_nat_tree_gauge -v
+      - name: NAT7 fixed generic normalization baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_tree_gauge_baseline.py
+      - name: NAT7 NAT6-regression gauge-invariance sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_tree_gauge_sweep.py --seeds 8
