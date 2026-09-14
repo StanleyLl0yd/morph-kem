@@ -1,0 +1,51 @@
+name: BPT-W0 stacked S3 weak control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/bpt_pachner.py'
+      - 'tests/test_bpt_pachner.py'
+      - 'scripts/bpt_pachner_*.py'
+      - '.github/workflows/bpt0.yml'
+      - 'docs/98-bpt0-stacked-s3-weak-control.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/bpt_pachner.py'
+      - 'tests/test_bpt_pachner.py'
+      - 'scripts/bpt_pachner_*.py'
+      - '.github/workflows/bpt0.yml'
+      - 'docs/98-bpt0-stacked-s3-weak-control.md'
+
+permissions:
+  contents: read
+
+jobs:
+  bpt0:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile BPT-W0
+        run: >-
+          python -m compileall -q
+          src/morph_kem/bpt_pachner.py
+          tests/test_bpt_pachner.py
+          scripts/bpt_pachner_baseline.py
+          scripts/bpt_pachner_sweep.py
+      - name: BPT-W0 unit tests
+        run: python -m unittest tests.test_bpt_pachner -v
+      - name: BPT-W0 fixed weak baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/bpt_pachner_baseline.py --params bptw0-d3
+      - name: BPT-W0 24-instance sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/bpt_pachner_sweep.py --seeds 8
