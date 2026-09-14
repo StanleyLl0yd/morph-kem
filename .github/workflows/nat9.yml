@@ -1,0 +1,51 @@
+name: NAT9 lossy A5 surface observable
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/nat_lossy_a5_surface.py'
+      - 'tests/test_nat_lossy_a5_surface.py'
+      - 'scripts/nat_lossy_a5_surface_*.py'
+      - '.github/workflows/nat9.yml'
+      - 'docs/88-nat9-lossy-a5-surface.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/nat_lossy_a5_surface.py'
+      - 'tests/test_nat_lossy_a5_surface.py'
+      - 'scripts/nat_lossy_a5_surface_*.py'
+      - '.github/workflows/nat9.yml'
+      - 'docs/88-nat9-lossy-a5-surface.md'
+
+permissions:
+  contents: read
+
+jobs:
+  nat9:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile NAT9
+        run: >-
+          python -m compileall -q
+          src/morph_kem/nat_lossy_a5_surface.py
+          tests/test_nat_lossy_a5_surface.py
+          scripts/nat_lossy_a5_surface_baseline.py
+          scripts/nat_lossy_a5_surface_sweep.py
+      - name: NAT9 unit tests
+        run: python -m unittest tests.test_nat_lossy_a5_surface -v
+      - name: NAT9 fixed coarse-observable baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_lossy_a5_surface_baseline.py --params nat9-X4
+      - name: NAT9 multi-seed coarse-observable sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_lossy_a5_surface_sweep.py --seeds 8
