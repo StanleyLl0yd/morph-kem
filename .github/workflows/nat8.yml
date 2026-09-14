@@ -1,0 +1,51 @@
+name: NAT8 public residual-representation closure
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/nat_residual_representation.py'
+      - 'tests/test_nat_residual_representation.py'
+      - 'scripts/nat_residual_representation_*.py'
+      - '.github/workflows/nat8.yml'
+      - 'docs/84-nat8-public-residual-representation.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/nat_residual_representation.py'
+      - 'tests/test_nat_residual_representation.py'
+      - 'scripts/nat_residual_representation_*.py'
+      - '.github/workflows/nat8.yml'
+      - 'docs/84-nat8-public-residual-representation.md'
+
+permissions:
+  contents: read
+
+jobs:
+  nat8:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile NAT8
+        run: >-
+          python -m compileall -q
+          src/morph_kem/nat_residual_representation.py
+          tests/test_nat_residual_representation.py
+          scripts/nat_residual_representation_baseline.py
+          scripts/nat_residual_representation_sweep.py
+      - name: NAT8 unit tests
+        run: python -m unittest tests.test_nat_residual_representation -v
+      - name: NAT8 fixed residual-representation baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_residual_representation_baseline.py
+      - name: NAT8 NAT6 flat-torus regression sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/nat_residual_representation_sweep.py --seeds 8
