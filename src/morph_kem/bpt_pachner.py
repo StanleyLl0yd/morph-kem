@@ -145,7 +145,6 @@ def four_one_move_for_vertex(
 
     replacement = tuple(neighbours)
     if replacement in set(facets):
-        # In the boundary of a 4-simplex this blocks collapsing a genuine base vertex.
         return None
     return BPTMove("4-1", replacement, vertex)
 
@@ -208,7 +207,6 @@ def greedy_simplify(complex_: SimplicialComplex) -> BPTSimplification:
         legal_seen += len(legal)
         if not legal:
             break
-        # Deliberately choose the smallest public vertex, not the planted reverse order.
         chosen = legal[0]
         current = apply_move(current, chosen)
         moves.append(chosen)
@@ -217,11 +215,7 @@ def greedy_simplify(complex_: SimplicialComplex) -> BPTSimplification:
 
 @lru_cache(maxsize=2048)
 def canonical_tetrahedral_signature(complex_: SimplicialComplex) -> tuple[tuple[int, int, int, int], ...]:
-    """Exact toy isomorphism signature by exhaustive relabeling.
-
-    This is intentionally limited to the tiny BPT-W0 calibration range.  A
-    stronger BPT family must use an independent scalable canonicalization layer.
-    """
+    """Exact toy isomorphism signature by exhaustive relabeling."""
     vertices = tuple(sorted(complex_.vertices))
     if len(vertices) > 8:
         raise BPTError("exact BPT-W0 canonicalization is limited to eight vertices")
@@ -237,6 +231,36 @@ def canonical_tetrahedral_signature(complex_: SimplicialComplex) -> tuple[tuple[
     if best is None:
         raise BPTError("empty tetrahedral signature")
     return best
+
+
+def recover_tetrahedral_isomorphism(
+    left: SimplicialComplex,
+    right: SimplicialComplex,
+) -> tuple[tuple[int, int], ...] | None:
+    """Recover a deterministic exact vertex isomorphism from left to right.
+
+    The exhaustive search is intentionally limited to the tiny BPT-W0 range.
+    """
+    left_vertices = tuple(sorted(left.vertices))
+    right_vertices = tuple(sorted(right.vertices))
+    if len(left_vertices) != len(right_vertices):
+        return None
+    left_facets = _tetrahedra(left)
+    right_facets = set(_tetrahedra(right))
+    if len(left_facets) != len(right_facets):
+        return None
+    if len(left_vertices) > 8:
+        raise BPTError("exact BPT-W0 isomorphism recovery is limited to eight vertices")
+
+    for images in permutations(right_vertices):
+        mapping = dict(zip(left_vertices, images))
+        mapped = {
+            tuple(sorted(mapping[v] for v in facet))
+            for facet in left_facets
+        }
+        if mapped == right_facets:
+            return tuple(sorted(mapping.items()))
+    return None
 
 
 def isomorphic(left: SimplicialComplex, right: SimplicialComplex) -> bool:
@@ -309,7 +333,7 @@ def generate_bpt_weak_instance(
 @lru_cache(maxsize=4096)
 def _count_simplification_paths(complex_: SimplicialComplex) -> int:
     base = boundary_of_4_simplex()
-    if complex_ == base:
+    if isomorphic(complex_, base):
         return 1
     legal = legal_four_one_moves(complex_)
     if not legal:
@@ -322,6 +346,36 @@ def _count_simplification_paths(complex_: SimplicialComplex) -> int:
     return total
 
 
+def _relabel_move(move: BPTMove, mapping: dict[int, int]) -> BPTMove:
+    try:
+        tetrahedron = tuple(sorted(mapping[v] for v in move.tetrahedron))
+        vertex = mapping[move.vertex]
+    except KeyError as exc:
+        raise BPTError("incomplete BPT-W0 transport isomorphism") from exc
+    return BPTMove(move.kind, tetrahedron, vertex)  # type: ignore[arg-type]
+
+
+def _extend_root_isomorphism(
+    public_target: SimplicialComplex,
+    target_root: SimplicialComplex,
+    source_root: SimplicialComplex,
+) -> dict[int, int] | None:
+    recovered = recover_tetrahedral_isomorphism(target_root, source_root)
+    if recovered is None:
+        return None
+    mapping = dict(recovered)
+    used = set(source_root.vertices)
+    fresh = 0
+    removed_target_vertices = sorted(set(public_target.vertices) - set(target_root.vertices))
+    for vertex in removed_target_vertices:
+        while fresh in used:
+            fresh += 1
+        mapping[vertex] = fresh
+        used.add(fresh)
+        fresh += 1
+    return mapping
+
+
 def recover_bpt_weak(
     public: BPTWeakPublic,
     *,
@@ -332,9 +386,11 @@ def recover_bpt_weak(
 
     common_exact = source.root == target.root
     common_iso = isomorphic(source.root, target.root)
-    if not common_exact:
-        # BPT-W0 intentionally shares the standard labelled S^3 root.  A later
-        # family must splice roots through an explicit recovered isomorphism.
+    source_paths = _count_simplification_paths(public.source)
+    target_paths = _count_simplification_paths(public.target)
+
+    transport = _extend_root_isomorphism(public.target, target.root, source.root)
+    if transport is None:
         return BPTWeakRecovery(
             False,
             (),
@@ -347,16 +403,18 @@ def recover_bpt_weak(
             target.legal_moves_seen,
             common_exact,
             common_iso,
-            _count_simplification_paths(public.source),
-            _count_simplification_paths(public.target),
+            source_paths,
+            target_paths,
             0,
             None,
         )
 
-    recovered = source.moves + tuple(inverse_move(move) for move in reversed(target.moves))
+    transported_target_reverse = tuple(
+        _relabel_move(inverse_move(move), transport)
+        for move in reversed(target.moves)
+    )
+    recovered = source.moves + transported_target_reverse
     accepted = verify_path(public, recovered)
-    source_paths = _count_simplification_paths(public.source)
-    target_paths = _count_simplification_paths(public.target)
     multiplicity = min(1_000_000, source_paths * target_paths)
     matches = None
     if accepted and reference is not None:
