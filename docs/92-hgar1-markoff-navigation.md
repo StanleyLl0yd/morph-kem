@@ -2,9 +2,9 @@
 
 ## Status
 
-**HGA-R1 is a predeclared negative-control falsification experiment.** It calibrates the post-NAT binding-action interface from `docs/91-hga0-binding-action-survey.md` on a topology/arithmetic action expected to be publicly navigable.
+**HGA-R1 is rejected by HGA-R-A001.** The declared public Markoff/Schreier graph is directly navigable on every sampled instance: ordinary BFS and the bounded two-tree/bidirectional search recover verifier-accepted actions on all 72/72 cases.
 
-The `R` suffix is deliberate. The repository already preserves the historical HGA1 Heisenberg/Nielsen negative control and its workflow. HGA-R1 is the first experiment in the redesign line; it does not replace or reinterpret the historical HGA0/HGA1 corpus.
+The `R` suffix is deliberate. The repository already preserves the historical HGA1 Heisenberg/Nielsen negative control and its workflow. HGA-R1 is the first measured experiment in the post-NAT redesign line; it does not replace or reinterpret the historical HGA0/HGA1 corpus.
 
 No hardness, novelty, one-wayness, post-quantum, KEM, signature, IND-CPA/CCA or production-security claim exists.
 
@@ -52,7 +52,7 @@ Generation may resample the planted word only when it maps `X` to itself. It nev
 
 ## Fixed grid
 
-Before measurement:
+The grid was fixed before measurement:
 
 ```text
 p in {29,43,59}
@@ -60,7 +60,7 @@ L in {8,16,24}
 8 deterministic seeds per (p,L)
 ```
 
-This is exactly 72 instances. No prime, word bound, seed count or attack budget may be changed after inspecting recovery results.
+This is exactly 72 instances. No prime, word bound, seed count or attack budget was changed after inspecting recovery results.
 
 Implementation parameter IDs retain the compact `hga1-pXX-LYY` spelling inside the isolated Markoff module, but the experiment name and workflow are **HGA-R1** to avoid collision with the preserved historical HGA1 Heisenberg experiment.
 
@@ -68,32 +68,95 @@ Implementation parameter IDs retain the compact `hga1-pXX-LYY` spelling inside t
 
 ### Ordinary shortest BFS
 
-Run deterministic BFS from `X` on the public generator graph, stopping when `Y` is first discovered or depth `L` is exhausted. Record:
+Deterministic BFS runs from `X` on the public generator graph, stopping when `Y` is first discovered or depth `L` is exhausted. It records states discovered/expanded, generator-edge scans, shortest recovered length and exact verifier acceptance.
 
-- states discovered;
-- states expanded;
-- generator-edge scans;
-- recovered shortest length;
-- verifier result.
+### Bounded two-tree / bidirectional search
 
-### Bidirectional BFS
-
-Build public bounded BFS trees from `X` and `Y`, using radii
+Public bounded BFS trees are built from `X` and `Y` with radii
 
 ```text
 ceil(L/2)
-floor(L/2)
+floor(L/2).
 ```
 
-and choose an intersection minimizing total public depth. Because the generators are involutions, the right half is traversed back with the same labels. Adjacent equal labels created at the join are publicly cancelled before verification.
+An intersection minimizing total public depth is chosen. Because the generators are involutions, the right half is traversed back with the same labels. Adjacent equal labels created at the join are publicly cancelled before verification.
 
-Record the same work metrics.
+This implementation intentionally records its full bounded-tree work instead of claiming an optimized bidirectional stopping rule. Ordinary BFS alone is already sufficient for rejection.
 
 ### Full public orbit
 
-Independently enumerate the connected component of `X`. This provides a direct scale comparison for navigation work; orbit enumeration is not needed for verifier acceptance.
+The connected component of `X` is independently enumerated. In every measured case it equals the entire nonzero Markoff point set for the selected prime:
 
-## Reduced-word multiplicity
+```text
+p=29:   928 / 928
+p=43:  1720 / 1720
+p=59:  3304 / 3304
+```
+
+Thus all sampled public source/target pairs live in one directly traversable public component at each prime.
+
+## Measured fixed baseline — `hga1-p59-L24`
+
+```text
+Markoff points / orbit:        3304 / 3304
+orbit edge scans:              9912
+BFS accepted:                  yes
+BFS shortest length:           13
+BFS discovered / expanded:     3106 / 2534
+BFS edge scans:                7600
+BFS equals planted:            no
+bounded two-tree accepted:     yes
+bounded two-tree length:       13
+states discovered / expanded:  3288 / 4596
+edge scans:                    13788
+bidirectional equals planted:  no
+transporter reduced words:     13982
+nonempty stabilizer words:     17718
+```
+
+The bounded two-tree implementation can do more edge scans than full orbit enumeration because both depth-bounded trees are materialized. This is not evidence of hardness: ordinary BFS already recovers an accepted action with fewer scans than one full orbit traversal.
+
+## Declared 72-instance sweep
+
+Both public navigation attacks succeed on every case:
+
+```text
+ordinary BFS accepted:         72 / 72
+bounded two-tree accepted:     72 / 72
+```
+
+Recovered shortest lengths range only from
+
+```text
+2 .. 13
+```
+
+across planted bounds `L=8,16,24`.
+
+Equality with the planted word occurs on only
+
+```text
+9 / 72
+```
+
+cases for either navigation method. The nine matches are confined to the short `L=8` slice (`2/8` for `p=43`, `7/8` for `p=59`); all `L=16` and `L=24` cases recover different accepted words.
+
+Per-set summary:
+
+```text
+set            BFS  two-tree  shortest   transporter range    stabilizer range
+p29-L8         8/8    8/8       2..8          2..8                 3..8
+p29-L16        8/8    8/8       3..10        87..317             276..479
+p29-L24        8/8    8/8       7..13     32806..103664        58491..103890
+p43-L8         8/8    8/8       4..8          1..4                 0..7
+p43-L16        8/8    8/8       3..12        74..382             112..822
+p43-L24        8/8    8/8       6..11     28076..30966         29650..59028
+p59-L8         8/8    8/8       6..8          1..2                 0..3
+p59-L16        8/8    8/8       6..12        43..75               56..106
+p59-L24        8/8    8/8       4..13     14765..16138         15946..18068
+```
+
+## Reduced-word multiplicity interpretation
 
 Dynamic programming over public states `(point,last_generator)` counts exactly, within the verifier language,
 
@@ -102,20 +165,21 @@ T_L(X,Y) = #{reduced words of length <= L mapping X to Y}
 S_L(X)   = #{nonempty reduced words of length <= L mapping X to X}.
 ```
 
-These are counts of accepted **word representations**. They are not claimed to be counts of distinct abstract mapping-class-group elements because different reduced words can induce the same permutation/action.
+These are counts of accepted **word representations**, not proven counts of distinct abstract mapping-class-group elements. Different reduced words can induce the same permutation/action.
 
-This distinction is mandatory: multiplicity is evidence about verifier binding, not a group-presentation theorem.
+That distinction does not rescue the construction: direct public navigation already finds an accepted witness on 72/72 cases. The large `L=24` word counts are additional evidence that the verifier relation is weakly binding at the word-representation level.
 
-## Rejection gate
+## Verdict
 
-Reject HGA-R1 as a hardness direction if ordinary or bidirectional public graph navigation routinely recovers an accepted action with work on the scale of the small public orbit, independent of planted-word equality.
+HGA-R1 is rejected as a hardness direction.
 
-Large `T_L` or `S_L` is additional negative evidence. Rejection does not require proving transporter multiplicity large if direct public navigation already succeeds cheaply.
+The redesigned binding-action harness behaves as intended:
 
-## Calibration expectation
+1. it does **not** demand recovery of the planted action;
+2. it accepts any verifier-equivalent transporter as attacker success;
+3. it measures public orbit size and accepted-word multiplicity explicitly;
+4. it rejects a topology/arithmetic action whose public Schreier graph can simply be traversed.
 
-The experiment is expected to reject. If the declared 72-instance sweep does not show routine public recovery, first inspect implementation and verifier semantics before interpreting the outcome as evidence of hardness.
-
-A rejection is useful: it demonstrates that the redesigned binding-action harness catches a topology/arithmetic action whose public orbit graph remains directly navigable.
+A successor must therefore change the action space, not increase `p` or planted word length in this same Markoff graph. In particular, scaling a publicly enumerable orbit is not an acceptable repair.
 
 No security claim.
