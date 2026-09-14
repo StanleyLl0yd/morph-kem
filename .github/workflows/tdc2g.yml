@@ -1,0 +1,54 @@
+name: TDC2g common random parity-overlay control
+
+on:
+  pull_request:
+    paths:
+      - 'src/morph_kem/tdc_random_overlay.py'
+      - 'tests/test_tdc_random_overlay.py'
+      - 'scripts/tdc_random_overlay_*.py'
+      - '.github/workflows/tdc2g.yml'
+      - 'docs/85-tdc2g-random-parity-overlay.md'
+  push:
+    branches: [main]
+    paths:
+      - 'src/morph_kem/tdc_random_overlay.py'
+      - 'tests/test_tdc_random_overlay.py'
+      - 'scripts/tdc_random_overlay_*.py'
+      - '.github/workflows/tdc2g.yml'
+      - 'docs/85-tdc2g-random-parity-overlay.md'
+
+permissions:
+  contents: read
+
+jobs:
+  tdc2g:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile TDC2g
+        run: >-
+          python -m compileall -q
+          src/morph_kem/tdc_random_overlay.py
+          tests/test_tdc_random_overlay.py
+          scripts/tdc_random_overlay_baseline.py
+          scripts/tdc_random_overlay_sweep.py
+      - name: TDC2g unit tests
+        run: python -m unittest tests.test_tdc_random_overlay -v
+      - name: TDC2g fixed baseline
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_random_overlay_baseline.py --params tdc2g-n10
+      - name: TDC2g all-size sweep
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_random_overlay_sweep.py --seeds 8
+      - name: TDC2g extended n10 screen
+        if: matrix.python-version == '3.12'
+        run: python scripts/tdc_random_overlay_sweep.py --params tdc2g-n10 --seeds 32
