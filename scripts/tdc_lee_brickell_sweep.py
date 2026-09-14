@@ -49,6 +49,18 @@ def add_checkpoint(row: dict[str, int], cp) -> None:
     row["verifier"] += cp.verifier_calls
 
 
+def add_pair(row: list[int], top_ok: bool, rnd_ok: bool) -> None:
+    # top-only, control-only, both, neither
+    if top_ok and not rnd_ok:
+        row[0] += 1
+    elif rnd_ok and not top_ok:
+        row[1] += 1
+    elif top_ok and rnd_ok:
+        row[2] += 1
+    else:
+        row[3] += 1
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--params", choices=sorted(TDC3C_PARAMETER_SETS), required=True)
@@ -59,6 +71,8 @@ def main() -> None:
 
     params = TDC3C_PARAMETER_SETS[args.params]
     success: dict[tuple[int, int, int], list[int]] = defaultdict(lambda: [0, 0, 0])
+    paired: dict[tuple[int, int, int], list[int]] = defaultdict(lambda: [0, 0, 0, 0])
+    paired_all_weights: dict[tuple[int, int], list[int]] = defaultdict(lambda: [0, 0, 0, 0])
     work_top = {budget: blank_work() for budget in params.trial_budgets}
     work_rnd = {budget: blank_work() for budget in params.trial_budgets}
     first_work: dict[int, list[int]] = defaultdict(lambda: [0, 0, 0, 0, 0, 0])
@@ -88,10 +102,14 @@ def main() -> None:
             rnd_grid = {(order, budget): ok for order, budget, ok in rnd.success_grid}
             for order in params.outside_orders:
                 for budget in params.trial_budgets:
+                    top_ok = top_grid[(order, budget)]
+                    rnd_ok = rnd_grid[(order, budget)]
                     row = success[(weight, order, budget)]
-                    row[0] += int(top_grid[(order, budget)])
-                    row[1] += int(rnd_grid[(order, budget)])
+                    row[0] += int(top_ok)
+                    row[1] += int(rnd_ok)
                     row[2] += 1
+                    add_pair(paired[(weight, order, budget)], top_ok, rnd_ok)
+                    add_pair(paired_all_weights[(order, budget)], top_ok, rnd_ok)
 
             for cp in top.work_by_budget:
                 add_checkpoint(work_top[cp.budget], cp)
@@ -109,12 +127,10 @@ def main() -> None:
             if top.first_success_work is not None:
                 fw[0] += 1
                 fw[2] += top.first_success_work.trials_attempted
+                fw[4] += top.first_success_work.row_xors
             if rnd.first_success_work is not None:
                 fw[1] += 1
                 fw[3] += rnd.first_success_work.trials_attempted
-            if top.first_success_work is not None:
-                fw[4] += top.first_success_work.row_xors
-            if rnd.first_success_work is not None:
                 fw[5] += rnd.first_success_work.row_xors
 
     print("summary,set,weight,max_order,budget,top_success,rnd_success,delta,cases")
@@ -122,6 +138,20 @@ def main() -> None:
         print(
             f"summary,{params.name},{weight},{order},{budget},{row[0]},{row[1]},"
             f"{row[0]-row[1]},{row[2]}"
+        )
+
+    print("paired,set,weight,max_order,budget,top_only,control_only,both,neither,discordant_delta")
+    for (weight, order, budget), row in sorted(paired.items()):
+        print(
+            f"paired,{params.name},{weight},{order},{budget},{row[0]},{row[1]},"
+            f"{row[2]},{row[3]},{row[0]-row[1]}"
+        )
+
+    print("paired_all,set,max_order,budget,top_only,control_only,both,neither,discordant_delta,cases")
+    for (order, budget), row in sorted(paired_all_weights.items()):
+        print(
+            f"paired_all,{params.name},{order},{budget},{row[0]},{row[1]},"
+            f"{row[2]},{row[3]},{row[0]-row[1]},{sum(row)}"
         )
 
     print("strongest,set,weight,top_ok,rnd_ok,top_planted,rnd_planted,cases")
