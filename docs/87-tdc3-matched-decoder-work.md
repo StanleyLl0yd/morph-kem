@@ -2,7 +2,7 @@
 
 ## Status
 
-**TDC3 is a falsification experiment in progress.** TDC2g is the first stage in the current TDC lineage that survives its predeclared largest-size rank + exact weight-`<=8` gate. TDC3 therefore moves from cheap structural distinguishers to explicit syndrome-decoding work on the same paired ensemble.
+**TDC3 survives TDC-A010 on the measured toy distribution.** The unchanged TDC2g topology/control ensemble shows no reproducible topology-easier signal under greedy bit flipping, exact bounded syndrome decoding, or a predeclared public reliability-guided search. This is survival of a decoder-work falsification gate only, not evidence of asymptotic, post-quantum, or production-security hardness.
 
 TDC3 is not a trapdoor primitive, KEM, one-way function, post-quantum assumption, or production-security construction.
 
@@ -21,7 +21,7 @@ The public decoder never receives the planted support. It sees only the public m
 
 ## Error schedule
 
-The first decoder gate fixes planted weights
+The decoder gate fixes planted weights
 
 ```text
 1, 2, 3, 4, 5, 6
@@ -38,26 +38,42 @@ Starting from zero error and the target syndrome:
 3. update the residual syndrome;
 4. stop on zero syndrome, no improving flip, a repeated residual state, or the declared iteration cap.
 
-Record iterations, score evaluations, initial/final syndrome weights, and exact public acceptance.
+The clean `n8/n9/n10 × 8 × weights 1..6` sweep contains 144 paired syndromes per family. Measured public success is exactly
 
-This is intentionally a cheap baseline. The public matrices are relatively dense after row/column mixing and parity overlay, so failure of naive bit flipping is not evidence of hardness.
+```text
+topology: 26 / 144
+control:  26 / 144
+```
+
+Per size:
+
+```text
+n8:   9 / 48  vs  9 / 48
+n9:   9 / 48  vs  9 / 48
+n10:  8 / 48  vs  8 / 48
+```
+
+No topology advantage appears at this cheap iterative gate.
 
 ## TDC-A010 attack 2 — exact meet-in-the-middle through weight six
 
 Enumerate every public column subset of weight at most three and index its XOR syndrome. Pair two disjoint indexed subsets whose syndromes XOR to the target. Scan all candidate pairs and return the minimum-weight, then lexicographically smallest, accepted error.
 
-This is an exact bounded toy ground truth through total weight six, not an efficient large-parameter algorithm.
+Across the same clean 144-case sweep:
 
-### Pre-clean-branch measurement
+```text
+exact accepted:
+  topology: 144 / 144
+  control:  144 / 144
 
-The precursor stacked implementation measured `n8/n9/n10 × 8 × weights 1..6`, 144 paired syndromes per family:
+exact result equals planted support:
+  topology: 144 / 144
+  control:  143 / 144
+```
 
-- greedy bit-flip success: `26/144` topology and `26/144` matched controls;
-- exact `<=6` decoder acceptance: `144/144` topology and `144/144` controls;
-- exact result equals planted support: `144/144` topology and `143/144` controls;
-- the single control mismatch is still attacker success: an accepted lower-weight error was found for a planted weight-six syndrome.
+The single control mismatch is not a decoder failure: the public decoder found a verifier-accepted lower-weight error for a planted weight-six syndrome. Under the project attack semantics that is attacker success.
 
-These numbers are retained as precursor evidence only until reproduced on the clean branch based directly on merged TDC2g.
+This exact decoder is a bounded toy ground truth through total weight six, not an efficient large-parameter algorithm.
 
 ## TDC-A010 attack 3 — reliability-guided bounded exact search
 
@@ -70,33 +86,50 @@ smaller column weight,
 smaller public column index.
 ```
 
-Fix the top **24** public columns as the reliability pool and run the same exact `<=6` MITM search restricted to that pool.
+Fix the top **24** public columns as the reliability pool and run the same exact `<=6` MITM search restricted to that pool. This is not channel soft information; it is a purely public coordinate heuristic.
 
-This is not channel soft information. It is a purely public reliability proxy intended to test whether topology exposes a more useful coordinate ordering than matched random controls.
-
-Record:
-
-- public acceptance;
-- recovered weight;
-- planted coordinates that happen to fall in the top-24 pool, reference-only;
-- indexed subsets and candidate-pair work;
-- syndrome-bucket collisions.
-
-The declared reliability experiment is fixed **before** observing its clean-branch results:
+The predeclared `n8/n9/n10 × 8 × weights 1..6` measurement gives:
 
 ```text
-n8/n9/n10 × 8 seeds × weights 1..6, pool=24
-n10 × 32 seeds × weights 1..6, pool=24
+size   topology success   control success   delta
+n8          17 / 48           21 / 48        -4
+n9          14 / 48           12 / 48        +2
+n10         10 / 48           11 / 48        -1
 ```
 
-## Gate
+The sign changes with size, so the eight-seed sweep does not support a topology-easier interpretation.
 
-Reject the current TDC2g-derived ensemble if topology instances are routinely easier to decode than paired controls at matched public dimensions/rank/rate/error weight, or if equivalent lower-weight errors appear disproportionately in topology.
+The predeclared larger `n10 × 32 × weights 1..6` extension gives:
 
-If greedy, exact-bounded and reliability-guided behavior overlap without a reproducible topology advantage, record survival of **this decoder-work gate only** and proceed to a bounded OSD/ISD-style successor attack. Do not infer asymptotic or post-quantum hardness.
+```text
+weight   topology   control   delta
+1          32/32      32/32      0
+2           5/32       7/32     -2
+3           2/32       3/32     -1
+4           1/32       1/32      0
+5           0/32       0/32      0
+6           0/32       0/32      0
+-----------------------------------
+total      40/192     43/192     -3
+```
+
+Thus the larger screen again does **not** make topology easier. The reference-only count of planted coordinates appearing in the top-24 pool is also not larger for topology on this n10 extension: by weights 1..6 the cumulative counts are
+
+```text
+topology: 32, 22, 32, 41, 50, 53
+control:  32, 26, 35, 44, 64, 77
+```
+
+This latter measurement is diagnostic only; public attack success remains the primary gate.
+
+## Interpretation
+
+TDC2g removed the earlier cheap rank/low-weight distinction by structurally changing the ensemble. TDC3 now shows that three predeclared public decoders also fail to expose a reproducible topology-easier distribution on the tested toy sizes.
+
+The correct result is **gate survival**, not a hardness claim. The next falsification stage must use a stronger bounded information-set / OSD-style decoder with explicit public work accounting while keeping the TDC2g generator and error distribution fixed.
 
 ## Rate warning
 
-The TDC2g common overlay spends six parity constraints to suppress inherited short codewords. TDC3 must keep reporting the rate cost. Surviving toy decoder comparisons by collapsing rate is not a useful cryptographic design.
+The TDC2g common overlay spends six parity constraints to suppress inherited short codewords. TDC3 keeps that rate cost. Surviving toy decoder comparisons by collapsing rate is not a useful cryptographic design by itself.
 
 No security claim.
