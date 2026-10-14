@@ -1,0 +1,33 @@
+# N1-56 - exact finite-field cyclic bispectrum (analytic no-go)
+
+**Date:** 2026-10-14. **Global:** NO NOMINATION. **Outcome:** ANALYTIC REJECT before code; **0 empirical cases**.
+
+Original complete 15-field research proof was recorded first as [#196 comment 6175990737](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6175990737). This document transcribes that immutable source, not independent numerical revalidation. No Python scripts, test files, ZIPs, crypto implementation or results are imported.
+
+## N1-56 (2026-10-14): complete cyclic bispectrum over a finite field - exact public Fourier section (ANALYTIC REJECT)
+
+**Independent mathematical family:** third-order translation-invariant harmonic spectra, not the N1-54 linear-state Hankel moments, N1-55 2-adic valuation trees, graph-distance/electrical networks, or N1-47 four-point cross ratios. This supersedes only N1-56's earlier *literature-only* matchgate pre-screen as a **complete 15-field candidate test**. **Pre-code analytic proof; ZERO empirical cases. GLOBAL NO NOMINATION.**
+
+### All 15 MORPH-R0 fields, fixed before any sampling
+
+1. **PublicInstance:** integer k>=2; n=2^k-1 and q=2^k; canonical public representation of F_q via the lexicographically first monic irreducible degree-k binary polynomial and the first primitive multiplicative element omega under a fixed lexicographic order; full labeled n-by-n array `B_{a,b} = F_a F_b F_{-a-b mod n}` in F_q for a,b in Z/n.
+2. **Secret/Witness:** planted cyclic signal x=(x_0,...,x_{n-1}) in F_q^n, with Fourier coordinates `F_a=sum_{j=0}^{n-1} x_j omega^{aj}`. A witness is **any** signal y with `F_0(y)=1` and all `F_a(y)!=0` that reproduces the entire exact array B. No planted shift required.
+3. **Generation distribution:** independently sample F_1,...,F_{n-1} uniformly from F_q^*, set F_0=1, then inverse Fourier `x_j=n^{-1} sum_a F_a omega^{-aj}` in F_q (n is odd, hence equals 1 as a field element). Publish all B. All draws independent and unconditioned on B. Canonical irreducible polynomial and primitive-element search can be done by exhaustive O(poly(n)) trials with polynomial(k) testing, since q=n+1; q,n, output bitlength, generation and exact arithmetic polynomial in n. We **do not** assert polynomial in log n when n full-coordinate public instance is itself size Omega(n^2).
+4. **Public verifier:** compute candidate F by finite-field DFT; check F_0=1, every F_a nonzero, and recompute all n^2 products `F_a F_b F_{-a-b}` equal to B; deterministic poly(n,k) bit time, no floats.
+5. **Attacker target:** `Equivalent(P)={y in F_q^n: F_0(y)=1, forall a F_a(y)!=0, forall a,b F_a(y)F_b(y)F_{-a-b}(y)=B_{a,b}}`. Any member wins.
+6. **Stabilizer/fibre:** cyclic shift `y_j=x_{j-s}` multiplies `F_a` by `omega^{as}` and preserves B. Because F_1 !=0 and omega generates F_q^* of order n, there is a unique cyclic shift with F_1=1. The public recurrence in Field 8 reconstructs that normalized representative uniquely, so **exact fibre size n**, all n cyclic shifts of planted x, with trivial point stabilizer because F_1 !=0.
+7. **Known quotients/representations:** cyclic group character table, DFT, triple correlation/bispectrum as translation invariant, classical bispectrum completeness and phase/shift reconstruction, not a novel cryptographic assumption.
+8. **PUBLIC ANY-WITNESS SECTION:** derive `P_a=B_{a,-a}=F_a F_{-a}` (using F_0=1). Set `F'_0=1, F'_1=1`. For 2<=a<=n-1 compute **`F'_a=F'_{a-1} P_a/B_{a-1,1}`**, all denominators nonzero. Identity `B_{a-1,1}=F_{a-1}F_1F_{-a}` and `P_a=F_aF_{-a}` proves by induction `F'_a=F_a/F_1^a`. Since `F_1^n=1` (F_q^* order n), this identity holds for residues mod n. Thus every B entry is preserved and inverse DFT of F' gives an accepted y in poly(n,k), on EVERY honestly generated instance.
+9. **Local/low-weight:** the `n-2` one-column relations `B_{a-1,1}` plus `P_a` (read directly from B) are sufficient to build an entire accepted witness. Most of the n^2 published spectrum is redundant; planted phase entropy is only shift gauge.
+10. **Noise/optimization:** none, exact finite-field observations. Sparse/partial B, zeros in some F, integer/circle-valued signals or noisy Fourier products change the source and acceptance domain; no automatic hardness transfer.
+11. **Cover/base/fibre:** the only fibre quotient is public cyclic translation orbit. There is no hidden topological cover, cryptographic trapdoor or inaccessible group basis.
+12. **Matched weak control:** power-only `P_a=F_aF_{-a}` from the same source is the weaker second-order comparator; it is not claimed hard or tested. The mandatory full-B attacker succeeds identically.
+13. **Validation:** ZERO source samples, preregistered slices, runs or synthetic corpus. Field 8 is an exact theorem. No addition to N1-52 593,305+40 heterogeneous historical cases.
+14. **Quantum:** deterministic polynomial classical inverter already solves the specified any-witness problem. No HSP/hidden shift/PQ hardness survives this gate.
+15. **Independent novelty:** **FAIL**, affirmative mature-family counterevidence. Bispectrum completeness up to group translations and constructive inversion have decades of prior art: R. Kakarala, [Bispectrum on finite groups (ICASSP 2009)](https://dihana.cps.unizar.es/proceedings/ICASSP/2009/pdfs/0003293.pdf); Kakarala, [The bispectrum as a source of phase-sensitive invariants, 2012](https://arxiv.org/abs/0902.0196); Bendory, Edidin, Kreymer, [Signal recovery from high-order spectra, ACHA 2022](https://doi.org/10.1016/j.acha.2021.10.003). These establish **prior-art category**; our finite characteristic-2 specialization and recurrence are self-contained here, not misattributed as verbatim published formulas.
+
+### Proof scope / verdict
+
+All F_a are nonzero by construction. The recurrence has no divisions by zero and yields F'_a=F_a/F_1^a. `F_1=omega^s` for a unique s in Z/n, hence F' is the Fourier transform of a cyclic translate of x. Exactly the ORIGINAL public verifier accepts inverse-DFT(F'). Thus the hidden signal is **trivially reconstructible up to publicly irrelevant translation** within the strict honest distribution and full-labeled-B acceptance domain. No generalization to incomplete/noisy spectra or missing Fourier frequencies.
+
+**N1-56 ANALYTIC REJECT, GLOBAL NO NOMINATION. No KEM/PKE/trapdoor, OWF/PQ claim, code, new enumerated cases or HEPMR AP sweeps. Next independent mathematical gate: N1-57.** Historical N1-19 PARTIAL, N1-23 PARTIAL, N1-26 HOLD untouched.

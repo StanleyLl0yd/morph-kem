@@ -2,12 +2,21 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-14 - N1-56, N1-57, N1-58: three independent analytical REJECT decisions
+
+- **[N1-56](../docs/104-morph-n1-56-finite-bispectrum-no-go.md)**: full cyclic bispectrum over F_(2^k), n=2^k-1; a public bispectrum power slice yields a recurrence reconstructing all nonzero Fourier coefficients up to cyclic shift. Exact fibre n shifts, polynomial any-witness inverse. Classical bispectrum completeness/translation invariant prior art fails Field 15. [Original issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6175990737).
+- **[N1-57](../docs/105-morph-n1-57-radon-walsh-no-go.md)**: complete labeled binary-affine hyperplane sums with values in F_3; taking bin differences yields all Walsh coefficients and exact inverse Walsh transform. Classical finite Radon/tomography prior art fails Field 15. [Original issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6176006953).
+- **[N1-58](../docs/106-morph-n1-58-principal-minors-no-go.md)**: signed symmetric F_5 matrix, all one/two minors plus anchored size-three minors. Triangle determinants expose signed switching invariants; normalize public star to +1 and reconstruct every other edge in O(n^2) field work. Classical symmetric principal-minor assignment/signed graph switching prior art fails Field 15. [Original issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6176025206).
+
+**Research only, NO NOMINATION, 0 new source/protocol cases**. N1-52 reported 593,305 complete heterogeneous toy cases +40 controls is unchanged; the original N1-46/47/51 ZIPs are NOT in repository ([#199](https://github.com/StanleyLl0yd/morph-kem/issues/199) remains blocked). N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12, N1-26 HOLD/BENCHMARK and HEPMR #195 BENCHMARK ONLY through AP103 remain. No KEM/PKE/trapdoor, OWF/PQ claim or HEPMR broad scan. **Next gate N1-59: different positive Field-15 case.**
+
+
 ## 2026-10-14 - N1-54 and N1-55: two independent analytical REJECT decisions
 
 - [N1-54](../docs/102-morph-n1-54-hankel-realization-no-go.md) specifies all 15 MORPH-R0 fields for exact 2n public finite-field moments `h_t=cA^t b`. Planted diagonal eigenvalues with nonzero weights make the Hankel matrix nonsingular. A public linear recurrence and companion realization recover a verifier-accepted triple in polynomial field operations; hidden GL_n basis entropy is a gauge orbit. Classical Ho-Kalman/system-identification prior art defeats Field 15. [Issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6171154797).
 - [N1-55](../docs/103-morph-n1-55-adic-trie-no-go.md) independently specifies a full labeled `v_2(x_i-x_j)` matrix for random distinct residues mod `2^m`. Public equivalence-class partitions at all bit depths determine a binary trie; canonical 0/1 child labels produce a verifier-valid alternative number vector in polynomial time. Classical ultrametric/dendrogram and p-adic tree representation defeats Field 15. [Issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6171176966).
 
-**No new empirical cases, scripts, corpus or rerun of N1-52:** 593,305 exact fully enumerated source/protocol cases and 40 controls stay historical, with [artifact provenance blocker #199](https://github.com/StanleyLl0yd/morph-kem/issues/199) still open. N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12, N1-26 HOLD/BENCHMARK unchanged. HEPMR #195 BENCHMARK ONLY through AP103. **GLOBAL NO NOMINATION; next Field-15 research gate N1-56.** No PKE/KEM/trapdoor or OWF/PQ claim.
+**No new empirical cases, scripts, corpus or rerun of N1-52:** 593,305 exact fully enumerated source/protocol cases and 40 controls stay historical, with [artifact provenance blocker #199](https://github.com/StanleyLl0yd/morph-kem/issues/199) still open. N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12, N1-26 HOLD/BENCHMARK unchanged. HEPMR #195 BENCHMARK ONLY through AP103. **GLOBAL NO NOMINATION; this N1-56 pointer is historical, superseded by N1-59 above.** No PKE/KEM/trapdoor or OWF/PQ claim.
 
 
 ## 2026-10-14 - MORPH-N1 #196 checkpoint N1-52 synchronized into repository
