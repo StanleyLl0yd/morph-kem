@@ -1,50 +1,21 @@
-# 00 — Overview
+# 00 - Overview
 
-## Objective
+## Current objective (2026-10-14)
 
-MORPH-KEM investigates a possible trapdoor-cryptography direction based on hidden discrete-Morse reduction structure in finite combinatorial-topological objects.
+MORPH-KEM is a **research-only, attack-first search for an independently motivated mathematical inversion relation** that is not just a renamed classical cryptographic assumption or a hard-looking encoding. Its original discrete Morse / topological KEM concepts are historical negative controls, **not an active candidate architecture**.
 
-The central research question is not "can we encode a secret in a complicated complex?" It is:
+**GLOBAL NO NOMINATION.** No OWF, PQ-security, trapdoor, PKE or KEM claim. No implementation is authorized until a mathematical relation survives the [MORPH-R0 15-field entry gate](97-morph-r0-cross-line-postmortem.md#11-re-entry-gate-for-any-new-morph-family).
 
-> Can we define a generated-instance distribution for which forward evaluation and inversion with a compact trapdoor are efficient, while inversion or trapdoor recovery without that trapdoor resists all known classical and quantum attacks?
+## Current program
 
-## Research status
+- ~80% genuinely new mathematics and public any-witness inversion attacks, recorded in [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
+- ~20% restricted HEPMR review through AP103 in [#195](https://github.com/StanleyLl0yd/morph-kem/issues/195); **BENCHMARK ONLY**, no wider scan.
+- [N1-52 checkpoint](100-morph-n1-status-2026-10-14.md) records 593,305 exact toy protocol cases plus 40 controls since N1-34, all without a nominated candidate. Next gate: N1-53.
 
-The project begins at the lowest maturity level:
+For every proposed public instance `P`, the attacker wins by producing **any** `candidate` satisfying `Verify(P,candidate)`; planted-source recovery is not required. Generated distribution, public bitlength, the fibre `Equivalent(P)`, polynomial verifier, known normal forms, classical/quantum attacks and Field-15 distinctness must be explicit *before* code.
 
-- no average-case hardness result;
-- no reduction from a standard hard problem;
-- no quantum-security proof;
-- no IND-CPA or IND-CCA proof;
-- no production parameters;
-- no independent cryptanalysis.
+## Historical materials
 
-Accordingly, every security-relevant statement should be read as a hypothesis until proved.
+The older descriptions in `01` through `04`, `spec/morph-kem-v0.1.md`, and the M/H/K/G/HGA/NAT/TDC/BPT experiment files document **rejected research directions**. Preserve them for reproducibility; do not interpret historical `KeyGen`, `Decaps` or trapdoor sketches as a live roadmap.
 
-## Candidate architecture
-
-The provisional architecture has four layers:
-
-1. a family of finite complexes with hidden reduction structure;
-2. a secret acyclic discrete-Morse matching / reduction certificate;
-3. public forward transformations that obscure simple hidden coordinates;
-4. a KEM wrapper that derives a shared secret from a recovered hidden seed and transcript binding.
-
-The cryptographic value of the entire direction depends on whether the public structure leaks the hidden reduction certificate.
-
-## Primary falsification targets
-
-The first experiments should try to show the idea is broken by:
-
-- greedy or heuristic Morse reduction;
-- canonical labeling / isomorphism recovery;
-- common-structure recovery across public transformations;
-- SAT or MILP reconstruction;
-- low-treewidth or separator algorithms;
-- statistical invariants;
-- meet-in-the-middle decomposition;
-- graph-neural or other learned gadget recognition;
-- malformed-ciphertext or decapsulation leakage;
-- quantum search or quantum-walk improvements.
-
-A fast break is a useful result.
+Source of truth: [current status](100-morph-n1-status-2026-10-14.md), [research log](../notes/research-log.md), [cryptanalysis ledger](05-cryptanalysis.md), [MORPH-N1 #196](https://github.com/StanleyLl0yd/morph-kem/issues/196).

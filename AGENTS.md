@@ -22,6 +22,15 @@ This repository is a cryptographic research project, not a production cryptograp
 9. Do not delete attack code or failed experiments merely because they weaken the proposal.
 10. Any external factual or literature claim added to research documents must include a source.
 
+## Current MORPH-N1 gate (2026-10-14)
+
+- Source of truth for active research: `docs/100-morph-n1-status-2026-10-14.md`, issue #196, and the complete 15-field gate in `docs/97-morph-r0-cross-line-postmortem.md`.
+- **GLOBAL NO NOMINATION**. Strategy ~80% independent new mathematics, ~20% bounded HEPMR (#195, BENCHMARK ONLY through AP103). Research-only; no trapdoor, PKE/KEM, OWF/PQ claim or implementation branch for an unadmitted primitive.
+- For every public `P`, attacker success is any member of `Equivalent(P)={candidate:Verify(P,candidate)}`. Require generation distribution, polynomial public verifier, full public-bitlength and entropy analysis, known canonicals/normal forms/attacks, matched controls, frozen validation, quantum screen and independently justified Field 15 *before* code.
+- Historical N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12, N1-26 HOLD/BENCHMARK must not be silently completed. Do not rescue rejected results by parameter changes; do not restart broad HEPMR AP scans.
+- Distinguish GitHub-issue-only N1 result claims from code, scripts, tests and archived artifacts actually committed to this repository. Never claim uncommitted datasets or case totals were locally reproduced.
+- Prefer updates to active status and indexes over rewriting historical observations. After a checkpoint changes, synchronize the README, overview, open questions, cryptanalysis index and research log without deleting earlier findings.
+
 ## Workflow
 
 - Prefer small, reviewable research milestones.

@@ -1,5 +1,7 @@
 # 01 — Mathematical foundation
 
+> **Archive notice (2026-10-14):** This is a historical discrete-Morse foundation, **not** the active MORPH-N1 mathematical candidate or an approved implementation plan. Current status: [N1-52](100-morph-n1-status-2026-10-14.md), **GLOBAL NO NOMINATION**, no trapdoor/PKE/KEM/OWF/PQ claim. Read original experiments as historical evidence.
+
 ## Objects
 
 The initial proposal uses finite simplicial complexes, with possible later generalization to regular CW complexes if that improves compactness or control over reductions.

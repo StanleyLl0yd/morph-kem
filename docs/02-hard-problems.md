@@ -1,5 +1,7 @@
 # 02 — Candidate hard problems
 
+> **Archive notice (2026-10-14):** This is a historical Morse problem catalog, **not** the active MORPH-N1 mathematical candidate or an approved implementation plan. Current status: [N1-52](100-morph-n1-status-2026-10-14.md), **GLOBAL NO NOMINATION**, no trapdoor/PKE/KEM/OWF/PQ claim. Read original experiments as historical evidence.
+
 The names in this document are provisional research labels, not established complexity assumptions.
 
 ## Historical labels

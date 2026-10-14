@@ -35,3 +35,7 @@ For torus-4x4, generic greedy Hasse matching hit the target 0/4 times and reache
 Parameter inflation is never a response to a structural break. M0–M4 all fail before a security-parameter gate.
 
 A future family may scale only after equivalent-witness semantics, constructive decomposition attacks, incidence/statistical distinguishers, greedy and exact solver attacks, width analysis, and a quantum threat model are in place.
+
+## Current scope (2026-10-14)
+
+The historical M4 ladder above is **not** a current scaling proposal or security parameter recommendation. MORPH-N1 has **no candidate family** and hence no accepted public-key, witness, entropy, or security parameter sets. Toy enumeration sizes and combined source/protocol counts are reported only as negative evidence in [N1-52](100-morph-n1-status-2026-10-14.md). Increasing n, k, lift factor, noise or solver budget cannot rescue a structurally rejected line without a new independently justified mechanism and complete MORPH-R0 gate.
