@@ -6,16 +6,16 @@
 >
 > Do not use MORPH-KEM to protect real data, credentials, communications, or systems.
 
-## Current status (14 October 2026, through N1-53)
+## Current status (14 October 2026, through N1-55)
 
 **GLOBAL NO NOMINATION. Research-only.** Neither an accepted one-way-function assumption nor a post-quantum primitive has been identified. No trapdoor, PKE or KEM development is authorized.
 
-- **Active:** [MORPH-N1 #196](https://github.com/StanleyLl0yd/morph-kem/issues/196). N1-53 [analytic electrical-resistance inverse](docs/101-morph-n1-53-resistance-no-go.md) is **REJECT** by a polynomial public Laplacian reconstruction; the next independent Field-15 screen is **N1-54**. Earlier aggregate [N1-52](docs/100-morph-n1-status-2026-10-14.md) remains a frozen checkpoint.
+- **Active:** [MORPH-N1 #196](https://github.com/StanleyLl0yd/morph-kem/issues/196). N1-53 [effective resistance](docs/101-morph-n1-53-resistance-no-go.md), N1-54 [finite-field Hankel realization](docs/102-morph-n1-54-hankel-realization-no-go.md), and N1-55 [2-adic valuation-trie reconstruction](docs/103-morph-n1-55-adic-trie-no-go.md) are each **ANALYTIC REJECT** via deterministic polynomial public inverters. The next genuinely independent Field-15 screen is **N1-56**. Earlier aggregate [N1-52](docs/100-morph-n1-status-2026-10-14.md) remains a frozen checkpoint.
 - **Python compatibility:** 3.11-3.13 retain the historical full regression matrix; new 3.14/3.15 checks cover compile + unit tests only. They do not revalidate every historical heavy benchmark.
 - **Strategy:** approximately 80% novel relation discovery / 20% bounded HEPMR closure. [HEPMR #195](https://github.com/StanleyLl0yd/morph-kem/issues/195) is **BENCHMARK ONLY** through AP103, not an implementation track.
 - **Evidence:** 593,305 exact heterogeneous fully enumerated toy cases plus 40 larger controls since N1-34. N1-46/47/51 contributed 314,936 publicly verifier-accepted inversions. These results refute tested proposals; they **do not** establish security.
 - **Exceptions:** historical N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12 and N1-26 HOLD/BENCHMARK are not silently completed or rescued.
-- **Source of truth:** [N1-53 analytic result](docs/101-morph-n1-53-resistance-no-go.md), [N1-52 numerical checkpoint](docs/100-morph-n1-status-2026-10-14.md), [15-field entry gate](docs/97-morph-r0-cross-line-postmortem.md#11-re-entry-gate-for-any-new-morph-family), and issue #196. The N1 research bundles are **conversation-local**, not committed in this repository.
+- **Source of truth:** [N1-54 analytic result](docs/102-morph-n1-54-hankel-realization-no-go.md), [N1-55 analytic result](docs/103-morph-n1-55-adic-trie-no-go.md), [N1-53 analytic result](docs/101-morph-n1-53-resistance-no-go.md), [N1-52 numerical checkpoint](docs/100-morph-n1-status-2026-10-14.md), [15-field entry gate](docs/97-morph-r0-cross-line-postmortem.md#11-re-entry-gate-for-any-new-morph-family), and issue #196. The N1 research bundles are **conversation-local**, not committed in this repository.
 
 ### Historical negative corpus
 
@@ -385,6 +385,9 @@ See `docs/56-g21-genus2-crossing-basis.md`.
 
 ## Key files
 
+- `docs/102-morph-n1-54-hankel-realization-no-go.md` - N1-54 15-field finite-field Hankel public realization no-go
+- `docs/103-morph-n1-55-adic-trie-no-go.md` - N1-55 15-field 2-adic digit-trie public section no-go
+
 - `docs/101-morph-n1-53-resistance-no-go.md` - analytic N1-53 rejection, all 15 fields and exact public inversion
 - `docs/100-morph-n1-status-2026-10-14.md` - frozen N1-52 checkpoint and evidence provenance
 - `docs/97-morph-r0-cross-line-postmortem.md` - mandatory 15-field research admission gate
@@ -436,7 +439,9 @@ See `docs/56-g21-genus2-crossing-basis.md`.
 
 ## Next research gate
 
-**N1-54** must identify a mathematically independent relation that clears MORPH-R0 Field 15 with positive evidence and survives the elementary canonicalization/quotient attack screen **before** any code or source samples. N1-53 already failed by the exact effective-resistance/Laplacian identity. See [N1-53](docs/101-morph-n1-53-resistance-no-go.md), [N1-52](docs/100-morph-n1-status-2026-10-14.md) and [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
+**N1-56** must identify a genuinely independent public relation and exact generated distribution with **positive, cited MORPH-R0 Field-15 evidence**, not merely a new geometric representation. N1-53 (effective resistance), N1-54 (finite-field Markov/Hankel moments) and N1-55 (complete 2-adic valuation profiles) all fail by deterministic **polynomial public any-witness sections**. See [N1-53](docs/101-morph-n1-53-resistance-no-go.md), [N1-54](docs/102-morph-n1-54-hankel-realization-no-go.md), [N1-55](docs/103-morph-n1-55-adic-trie-no-go.md) and [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
+
+**Evidence gap:** [#199](https://github.com/StanleyLl0yd/morph-kem/issues/199) remains blocked on the original N1-46/47/51 ZIP bytes; the 593,305-case N1-52 aggregate is preserved as a reported historical value, not newly reproduced.
 
 No KEM, PKE, trapdoor, OWF or PQ security claim exists.
 

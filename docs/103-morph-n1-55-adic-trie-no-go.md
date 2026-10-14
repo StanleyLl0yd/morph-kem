@@ -1,0 +1,33 @@
+# N1-55 - exact 2-adic valuation-trie realization (analytic no-go)
+
+**Date:** 2026-10-14. **Disposition:** ANALYTIC REJECT, pre-code; **0 empirical cases**, NO NOMINATION.
+
+This research note transcribes the complete MORPH-R0 specification, canonical digit-trie inverter and limits from [the original issue result](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6171176966). It does not contain new empirical results. **#199 remains blocked** until original earlier ZIP bytes are recovered; no archived data are asserted.
+
+## N1-55 (2026-10-14): 2-adic pair valuation matrix - canonical public digit-trie section (ANALYTIC REJECT)
+
+**Independent mathematical family:** non-Archimedean / 2-adic geometry, not N1-54 finite-field dynamical Markov parameters, N1-53 electrical resistance, N1-25 shortest paths or N1-47 projective cross ratios. Test an exact, fully labeled p-adic valuation transcript as a putative hidden-number relation. **All 15 MORPH-R0 fields are screened pre-code.** No empirical series or repo source implementation.
+
+### Mandatory 15 MORPH-R0 fields
+
+1. **PublicInstance:** integer n>=2, m=ceil(log_2(2n)), and all labeled symmetric pairwise values `t_ij=v_2(x_i-x_j)` for 0<=i<j<n, where hidden `x_i` are *distinct* residues in `{0,...,2^m-1}`. Valuations are integers 0..m-1 (never infinity under distinctness).
+2. **Secret/Witness:** planted injective ordered n-vector x; any injective `y in {0,...,2^m-1}^n` reproducing every `t_ij` is an accepted witness. Labels/indices matter, planted numeric digits do not.
+3. **Generation distribution:** uniformly sample an ordered injective n-tuple from q=2^m residues (for example uniformly shuffle the range and take its first n entries; q in [2n,4n), standard exact bounded-range draws). Distribution is fixed *before* seeing any attacker result, no solvability filtering. Sampling, differences, valuations and bitlength are polynomial in n. Source support is `(q)_n`, all sampled tuples feasible.
+4. **Public verifier:** check all n integers lie in [0,q), are pairwise distinct and for each i<j recompute `v_2(y_i-y_j)` exactly (max m-1); compare to t_ij. O(n^2 m) elementary bit work, no approximate metrics.
+5. **Attacker-success equivalence:** `Equivalent(P)={y distinct mod 2^m : forall i<j, v_2(y_i-y_j)=t_ij}`. Any accepted y is success, even if *all* hidden digits are changed.
+6. **Stabilizer/fibre:** pairwise data specify a rooted hierarchical partition but not which outgoing trie branch is labeled bit 0 or bit 1 at each node. At every internal node with two nonempty children, swapping the 0/1 digit assignments produces a distinct accepted vector. Thus accepted fibre has at least `2^b` witnesses, b = number of binary splitting nodes, and generally more freedom at unary chains. No planted-vector recovery claim follows from cardinality.
+7. **Known quotients/representations:** 2-adic ultrametric `d_ij=2^{-t_ij}`, nested congruence classes mod 2^l, binary prefix trie in **least-significant-digit first** order, standard ultrametric-dendrogram equivalence and p-adic dendrogram encodings.
+8. **Canonicalization / public inverter:** define `i~_l j <=> t_ij>=l` for l=0..m, with `t_ii=m`. The classes of ~_0 form one root and ~_m are singletons. Each class at depth l contains at most **two** children at l+1 for honest inputs. Sort the children of each parent class by the least original vertex index and publicly assign digits 0,1 at position l. For each i, output `y_i=sum_{l=0}^{m-1} digit_l(class containing i) 2^l`. This uses only P and O(poly(n,m)) partition operations. If t_ij=r, i,j share exactly the l<r digit classes and first differ at l=r, hence `v_2(y_i-y_j)=r` and y_i distinct. The **original** verifier accepts y for EVERY generated public profile.
+9. **Local/low-weight:** the ultrametric transitivity condition `t_ik >= min(t_ij,t_jk)` makes each ~_l an equivalence; the 2-adic alphabet restricts branching <=2. These publicly visible local/nested constraints are sufficient to build a global witness.
+10. **Noise-to-optimization:** none. No rounded or missing observations. Sparse/partial valuations would change the verifier to constrained tree-completion / non-Archimedean metric realization, and require new Field-15 novelty evidence, not parameter inflation.
+11. **Cover/base/fibre:** each ~_l is a public quotient; the full profile **already reveals the trie and all parent-child fibres**. There is no secret lift or relabeling that hides the base.
+12. **Matched weak control:** a single landmark row `(t_0i)` from the same source is a weaker observation, never a proof of security. No paired benchmark is run since the full-matrix public section is unconditional.
+13. **Mandatory validation distribution:** ZERO experiments frozen or run because Fields 7,8,15 analytically reject. No new enumerations, checksums, scripts, accepted-case counts or numerical claims are attached.
+14. **Quantum screen:** a simple deterministic polynomial classical inverter exists, so generic quantum Grover, HSP or hidden shift arguments do not create a PQ hardness question.
+15. **Why not a renamed mature assumption? FAILED.** Ultrametrics and dendrograms are equivalent classical representations, and dendrograms have established p-adic digit/tree encodings. References: [Carlsson & Memoli, JMLR 11 (2010), Theorem 9](https://www.jmlr.org/papers/v11/carlsson10a.html), [P. Bradley, Mumford dendrograms and discrete p-adic symmetries, 2009](https://doi.org/10.1134/S2070046609020034), [standard exact p-adic digit-trie representation](https://pmc.ncbi.nlm.nih.gov/articles/PMC8392696/). The explicit binary label assignment above is proved directly here rather than attributed as an exact quoted theorem.
+
+### Exact scope, nuance, decision
+
+The observation `v_2(x_i-x_j)` records the **first DIFFERING low-order binary digit**, and `2^{-t_ij}` is its ultrametric distance (the inequality direction for t is reversed). For each l, agreement on the l lowest bits is exactly ~_l. Assigning canonical digits to public children therefore constructs a valid nonplanted vector without knowledge of x. This proof requires the *complete labeled matrix*, an injective residue vector and a fixed binary base; it does **not** solve arbitrary incomplete-distance, noisy, mixed-base, graph-geodesic, or constrained embedding problems.
+
+**N1-55 ANALYTIC REJECT, GLOBAL NO NOMINATION.** No test count increase from N1-52, no HEPMR AP expansion, no historic PARTIAL completion, no trapdoor/KEM/PKE/OWF/PQ claim. Next gate N1-56: independent positive Field-15 mechanism before any sampling or code.

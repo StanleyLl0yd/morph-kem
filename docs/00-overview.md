@@ -10,7 +10,7 @@ MORPH-KEM is a **research-only, attack-first search for an independently motivat
 
 - ~80% genuinely new mathematics and public any-witness inversion attacks, recorded in [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
 - ~20% restricted HEPMR review through AP103 in [#195](https://github.com/StanleyLl0yd/morph-kem/issues/195); **BENCHMARK ONLY**, no wider scan.
-- [N1-52 checkpoint](100-morph-n1-status-2026-10-14.md) records 593,305 exact toy protocol cases plus 40 controls since N1-34. [N1-53](101-morph-n1-53-resistance-no-go.md) independently screened full effective-resistance matrices and **rejected** them analytically via exact Laplacian recovery. No new toy enumerations. Next gate: **N1-54**, independent Field-15 screen.
+- [N1-52 checkpoint](100-morph-n1-status-2026-10-14.md) records 593,305 exact toy protocol cases plus 40 controls since N1-34. [N1-53](101-morph-n1-53-resistance-no-go.md) (effective resistance), [N1-54](102-morph-n1-54-hankel-realization-no-go.md) (finite-field Hankel realization), and [N1-55](103-morph-n1-55-adic-trie-no-go.md) (2-adic digit-trie realization) have all been **rejected analytically** by exact polynomial public any-witness sections. No new toy enumerations. Next gate: **N1-56**, independent positive Field-15 screen.
 
 For every proposed public instance `P`, the attacker wins by producing **any** `candidate` satisfying `Verify(P,candidate)`; planted-source recovery is not required. Generated distribution, public bitlength, the fibre `Equivalent(P)`, polynomial verifier, known normal forms, classical/quantum attacks and Field-15 distinctness must be explicit *before* code.
 
@@ -18,4 +18,4 @@ For every proposed public instance `P`, the attacker wins by producing **any** `
 
 The older descriptions in `01` through `04`, `spec/morph-kem-v0.1.md`, and the M/H/K/G/HGA/NAT/TDC/BPT experiment files document **rejected research directions**. Preserve them for reproducibility; do not interpret historical `KeyGen`, `Decaps` or trapdoor sketches as a live roadmap.
 
-Source of truth: [N1-53 analytic status](101-morph-n1-53-resistance-no-go.md), [N1-52 numeric status](100-morph-n1-status-2026-10-14.md), [research log](../notes/research-log.md), [cryptanalysis ledger](05-cryptanalysis.md), [MORPH-N1 #196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
+Source of truth: [N1-55 analytic status](103-morph-n1-55-adic-trie-no-go.md), [N1-54 analytic status](102-morph-n1-54-hankel-realization-no-go.md), [N1-53 analytic status](101-morph-n1-53-resistance-no-go.md), [N1-52 numeric status](100-morph-n1-status-2026-10-14.md), [research log](../notes/research-log.md), [cryptanalysis ledger](05-cryptanalysis.md), [MORPH-N1 #196](https://github.com/StanleyLl0yd/morph-kem/issues/196).

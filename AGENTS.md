@@ -24,7 +24,7 @@ This repository is a cryptographic research project, not a production cryptograp
 
 ## Current MORPH-N1 gate (2026-10-14)
 
-- Source of truth for active research: the latest numbered `docs/10*-morph-n1-*.md` outcome (currently `docs/101-morph-n1-53-resistance-no-go.md`), frozen N1-52 summary `docs/100-morph-n1-status-2026-10-14.md`, issue #196 and the complete 15-field gate in `docs/97-morph-r0-cross-line-postmortem.md`.
+- Source of truth for active research: the latest numbered `docs/10*-morph-n1-*.md` outcome (currently `docs/103-morph-n1-55-adic-trie-no-go.md`), frozen N1-52 summary `docs/100-morph-n1-status-2026-10-14.md`, issue #196 and the complete 15-field gate in `docs/97-morph-r0-cross-line-postmortem.md`.
 - **GLOBAL NO NOMINATION**. Strategy ~80% independent new mathematics, ~20% bounded HEPMR (#195, BENCHMARK ONLY through AP103). Research-only; no trapdoor, PKE/KEM, OWF/PQ claim or implementation branch for an unadmitted primitive.
 - For every public `P`, attacker success is any member of `Equivalent(P)={candidate:Verify(P,candidate)}`. Require generation distribution, polynomial public verifier, full public-bitlength and entropy analysis, known canonicals/normal forms/attacks, matched controls, frozen validation, quantum screen and independently justified Field 15 *before* code.
 - Historical N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12, N1-26 HOLD/BENCHMARK must not be silently completed. Do not rescue rejected results by parameter changes; do not restart broad HEPMR AP scans.
