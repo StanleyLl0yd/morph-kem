@@ -2,6 +2,14 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-14 - N1-56 and N1-57: analytic public section versus prior-art-only gate
+
+- **N1-56 ANALYTIC REJECT:** [15-field Pauli-commutation signature](../docs/104-morph-n1-56-pauli-symplectic-no-go.md) has `P=U^T J U` of rank 2r over GF(2). Alternating-form congruence supplies a polynomial, deterministic public any-witness `V=[I|0]Q^-1`. Its entire full-row-rank fibre is the Sp(2r,2) orbit. This is classical stabilizer/symplectic linear algebra, not new cryptographic hardness. [Original issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6175898415).
+- **N1-57 REJECT FOR NOVELTY ONLY:** [15-field integer absolute-maximal-minor relation](../docs/105-morph-n1-57-arithmetic-matroid-no-go.md) gives exact anchored coordinate magnitudes, leaving at most two Boolean sign variables per nonzero extra column. It reduces to a public sign-CSP; **no polynomial-time canonical section has been proved or measured**. Mature representable arithmetic-matroid / phaseless Pluecker theory already fails Field 15. [Original issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6175967487).
+
+**No empirical experiments, corpus, implementation or restored historical archives.** N1-52 remains 593,305 reported complete exact heterogeneous cases + 40 controls; missing original ZIP bytes tracked by [#199](https://github.com/StanleyLl0yd/morph-kem/issues/199). N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12, N1-26 HOLD/BENCHMARK, HEPMR #195 BENCHMARK ONLY through AP103 unchanged. **GLOBAL NO NOMINATION; next N1-58 with positive Field-15 evidence before code.**
+
+
 ## 2026-10-14 - N1-54 and N1-55: two independent analytical REJECT decisions
 
 - [N1-54](../docs/102-morph-n1-54-hankel-realization-no-go.md) specifies all 15 MORPH-R0 fields for exact 2n public finite-field moments `h_t=cA^t b`. Planted diagonal eigenvalues with nonzero weights make the Hankel matrix nonsingular. A public linear recurrence and companion realization recover a verifier-accepted triple in polynomial field operations; hidden GL_n basis entropy is a gauge orbit. Classical Ho-Kalman/system-identification prior art defeats Field 15. [Issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6171154797).
