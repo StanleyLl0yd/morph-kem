@@ -2,6 +2,14 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-14 - N1-54 and N1-55: two independent analytical REJECT decisions
+
+- [N1-54](../docs/102-morph-n1-54-hankel-realization-no-go.md) specifies all 15 MORPH-R0 fields for exact 2n public finite-field moments `h_t=cA^t b`. Planted diagonal eigenvalues with nonzero weights make the Hankel matrix nonsingular. A public linear recurrence and companion realization recover a verifier-accepted triple in polynomial field operations; hidden GL_n basis entropy is a gauge orbit. Classical Ho-Kalman/system-identification prior art defeats Field 15. [Issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6171154797).
+- [N1-55](../docs/103-morph-n1-55-adic-trie-no-go.md) independently specifies a full labeled `v_2(x_i-x_j)` matrix for random distinct residues mod `2^m`. Public equivalence-class partitions at all bit depths determine a binary trie; canonical 0/1 child labels produce a verifier-valid alternative number vector in polynomial time. Classical ultrametric/dendrogram and p-adic tree representation defeats Field 15. [Issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6171176966).
+
+**No new empirical cases, scripts, corpus or rerun of N1-52:** 593,305 exact fully enumerated source/protocol cases and 40 controls stay historical, with [artifact provenance blocker #199](https://github.com/StanleyLl0yd/morph-kem/issues/199) still open. N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12, N1-26 HOLD/BENCHMARK unchanged. HEPMR #195 BENCHMARK ONLY through AP103. **GLOBAL NO NOMINATION; next Field-15 research gate N1-56.** No PKE/KEM/trapdoor or OWF/PQ claim.
+
+
 ## 2026-10-14 - MORPH-N1 #196 checkpoint N1-52 synchronized into repository
 
 **GLOBAL NO NOMINATION.** Research-only split ~80% new relation discovery, ~20% bounded HEPMR closure, not implementation. Active N1 issue #196 reached checkpoint [6168184843](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6168184843). HEPMR #195 stays BENCHMARK ONLY through AP103; do not restart AP104+.
@@ -17,7 +25,7 @@ The prior detailed log through 2026-09-11 is preserved verbatim in `notes/resear
 
 ## 2026-10-14 - N1-53 full effective-resistance inverse: analytic REJECT
 
-An independent, complete 15-field screen of exact labeled weighted-graph **effective resistance** (not shortest-path distance) yielded the public reconstruction identity `L^+=-JRJ/2`, then `L=(L^+ + 11^T/n)^{-1}-11^T/n`. Every edge conductance is publicly recovered from `-L_ij` in polynomial exact bit complexity. Field 15 fails classical electrical-network inverse prior art. **No N1-53 source enumeration, code or security claim.** [Proof and all fields](../docs/101-morph-n1-53-resistance-no-go.md); [issue result](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6169028746). **Next: N1-54 Field-15 independent search; GLOBAL NO NOMINATION.**
+An independent, complete 15-field screen of exact labeled weighted-graph **effective resistance** (not shortest-path distance) yielded the public reconstruction identity `L^+=-JRJ/2`, then `L=(L^+ + 11^T/n)^{-1}-11^T/n`. Every edge conductance is publicly recovered from `-L_ij` in polynomial exact bit complexity. Field 15 fails classical electrical-network inverse prior art. **No N1-53 source enumeration, code or security claim.** [Proof and all fields](../docs/101-morph-n1-53-resistance-no-go.md); [issue result](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6169028746). **Superseded next-gate reference: see N1-54/55 above; GLOBAL NO NOMINATION.**
  Repository commits and the numbered research documents remain the authoritative detailed evidence for individual experiments.
 
 ## 2026-09-14 — HGA4 finite-representation line frozen
