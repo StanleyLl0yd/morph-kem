@@ -16,4 +16,4 @@
 
 Publish all **15 fields** in [MORPH-R0](97-morph-r0-cross-line-postmortem.md#11-re-entry-gate-for-any-new-morph-family) *before source samples*. Only a concrete relation that passes the novelty screen may justify a bounded attack-first experiment.
 
-Preserve N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12 and N1-26 HOLD/BENCHMARK as historical states, not unfinished parameter sweeps to repair. HEPMR #195 remains BENCHMARK ONLY through AP103. **N1-53/54/55/56 have polynomial public inverters; N1-57 fails novelty without a proven polynomial section. N1-58 is the next independent positive Field-15 screen.**
+Preserve N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12 and N1-26 HOLD/BENCHMARK as historical states, not unfinished parameter sweeps to repair. HEPMR #195 remains BENCHMARK ONLY through AP103. **N1-53/54/55/56/57 all have analytic public polynomial any-witness sections. The N1-57b sign-graph theorem supersedes its initial novelty-only classification without adding empirical cases. N1-58 is the next independent positive Field-15 screen.**

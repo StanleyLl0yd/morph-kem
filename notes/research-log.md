@@ -2,10 +2,17 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-14 - N1-57b: polynomial public reconstruction resolves N1-57's prior open sign-CSP
+
+**Correction / chronological advancement, NOT a rerun:** after the initial N1-57 novelty-only decision, [an independent graph-cycle proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6176148985) established a **deterministic polynomial public any-witness inverter for the same original anchored rank-3 full absolute-minor verifier**. All coordinate magnitudes are revealed by two-anchor minors. Chordless support-graph 4-/6-cycles each have two perfect matchings; their absolute determinant reveals cycle-sign parity. A GF(2) linear system constructs signs consistent on all cycles, hence an accepted matrix up to row/extra-column sign gauges. Full fibre size is `2^{n-c(G)}` for bipartite nonzero-support graph G, with isolated vertices included in c. For fixed rank d, the same principle costs `n^{O(d)}`, **not** a claim for variable d. [Updated N1-57 note](../docs/105-morph-n1-57-arithmetic-matroid-no-go.md).
+
+**Final N1-57 ANALYTIC REJECT**; prior novelty-only gate below remains accurate as a statement of what was known *before* this proof, not the current verdict. No source samples, tests, additional enumeration counts or changes to N1-52, #199, legacy PARTIAL/HOLD or HEPMR. Next N1-58 Field-15 search remains open; **GLOBAL NO NOMINATION**.
+
+
 ## 2026-10-14 - N1-56 and N1-57: analytic public section versus prior-art-only gate
 
 - **N1-56 ANALYTIC REJECT:** [15-field Pauli-commutation signature](../docs/104-morph-n1-56-pauli-symplectic-no-go.md) has `P=U^T J U` of rank 2r over GF(2). Alternating-form congruence supplies a polynomial, deterministic public any-witness `V=[I|0]Q^-1`. Its entire full-row-rank fibre is the Sp(2r,2) orbit. This is classical stabilizer/symplectic linear algebra, not new cryptographic hardness. [Original issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6175898415).
-- **N1-57 REJECT FOR NOVELTY ONLY:** [15-field integer absolute-maximal-minor relation](../docs/105-morph-n1-57-arithmetic-matroid-no-go.md) gives exact anchored coordinate magnitudes, leaving at most two Boolean sign variables per nonzero extra column. It reduces to a public sign-CSP; **no polynomial-time canonical section has been proved or measured**. Mature representable arithmetic-matroid / phaseless Pluecker theory already fails Field 15. [Original issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6175967487).
+- **N1-57 initial state before N1-57b (now superseded):** [15-field integer absolute-maximal-minor relation](../docs/105-morph-n1-57-arithmetic-matroid-no-go.md) gives exact anchored coordinate magnitudes, leaving at most two Boolean sign variables per nonzero extra column. It reduces to a public sign-CSP; **no polynomial-time canonical section has been proved or measured**. Mature representable arithmetic-matroid / phaseless Pluecker theory already fails Field 15. [Original issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6175967487).
 
 **No empirical experiments, corpus, implementation or restored historical archives.** N1-52 remains 593,305 reported complete exact heterogeneous cases + 40 controls; missing original ZIP bytes tracked by [#199](https://github.com/StanleyLl0yd/morph-kem/issues/199). N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12, N1-26 HOLD/BENCHMARK, HEPMR #195 BENCHMARK ONLY through AP103 unchanged. **GLOBAL NO NOMINATION; next N1-58 with positive Field-15 evidence before code.**
 
