@@ -2,13 +2,20 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-14 - N1-59 rational hyperbolic-geodesic cosine distances: ANALYTIC REJECT
+
+[The complete 15-field source proof](../docs/107-morph-n1-59-hyperbolic-geodesic-no-go.md) fixes a 1D H^1 hyperbolic geodesic, rational cosh-distances and an anchored, integer-supported parameter t_0=1, t_i>1. A public anchor row suffices: `t_i=C_0i+sqrt(C_0i^2-1)`; every honest radicand is an exact rational square, so the original verifier accepts the recovered planted tuple in polynomial bit time. This does **not** prove arbitrary higher-dimensional hyperbolic inverse embeddings easy; the category is already established h-MDS/Lorentz Gramian prior art (Sala et al. 2018, Tabaghi/Dokmanic 2020). [Original N1-59 proof comment](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6176155839), [prior-art preliminary caution](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6176123156).
+
+**GLOBAL NO NOMINATION, zero new empirical cases.** Keep frozen N1-52 counts 593,305 +40 (unrecovered original ZIPs [#199](https://github.com/StanleyLl0yd/morph-kem/issues/199)), N1-19 and N1-23 PARTIAL, N1-26 HOLD/BENCHMARK, HEPMR #195 BENCHMARK ONLY. Next: N1-60 distinct positive Field-15 screen before any code or sampling.
+
+
 ## 2026-10-14 - N1-56, N1-57, N1-58: three independent analytical REJECT decisions
 
 - **[N1-56](../docs/104-morph-n1-56-finite-bispectrum-no-go.md)**: full cyclic bispectrum over F_(2^k), n=2^k-1; a public bispectrum power slice yields a recurrence reconstructing all nonzero Fourier coefficients up to cyclic shift. Exact fibre n shifts, polynomial any-witness inverse. Classical bispectrum completeness/translation invariant prior art fails Field 15. [Original issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6175990737).
 - **[N1-57](../docs/105-morph-n1-57-radon-walsh-no-go.md)**: complete labeled binary-affine hyperplane sums with values in F_3; taking bin differences yields all Walsh coefficients and exact inverse Walsh transform. Classical finite Radon/tomography prior art fails Field 15. [Original issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6176006953).
 - **[N1-58](../docs/106-morph-n1-58-principal-minors-no-go.md)**: signed symmetric F_5 matrix, all one/two minors plus anchored size-three minors. Triangle determinants expose signed switching invariants; normalize public star to +1 and reconstruct every other edge in O(n^2) field work. Classical symmetric principal-minor assignment/signed graph switching prior art fails Field 15. [Original issue proof](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6176025206).
 
-**Research only, NO NOMINATION, 0 new source/protocol cases**. N1-52 reported 593,305 complete heterogeneous toy cases +40 controls is unchanged; the original N1-46/47/51 ZIPs are NOT in repository ([#199](https://github.com/StanleyLl0yd/morph-kem/issues/199) remains blocked). N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12, N1-26 HOLD/BENCHMARK and HEPMR #195 BENCHMARK ONLY through AP103 remain. No KEM/PKE/trapdoor, OWF/PQ claim or HEPMR broad scan. **Next gate N1-59: different positive Field-15 case.**
+**Research only, NO NOMINATION, 0 new source/protocol cases**. N1-52 reported 593,305 complete heterogeneous toy cases +40 controls is unchanged; the original N1-46/47/51 ZIPs are NOT in repository ([#199](https://github.com/StanleyLl0yd/morph-kem/issues/199) remains blocked). N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12, N1-26 HOLD/BENCHMARK and HEPMR #195 BENCHMARK ONLY through AP103 remain. No KEM/PKE/trapdoor, OWF/PQ claim or HEPMR broad scan. **This N1-59 pointer is superseded by the later N1-59 analytical result above; next gate N1-60.**
 
 
 ## 2026-10-14 - N1-54 and N1-55: two independent analytical REJECT decisions
