@@ -12,6 +12,8 @@ MORPH-KEM is a **research-only, attack-first search for an independently motivat
 - ~20% restricted HEPMR review through AP103 in [#195](https://github.com/StanleyLl0yd/morph-kem/issues/195); **BENCHMARK ONLY**, no wider scan.
 - [N1-52 checkpoint](100-morph-n1-status-2026-10-14.md) records 593,305 exact toy protocol cases plus 40 controls since N1-34. The independent relations [N1-53](101-morph-n1-53-resistance-no-go.md) through [N1-59](107-morph-n1-59-hyperbolic-geodesic-no-go.md) all fail by exact polynomial public any-witness sections. New families: [N1-56 cyclic bispectrum](104-morph-n1-56-finite-bispectrum-no-go.md), [N1-57 Walsh-Radon tomography](105-morph-n1-57-radon-walsh-no-go.md), [N1-58 symmetric principal minors](106-morph-n1-58-principal-minors-no-go.md), and [N1-59 rational hyperbolic-geodesic cosh-distance](107-morph-n1-59-hyperbolic-geodesic-no-go.md). No new toy enumerations. Next gate: **N1-60**, independent positive Field-15 screen.
 
+Additional independently developed no-go proofs were retained under [supplemental notes](supplemental/README.md): [Pauli symplectic Gram](supplemental/s1-pauli-symplectic-public-section.md) and [anchored phaseless integer minors](supplemental/s2-anchored-phaseless-minor-public-section.md). Their original issue labels collided with the canonical N1 timeline, which is unchanged; neither added empirical cases.
+
 For every proposed public instance `P`, the attacker wins by producing **any** `candidate` satisfying `Verify(P,candidate)`; planted-source recovery is not required. Generated distribution, public bitlength, the fibre `Equivalent(P)`, polynomial verifier, known normal forms, classical/quantum attacks and Field-15 distinctness must be explicit *before* code.
 
 ## Historical materials
