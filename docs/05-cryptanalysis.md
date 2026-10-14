@@ -1,6 +1,6 @@
 # 05 — Cryptanalysis ledger
 
-This file is the canonical **repository-implemented legacy attack ID index** for MORPH-KEM. Successful breaks are research results and remain part of the record. The subsequent MORPH-N1 paper/issue series N1-01..52 (with explicitly partial/held exceptions) is tracked separately in [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196) and [current N1 snapshot](100-morph-n1-status-2026-10-14.md). **No new A-ID or executable attack is implied by a research issue comment.**
+This file is the canonical **repository-implemented legacy attack ID index** for MORPH-KEM. Successful breaks are research results and remain part of the record. The subsequent MORPH-N1 paper/issue series N1-01..52 (with explicitly partial/held exceptions) is tracked separately in [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196) and [current N1 snapshot](100-morph-n1-status-2026-10-14.md). **No new A-ID or executable attack is implied by a research issue comment.** N1-53 adds a separate **analytic-only** exact effective-resistance/Laplacian public-section no-go; see [its 15-field note](101-morph-n1-53-resistance-no-go.md).
 
 Historical detail is preserved verbatim in:
 
