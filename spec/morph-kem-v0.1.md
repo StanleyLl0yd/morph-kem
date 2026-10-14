@@ -1,6 +1,6 @@
 # MORPH-KEM v0.1 — research draft
 
-**Status:** incomplete, non-normative, research only.
+**Status:** **HISTORICAL, non-normative, abandoned scheme sketch**. Version 0.1 is not a candidate or planned release. As of 2026-10-14 the research gate is [MORPH-N1 N1-52](../docs/100-morph-n1-status-2026-10-14.md), **GLOBAL NO NOMINATION**. The future API pseudocode below is archival, not an authorized KEM/PKE/trapdoor roadmap.
 
 M0–M4 are rejected attack experiments, not deployable cryptography:
 

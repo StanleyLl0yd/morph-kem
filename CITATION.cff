@@ -1,9 +1,9 @@
 cff-version: 1.2.0
 message: "If you use this research artifact, please cite it using the metadata below."
-title: "MORPH-KEM: exploratory post-quantum KEM research"
+title: "MORPH-KEM: attack-first mathematical cryptography research and negative results"
 type: software
 authors:
   - family-names: "Lloyd"
     given-names: "Stanley"
 repository-code: "https://github.com/StanleyLl0yd/morph-kem"
-abstract: "Exploratory research on a candidate key-encapsulation construction based on hidden discrete Morse reductions and combinatorial topology. Research only; no security claim."
+abstract: "Research-only attack-first exploration of mathematical inversion relations and negative cryptanalytic results. No nominated cryptographic primitive, implementation proposal, or post-quantum security claim."

@@ -1,25 +1,24 @@
 # MORPH-KEM
 
-**MORPH-KEM** is exploratory public-key/post-quantum cryptography research based on discrete Morse theory, combinatorial topology, hyperbolic/non-orientable structures, and attack-first mathematical experimentation.
+**MORPH-KEM** is attack-first research into possible new mathematical inversion relations. It began with discrete Morse theory and topology; the current **MORPH-N1** line tests independent relations rather than promoting an existing KEM design.
 
 > **Research only. Not for production use. Not a security claim.**
 >
 > Do not use MORPH-KEM to protect real data, credentials, communications, or systems.
 
-## Current status
+## Current status (14 October 2026)
 
-**M0–M5, BTTS/Pachner calibrations T0–T1, and HGES controls G0–G21 are implemented and rejected. The H/Escher/covering and K0–K2.3 side tracks have also produced only negative results. No candidate primitive exists.**
+**GLOBAL NO NOMINATION. Research-only.** Neither an accepted one-way-function assumption nor a post-quantum primitive has been identified. No trapdoor, PKE or KEM development is authorized.
 
-Core M-series:
+- **Active:** [MORPH-N1 #196](https://github.com/StanleyLl0yd/morph-kem/issues/196), latest [N1-52](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6168184843); next candidate gate **N1-53**, requiring a genuinely independent Field-15 mathematical relation.
+- **Strategy:** approximately 80% novel relation discovery / 20% bounded HEPMR closure. [HEPMR #195](https://github.com/StanleyLl0yd/morph-kem/issues/195) is **BENCHMARK ONLY** through AP103, not an implementation track.
+- **Evidence:** 593,305 exact heterogeneous fully enumerated toy cases plus 40 larger controls since N1-34. N1-46/47/51 contributed 314,936 publicly verifier-accepted inversions. These results refute tested proposals; they **do not** establish security.
+- **Exceptions:** historical N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12 and N1-26 HOLD/BENCHMARK are not silently completed or rescued.
+- **Source of truth:** [current research status and limits](docs/100-morph-n1-status-2026-10-14.md), [15-field entry gate](docs/97-morph-r0-cross-line-postmortem.md#11-re-entry-gate-for-any-new-morph-family), and issue #196. The N1 research bundles are **conversation-local**, not committed in this repository.
 
-- **M0** — A-000 direct public coordinate recovery.
-- **M1** — A-008 meet-in-the-middle path recovery.
-- **M2** — A-014 structural hidden-core reconstruction.
-- **M3** — A-016 collapse + spanning-tree equivalent witness.
-- **M4** — A-018 public primal/dual tree-cotree witness.
-- **M5** — irregular non-manifold 2-core with zero free collapses, but public tree-plus-extension search reaches an accepted equivalent Morse witness in 30 nodes on the fixed baseline.
+### Historical negative corpus
 
-The project does not interpret increasingly elaborate topology as security. Every new relation is attacked before scaling.
+The sections below preserve the earlier M0-M5, T0-T1, H/K, G0-G22, HGA, NAT, TDC and BPT negative-control research. Their chronological language is historical; they are **not** the active development plan or a claim of a surviving primitive. See [research log](notes/research-log.md) and [cryptanalysis index](docs/05-cryptanalysis.md).
 
 ## H / Escher / covering results
 
@@ -385,6 +384,10 @@ See `docs/56-g21-genus2-crossing-basis.md`.
 
 ## Key files
 
+- `docs/100-morph-n1-status-2026-10-14.md` - current N1-52 checkpoint, evidence provenance and N1-53 entry gate
+- `docs/97-morph-r0-cross-line-postmortem.md` - mandatory 15-field research admission gate
+- `docs/98-bpt0-stacked-s3-weak-control.md` and `docs/99-bpt-r1-pachner-reconciliation.md` - closed historical BPT controls
+
 - `src/morph_kem/` — executable constructions and attacks
 - `tests/` — exact validators and regression tests
 - `scripts/` — deterministic baselines and sweeps
@@ -429,15 +432,11 @@ See `docs/56-g21-genus2-crossing-basis.md`.
 - `notes/research-log.md` — chronological record
 - `spec/morph-kem-v0.1.md` — future-spec skeleton
 
-## Next gate
+## Next research gate
 
-The next controlled HGES experiment is **G22**, not a trapdoor construction. G21 shows that even a simultaneous complete primal-dual crossing matrix is not enough when a public tree-cotree decomposition mechanically supplies the required family.
+**N1-53** must first define the exact public relation and honest generation distribution, a polynomial verifier, every accepted equivalent witness, and a credible *positive* distinction from established assumptions in MORPH-R0 Field 15. Only then attack-first theory and pre-registered toy tests may follow. See [current N1 checkpoint](docs/100-morph-n1-status-2026-10-14.md) and [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
 
-G22 must impose geometry not automatic from a tree-cotree basis, especially relations among cycles on the same side: vertex-disjointness, prescribed same-side intersections, shared avoidance regions, or meaningful public length constraints. It must immediately face symplectic-basis algorithms, disjoint paths/vertex splitting/max-flow, matching, shortest-cycle methods, ILP/SAT/CP-SAT, separator/treewidth, normalization and equivalent-witness enumeration.
-
-No trapdoor/KEM work begins before such a coupled geometric multicurve relation survives these attacks.
-
-No security or post-quantum claim exists.
+No KEM, PKE, trapdoor, OWF or PQ security claim exists.
 
 ## Naming
 

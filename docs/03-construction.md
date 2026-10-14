@@ -1,5 +1,7 @@
 # 03 — Provisional construction
 
+> **Archive notice (2026-10-14):** This is a abandoned speculative KEM construction sketch, **not** the active MORPH-N1 mathematical candidate or an approved implementation plan. Current status: [N1-52](100-morph-n1-status-2026-10-14.md), **GLOBAL NO NOMINATION**, no trapdoor/PKE/KEM/OWF/PQ claim. Read original experiments as historical evidence.
+
 ## Status
 
 This document records the current construction sketch. It is intentionally non-normative until the objects and distributions are formalized.

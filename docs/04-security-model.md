@@ -1,5 +1,7 @@
 # 04 — Security model
 
+> **Archive notice (2026-10-14):** This is a historical security-model sketch, **not** the active MORPH-N1 mathematical candidate or an approved implementation plan. Current status: [N1-52](100-morph-n1-status-2026-10-14.md), **GLOBAL NO NOMINATION**, no trapdoor/PKE/KEM/OWF/PQ claim. Read original experiments as historical evidence.
+
 ## Separation of claims
 
 The project keeps four layers separate:

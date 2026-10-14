@@ -2,6 +2,17 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-14 - MORPH-N1 #196 checkpoint N1-52 synchronized into repository
+
+**GLOBAL NO NOMINATION.** Research-only split ~80% new relation discovery, ~20% bounded HEPMR closure, not implementation. Active N1 issue #196 reached checkpoint [6168184843](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6168184843). HEPMR #195 stays BENCHMARK ONLY through AP103; do not restart AP104+.
+
+The N1-46 Euler/de Bruijn spectrum attack accepted 81,672/81,672 cases; N1-47 public Möbius-frame inversion accepted 229,200/229,200; N1-51 fixed-k coupled-spectrum frontier DP accepted 4,064/4,064 while single-view Euler accepted both constraints only 2,179/4,064. N1-48/49 were analytic redundancy results without additional enumerations. All three exact families REJECT, not cryptographic confirmations.
+
+Cumulative reported numbers since N1-34: **593,305 full exact toy source/protocol enumerations + 40 replay controls**. N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12, N1-26 HOLD/BENCHMARK unchanged. The original scripts/ZIP bundles remain conversation-local and are **not** imported or rerun in this documentation synchronization. See [docs/100-morph-n1-status-2026-10-14.md](../docs/100-morph-n1-status-2026-10-14.md) for sources, limitations and N1-53 gate.
+
+**Decision:** no candidate and no trapdoor/PKE/KEM, OWF or PQ claim. Documentation catch-up does not change the research result.
+
+
 The prior detailed log through 2026-09-11 is preserved verbatim in `notes/research-log-through-2026-09-11.md`. Repository commits and the numbered research documents remain the authoritative detailed evidence for individual experiments.
 
 ## 2026-09-14 — HGA4 finite-representation line frozen
