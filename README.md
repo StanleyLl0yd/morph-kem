@@ -6,15 +6,15 @@
 >
 > Do not use MORPH-KEM to protect real data, credentials, communications, or systems.
 
-## Current status (14 October 2026)
+## Current status (14 October 2026, through N1-53)
 
 **GLOBAL NO NOMINATION. Research-only.** Neither an accepted one-way-function assumption nor a post-quantum primitive has been identified. No trapdoor, PKE or KEM development is authorized.
 
-- **Active:** [MORPH-N1 #196](https://github.com/StanleyLl0yd/morph-kem/issues/196), latest [N1-52](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6168184843); next candidate gate **N1-53**, requiring a genuinely independent Field-15 mathematical relation.
+- **Active:** [MORPH-N1 #196](https://github.com/StanleyLl0yd/morph-kem/issues/196). N1-53 [analytic electrical-resistance inverse](docs/101-morph-n1-53-resistance-no-go.md) is **REJECT** by a polynomial public Laplacian reconstruction; the next independent Field-15 screen is **N1-54**. Earlier aggregate [N1-52](docs/100-morph-n1-status-2026-10-14.md) remains a frozen checkpoint.
 - **Strategy:** approximately 80% novel relation discovery / 20% bounded HEPMR closure. [HEPMR #195](https://github.com/StanleyLl0yd/morph-kem/issues/195) is **BENCHMARK ONLY** through AP103, not an implementation track.
 - **Evidence:** 593,305 exact heterogeneous fully enumerated toy cases plus 40 larger controls since N1-34. N1-46/47/51 contributed 314,936 publicly verifier-accepted inversions. These results refute tested proposals; they **do not** establish security.
 - **Exceptions:** historical N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12 and N1-26 HOLD/BENCHMARK are not silently completed or rescued.
-- **Source of truth:** [current research status and limits](docs/100-morph-n1-status-2026-10-14.md), [15-field entry gate](docs/97-morph-r0-cross-line-postmortem.md#11-re-entry-gate-for-any-new-morph-family), and issue #196. The N1 research bundles are **conversation-local**, not committed in this repository.
+- **Source of truth:** [N1-53 analytic result](docs/101-morph-n1-53-resistance-no-go.md), [N1-52 numerical checkpoint](docs/100-morph-n1-status-2026-10-14.md), [15-field entry gate](docs/97-morph-r0-cross-line-postmortem.md#11-re-entry-gate-for-any-new-morph-family), and issue #196. The N1 research bundles are **conversation-local**, not committed in this repository.
 
 ### Historical negative corpus
 
@@ -384,7 +384,8 @@ See `docs/56-g21-genus2-crossing-basis.md`.
 
 ## Key files
 
-- `docs/100-morph-n1-status-2026-10-14.md` - current N1-52 checkpoint, evidence provenance and N1-53 entry gate
+- `docs/101-morph-n1-53-resistance-no-go.md` - analytic N1-53 rejection, all 15 fields and exact public inversion
+- `docs/100-morph-n1-status-2026-10-14.md` - frozen N1-52 checkpoint and evidence provenance
 - `docs/97-morph-r0-cross-line-postmortem.md` - mandatory 15-field research admission gate
 - `docs/98-bpt0-stacked-s3-weak-control.md` and `docs/99-bpt-r1-pachner-reconciliation.md` - closed historical BPT controls
 
@@ -434,7 +435,7 @@ See `docs/56-g21-genus2-crossing-basis.md`.
 
 ## Next research gate
 
-**N1-53** must first define the exact public relation and honest generation distribution, a polynomial verifier, every accepted equivalent witness, and a credible *positive* distinction from established assumptions in MORPH-R0 Field 15. Only then attack-first theory and pre-registered toy tests may follow. See [current N1 checkpoint](docs/100-morph-n1-status-2026-10-14.md) and [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
+**N1-54** must identify a mathematically independent relation that clears MORPH-R0 Field 15 with positive evidence and survives the elementary canonicalization/quotient attack screen **before** any code or source samples. N1-53 already failed by the exact effective-resistance/Laplacian identity. See [N1-53](docs/101-morph-n1-53-resistance-no-go.md), [N1-52](docs/100-morph-n1-status-2026-10-14.md) and [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
 
 No KEM, PKE, trapdoor, OWF or PQ security claim exists.
 

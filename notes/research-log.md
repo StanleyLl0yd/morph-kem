@@ -13,7 +13,12 @@ Cumulative reported numbers since N1-34: **593,305 full exact toy source/protoco
 **Decision:** no candidate and no trapdoor/PKE/KEM, OWF or PQ claim. Documentation catch-up does not change the research result.
 
 
-The prior detailed log through 2026-09-11 is preserved verbatim in `notes/research-log-through-2026-09-11.md`. Repository commits and the numbered research documents remain the authoritative detailed evidence for individual experiments.
+The prior detailed log through 2026-09-11 is preserved verbatim in `notes/research-log-through-2026-09-11.md`.
+
+## 2026-10-14 - N1-53 full effective-resistance inverse: analytic REJECT
+
+An independent, complete 15-field screen of exact labeled weighted-graph **effective resistance** (not shortest-path distance) yielded the public reconstruction identity `L^+=-JRJ/2`, then `L=(L^+ + 11^T/n)^{-1}-11^T/n`. Every edge conductance is publicly recovered from `-L_ij` in polynomial exact bit complexity. Field 15 fails classical electrical-network inverse prior art. **No N1-53 source enumeration, code or security claim.** [Proof and all fields](../docs/101-morph-n1-53-resistance-no-go.md); [issue result](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6169028746). **Next: N1-54 Field-15 independent search; GLOBAL NO NOMINATION.**
+ Repository commits and the numbered research documents remain the authoritative detailed evidence for individual experiments.
 
 ## 2026-09-14 — HGA4 finite-representation line frozen
 
