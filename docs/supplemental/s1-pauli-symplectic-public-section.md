@@ -1,0 +1,39 @@
+# S1 - Pauli commutation, public symplectic Gram section
+
+**Supplemental analytic no-go, not canonical N1-56.** The original contemporaneous issue and source document called this N1-56, but a different parallel workstream assigned canonical N1-56 to finite-field cyclic bispectrum and merged it via PR #203. Original mathematical equations and 15 fields below are preserved without assigning a new N1 number. See [supplemental index](README.md) for provenance. Zero empirical cases.
+
+---
+
+# N1-56 - complete labeled Pauli commutation signature (analytic no-go)
+
+**Date:** 2026-10-14. **Disposition:** ANALYTIC REJECT before code. **Zero empirical cases; global NO NOMINATION.**
+
+This is the complete original 15-field pre-code specification from [MORPH-N1 issue #196](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6175898415). It is a new independent theoretical gate, not a claim of a measured attack or a code implementation.
+
+## N1-56 (2026-10-14): labeled Pauli commutation signature - public symplectic Gram factorization (ANALYTIC REJECT)
+
+**Research-only, no nomination.** An independently defined finite quantum-algebra / alternating-bilinear-form relation, **not** N1-54 Hankel moments, N1-55 2-adic distances, N1-53 Laplacian inversion, or the earlier tentative planar matchgate prior-art screen in this issue. All 15 MORPH-R0 fields are defined **before** any code or source trials. Outcome is a direct mathematical no-go, not a numerical experiment.
+
+### Complete MORPH-R0 15 fields
+
+1. **PublicInstance:** positive r, k=3r, full labeled symmetric binary k×k matrix `P` with zero diagonal and `rank_F2 P = 2r`. It represents the pairwise commute/anticommute signs of k phase-free r-qubit Pauli words.
+2. **Secret/Witness:** planted columns of a 2r×k binary matrix `U`; each column is a Pauli vector `(x_1,z_1,...,x_r,z_r)`. Any 2r×k binary matrix `V` of full row rank obeying `V^T J V=P`, with `J=diag([[0,1],[1,0]],...,[[0,1],[1,0]])`, is a valid accepted witness. No planted basis or Pauli phases are checked.
+3. **Generation distribution:** draw every bit of Z∈F2^{2r×r} iid fair and set `U_0=[I_{2r}|Z]`. Draw exactly `12k²` independent pairs i≠j uniformly from [k], independent fair bits b, form public-distribution hidden invertible `M=Π(I_k+b e_i e_j^T)` in that fixed order. Draw exactly `r²` independent fair-bit vectors v∈F2^{2r}, form `S=Π(I_{2r}+v(v^T J))` (symplectic transvections, identity if v=0). Set `U=S U_0 M` and publish `P=U^T J U`. **No rejection/solvability conditioning.** U has full row rank since S,M invertible, hence rank P=2r; all computation and public bitlength polynomial in r. S is entirely a gauge hiding nothing from the signature.
+4. **Public verifier:** on given P, candidate V check dimension, entries in F2, rank V=2r and exact `V^T J V=P`. Matrix operations polynomial in k; no planted bits, sampling seed, or phases checked.
+5. **Attacker equivalent target:** `Equivalent(P)={V∈F2^{2r×k}: rank(V)=2r and V^T J V=P}`. Any accepted V wins; original columns need not be recovered.
+6. **Stabilizer/kernel/fibre:** `ker(P)=ker(U)` since U has full row rank and J nondegenerate. For any U,V of full row rank with the same P, map `Ux ↦ Vx` is well-defined on F2^{2r}, invertible and preserves J, so V=T U for a **unique** T∈Sp(2r,2). Thus the entire fibre is a Sp(2r,2)-orbit; source entropy in symplectic S is not cryptographic hardness.
+7. **Known quotients:** binary symplectic Pauli representation, symplectic Gram matrix, alternating bilinear form congruence, standard characteristic-2 Gram-Schmidt/Witt decomposition, Clifford/stabilizer equivalence. These are established mathematical and quantum-error-correction objects.
+8. **Exact public canonical section:** polynomial alternating-form elimination computes invertible Q∈GL_k(F2) with `Q^T P Q=diag(J,0_{k-2r})`. Set `A=[I_{2r}|0_{2r×(k-2r)}]` and output `V=A Q^{-1}`. Then `V^T J V=Q^{-T} diag(J,0) Q^{-1}=P`, rank V=2r, **original verifier PASS for every honestly generated instance**. Finding Q and inverting it costs O(k³) binary field operations. No source-specific randomness or search.
+9. **Local/low-weight leakage:** P consists entirely of publicly accessible degree-two commutation relations; rank2r and the alternating canonical form already determine a valid realization. No low-weight Pauli search is necessary.
+10. **Noise-to-optimization:** no noise, missing pairings or approximate bit matrices in this exact relation. Incomplete/noisy constraints, bounded Pauli support and Clifford-circuit synthesis are **different** constrained inverse problems; not a repair of this one.
+11. **Cover/base/fibre:** hidden Pauli basis is an Sp orbit, completely quotiented by P. The congruence normal form is a public representative, not a trapdoor fibre.
+12. **Matched weak control:** e.g. a fixed 2r×2r principal submatrix of P is a lower-information control from the identical source; no empirical comparison asserted or required for analytic rejection. Public full-P attack must always be evaluated first.
+13. **Validation protocol:** **zero** empirical sources, slices, scripts, verifier trials, seed experiments or reproduced counts. The exact congruence proof resolves this specified relation prior to any attack benchmark.
+14. **Quantum screen:** a deterministic **classical polynomial** public section exists. Quantum accelerations cannot make the specified inversion relation hard; no post-quantum security inference.
+15. **Independent novelty / why-not-mature: FAIL.** Pauli commutation is precisely a binary symplectic inner product in the classical Gottesman stabilizer formalism; alternating-form Gram-Schmidt is a standard polynomial algorithm. Primary literature: [D. Gottesman, *Stabilizer Codes and Quantum Error Correction* (1997)](https://arxiv.org/abs/quant-ph/9705052), [J. B. Wilson, *Optimal algorithms of Gram-Schmidt type*, Linear Algebra Appl. 438 (2013), 4573-4583](https://doi.org/10.1016/j.laa.2013.02.026). Independent adjacent prior-art screen already documented: [Cai & Gorenstein, *Matchgates Revisited* (2014)](https://doi.org/10.4086/toc.2014.v010a007), but **not** used to establish the distinct symplectic factorization theorem here.
+
+### Proof boundary and decision
+
+This attack factors the **complete labeled binary commutation matrix** for **unrestricted phase-free r-qubit Pauli vectors**. It does not invert arbitrary Clifford circuits, characterize nonlinear gate combinations, recover the planted secret, enforce locality or synthesize sparse physical operators. Any such modification changes `Verify` and needs its own 15-field gate with cited independent novelty. The constant-size r=1 case also fits the proof; no special-case enumerations are needed.
+
+**N1-56 ANALYTIC REJECT; GLOBAL NO NOMINATION.** N1-52 remains 593,305 exact heterogeneous enumerations + 40 larger controls (historical; original evidence unresolved in #199), N1-19/N1-23 PARTIAL, N1-26 HOLD, HEPMR #195 BENCHMARK ONLY through AP103. Zero added empirical cases, no code, KEM/PKE/trapdoor, OWF/PQ/security claims or expanded HEPMR scans. **Next gate: N1-57 independent positive Field-15 candidate or earlier analytic kill.**
