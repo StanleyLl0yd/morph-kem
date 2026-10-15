@@ -70,9 +70,41 @@ For either public \(P\), the fibre \(E(P)\) has \(2^{n-1}\) members. Conditioned
 
 **Gate:** before suggesting a new gluing/history family, test whether it reveals group-valued edge transports or an equivalent gain/cocycle; quotient a spanning-tree gauge, then evaluate the actual residual witness relation. Source issue proof: [#208 F0-K4](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6187674019). Zero experiments.
 
-## 8. Research status after this audit
+## 8. F0-K4a: two separately canonicalizable nonabelian gauge views still have a joint public section
 
-**Proved (within explicit hypotheses):** F0-K1 parity entropy counterexample, F0-K2 stacked public linear-view inverter, F0-K3 public-decomposition low-width CSP inverter, and F0-K4 a public nonabelian spanning-tree gauge inverter even on complete graphs. These are well-known mechanisms, not new mathematical inventions.
+**Exact corollary of F0-K4, not a new independent assumption.** Given a common hidden assignment \(g\in G^V\) from the same unconditional source, publish **two** sets of labeled edge transports \(P_i=\{g_u^{-1}g_v:(u,v)\in E_i\}\), for public graphs \(\Gamma_i=(V,E_i)\). The original *joint* verifier accepts any y reproducing **all** edges from both E1 and E2.
+
+Even if the two marginal graphs have different connected-component partitions and their individually chosen canonical sections fail to agree on shared vertices, the public attacker forms the **union graph** \(\Gamma=(V,E_1\cup E_2)\) and applies F0-K4's spanning-forest propagation. Every honest off-forest label matches automatically, giving an accepted witness in \(O(|V|+|E_1|+|E_2|)\) group operations. The joint fibre contains exactly \(|G|^{c(\Gamma)}\) witnesses. Two marginal gauge choices can be incompatible **as chosen representatives**, without making their joint intersection difficult to find.
+
+**Scope:** exact fully public group-valued edge transports on one common group assignment. Not arbitrary pairs of nonlinear invariants, missing edge labels, unknown group operations or noisy data. This destroys the *specific* H-A/H-B proposal "combine two easy public edge-gauge quotients to force hardness," even when G is nonabelian. [Original proof](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6187744006).
+
+## 9. F0-K5: universality trap - two trivially invertible nonlinear views may encode ANY existing inverse task
+
+**Proposition (self-contained, mathematical reduction, NOT a public inverter for arbitrary h).** Let \(h:\{0,1\}^n\to\{0,1\}^m\) be **any** polynomial-time function and D any efficiently samplable source distribution on x. Introduce a fresh independent uniform mask \(r\in\{0,1\}^m\) and object \(z=(x,r)\). Define two polynomial-time views
+
+\[
+f(x,r)=r,\qquad g(x,r)=r\oplus h(x).
+\]
+
+For every possible public a and b, f and g individually have polynomial public sections:
+
+\[
+s_f(a)=(0^n,a),\qquad s_g(b)=(0^n,b\oplus h(0^n)).
+\]
+
+Indeed f(s_f(a))=a and g(s_g(b))=b, with no inversion of h. The **honest paired source** draws x←D, r←uniform and publishes P=(a,b)=(r,r⊕h(x)); the ORIGINAL public verifier accepts any candidate \((x',r')\) satisfying \(r'=a\) and \(r'\oplus h(x')=b\). Its entire accepted fibre is
+
+\[
+E(P)=\{(x',a):h(x')=a\oplus b\}.
+\]
+
+**Exact distribution-preserving interreduction (including any-witness semantics).** From a function inverter A_h for honest y=h(x), compute y=a⊕b and return (A_h(y),a). The pair's verifier succeeds **exactly when** A_h returns an h-preimage. Conversely, given a paired-view inverter A_pair, to invert honest y=h(x), independently sample a uniformly, compute b=a⊕y, invoke A_pair(a,b), and **first check the ORIGINAL paired verifier on its entire returned pair**. Only on a valid result return its x' coordinate; otherwise output a distinguished failure symbol \(\bot\notin\{0,1\}^n\). The joint input (a,b) is distributed **exactly** as in honest pair generation, and the verifier-gated reduction's success probability equals A_pair's original success probability. Each reduction is polynomial-time and preserves any accepted witness, not planted recovery.
+
+**Consequence:** arbitrary h-inversion can be *repackaged* as the intersection of two individually effortless public inverse views. Thus the slogan "two easy inverse problems become hard when coupled" has **zero independent novelty content** by itself. This is **NOT** a theorem that all coupled problems are easy: if h were hard to invert under D, the pair would inherit that hardness completely from h. It supplies no new OWF, no new hard assumption, and no candidate in MORPH. A future H-A attempt must expose the irreducible underlying mathematical relation **before** claiming originality. [Original F0-K5 proof and reduction precision edit](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6187822455).
+
+## 10. Research status after this audit
+
+**Proved (within explicit hypotheses):** F0-K1 parity entropy counterexample, F0-K2 stacked public linear-view inverter, F0-K3 public-decomposition low-width CSP inverter, and F0-K4 a public nonabelian spanning-tree gauge inverter even on complete graphs. F0-K4a extends the gauge section to coupled public views; F0-K5 shows that two trivially invertible nonlinear views can encode any preexisting h-inversion problem without implying novelty. These are known or elementary mechanisms, not newly established cryptographic hardness results.
 
 **Not proved:** that every coupled nonlinear relation reduces to CSP in a tractable form; that every large-width honest distribution is hard; that nontrivial sheaf obstruction yields average-case one-wayness; that any current MORPH-F0 hypothesis is new or PQ secure.
 
