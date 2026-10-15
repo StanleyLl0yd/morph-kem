@@ -60,9 +60,19 @@ For either public \(P\), the fibre \(E(P)\) has \(2^{n-1}\) members. Conditioned
 - [Random local functions](https://eccc.weizmann.ac.il/report/2025/139/) and the established Goldreich-function literature mean a generic planted local predicate graph cannot be called mathematically new by attaching geometric language.
 - [Akavia et al., *On Basing One-Way Functions on NP-Hardness*](https://www.wisdom.weizmann.ac.il/~oded/PSX/aggm1.pdf) reinforce that worst-case NP-hardness must not be substituted for distributional inversion hardness.
 
-## 7. Research status after this audit
+## 7. F0-K4: nonabelian global edge relations invert even at maximal treewidth
 
-**Proved (within explicit hypotheses):** F0-K1 parity entropy counterexample, F0-K2 stacked public linear-view inverter, F0-K3 public-decomposition low-width CSP inverter. These are well-known mechanisms, not new mathematical inventions.
+**Proposition.** Let G be a fixed nonabelian finite group with public polynomial-time product and inverse (for example S3). Let \(\Gamma=(V,E)\) be ANY publicly labeled connected graph with polynomially many edges. The unconditional honest source draws \(g_v\in G\) independently uniformly and publishes an oriented edge transcript \(t_{uv}=g_u^{-1}g_v\). The original verifier accepts any complete \(y\in G^V\) satisfying **every** edge equation \(y_u^{-1}y_v=t_{uv}\).
+
+**Universal public section, exact proof.** Find a spanning tree and root r. Set \(y_r=1_G\). For every oriented tree edge u→v, propagate \(y_v=y_u t_{uv}\); if only a reverse label is stored, use its inverse. By induction along tree paths, \(y_v=g_r^{-1}g_v\) on all vertices. For **any** original non-tree edge, \(y_u^{-1}y_v=(g_r^{-1}g_u)^{-1}(g_r^{-1}g_v)=g_u^{-1}g_v=t_{uv}\), so the ORIGINAL verifier accepts. Cost O(|V|+|E|) public group operations. The complete accepted fibre is the left-translation orbit \(\{(h g_v)_v:h\in G\}\), of size |G| when the graph is connected. For c components the size is |G|^c.
+
+**High-width countercontrol.** Choose \(\Gamma=K_n\). The primal constraint graph has treewidth n-1 and can contain many cycles, while the public inverter is still linear in its explicit O(n²) edge count. The group may be noncommutative. Consequently **high width plus noncommutativity plus global coupling are not sufficient to make inverse search hard**. This does NOT prove that all nonabelian patching or high-width relations are easy; it exploits the explicit public difference/transport structure. Historical [N1-05 spanning-tree gauge](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6155038515) provides closely related project prior art, so this is a cross-family explanatory no-go, **not a mathematical novelty claim**.
+
+**Gate:** before suggesting a new gluing/history family, test whether it reveals group-valued edge transports or an equivalent gain/cocycle; quotient a spanning-tree gauge, then evaluate the actual residual witness relation. Source issue proof: [#208 F0-K4](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6187674019). Zero experiments.
+
+## 8. Research status after this audit
+
+**Proved (within explicit hypotheses):** F0-K1 parity entropy counterexample, F0-K2 stacked public linear-view inverter, F0-K3 public-decomposition low-width CSP inverter, and F0-K4 a public nonabelian spanning-tree gauge inverter even on complete graphs. These are well-known mechanisms, not new mathematical inventions.
 
 **Not proved:** that every coupled nonlinear relation reduces to CSP in a tractable form; that every large-width honest distribution is hard; that nontrivial sheaf obstruction yields average-case one-wayness; that any current MORPH-F0 hypothesis is new or PQ secure.
 
