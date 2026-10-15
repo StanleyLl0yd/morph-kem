@@ -2,6 +2,13 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-15 - MORPH-F0 foundation-first pivot: structural no-go gates and hypothesis triage
+
+After canonical N1-59 ANALYTIC REJECT, opened [MORPH-F0 #208](https://github.com/StanleyLl0yd/morph-kem/issues/208) without consuming N1-60. The [failure map](../docs/foundation/F0-failure-mechanisms.md) links representative N1 and legacy negative mechanisms and gives three self-contained exact counter-gates: F0-K1 large planted-secret conditional entropy with trivial public accepted witness; F0-K2 all publicly linear coupled views collapse to one polynomial Gaussian solve; F0-K3 honest satisfiable finite-domain CSPs with **given public** bounded-treewidth decomposition admit public dynamic-programming witnesses. These are known/easily proved mechanisms, **not** new security results or new measured attacks.
+
+[Three structural hypotheses](../docs/foundation/F0-hypothesis-ledger.md) remain HOLD: H-A coupled incompatible quotients; H-B local-to-global patches; H-C noncommuting histories. None has positive independently sourced Field-15 novelty or a complete 15-field candidate, so **no new samples, code, N1 stage, KEM/PKE/trapdoor, OWF/PQ claim or parameter series**. Keep global NO NOMINATION and strategy 80/20. HEPMR #195 BENCHMARK ONLY through AP103; N1-19 19/30 and N1-23 9/12 remain PARTIAL, N1-26 HOLD; historical N1-52 593,305 +40 unchanged; original archive issue #199 blocked.
+
+
 ## 2026-10-14 - N1-59 rational hyperbolic-geodesic cosine distances: ANALYTIC REJECT
 
 [The complete 15-field source proof](../docs/107-morph-n1-59-hyperbolic-geodesic-no-go.md) fixes a 1D H^1 hyperbolic geodesic, rational cosh-distances and an anchored, integer-supported parameter t_0=1, t_i>1. A public anchor row suffices: `t_i=C_0i+sqrt(C_0i^2-1)`; every honest radicand is an exact rational square, so the original verifier accepts the recovered planted tuple in polynomial bit time. This does **not** prove arbitrary higher-dimensional hyperbolic inverse embeddings easy; the category is already established h-MDS/Lorentz Gramian prior art (Sala et al. 2018, Tabaghi/Dokmanic 2020). [Original N1-59 proof comment](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6176155839), [prior-art preliminary caution](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6176123156).

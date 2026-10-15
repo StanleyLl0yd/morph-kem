@@ -1,0 +1,67 @@
+# MORPH-F0: three falsifiable foundation hypotheses (NOT admitted candidates)
+
+**Date:** 2026-10-15. **Tracker:** [#208](https://github.com/StanleyLl0yd/morph-kem/issues/208). **GLOBAL NO NOMINATION. Research-only.** This is a prioritized *research hypothesis ledger* after [failure map F0-K1..K3](F0-failure-mechanisms.md), not an OWF/KEM specification. There are **zero new source instances, tests, or empirical successes**. No hypothesis below passes full MORPH-R0 Field 15, so **none is authorized for coding, random sampling, parameter selection or a new canonical N1 number**. N1-60 remains available in the existing [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196), not claimed here.
+
+## Decision method
+
+For each family, first define an unconditional polynomial sampler of \((P,s)\) and an exact polynomial verifier \(V(P,y)\) including the entire admissible domain, and state \(E(P)=\{y:V(P,y)=1\}\). Then independently attempt public sections, algebraic quotients/gauge removal, mature problem reductions, finite-width CSP DP, degree/character-sum leakage, and arbitrary accepted-witness search. Only afterward consider any pre-registered bounded computation.
+
+**Five independent gates** (failure at any gate stops before benchmarks):
+
+1. **Computable interface:** finite, polynomial public bitlength, unconditional polynomial sampler, correct planted verifier and explicit honest distribution. No hidden exponentially expensive counting.
+2. **Public section:** a deterministic or randomized polynomial attacker that outputs *any* accepted witness on the honest source distribution kills the proposed inversion claim, regardless of fibre cardinality.
+3. **Known mathematical representation:** cite and attempt reductions to canonical normal forms, lattice/linear algebra, group actions, CSP, tomography, graph/hypergraph decomposition, rewriting problems, sheaf cohomology and existing local cryptographic assumptions.
+4. **Distributional burden:** absent a public inverter, state the unconditional image distribution and compute/estimate attacks against it. NP-hard worst-case slices, failed timeouts and many planted solutions do not pass.
+5. **Positive MORPH-R0 Field 15:** name a **mathematically distinct** relation with positive independent evidence beyond mature assumptions. "I could not find a paper" and "two familiar hard objects were coupled" do **not** pass.
+
+States: **REJECT** (explicit public section or fatal gate), **HOLD** (major undefined/mature/hardness gap, not eligible for code), **READY FOR COMPLETE 15-FIELD REVIEW** (all five pre-source gates supported, still no nomination), and **NO NOMINATION** (global). There is currently **no** ready family.
+
+## H-A: coupled observations with incompatible public quotients
+
+**Structural hypothesis, not a cryptographic assumption.** Let \(X_\lambda\) be a public efficiently recognizable finite object domain; draw \(x\leftarrow D_\lambda\) with explicit unconditional polynomial sampling and public presentation data \(\alpha,\beta\). Publish \(P=(\alpha,\beta,f_\alpha(x),g_\beta(x))\), where both f and g are polynomially computable and have polynomial output size. Define \(V(P,y)=[y\in X_\lambda\land f_\alpha(y)=P_f\land g_\beta(y)=P_g]\). **Any joint witness wins**. Conjectured *research question*: can a natural new coupled invariant family avoid a public common representative even though each marginal has a public section?
+
+**Why coupling alone is not a result:** [F0-K2](F0-failure-mechanisms.md#4-f0-k2-stacking-polynomially-many-public-linear-views-remains-linear) proves that any number of public finite-field linear views still invert by stacked Gaussian elimination. Earlier [N1-51](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6168144976) coupled two fixed-k spectra, yet a public frontier DP inverted all measured profiles in the preregistered tiny protocol. Polynomial interpolation, multi-view tomography, phaseless recovery, paired group-orbit normalization and generic planted CSP are established neighboring problems.
+
+**Attack-first falsifiers:** (i) exhibit \(s(P)\) accepted simultaneously by f and g, possibly after a publicly computable gauge/canonical normal form; (ii) show linear/rational reconstruction, low-rank lift, simple count/entropy leakage or small fixed seed basis; (iii) formulate exact joint verifier as CSP and inspect primal/hypertree width, local predicate polymorphisms, relaxation and SAT/SMT/MILP; (iv) exhibit a second public sampler matching the accepted image; (v) show that Field 15 collapses to a mature joint inverse problem. Any succeeds => REJECT, not "increase dimension".
+
+**Matched controls to preregister only after Field 15 passes:** same honest x/distribution with a publicly aligned second view, same number of constraints with independent public coordinate layout, and a weak single-view public section. Charge all work against original V and report public-instance bitlength. **No runs have been made.**
+
+**Status:** **HOLD**. No specific independently new pair (f,g), no proved absence of canonical section, no positive Field 15. **Conditional priority:** first for paper-only characterization of what a jointly constrained public fibre could add *beyond* the linear and bounded-width cases, not for new coding.
+
+## H-B: local-to-global compatibility with nontrivial overlapping patches
+
+**Structural hypothesis, not a cryptographic assumption.** A public cover \(\mathcal U=\{U_i\}\) of a public carrier and a public finite alphabet define a global assignment x and compatible restricted local objects \(x\vert_{U_i}\). The sampler chooses an honest global x *first* and publishes polynomial-size local observations \(p_i=F_i(x\vert_{U_i})\), where each F_i is polynomial. A candidate y is accepted iff it is a global assignment and \(F_i(y\vert_{U_i})=p_i\) for **all** i. Thus the honest image is globally feasible by construction. Local feasibility is a necessary condition, never a hardness proof.
+
+**Mature context / novelty obstacle:** [Abramsky-Brandenburger](https://arxiv.org/abs/1102.0264) already study local-to-global sections and contextuality; [Bulatov](https://arxiv.org/abs/1703.03021) and [Zhuk](https://arxiv.org/abs/1704.01914) classify finite-language CSP tractability; public abelian consistency is often linear coboundary solving. The ordinary local-to-global obstruction, a fancy topology or a high nominal Betti number is NOT a new crypto foundation.
+
+**Attack-first falsifiers:** (i) compute effective public marginal sections on overlaps and greedily glue; (ii) encode abelian transition values as a linear cochain/cocycle system and solve; (iii) exploit [F0-K3](F0-failure-mechanisms.md#5-f0-k3-local-constraints-on-a-public-low-width-primal-graph-have-a-public-section) on a public low-width primal graph or known decomposition; (iv) test finite-domain CSP algebraic tractability, SAT/SMT/ILP relaxations, group gauge and compactness; (v) derive a canonical public global object from local signatures. Genuine topological obstruction can coexist with an easy full global section on the *honest generated profiles*.
+
+**Matched controls to preregister only if admitted:** same source and patch degrees with tree-like/low-width overlap, exact same local predicates with randomized public arrangement, and uncoupled independent patches *not falsely counted as honest global samples*. Compare original verifier acceptance, output support and witness fibre under matched bitlength.
+
+**Status:** **HOLD**. No independently novel non-CSP/gluing relation or evidence about honest average-case inversion. It is a conceptual structural test, not a replacement for the already rejected topology family.
+
+## H-C: history-sensitive noncommuting transformations with polynomial observations
+
+**Structural hypothesis, not a cryptographic assumption.** Let X be a public finite or finitely presented family with polynomial encodings, and let \(T_1,\ldots,T_k\) be public polynomial-time partial transformations. The sampler selects an initial encoded x and a **polynomial-length** legal move sequence \(\sigma\) unconditionally from a fully specified polynomial sampler, computes a public polynomial-time observable \(P=F(x,\sigma)\) (possibly compressed endpoint and bounded intermediate observations). A candidate \((y,\tau)\), with \(\lvert\tau\rvert\le\mathrm{poly}(\lambda)\) and publicly checkable legality, passes iff \(F(y,\tau)=P\). **Any** candidate history is successful. The entire observable and witness encoding must be polynomial; putting an exponential state exploration into F or V fails immediately.
+
+**Prior-art danger:** group actions, orbit/conjugacy, rewriting systems, Tietze/Andrews-Curtis, Pachner/Kirby transformations and dynamical CSP already occur in [MORPH-R0](../97-morph-r0-cross-line-postmortem.md) and [legacy cryptanalysis](../05-cryptanalysis.md). Noncommutativity or topological complexity alone has repeatedly failed the public quotient/normal-form gate. This is not currently claimed distinct from those subjects.
+
+**Attack-first falsifiers:** (i) normalization of histories / public endpoint section and inverse moves, (ii) finite-quotient representations or action stabilizer recovery, (iii) sparse/short transcript synthesis by dynamic programming, meet-in-the-middle, SAT/MILP or group-word methods, (iv) bounded public state space or bounded-width transition factorization, (v) known mature action/word/reconfiguration formulation. Positive worst-case word-problem hardness alone is insufficient for the honest distribution. **No universal attack result** is claimed for arbitrary noncommuting transformations.
+
+**Matched controls to preregister only if admitted:** commuting/linearized moves on the identical source, public normal-form controls, independent-history sources without planted conditioning; account for each move's actual bit/time cost.
+
+**Status:** **HOLD / lower priority** because the entire mathematical category has extensive previous MORPH failure overlap. No positive Field 15, no candidate.
+
+## Provisional comparative decision
+
+| Track | Exact family / honest distribution selected? | Survives all known public sections? | Positive Field 15? | Decision |
+| --- | --- | --- | --- | --- |
+| H-A, coupled quotients | **No** (abstract interface only) | Unknown; stacked linear subclass **REJECT** | No | **HOLD**, conceptual priority 1 |
+| H-B, local-to-global patches | **No** (abstract interface only) | Unknown; public low-width subclass **REJECT** | No | **HOLD**, conceptual priority 2 |
+| H-C, noncommuting histories | **No** (abstract interface only) | Unknown; mature action/rewriting overlap | No | **HOLD**, conceptual priority 3 |
+
+**Immediate next research operation, still pre-code:** for H-A, first identify an exact coupling of **two independently defined, polynomial-computable observables** whose joint accepted fibre cannot be described by stacked linear systems, a known low-width CSP, an existing group orbit/canonical section or a relabeled known inverse family. If that cannot be stated with positive, independently checkable literature evidence, **stop** and return to the structural hypothesis rather than invent a synthetic benchmark. Carry the same attack-first discipline to H-B, then H-C.
+
+If and only if one exact family survives the five preliminary gates, complete all [15 MORPH-R0 fields](../97-morph-r0-cross-line-postmortem.md#11-re-entry-gate-for-any-new-morph-family), freeze a distribution and a budget in [#208](https://github.com/StanleyLl0yd/morph-kem/issues/208) BEFORE any source generation or empirical tests. Do not conflate this **research-methodology progression** with a cryptographic primitive nomination. Strategy 80% independent math / 20% bounded HEPMR (#195 BENCHMARK ONLY) is unchanged.
+
+**Evidence note:** [#199](https://github.com/StanleyLl0yd/morph-kem/issues/199) original archive bytes remain missing; N1-52's reported case totals are not rerun. N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12 and N1-26 HOLD/BENCHMARK stay frozen.
