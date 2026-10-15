@@ -4,6 +4,10 @@
 
 This document is a faithful transcription of the full 15-field specification, exact inversion identity and domain restrictions first published in [MORPH-N1 #196, comment 6176155839](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6176155839), following an earlier distinct literature-only screen. This is not source code or an independently executed run, and does not modify historical experiments.
 
+### Scope clarification (added after original issue comment)
+
+The points lie on **one geodesic inside ambient hyperbolic H^2**: the displayed 1+1 Lorentz coordinates embed in the 1+2 hyperboloid by setting the remaining spatial coordinate to zero. The one-dimensional induced geodesic metric is intrinsically isometric to the ordinary real line under `u=log t`; a 1D manifold does **not** exhibit intrinsic sectional curvature -1. Thus the exact square-root public section rejects **only an anchored single-geodesic transcript**, not arbitrary point clouds in a genuinely multidimensional negatively curved space. [Immutable correction in #196](https://github.com/StanleyLl0yd/morph-kem/issues/196#issuecomment-6176471304). The original research fields following this note are left unchanged for provenance.
+
 ## N1-59 (2026-10-14): rational Lobachevsky geodesic cosh-distance inverse - anchored exact public root (ANALYTIC REJECT)
 
 **Complete 15-field MORPH-R0 test after prior-art pre-screen 6176123156**, independently specified for a **one-dimensional hyperbolic geodesic**, NOT a theorem about every higher-dimensional, incomplete or arithmetically constrained hyperbolic embedding. Continuous negative-curvature point geometry differs from graph shortest-path families N1-25..29, though both are mature inverse-distance subjects. **Zero experiments, research-only, GLOBAL NO NOMINATION.**
