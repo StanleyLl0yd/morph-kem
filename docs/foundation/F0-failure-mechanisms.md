@@ -1,4 +1,4 @@
-# MORPH-F0: structural failure map and three exact public kill gates
+# MORPH-F0: structural failure map and exact public no-go gates
 
 **Date:** 2026-10-15. **State:** research methodology / negative-control mathematics, **GLOBAL NO NOMINATION**. This document is NOT a new cryptographic candidate, attack benchmark, general complexity theorem or implementation. It reports **zero new source instances, experiments or cases**. Tracker: [foundation-first #208](https://github.com/StanleyLl0yd/morph-kem/issues/208). Canonical MORPH-N1 numbering remains in [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196), latest N1-59; N1-60 is not allocated here.
 
@@ -102,9 +102,31 @@ E(P)=\{(x',a):h(x')=a\oplus b\}.
 
 **Consequence:** arbitrary h-inversion can be *repackaged* as the intersection of two individually effortless public inverse views. Thus the slogan "two easy inverse problems become hard when coupled" has **zero independent novelty content** by itself. This is **NOT** a theorem that all coupled problems are easy: if h were hard to invert under D, the pair would inherit that hardness completely from h. It supplies no new OWF, no new hard assumption, and no candidate in MORPH. A future H-A attempt must expose the irreducible underlying mathematical relation **before** claiming originality. [Original F0-K5 proof and reduction precision edit](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6187822455).
 
-## 10. Research status after this audit
+## 10. F0-K6: coupled Frobenius-polynomial observations with a public shared normal form remain linear
 
-**Proved (within explicit hypotheses):** F0-K1 parity entropy counterexample, F0-K2 stacked public linear-view inverter, F0-K3 public-decomposition low-width CSP inverter, and F0-K4 a public nonabelian spanning-tree gauge inverter even on complete graphs. F0-K4a extends the gauge section to coupled public views; F0-K5 shows that two trivially invertible nonlinear views can encode any preexisting h-inversion problem without implying novelty. These are known or elementary mechanisms, not newly established cryptographic hardness results.
+**Proposition (F0-K2 corollary, not a new hardness result).** Let \(F=\mathbb F_{q^k}\) be supplied with a public \(\mathbb F_q\)-basis and polynomial-time field arithmetic; let \(X=F^n\) be the **entire** accepted witness domain. The unconditional generator draws \(x\) from any efficiently samplable distribution on \(F^n\), and publishes a polynomially sized explicit collection of exact observations
+
+\[
+p_i=b_i+\sum_{\ell=1}^n\sum_{j=0}^{k-1}a_{i\ell j}(T(x)_\ell)^{q^j},\qquad i=1,\ldots,m,
+\]
+
+where \(m,n,k,\log q\) and the coefficient list are polynomially bounded in the input size; \(a_{i\ell j},b_i\in F\) and all descriptions are public. Here \(T:F^n\to F^n\) is a **public polynomial-time bijection with a polynomial-time public inverse**; \(T=\mathrm{id}\) is allowed. The *original joint verifier* accepts precisely those \(y\in F^n\) for which every displayed observation evaluates to its published \(p_i\).
+
+**Universal public any-witness inverter.** Put \(u=T(x)\). For \(c\in\mathbb F_q\), the Frobenius identities \((u+v)^{q^j}=u^{q^j}+v^{q^j}\) and \((cu)^{q^j}=cu^{q^j}\) imply that each published expression is affine over \(\mathbb F_q\) in the \(nk\) base-field coordinates of u. Subtract \(b_i\), evaluate the public map on each public basis vector, and stack all m views into an explicit \(mk\times nk\) base-field matrix \(M\). Because the public observations are honestly generated, \(Mu=p-b\) is consistent. Gaussian elimination obtains **some** solution \(u'\), and \(y=T^{-1}(u')\) passes **every condition of the original verifier**. Computing Frobenius powers, basis evaluations, elimination and T-inversion is polynomial in the stated explicit bitlength. If \(r=\operatorname{rank}_{\mathbb F_q}(M)\), then the entire verifier-accepted fibre contains exactly \(q^{nk-r}\) elements: \(T^{-1}\) bijectively transports an affine solution space. The inverse succeeds on **every** honestly generated P, regardless of the distribution on x, planted recovery, or how separate marginal sections were chosen.
+
+**Nonlinear coordinate example.** The triangular polynomial map
+\[
+T(x_1,\ldots,x_n)=(x_1,\ x_2+x_1^2,\ \ldots,\ x_n+x_{n-1}^2)
+\]
+has a public sequential inverse \(x_1=u_1,\ x_i=u_i-x_{i-1}^2\). Thus the same Gaussian attack applies to views that look high-degree and nonlinear in the original x coordinates. Over \(F_{q^k}\), a sparse term \(u^{q^j}\) may have high *ordinary polynomial degree* but remains linear over \(\mathbb F_q\). Degree alone is not an inverse-hardness invariant.
+
+**Boundary and independent prior art.** No claim for hidden/unknown/non-bijective T; proper constrained witness domains; noise; coefficients, extension fields or bases not publicly computable; arbitrary non-Frobenius terms; or descriptions too large for polynomial processing. These exclusions are **not** security assertions. Linearized polynomial maps and polynomial automorphisms are established fields; see J. Berson, [*Linearized polynomial maps over finite fields*](https://arxiv.org/abs/1201.1137), *Journal of Algebra* 399 (2014), pp. 389-406. [Original scoped project proof, #208](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6190211208).
+
+**Gate:** for H-A and H-B, first test whether all observations linearize over a common **public** base-field representation, possibly after a public reversible coordinate change. If yes, **REJECT** this precise subclass without source sampling. This is an F0-K2 corollary and a guard against high-degree notation, **not** a newly invented general hardness dichotomy.
+
+## 11. Research status after this audit
+
+**Proved (within explicit hypotheses):** F0-K1 parity entropy counterexample, F0-K2 stacked public linear-view inverter, F0-K3 public-decomposition low-width CSP inverter, and F0-K4 a public nonabelian spanning-tree gauge inverter even on complete graphs. F0-K4a extends the gauge section to coupled public views; F0-K5 shows that two trivially invertible nonlinear views can encode any preexisting h-inversion problem without implying novelty. F0-K6 adds the restriction-of-scalars/Frobenius linearization corollary with public reversible coordinates. These are known or elementary mechanisms, not newly established cryptographic hardness results.
 
 **Not proved:** that every coupled nonlinear relation reduces to CSP in a tractable form; that every large-width honest distribution is hard; that nontrivial sheaf obstruction yields average-case one-wayness; that any current MORPH-F0 hypothesis is new or PQ secure.
 
