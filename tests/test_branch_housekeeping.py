@@ -46,6 +46,18 @@ class BranchHousekeepingTest(unittest.TestCase):
         self.assertEqual([x[0] for x in picked], ["merged", "stale"])
         self.assertEqual(len(skipped), 6)
 
+    def test_skipped_reporting_matches_planner_shape(self):
+        rows = [b("main", "MAIN", True), b("unique", "X")]
+        selected, skipped = mod.plan(
+            rows, [], "main", "MAIN", lambda *_: False
+        )
+        self.assertEqual(selected, [])
+        self.assertEqual(
+            mod.format_skipped(skipped),
+            ["KEEP main: default/protected",
+             "KEEP unique: unmerged/untracked commits"],
+        )
+
     def test_closed_unmerged_and_external_pr_not_auto_deleted(self):
         rows = [b("old", "X"), b("fork", "Y")]
         prs = [p("old", "X", merged=False), p("fork", "Y", origin="other/repo")]

@@ -3,7 +3,9 @@ name: Conservative branch housekeeping
 on:
   push:
     branches: [main]
-    paths: [.github/workflows/branch-housekeeping.yml]
+    paths:
+      - .github/workflows/branch-housekeeping.yml
+      - scripts/branch_housekeeping.py
   pull_request:
     types: [closed]
   workflow_dispatch:
