@@ -1,0 +1,42 @@
+name: Conservative branch housekeeping
+
+on:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Only report deletable branches (no deletion)"
+        type: boolean
+        required: true
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: morph-branch-housekeeping
+  cancel-in-progress: false
+
+jobs:
+  prune:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Review and prune only safely classified branches
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [[ "$EVENT_NAME" == "workflow_dispatch" && "$DRY_RUN" == "true" ]]; then
+            python3 scripts/branch_housekeeping.py
+          else
+            python3 scripts/branch_housekeeping.py --apply
+          fi
