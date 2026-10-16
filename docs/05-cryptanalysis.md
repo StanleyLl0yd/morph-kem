@@ -4,6 +4,8 @@ This file is the canonical **repository-implemented legacy attack ID index** for
 
 **Additional non-A-ID analytical screen (2026-10-16):** [finite-field matroid realization](foundation/F0-matroid-realization-boundaries.md) gives exact original-verifier accepted public sections for rank two, the frame-generated rank-three subclass, frame-free simple rank-three near-pencils (all finite fields), core-anchored simple rank-three configurations over `q>n²` (deterministic line/conic avoidance), and near-certain large-field uniform honest-source outputs for fixed rank. This is a scoped mathematical/source-distribution failure, not a universal matroid inversion theorem, a measured attack or a new A-ID. [Original research comment](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6216134094).
 
+**Additional non-A-ID single-form analytical screen (2026-10-16):** [one alternating form](foundation/F0-one-alternating-form-rank-screen.md) admits a polynomial full-verifier TI witness at **every feasible dimension**; under the *ideal uniform* planted-vs-null laws, public matrix rank is exactly sufficient for optimal detection, with explicit finite-field counting formulas. This does **not** solve the general multi-form/tensor problem, does not introduce A-IDs or experiments, and is not new Field-15 evidence.
+
 Historical detail is preserved verbatim in:
 
 - `docs/05-cryptanalysis-through-a024.md` — original detailed records through A-024;
