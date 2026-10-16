@@ -1,6 +1,6 @@
 # MORPH-F0: three falsifiable foundation hypotheses (NOT admitted candidates)
 
-**Date:** 2026-10-15. **Tracker:** [#208](https://github.com/StanleyLl0yd/morph-kem/issues/208). **GLOBAL NO NOMINATION. Research-only.** This is a prioritized *research hypothesis ledger* after [failure map F0-K1..K8](F0-failure-mechanisms.md), not an OWF/KEM specification. There are **zero new source instances, tests, or empirical successes**. No hypothesis below passes full MORPH-R0 Field 15, so **none is authorized for coding, random sampling, parameter selection or a new canonical N1 number**. N1-60 remains available in the existing [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196), not claimed here.
+**Date:** 2026-10-15. **Tracker:** [#208](https://github.com/StanleyLl0yd/morph-kem/issues/208). **GLOBAL NO NOMINATION. Research-only.** This is a prioritized *research hypothesis ledger* after [failure map F0-K1..K9](F0-failure-mechanisms.md), not an OWF/KEM specification. There are **zero new source instances, tests, or empirical successes**. No hypothesis below passes full MORPH-R0 Field 15, so **none is authorized for coding, random sampling, parameter selection or a new canonical N1 number**. N1-60 remains available in the existing [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196), not claimed here.
 
 ## Decision method
 
@@ -26,6 +26,8 @@ States: **REJECT** (explicit public section or fatal gate), **HOLD** (major unde
 
 **Matched controls to preregister only after Field 15 passes:** same honest x/distribution with a publicly aligned second view, same number of constraints with independent public coordinate layout, and a weak single-view public section. Charge all work against original V and report public-instance bitlength. **No runs have been made.**
 
+**[Residual-inversion core lemma](F0-residual-core-and-acyclic-join.md#2-h-a-public-full-fibre-chart-exposes-an-exactly-equivalent-residual-inversion-problem):** when a first-view fibre has a complete efficiently invertible public chart, the exact joint any-witness inversion problem is distribution-preserving equivalent to inversion of the second view on that fibre. This is a change of variables, not a hardness theorem; the independent Field-15 claim must concern that residual relation.
+
 **Status:** **HOLD**. The explicit subclasses of paired public nonabelian edge-transport views, common-normal-form Frobenius-polynomial views, satisfiable polynomial-alphabet permutation constraints, and affine-on-public-fibres pairs are **REJECT** by F0-K4a, F0-K6, F0-K7 and F0-K8 respectively; the abstract pairing strategy has a **novelty/relabeling gate** by F0-K5. No specific independently new pair (f,g), no proved absence of canonical section, no positive Field 15. **Conditional priority:** first for paper-only characterization of what a jointly constrained public fibre could add *beyond* the linear and bounded-width cases, not for new coding.
 
 ## H-B: local-to-global compatibility with nontrivial overlapping patches
@@ -38,7 +40,7 @@ States: **REJECT** (explicit public section or fatal gate), **HOLD** (major unde
 
 **Matched controls to preregister only if admitted:** same source and patch degrees with tree-like/low-width overlap, exact same local predicates with randomized public arrangement, and uncoupled independent patches *not falsely counted as honest global samples*. Compare original verifier acceptance, output support and witness fibre under matched bitlength.
 
-**Status:** **HOLD**. No independently novel non-CSP/gluing relation or evidence about honest average-case inversion. It is a conceptual structural test, not a replacement for the already rejected topology family.
+**[F0-K9](F0-residual-core-and-acyclic-join.md#3-f0-k9-explicit-acyclic-hypergraph-joins-admit-a-polynomial-public-section)** also rejects exact gluing of polynomial-size **explicit extensional** tables over an acyclic hypergraph, even when primal treewidth is large; standard Yannakakis join-tree witness selection. **Status:** **HOLD**. No independently novel non-CSP/gluing relation or evidence about honest average-case inversion. It is a conceptual structural test, not a replacement for the already rejected topology family.
 
 ## H-C: history-sensitive noncommuting transformations with polynomial observations
 
