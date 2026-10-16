@@ -1,0 +1,46 @@
+name: Preserve and retire eight legacy branches
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/archive-legacy-branches.yml
+      - scripts/archive_legacy_branches.py
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Report only; do not create tags or delete branches"
+        type: boolean
+        default: true
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: morph-branch-housekeeping
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Verify archive manifest and pure safety tests
+        run: python3 -m unittest discover -s tests -p test_archive_legacy_branches.py -v
+      - name: Archive exact SHA as immutable tag before branch deletion
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [[ "$EVENT_NAME" == "workflow_dispatch" && "$DRY_RUN" == "true" ]]; then
+            python3 scripts/archive_legacy_branches.py
+          else
+            python3 scripts/archive_legacy_branches.py --apply
+          fi
