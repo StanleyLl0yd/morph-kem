@@ -14,6 +14,8 @@ This file is the canonical **repository-implemented legacy attack ID index** for
 
 **Additional non-A-ID two-slice support attack (2026-10-16):** [intersection of public alternating-slice images](foundation/F0-two-slice-public-row-support-intersection.md) exactly recovers a high-dimensional planted totally isotropic subspace under the public certificate `rank A_1=rank A_2=2c, dim(im A_1∩im A_2)=c`. For two independent conditional-uniform planted slices, `d≥2c`, attack success on the complete honest distribution is **exactly** `prod(j=0..2c−1)(1−q^(j−d))`. This requires **only two** public slices and polynomial linear algebra even when c grows. Not a general high-m low-d inversion, code implementation, A-ID or security claim.
 
+**Additional non-A-ID adaptive support attack (2026-10-16):** [all-m public image intersections](foundation/F0-adaptive-multislice-support-intersection.md) choose rank-`2c` alternating slices **without conditioning the generator**, intersect their covector images and verify the full original tuple. For the independent conditionally uniform planted source and **every d>c**, exact full-source attack success is a polynomial-bit finite sum from classical Gaussian-binomial Möbius inversion, with simple lower bound `max(0,1−((q^d−1)/(q−1))·(3/4)^m)`. The external `d<c` planted-TI conjectural regime is **not covered**. Analytical only; no A-ID, measured runs or security claim.
+
 Historical detail is preserved verbatim in:
 
 - `docs/05-cryptanalysis-through-a024.md` — original detailed records through A-024;
