@@ -40,6 +40,14 @@ This repository is a cryptographic research project, not a production cryptograp
 - Keep parameter sets explicitly labeled `toy`, `experimental`, or `candidate`; never use `secure` as a parameter-set label.
 - Before merging changes that affect the construction, verify consistency among the hard-problem definition, construction, security model, and attack model.
 
+## Parallel research and canonical stage numbering (MORPH #206)
+
+- **Working IDs:** Use collision-resistant unnumbered research identifiers (for example `X-20261016-topic-abcd1234` or `F0-Kn`) while working in parallel. Such labels **do not** reserve any `N1-xx` number, approve experiments or indicate a candidate.
+- **Only canonical numbering authority:** [the research stage registry](docs/foundation/research-stage-registry.md), synchronized with active issue [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196). The current last published stage is **N1-59**; **N1-60 is not reserved**. Comments, branch names, drafts and chat messages are not reservations.
+- **Serialize reservation through main:** A research stage can receive the next `N1-xx` only in a reviewed PR that changes the registry's **single** `next_unallocated` line, identifies the exact 15-field evidence and public original verifier, and proves the stage label is not duplicated in open PRs. Its merge must compare current main to the reviewed base and reconcile any movement. A stage may have a negative result; reserving a number does not nominate a primitive.
+- **Reconcile collisions, never overwrite:** Abandon conflicting stale numbering; retain issue comments and scientific evidence, and move nonoverlapping results to uniquely named supplements. Do not change historical conclusions or experiment counts to resolve collisions.
+- **Exact-head merge gate:** Compare PR head, main head, review threads, changed paths, applicable CI and stage registry **again immediately before merge**. No assumed fixed number of checks, no force/stale merge. After merge check new main and independently triggered CI. See the executable manual checklist in the registry.
+
 ## Publication discipline
 
 A public release should state what remains unproven and list known attacks and limitations. Do not rely on branding, novelty, obscurity, or code complexity as a security argument.
