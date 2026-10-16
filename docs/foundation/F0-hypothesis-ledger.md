@@ -67,3 +67,7 @@ States: **REJECT** (explicit public section or fatal gate), **HOLD** (major unde
 If and only if one exact family survives the five preliminary gates, complete all [15 MORPH-R0 fields](../97-morph-r0-cross-line-postmortem.md#11-re-entry-gate-for-any-new-morph-family), freeze a distribution and a budget in [#208](https://github.com/StanleyLl0yd/morph-kem/issues/208) BEFORE any source generation or empirical tests. Do not conflate this **research-methodology progression** with a cryptographic primitive nomination. Strategy 80% independent math / 20% bounded HEPMR (#195 BENCHMARK ONLY) is unchanged.
 
 **Evidence note:** [#199](https://github.com/StanleyLl0yd/morph-kem/issues/199) original archive bytes remain missing; N1-52's reported case totals are not rerun. N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12 and N1-26 HOLD/BENCHMARK stay frozen.
+
+## Source-first parallel boundary: finite-field matroid realization (2026-10-16)
+
+[Unnumbered matroid realization note](F0-matroid-realization-boundaries.md) documents a separate established mathematical inverse relation: exact polynomial public sections for full rank-two patterns and a frame-generated rank-three subclass, plus near-one honest-source inversion via uniform-matroid/Vandermonde sections for fixed rank and sufficiently large fields. The general small-field or non-frame-generated problem is **not** thereby solved or independently novel. No positive Field 15; H-A/H-B/H-C remain **HOLD**. Preserve #208 source provenance, no F0-K/N1 allocation, no new samples or security claims.
