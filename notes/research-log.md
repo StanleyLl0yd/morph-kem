@@ -2,6 +2,10 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-16 - Single alternating slice: exact TI inverter and rank-only planted detector
+
+[Unnumbered F0 note](../docs/foundation/F0-one-alternating-form-rank-screen.md) proves **pointwise polynomial any-witness inversion for every feasible d** against a single public alternating form over every finite field, including characteristic two and degenerate forms: maximal TI dimension is `n−rank(A)/2`. For the distinct **ideal uniform Grassmannian planted law**, the posterior solution count is an explicit polynomial-computable function of public matrix rank, and rank is a sufficient statistic for the exact optimal planted-vs-null detector; the source-bound caveat is explicit. Classical symplectic geometry, not original Field-15 evidence or general multi-slice inversion. No empirical cases/code or new N1/F0-K ID; GLOBAL NO NOMINATION, H-A/H-B/H-C HOLD.
+
 ## 2026-10-16 - Rank-three matroid public sections beyond intersection closure
 
 The [F0 finite-field matroid note](../docs/foundation/F0-matroid-realization-boundaries.md#6-rank-three-extension-frame-free-near-pencil-and-core-anchored-lines) now proves two further **paper-only, source-independent, full-original-verifier** public sections: (i) every simple rank-three frame-free pattern is a near-pencil and invertible over every finite field; (ii) when `q>n²`, a publicly reconstructed core whose unresolved collinear triples are supported on core-spanned lines admits a deterministic greedy line/conic section, including unresolved points on singly prescribed lines. Scope excludes unsupported residual incidences and does not imply generic rank-three representation. See [F0 #208](https://github.com/StanleyLl0yd/morph-kem/issues/208). No code, runs, new N1/F0-K numbers, crypto nomination or positive Field 15. H-A/H-B/H-C HOLD and GLOBAL NO NOMINATION remain.
