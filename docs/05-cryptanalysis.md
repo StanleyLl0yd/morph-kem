@@ -12,6 +12,8 @@ This file is the canonical **repository-implemented legacy attack ID index** for
 
 **Additional non-A-ID fixed-codimension wedge screen (2026-10-16):** [one-dimensional public wedge kernels and full-span planted-form attack](foundation/F0-fixed-codimension-wedge-kernel-section.md). For **fixed c**, a decomposable kernel line constructs a full-original-verifier accepted `d=n−c` subspace. On honest conditionally uniform full-vanishing-form sources, `m≥D=binom(n,2)−binom(d,2)` public slices yield exact full-span inversion probability `prod(j=0..D−1)(1−q^(j−m))`. This is NOT an all-input attack for higher-dimensional wedge kernels, an implemented A-ID, a new staged protocol, or PQ-security evidence.
 
+**Additional non-A-ID two-slice support attack (2026-10-16):** [intersection of public alternating-slice images](foundation/F0-two-slice-public-row-support-intersection.md) exactly recovers a high-dimensional planted totally isotropic subspace under the public certificate `rank A_1=rank A_2=2c, dim(im A_1∩im A_2)=c`. For two independent conditional-uniform planted slices, `d≥2c`, attack success on the complete honest distribution is **exactly** `prod(j=0..2c−1)(1−q^(j−d))`. This requires **only two** public slices and polynomial linear algebra even when c grows. Not a general high-m low-d inversion, code implementation, A-ID or security claim.
+
 Historical detail is preserved verbatim in:
 
 - `docs/05-cryptanalysis-through-a024.md` — original detailed records through A-024;
