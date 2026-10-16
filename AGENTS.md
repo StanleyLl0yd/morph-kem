@@ -39,6 +39,8 @@ This repository is a cryptographic research project, not a production cryptograp
 - Use the same normal exact-head CI, current-base review and expected-head merge gate. Delete merged temporary branches rather than retaining a branch per completed milestone.
 - The cleanup can be dry-run via the GitHub Actions manual dispatch. If the workflow token lacks delete-ref permission, report the blocker instead of claiming branches were removed.
 
+- The eight exceptional historical divergent branches dated 2026-10-16 are preserved before retirement through exact-SHA immutable Git tags; see [archive manifest](docs/archive/retired-branch-provenance-2026-10-16.md). Never delete historical divergent branches by assuming a closed unmerged PR is equal to its later clean replacement. Only the narrow reviewed `archive_legacy_branches.py` manifest is authorized for the one-time retirement.
+
 ## Per-pass repository sync (owner instruction, 2026-10-16)
 
 - **Every completed research pass must update durable project files in GitHub**, not stop at an issue comment. Put scoped analytical proofs and source links under `docs/foundation/` (or another topic-appropriate path); keep `notes/research-log.md` current and synchronize status/index files only where the result changes them. Do not invent a numbered N1/F0-K stage, test, run, branch artifact, or empirical count merely to satisfy this rule.
