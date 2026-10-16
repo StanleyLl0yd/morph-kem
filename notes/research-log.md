@@ -2,6 +2,10 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-16 - Arbitrarily many alternating slices: hyperplane inverse linearization and public distribution distinguisher
+
+[Multislice hyperplane F0 note](../docs/foundation/F0-multislice-isotropic-hyperplane-linearization.md) proves **pointwise deterministic decision-and-search** for the full rank-`n−1` TI verifier over **every finite field and any number m of alternating slices**, via the public linear kernel of `α↦(α∧A_i)_i`. Every accepted hyperplane is one projective point of this kernel: the exact fibre count and ideal uniform planted/null likelihood ratio depend only on its dimension. A polynomial distinguisher has ideal planted detection 1 and unrestricted uniform null false-positive probability at most `((q^n−1)/(q−1))*q^(−m·binom(n−1,2))`; a strict worst-case bounded binary-field source with fallback has an explicit TV bound and still provides an accepted witness on **every** run. Classical exterior/Koszul/Plücker principles; does not solve codimension ≥2 and does not constitute new Field-15 evidence. No code, experiments or stage numbers; GLOBAL NO NOMINATION, H-A/H-B/H-C HOLD.
+
 ## 2026-10-16 - Public regular alternating pencils: common Lagrangian and honest constant-probability inverter
 
 [Regular-pencil F0 note](../docs/foundation/F0-regular-alternating-pencil-public-section.md) proves a **deterministic original-verifier public section** for **all** alternating tuples whose matrix span is ≤2-dimensional and includes a nondegenerate original-field combination (even n, d≤n/2). A cyclic T-stable isotropic subspace and symplectic quotient recursion work in characteristic two without factoring. For two independent uniformly conditioned forms, a fixed planted S gives an exact per-slice nonsingularity product; the event at least one slice is nonsingular has probability ≥**455/2304** on the full honest law, with strict worst-case PPT exact generation on binary finite fields. No source filtering, code, numeric samples, new F0-K/N1 label, or Field-15 novelty. H-A/H-B/H-C HOLD, GLOBAL NO NOMINATION.
