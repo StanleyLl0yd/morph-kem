@@ -1,6 +1,9 @@
 name: Conservative branch housekeeping
 
 on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/branch-housekeeping.yml]
   pull_request:
     types: [closed]
   workflow_dispatch:
@@ -21,7 +24,7 @@ concurrency:
 
 jobs:
   prune:
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
