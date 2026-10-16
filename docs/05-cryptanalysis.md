@@ -10,6 +10,8 @@ This file is the canonical **repository-implemented legacy attack ID index** for
 
 **Additional non-A-ID hyperplane inversion screen (2026-10-16):** [arbitrary multislice alternating hyperplanes](foundation/F0-multislice-isotropic-hyperplane-linearization.md) at `d=n−1` admit public **linear** full-verifier decision/search for **all finite fields, any m**, exact hyperplane/basis fibre count, rank-of-wedge-kernel sufficient statistic for ideal planted/null detection, and strong unconditional null false-positive bounds. Codimension ≥2 still requires decomposable Plücker witnesses. This is analytic only, not a new A-ID, experimental run or general TI hardness statement.
 
+**Additional non-A-ID fixed-codimension wedge screen (2026-10-16):** [one-dimensional public wedge kernels and full-span planted-form attack](foundation/F0-fixed-codimension-wedge-kernel-section.md). For **fixed c**, a decomposable kernel line constructs a full-original-verifier accepted `d=n−c` subspace. On honest conditionally uniform full-vanishing-form sources, `m≥D=binom(n,2)−binom(d,2)` public slices yield exact full-span inversion probability `prod(j=0..D−1)(1−q^(j−m))`. This is NOT an all-input attack for higher-dimensional wedge kernels, an implemented A-ID, a new staged protocol, or PQ-security evidence.
+
 Historical detail is preserved verbatim in:
 
 - `docs/05-cryptanalysis-through-a024.md` — original detailed records through A-024;
