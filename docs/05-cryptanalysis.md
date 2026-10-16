@@ -8,6 +8,8 @@ This file is the canonical **repository-implemented legacy attack ID index** for
 
 **Additional non-A-ID regular-pencil screen (2026-10-16):** [alternating two-form pencils](foundation/F0-regular-alternating-pencil-public-section.md) with a publicly nonsingular combination admit deterministic polynomial common-TI witnesses for every `d≤n/2` in even dimension, including `F_2`; redundant larger tuples of public span dimension ≤2 inherit this section. Under two independent uniformly conditioned planted slices, exact full-source inverter success is at least `455/2304` (strictly bounded exact binary-field sampler). This is a scoped analytic attack, not a general tensor inverter, code benchmark or A-ID.
 
+**Additional non-A-ID hyperplane inversion screen (2026-10-16):** [arbitrary multislice alternating hyperplanes](foundation/F0-multislice-isotropic-hyperplane-linearization.md) at `d=n−1` admit public **linear** full-verifier decision/search for **all finite fields, any m**, exact hyperplane/basis fibre count, rank-of-wedge-kernel sufficient statistic for ideal planted/null detection, and strong unconditional null false-positive bounds. Codimension ≥2 still requires decomposable Plücker witnesses. This is analytic only, not a new A-ID, experimental run or general TI hardness statement.
+
 Historical detail is preserved verbatim in:
 
 - `docs/05-cryptanalysis-through-a024.md` — original detailed records through A-024;
