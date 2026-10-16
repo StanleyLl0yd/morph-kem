@@ -2,6 +2,10 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-16 - Public regular alternating pencils: common Lagrangian and honest constant-probability inverter
+
+[Regular-pencil F0 note](../docs/foundation/F0-regular-alternating-pencil-public-section.md) proves a **deterministic original-verifier public section** for **all** alternating tuples whose matrix span is ≤2-dimensional and includes a nondegenerate original-field combination (even n, d≤n/2). A cyclic T-stable isotropic subspace and symplectic quotient recursion work in characteristic two without factoring. For two independent uniformly conditioned forms, a fixed planted S gives an exact per-slice nonsingularity product; the event at least one slice is nonsingular has probability ≥**455/2304** on the full honest law, with strict worst-case PPT exact generation on binary finite fields. No source filtering, code, numeric samples, new F0-K/N1 label, or Field-15 novelty. H-A/H-B/H-C HOLD, GLOBAL NO NOMINATION.
+
 ## 2026-10-16 - Single alternating slice: exact TI inverter and rank-only planted detector
 
 [Unnumbered F0 note](../docs/foundation/F0-one-alternating-form-rank-screen.md) proves **pointwise polynomial any-witness inversion for every feasible d** against a single public alternating form over every finite field, including characteristic two and degenerate forms: maximal TI dimension is `n−rank(A)/2`. For the distinct **ideal uniform Grassmannian planted law**, the posterior solution count is an explicit polynomial-computable function of public matrix rank, and rank is a sufficient statistic for the exact optimal planted-vs-null detector; the source-bound caveat is explicit. Classical symplectic geometry, not original Field-15 evidence or general multi-slice inversion. No empirical cases/code or new N1/F0-K ID; GLOBAL NO NOMINATION, H-A/H-B/H-C HOLD.

@@ -6,6 +6,8 @@ This file is the canonical **repository-implemented legacy attack ID index** for
 
 **Additional non-A-ID single-form analytical screen (2026-10-16):** [one alternating form](foundation/F0-one-alternating-form-rank-screen.md) admits a polynomial full-verifier TI witness at **every feasible dimension**; under the *ideal uniform* planted-vs-null laws, public matrix rank is exactly sufficient for optimal detection, with explicit finite-field counting formulas. This does **not** solve the general multi-form/tensor problem, does not introduce A-IDs or experiments, and is not new Field-15 evidence.
 
+**Additional non-A-ID regular-pencil screen (2026-10-16):** [alternating two-form pencils](foundation/F0-regular-alternating-pencil-public-section.md) with a publicly nonsingular combination admit deterministic polynomial common-TI witnesses for every `d≤n/2` in even dimension, including `F_2`; redundant larger tuples of public span dimension ≤2 inherit this section. Under two independent uniformly conditioned planted slices, exact full-source inverter success is at least `455/2304` (strictly bounded exact binary-field sampler). This is a scoped analytic attack, not a general tensor inverter, code benchmark or A-ID.
+
 Historical detail is preserved verbatim in:
 
 - `docs/05-cryptanalysis-through-a024.md` — original detailed records through A-024;
