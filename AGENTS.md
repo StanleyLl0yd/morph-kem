@@ -31,6 +31,13 @@ This repository is a cryptographic research project, not a production cryptograp
 - Distinguish GitHub-issue-only N1 result claims from code, scripts, tests and archived artifacts actually committed to this repository. Never claim uncommitted datasets or case totals were locally reproduced.
 - Prefer updates to active status and indexes over rewriting historical observations. After a checkpoint changes, synchronize the README, overview, open questions, cryptanalysis index and research log without deleting earlier findings.
 
+## Per-pass repository sync (owner instruction, 2026-10-16)
+
+- **Every completed research pass must update durable project files in GitHub**, not stop at an issue comment. Put scoped analytical proofs and source links under `docs/foundation/` (or another topic-appropriate path); keep `notes/research-log.md` current and synchronize status/index files only where the result changes them. Do not invent a numbered N1/F0-K stage, test, run, branch artifact, or empirical count merely to satisfy this rule.
+- Prefer a **single focused PR per pass**, a reviewed current-base commit, exact-head applicable CI, and verified post-merge `main`. If CI or permissions block merging, leave an accurately identified open PR and report the blocker; **never claim project files on `main` were updated before merge**.
+- Keep root `README.md` a **compact landing page** (research status, safety warning, live navigation); detailed proofs and historical case-by-case material belong in versioned `docs/`, with archive links intact. Avoid appending pass-by-pass prose to README.
+- Research issue comments may provide review discussion and immutable evidence links, but **do not substitute for repository documentation**. Preserve rejected results and links, not only positive hypotheses.
+
 ## Workflow
 
 - Prefer small, reviewable research milestones.

@@ -2,6 +2,10 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-16 - F0 source-first matroid realization screen and README compaction
+
+[Finite-field matroid note](../docs/foundation/F0-matroid-realization-boundaries.md) transfers [#208 analytic proof](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6216134094) into repository documentation: rank-two full-pattern public sections, a scoped frame-generated rank-three projective closure, and high-probability Vandermonde/MDS any-witness sections for fixed-rank large-field unconditional sources. All proofs are analytical, with explicit full-original-verifier checks; no Field-15 originality, new cases or code. The old verbose README historical section was preserved in [legacy snapshot](../docs/archive/README-legacy-2026-10-14.md) and README reduced to status/navigation. Owner workflow now requires **durable GitHub file updates after each pass**. GLOBAL NO NOMINATION, H-A/B/C HOLD; N1-60 unallocated.
+
 ## 2026-10-16 - F0-HAC residualization and F0-K9 acyclic join section
 
 [Foundational note](../docs/foundation/F0-residual-core-and-acyclic-join.md) gives a **distribution-preserving exact any-witness equivalence** between public coupled H-A inversion and inversion of the residual second map when a public full first-fibre chart is available. This neither invents nor inverts that residual relation. It also records **F0-K9 ANALYTIC REJECT** for explicit polynomial-size join-tree / α-acyclic hypergraph constraints, by classical Yannakakis semijoin + witness reconstruction even at large primal width. [Original H-A project proof](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6210012660); [original F0-K9 proof](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6210050665). H-A/H-B/H-C remain **HOLD**, GLOBAL NO NOMINATION; zero empirical cases, no coding or new N1 stage.
