@@ -31,6 +31,14 @@ This repository is a cryptographic research project, not a production cryptograp
 - Distinguish GitHub-issue-only N1 result claims from code, scripts, tests and archived artifacts actually committed to this repository. Never claim uncommitted datasets or case totals were locally reproduced.
 - Prefer updates to active status and indexes over rewriting historical observations. After a checkpoint changes, synchronize the README, overview, open questions, cryptanalysis index and research log without deleting earlier findings.
 
+## Git branch lifecycle (owner instruction, 2026-10-16)
+
+- **No branch accumulation.** Create a branch only for a concrete PR; prefer reuse of an already-safe disposable branch when practical. Do not reserve a fresh branch for analytical discussion or an issue comment.
+- After each PR merge, automatically prune its original merged branch with `branch-housekeeping.yml` only when its head SHA matches the merged PR record. The job may also remove no-PR branches already ancestral to `main`. **Never delete** `main`, protected branches, open-PR branches, closed-unmerged PR branches, SHA-mismatched branches, or unmerged/untracked unique commits.
+- Existing unmerged divergent branches require individual provenance review before deletion. Never discard research evidence just to reduce branch count.
+- Use the same normal exact-head CI, current-base review and expected-head merge gate. Delete merged temporary branches rather than retaining a branch per completed milestone.
+- The cleanup can be dry-run via the GitHub Actions manual dispatch. If the workflow token lacks delete-ref permission, report the blocker instead of claiming branches were removed.
+
 ## Per-pass repository sync (owner instruction, 2026-10-16)
 
 - **Every completed research pass must update durable project files in GitHub**, not stop at an issue comment. Put scoped analytical proofs and source links under `docs/foundation/` (or another topic-appropriate path); keep `notes/research-log.md` current and synchronize status/index files only where the result changes them. Do not invent a numbered N1/F0-K stage, test, run, branch artifact, or empirical count merely to satisfy this rule.
