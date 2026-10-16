@@ -124,9 +124,41 @@ has a public sequential inverse \(x_1=u_1,\ x_i=u_i-x_{i-1}^2\). Thus the same G
 
 **Gate:** for H-A and H-B, first test whether all observations linearize over a common **public** base-field representation, possibly after a public reversible coordinate change. If yes, **REJECT** this precise subclass without source sampling. This is an F0-K2 corollary and a guard against high-degree notation, **not** a newly invented general hardness dichotomy.
 
-## 11. Research status after this audit
+## 11. F0-K7: *fully satisfiable* permutation constraints on an explicitly enumerable alphabet
 
-**Proved (within explicit hypotheses):** F0-K1 parity entropy counterexample, F0-K2 stacked public linear-view inverter, F0-K3 public-decomposition low-width CSP inverter, and F0-K4 a public nonabelian spanning-tree gauge inverter even on complete graphs. F0-K4a extends the gauge section to coupled public views; F0-K5 shows that two trivially invertible nonlinear views can encode any preexisting h-inversion problem without implying novelty. F0-K6 adds the restriction-of-scalars/Frobenius linearization corollary with public reversible coordinates. These are known or elementary mechanisms, not newly established cryptographic hardness results.
+Let \(S\) be a public alphabet of size \(q\) that can be enumerated in time polynomial in the explicit public bitlength (e.g., every permutation is given as a table of q symbols). For each oriented edge \(e=(u,v)\) in a public, possibly dense/multi-edge graph \(\Gamma=(V,E)\), publish a permutation \(\pi_e:S\to S\) with polynomial-time evaluation and inverse. An unconditional efficient honest generator samples a full assignment \(x\in S^V\), then generates such permutations with \(\pi_e(x_u)=x_v\). For example, sample x uniformly and independently sample each edge permutation uniformly from those mapping the selected source symbol to the selected target symbol, using a direct uniform shuffle of the remaining \(q-1\) entries; no rejection-conditioned hardness source is required. The **original verifier** accepts *any* \(y\in S^V\) satisfying every edge constraint \(y_v=\pi_e(y_u)\).
+
+**Attack (and crucial caveat relative to F0-K4).** For each connected component, choose a spanning tree and root r. **Enumerate all \(q\) root symbols**, propagate each symbol along tree edges using the public permutation or inverse, and check **all original edge constraints**. Since the honest x supplies a valid root value, at least one of the q trials passes. Repeat for each component and combine accepted local assignments. Work \(O(q(|V|+|E|))\) permutation applications/comparisons (plus polynomial parsing/enumeration and forest construction). For each component, let \(\tau_v\) be the public root-to-v tree-path permutation. For each oriented non-tree edge e=(u,v), define the holonomy \(\rho_e=\tau_v^{-1}\circ\pi_e\circ\tau_u\). The exact number of accepted assignments for that component is
+\[
+\left|\bigcap_{e\notin T}\operatorname{Fix}(\rho_e)\right|.
+\]
+The global fibre cardinality is the product of these counts over components. An empty edge set imposes no constraints: all q roots work. **Unlike** F0-K4 group-difference gauges, an arbitrary root value may NOT satisfy all cycles: one must enumerate/check roots. The fact that the planted root is accepted makes the honest fibre nonempty. Dense graph/treewidth \(|V|-1\), nonlinear-looking permutations, two overlapping collections of permutation views, and noncommuting permutation products do not defeat this public section under the stated small-alphabet promise.
+
+**Mature prior art:** this is the *perfectly satisfiable* Unique Games case, clearly described by Luca Trevisan, *Approximation Algorithms for Unique Games* (ECCC TR05-034, 2005), https://eccc.weizmann.ac.il/report/2005/034/download, §1 pp. 1–2. **Not covered:** exponentially large/succinct alphabets, general binary relations with multiple/no compatible outputs, noisy/inconsistent instances, the optimization problem of satisfying *almost all* constraints, or absent efficient inverse permutations. No implication that all Unique Games instances are easy.
+
+
+## 12. F0-K8: public affine parametrization of one entire fibre kills nonlinear two-view inversion
+
+Fix efficiently represented finite fields \(\mathbb F_q\), an efficiently recognizable finite witness domain X, and polynomial-time maps \(f:X\to A\), \(g:X\to\mathbb F_q^m\). An unconditional generator draws any \(x\) from any polynomial-time source on X and outputs \(P=(a,b)=(f(x),g(x))\). The **original joint verifier** checks \(y\in X\), \(f(y)=a\), and \(g(y)=b\).
+
+Assume a public polynomial-time algorithm for **every honestly reachable a** returns a dimension d and a polynomial-time evaluable **bijection** \(\Psi_a:\mathbb F_q^d\to\{z\in X:f(z)=a\}\) as well as explicit public \(M_a\in\mathbb F_q^{m\times d}\), \(c_a\in\mathbb F_q^m\) such that
+\[
+g(\Psi_a(t))=M_at+c_a\quad\text{for EVERY }t\in\mathbb F_q^d.
+\]
+Descriptions, d and output lengths are polynomial; the assumptions require a parametrization of the **entire** f-fibre, not merely a planted subset or selected marginal representative.
+
+**Attack/proof:** row-reduce the public consistent system \(M_at=b-c_a\), choose any solution t and return \(\Psi_a(t)\). Bijection and affine identity imply **all three conditions of the original verifier**, on every honest input. Exact joint fibre size is \(q^{d-\operatorname{rank}M_a}\). Only marginal f-fibre parameterization plus a **fibrewise** linear second observation is needed; f and g themselves can have nonlinear high-degree syntax globally. This is a direct Gaussian elimination corollary, not a novel algorithm or average-case hardness result.
+
+**Example in any \(\mathbb F_q\):** \(X=\mathbb F_q^2\), \(f(x,z)=x\), \(g(x,z)=x^2+(1+x)z\). Both marginals have public sections: \(s_f(a)=(a,0)\) and \(s_g(b)=(0,b)\). Joint inverse: set x=a and solve \((1+a)z=b-a^2\). At \(a=-1\) the coefficient vanishes, but honest b must equal \(a^2\); any z then passes. Exact fibre size is q in the degenerate case and 1 otherwise. This example disproves the inference that nonlinear coupling with a marginal degeneracy yields hard inversion.
+
+**Strict limits:** Unknown/expensive/non-surjective fibre charts, nonlinear \(g\circ\Psi_a\) without another public solver, witness domain restrictions not covered by \(\Psi_a\), or incorrectly substituting planted recovery for any-witness verification. F0-K8 is NOT a theorem that all nonlinear fibre intersections are easy.
+
+
+**Original project proof and boundaries:** [#208, F0-K7/K8](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6209881636).
+
+## 13. Research status after this audit
+
+**Proved (within explicit hypotheses):** F0-K1 parity entropy counterexample, F0-K2 stacked public linear-view inverter, F0-K3 public-decomposition low-width CSP inverter, and F0-K4 a public nonabelian spanning-tree gauge inverter even on complete graphs. F0-K4a extends the gauge section to coupled public views; F0-K5 shows that two trivially invertible nonlinear views can encode any preexisting h-inversion problem without implying novelty. F0-K6 adds the restriction-of-scalars/Frobenius linearization corollary with public reversible coordinates. F0-K7 uses the classical perfectly satisfiable Unique Games spanning-tree/root-enumeration algorithm for polynomial alphabets; F0-K8 uses a public complete marginal-fibre parametrization followed by an affine solve. These are known or elementary mechanisms, not newly established cryptographic hardness results.
 
 **Not proved:** that every coupled nonlinear relation reduces to CSP in a tractable form; that every large-width honest distribution is hard; that nontrivial sheaf obstruction yields average-case one-wayness; that any current MORPH-F0 hypothesis is new or PQ secure.
 
