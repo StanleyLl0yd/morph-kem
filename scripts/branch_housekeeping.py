@@ -67,6 +67,11 @@ def plan(branches, pulls, default_branch, main_sha, is_ancestor):
     return chosen, skipped
 
 
+def format_skipped(skipped):
+    """Display the (name, reason) pairs produced by the conservative planner."""
+    return [f"KEEP {name}: {reason}" for name, reason in skipped]
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--apply", action="store_true",
@@ -107,8 +112,8 @@ def main():
     chosen, skipped = plan(branches, pulls, default, main_sha, ancestor)
     print(f"main={main_sha}; branches={len(branches)}; PRs={len(pulls)}; "
           f"eligible={len(chosen)}; protected/ambiguous={len(skipped)}")
-    for name, sha, reason in skipped:
-        print(f"KEEP {name}: {reason}")
+    for line in format_skipped(skipped):
+        print(line)
 
     errors, deleted = [], []
     for name, expected_sha, reason in chosen:
