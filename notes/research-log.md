@@ -2,6 +2,10 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-19 - Pointwise complete matroid rank-table inversion at fixed finite field and rank
+
+[Updated F0 matroid realization boundaries](../docs/foundation/F0-matroid-realization-boundaries.md#7-all-fixed-field-fixed-rank-labelled-matroids-finite-projective-point-enumeration) prove a **source-independent full-original-verifier any-witness inverter** for *every* honest complete labelled rank table at **fixed q and fixed r**, by compressing zero/parallel column classes and exhaustively assigning their at most `M=(q^r−1)/(q−1)` projective directions. The runtime is `M!·poly(L,n,r,log q)` against the **explicit public table**, with pointwise success one. In particular GF(2), rank three, has at most seven directions and `7!=5040` assignments even for arbitrarily many labelled parallels. This **does not** give polynomial inversion over growing fields, growing rank or succinct rank oracles; no new source samples, code, N1/F0-K stage, independent Field-15 novelty or crypto claim. GLOBAL NO NOMINATION, H-A/H-B/H-C HOLD.
+
 ## 2026-10-19 - Sparse planted-TI individual rank-vector TV and high-corank MinRank null controls
 
 [Source-first F0 rank-profile note](../docs/foundation/F0-sparse-planted-ti-rank-profile-minrank-screen.md) extends [#208's coefficient-rank/common-radical exclusions](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6215891446) to the **complete vector of individual public alternating-slice ranks**, via exact conditioned-cross-block rank mixtures and classic Fulman–Goldstein random-alternating-rank counts. For fixed q, `m=ceil(n/log n)` and `d=ceil(n/C), C>=3`, its joint planted-vs-null rank-profile TV is negligible; additionally on **both laws**, with overwhelming probability **no** projective linear combination has corank `>=ceil(2 sqrt(m))+2`. This is a **narrow anti-overclaim** result: smaller-threshold adaptive MinRank and any-witness inversion remain unresolved, and there are zero experiments/code/new N1/F0-K cases or security claims. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.
