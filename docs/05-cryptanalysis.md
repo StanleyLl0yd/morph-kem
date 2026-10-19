@@ -20,6 +20,8 @@ This file is the canonical **repository-implemented legacy attack ID index** for
 
 **Additional unnumbered F0 sparse-TI rank null controls (2026-10-19):** [exact individual-slice rank distributions and high-corank MinRank threshold exclusion](foundation/F0-sparse-planted-ti-rank-profile-minrank-screen.md). In the externally conjectural `m~n/log n,d~n/C,C>=3` regime, all individual ranks jointly have negligible planted-vs-unrestricted TV; on either source no projective linear combination typically has corank `>=ceil(2 sqrt(m))+2`. This does **not** exclude lower-threshold adaptive MinRank, solve original witness inversion, introduce an A-ID or provide crypto evidence.
 
+**Additional F0 fixed-field matroid no-go (2026-10-19):** [full labelled rank-table public inversion](foundation/F0-matroid-realization-boundaries.md#7-all-fixed-field-fixed-rank-labelled-matroids-finite-projective-point-enumeration) works **pointwise for every honest matrix** when finite q and rank r are fixed. Public zero/parallel classes compress to at most `M=(q^r−1)/(q−1)` projective directions, permitting ≤`M!` candidate assignments and complete original-verifier rank checks. For GF(2), r=3, this is ≤5040 assignments. Does **not** solve growing-field rank-three realizability or succinct rank interfaces; analytic only, no A-ID or novel crypto basis.
+
 Historical detail is preserved verbatim in:
 
 - `docs/05-cryptanalysis-through-a024.md` — original detailed records through A-024;
