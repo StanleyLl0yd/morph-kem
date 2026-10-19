@@ -1,5 +1,7 @@
 # MORPH-F0: exact first moments for all isotropic subspace dimensions
 
+**Different observation model:** [exact random-subspace restriction TV screen](F0-planted-ti-random-restriction-exact-tv.md) analyzes the full restricted tensor on one precommitted uniform t-plane; it neither follows from nor strengthens this abstract Z_r expectation into a global tensor-TV theorem.
+
 **Follow-up:** the separate [all-r null variance and planted covariance note](F0-isotropic-subspace-second-moment-boundaries.md) extends these first moments without changing their source assumptions or original verifier.
 
 **2026-10-19. Analytical source-first counting boundary, not an implemented attack or a new candidate.** GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD. This note extends the previously merged [rank-two dual-bivector moments](F0-dual-bivector-kernel-exact-source-moments.md), without reproducing their exact covariance/variance result. It does not allocate N1-60, claim independent cryptographic novelty, solve any-witness inversion, or give a polynomial-time subspace counter.
