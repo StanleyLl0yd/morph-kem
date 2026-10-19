@@ -2,6 +2,10 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-19 - All-r isotropic-subspace null variance and planted covariance kernel
+
+[Source-first second-moment boundary](../docs/foundation/F0-isotropic-subspace-second-moment-boundaries.md) gives an exact Gaussian-binomial **null variance for every r** and an exact **fixed-H planted covariance kernel** via ranks of the images of Lambda^2 J and Lambda^2 K in (Lambda^2 V)/(Lambda^2 H). At fixed q,r, d/n -> alpha in (0,1/2), m=o(n), the planted-to-null mean shift divided by **null** standard deviation is Theta(q^(2d-n+m/2)) = q^(-Omega(n)), uniformly in the choice of unconditional planted H-prior. The s=2 intersection term dominates null variance for every fixed r>=2; no claim for growing r, TV closeness, efficient counting or inversion. Arithmetic cross-checked for q=2,n=4,m=1,r=2/3. No new A-ID or N1-60 allocation. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.
+
 ## 2026-10-19 - All-r planted-TI isotropic-subspace mean hierarchy and sparse low-r bound
 
 [Exact source-first F0 all-r first-moment theorem](../docs/foundation/F0-isotropic-subspace-first-moment-hierarchy.md): for each r<=d and unrestricted null, E[Z_r]=[n choose r]_q*q^(-m*binom(r,2)); the conditionally uniform planted source has an exact sum by t=dim(J intersect H), counting [d choose t]_q*[c choose r-t]_q*q^((d-t)(r-t)) terms at survival probability q^(-m*(binom(r,2)-binom(t,2))). For fixed q, d≈n/C,C>=3,m≈n/logn, the planted/null **relative expectations** agree to 1+q^(-Omega(n)) for r<= (2-epsilon)c/m. This is only an expectation-level negative control, not TV closeness, an efficient counter/inverter or a cryptographic security claim. Previously proved full-r size-bias/null d-witness rarity is credited to [#208 comment 6215551334](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6215551334), and the rank-two variance remains PR #231. No data/code/stage allocation. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.
