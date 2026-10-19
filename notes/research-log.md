@@ -2,6 +2,10 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-19 - Exact planted third centered bivector moment and four quotient-line types
+
+[Exact planted-source third-moment theorem](../docs/foundation/F0-dual-bivector-planted-third-central-moment.md) extends PR #236's null third-moment correction and the previous planted quotient-line fibre variance: quotient projective lines with three supported directions fall into exactly four types (Segre A, same-P affine rank-one, same-P affine rank-two, compatible transverse-pencil). Weighted ordered collinear triples yield a finite **closed Gaussian-binomial expression** for the planted Z2 third centered moment for all q,n,2<=d<n,m>=1 and every unconditional H-prior. In fixed-q,d/n<1/2,m=o(n), the planted/null third moments agree to relative error q^(-Omega(n)), dominated by lifted transverse-pencil lines. Exhaustive scratch checks match for GF(2) n4/5 and GF(3) n4, including affine rank-two and varying-P cases. This is **not** TV closeness, a Gaussian law, feasible public counting, any-witness inversion, new Field-15 novelty or a crypto claim. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD. N1-60 remains unallocated.
+
 ## 2026-10-19 - Exact null third central moment for decomposable 2-plane counts
 
 [Higher-moment negative control](../docs/foundation/F0-dual-bivector-null-third-central-moment.md) proves the exact **third centered null moment** of X=Z2: T*p*(1-p)*(1-2p) + [n choose1]_q*[n-1 choose2]_q*(q+1)*q*(q-1)*p^2*(1-p), T=[n choose2]_q,p=q^(-m). Dependent triples correspond precisely to projective Plücker lines indexed by flags of dimensions (1,3), exposing genuine third-order dependencies despite pairwise independence. At fixed q,m=o(n), standardized null skew is Theta_q(q^(-m/2)); no Gaussian/TV inference. Independent tiny GF(2),n=4 exhaustive scratch arithmetic agrees for m=1 (315/4) and m=2 (525/16), not committed as an attack benchmark. Planted third moment, feasible public counting, full verifier inversion and security remain unresolved. NO NOMINATION; H-A/H-B/H-C HOLD; N1-60 free.
