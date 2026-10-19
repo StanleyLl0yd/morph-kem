@@ -171,11 +171,83 @@ For \(\mathbb F_q\) with \(q>2\), replacement-basis rank still reveals the **zer
 
 **GLOBAL NO NOMINATION**, no samples, no implementation and no independent Field-15 novelty.
 
-## 9. Decision and limits
+## 9. All honest ternary matroids: polynomial public reconstruction from independence queries
+
+The binary standard-form section (§8) is **not** the final boundary. Over \(\mathbb F_3\), each nonzero standard-form entry is either \(+1\) or \(-1\). Public basis-replacement independence queries expose its **support**, while **induced cycles** in that bipartite support graph expose enough *sign products* to reconstruct the entire representation, up to invertible row and nonzero column scalings. This is an explicit polynomial-query public section for **any honest ternary matroid and arbitrary rank**, with no fixed-field projective-point enumeration. It is a constructive application of established ternary unique-representability mathematics, not a new theorem of matroid theory. Classical priority: [Seymour, *Matroid representation over GF(3)*, JCTB 26 (1979), 159–173](https://doi.org/10.1016/0095-8956(79)90055-8) (uniqueness under row transformations and point inversions), [Truemper, *Alpha-balanced graphs and matrices*, JCTB 32 (1982), 112–139](https://doi.org/10.1016/0095-8956(82)90028-4) (induced-cycle sign constraints).
+
+### Exact honest interface and fundamental graph
+
+Let P be **any honest GF(3)-representable labelled matroid** of actual rank \(\rho\le n\), given through an **exact public independence oracle** on arbitrary labelled subsets. A rank oracle or a complete rank table also suffices. The original any-witness relation is to output *any* \(\rho\times n\) GF(3) matrix that realizes the **same ranks/independence structure for every subset** (with zero rows added when an explicit published r-row format requires r≥ρ). No source distribution or hidden-coordinate recovery is assumed.
+
+Greedily construct an ordered public independent basis \(B\) of size \(\rho\) in at most n independence calls. For proof only normalize any existing honest matrix to \([I_\rho\mid D_*]\) using one global invertible row change. Let C be the \(n-\rho\) nonbasis column labels. For each \((b_i,x)\in B\times C\), the public test
+\[
+\operatorname{Independent}\bigl((B\setminus\{b_i\})\cup\{x\}\bigr)
+\]
+holds **iff** the \((i,x)\)-entry of \(D_*\) is nonzero. This gives a complete **public bipartite support graph**
+\[
+G=(B\sqcup C,\ E=\{(b_i,x):(D_*)_{i,x}\ne0\}),
+\quad |E|\le \rho(n-\rho).
+\]
+Each edge has an unknown sign \(w_e\in\mathbb F_3^*=\{\pm1\}\), expressible as \(w_e=(-1)^{z_e}\) with \(z_e\in\mathbb F_2\). Loops are isolated nonbasis columns; repeated or parallel labels require no exception.
+
+### An induced cycle gives one exact public binary sign equation
+
+Let \(Z\) be a **chordless induced cycle** of G, of length \(2k\ge4\). Its k row vertices form \(R\subseteq B\), and its k column vertices form \(X\subseteq C\). The submatrix \(D_*[R,X]\) has support **exactly** one even cycle, so its determinant consists of **exactly two** perfect-matching terms \(M_0,M_1\). Relative permutation parity is \((-1)^{k-1}\):
+\[
+\det D_*[R,X]
+=\pm\biggl(\prod_{e\in M_0}w_e
+ +(-1)^{k-1}\prod_{e\in M_1}w_e\biggr).
+\]
+Over GF(3), both terms have values \(\pm1\). The determinant is zero **iff** the product of the signs around **all** 2k cycle edges equals \((-1)^k\). It is nonzero iff that full product is \(-(-1)^k\). In particular **zero vs nonzero determines exactly one bit**, not merely an approximate or probabilistic constraint.
+
+The full-rank/nonzero determinant predicate is **publicly computable with just one independence-oracle call** on the labelled set
+\[
+ (B\setminus R)\cup X,
+\]
+whose cardinality is \(\rho\). In the honest standard form, this set is independent **iff** \(\det D_*[R,X]\ne0\). Hence every chordless cycle gives an explicitly known *linear* parity constraint
+\[
+\sum_{e\in Z}z_e
+ =\begin{cases}
+k\bmod2,&(B\setminus R)\cup X\text{ is dependent},\\
+(k+1)\bmod2,&(B\setminus R)\cup X\text{ is independent}.
+\end{cases}
+\qquad\text{in }\mathbb F_2.
+\]
+The same derivation works for a disconnected support graph component by component. There is **no enumeration of GF(3) sign assignments** and no secret information beyond the public oracle.
+
+### A polynomial family of chordless cycles determines the whole gauge
+
+Compute a spanning forest T of the known finite support graph G. Each nonforest edge creates one **fundamental cycle** with the unique T-path joining its endpoints. A fundamental cycle need not be chordless. For each such cycle, recursively split it along any graph chord into two strictly shorter simple cycles and repeat until **every leaf cycle is chordless**. This is deterministic and polynomial:
+
+- Each split of a length-\(\ell\) cycle into lengths \(\ell_1,\ell_2\) satisfies \(\ell_1+\ell_2=\ell+2\).
+- The integer potential \(\ell-2\) is conserved: \((\ell_1-2)+(\ell_2-2)=\ell-2\). Every leaf has length at least 4 and therefore positive potential, so each initial fundamental cycle yields at most \(\ell-2\le n-2\) leaves.
+- The cycles in each split satisfy \(1_Z=1_{Z_1}+1_{Z_2}\) as edge-indicator vectors over \(\mathbb F_2\). Therefore the **polynomial-sized union of all leaf chordless cycles spans the entire binary cycle space** of G, since fundamental cycles are a standard basis. There are at most \(O(n|E|)\) leaf cycles/independence queries.
+
+Collect their public sign-product parity equations and solve them by ordinary \(\mathbb F_2\) Gaussian elimination. An honest GF(3) representation induces one satisfying assignment, so the system is **guaranteed consistent on every honestly representable input**. Construct candidate \(D\) with support G and edge entries \((-1)^{z_e}\), zero elsewhere; output \(Y=[I_\rho\mid D]\) in the original labelled column order.
+
+### Proof that *every* resulting binary solution is an original-verifier witness
+
+Let \(z_*\) be the (unknown) signs of a genuine honest \([I\mid D_*]\). Both \(z\) and \(z_*\) satisfy every recorded induced-cycle equation. Thus their difference \(\Delta=z-z_*\in\mathbb F_2^E\) has **zero sum on every chordless leaf cycle**, and therefore on **every cycle** of G by the spanning argument.
+
+On a graph, an edge labelling whose sum is zero on every cycle is a vertex coboundary: there exist vertex bits \(u_b\) on basis-row vertices and \(v_x\) on nonbasis-column vertices with
+\[
+\Delta_{(b,x)}=u_b+v_x\pmod2.
+\]
+Consequently \(D=\operatorname{diag}((-1)^{u_b})\,D_*\,
+\operatorname{diag}((-1)^{v_x})\). Conjugate the full \([I\mid D_*]\) with the row scaling and corresponding inverse scaling of basis-labelled columns; then scale each nonbasis-labelled column to obtain \([I\mid D]\). Such operations **preserve every labelled-subset rank**. Therefore \(Y\) is an accepted **any-witness** for the **entire original rank/independence verifier** on **every honest ternary input**, including those with multiple representations or disconnected support graphs. For a rank-query interface, the attacker may run the complete original verifier; an independence oracle alone defines mathematical equality of *all* ranks but does **not** make exhaustive all-subset verification a polynomial algorithm.
+
+### Complexity and non-claims
+
+A greedy basis needs ≤n oracle calls; fundamental support discovery uses \(\rho(n-\rho)\) independence calls; chordless-cycle decomposition uses \(O(n|E|)\) additional calls and polynomial graph processing, plus one binary linear solve with |E| unknown signs. All queried sets contain at most n labels and the complete algorithm is **deterministic polynomial in n** for arbitrary \(\rho\) and **no restriction on the honest source distribution**. Every claimed successful witness is verified mathematically against the **original full rank relation**, not a weakened chart-equivalence predicate.
+
+This establishes a stronger exact boundary than fixed-(q,r) enumeration for the ternary field, while the *general* \(\mathbb F_q\), \(q\ge4\), case remains outside this proof: more than two nonzero scalars do not reduce to one sign bit per support edge, and an induced-cycle determinant zero/nonzero may no longer determine its ratio uniquely. This proof does not imply polynomial decision for adversarial non-ternary NO oracle inputs, representability over growing q, or cryptographic hardness anywhere. **GLOBAL NO NOMINATION**, H-A/H-B/H-C HOLD, N1-60 unallocated, no measured source cases, implementation PR or candidate.
+
+## 10. Decision and limits
 
 | Public subclass | Original any-witness inverse | Research decision |
 | --- | --- | --- |
 | Rank ≤2, full labelled rank pattern | Pointwise polynomial, with effective field enumeration | **ANALYTIC EASY** |
+| All honest ternary (GF(3)) independence-oracle matroids, even growing rank | Public fundamental support, induced-cycle determinant signs, binary cycle-system solve | **ANALYTIC EASY, polynomial query reconstruction** |
 | All honest binary (GF(2)) rank-access matroids, even growing rank | Pointwise polynomial public basis-exchange recovery, `O(nr)` rank/independence queries | **ANALYTIC EASY, no rank bound** |
 | All exact labelled rank tables over fixed finite q and fixed r | Complete pointwise projective-class enumeration, at most `M(q,r)!` trials | **ANALYTIC EASY (parameter-limited)** |
 | Simple rank 3 with frame-generated two-line closure | Pointwise polynomial; verify all ranks | **ANALYTIC EASY under closure hypothesis** |
