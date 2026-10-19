@@ -1,5 +1,7 @@
 # MORPH-F0: exact null third central moment of decomposable-bivector survival counts
 
+**Planted-source follow-up:** [exact third central moment using four projective quotient-line types](F0-dual-bivector-planted-third-central-moment.md), including the sparse-regime relative comparison. No efficient tensor counter, TV or security claim follows.
+
 **2026-10-19. Paper-only, attack-first statistics screen; GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.** Extends the [previous exact first/second bivector moments](F0-dual-bivector-kernel-exact-source-moments.md) and the [all-r variance hierarchy](F0-isotropic-subspace-second-moment-boundaries.md) without claiming a new independent cryptographic foundation. No N1/F0-K/A-ID, source experiments, executable counter, PKE/KEM/trapdoor or security theorem.
 
 **Origin and credit.** The external planted alternating-tensor problem is Liu, Qiao, Tang and Zhang, *The planted tensor problem over finite fields: algorithms and cryptography*, [arXiv:2609.31256v1](https://arxiv.org/abs/2609.31256). The earlier r=2 null expectation/variance and planted second moments are already documented in the linked notes and PR #231. This scoped addition derives the **exact null third central moment** and classifies the only source of third-order dependence through classical projective lines on the Grassmannian. It is elementary finite geometry, not a novel hardness assumption.
