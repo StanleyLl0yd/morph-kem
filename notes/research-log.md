@@ -2,6 +2,10 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-19 - Exact null-orthogonal three-plane contrast and single-slice pointwise identity
+
+[New scoped F0 Z3-minus-Z2 analysis](../docs/foundation/F0-isotropic-three-plane-orthogonal-contrast.md) gives the exact null projection coefficient B=[n-2 choose1]_q*q^(-2m) for D3=Z3-B Z2. With p=q^(-m) and F=(1-p)(1-q p)(1+(q+1)p), proves Var_0(D3)=[n choose3]_q*p^3*F and E_pl(D3)-E_0(D3)=[d choose3]_q*F under the entire conditional-uniform planted source and any unconditional H-prior. For m=1, F=0 and the **pointwise** identity [n-2 choose1]_q*Z2=(q+1)*[n choose3]_q+q^2*Z3 holds for every alternating form; previously documented one-slice public inversion retains priority. For fixed q, d/n<1/2 and 2<=m=o(n), the standardized residual mean signal is q^(-Omega(n)), not TV closeness, hardness, or a public counter. Tiny GF(2),n=4,d=3,m=2 conditional/unconditional enumerations independently match exact fractions. No numbered stage or construction. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.
+
 ## 2026-10-19 - Mixed-dimensional isotropic counts: exact covariance and rank-one null fluctuations
 
 [All-(r,k) finite-field covariance result](../docs/foundation/F0-isotropic-subspace-mixed-covariance-rank-one.md) extends the just-merged same-r source moments: under unrestricted iid alternating slices, Cov(Z_r,Z_k) is an exact Gaussian-binomial sum by s=dim(J cap K). Under fixed planted H, an exact nonnegative mixed covariance kernel uses quotient exterior-square ranks. For fixed field q and fixed r,k>=2 with m=o(n), the null covariance matrix is asymptotically rank one: Cov(Z_r,Z_k)~B_r B_k Var(Z_2), B_j=[n-2 choose j-2]_q*q^(-m*(binom(j,2)-1)), and Corr(Z_r,Z_k)->1. This describes **leading null fluctuations only**; planted covariance, residual linear contrasts, growing r, computability, TV, inversion and hardness remain open. Tiny GF(2),n=4,m=1 cross-covariance 105/16 checked independently. No source changes, N1 number, A-ID, implementation or crypto claim. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.

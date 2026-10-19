@@ -1,5 +1,7 @@
 # MORPH-F0: mixed-dimensional isotropic-count covariance and rank-one null fluctuations
 
+**Follow-up screen:** [exact Z3 minus null-projection Z2 contrast](F0-isotropic-three-plane-orthogonal-contrast.md) evaluates a residual direction rather than assuming leading null-correlation alone rules it out.
+
 **2026-10-19. Analytical-only source moment boundary.** GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD. Follows the [all-r first moments](F0-isotropic-subspace-first-moment-hierarchy.md) and [same-dimensional second moments](F0-isotropic-subspace-second-moment-boundaries.md); neither earlier result is re-announced as an independent new foundation. No source modification, implemented public attack, experimental artifact, cryptographic security claim, or new N1/F0-K number.
 
 **External problem and priority:** Liu, Qiao, Tang and Zhang, *The planted tensor problem over finite fields: algorithms and cryptography*, [arXiv:2609.31256v1](https://arxiv.org/abs/2609.31256). Earlier exact planted size-bias and full-d null-witness rarity are [#208 comment 6215551334](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6215551334). The precise scoped addition here is the **joint second-moment matrix across distinct r,k**, with an asymptotic leading-rank-one identity under *null*. It does not purport to invent the underlying Grassmann incidence counting.
