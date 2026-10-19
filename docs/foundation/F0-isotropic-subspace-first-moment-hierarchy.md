@@ -1,5 +1,7 @@
 # MORPH-F0: exact first moments for all isotropic subspace dimensions
 
+**Follow-up:** the separate [all-r null variance and planted covariance note](F0-isotropic-subspace-second-moment-boundaries.md) extends these first moments without changing their source assumptions or original verifier.
+
 **2026-10-19. Analytical source-first counting boundary, not an implemented attack or a new candidate.** GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD. This note extends the previously merged [rank-two dual-bivector moments](F0-dual-bivector-kernel-exact-source-moments.md), without reproducing their exact covariance/variance result. It does not allocate N1-60, claim independent cryptographic novelty, solve any-witness inversion, or give a polynomial-time subspace counter.
 
 **Source and earlier priority.** The planted alternating-tensor setting is Liu, Qiao, Tang and Zhang, *The planted tensor problem over finite fields: algorithms and cryptography*, [arXiv:2609.31256v1](https://arxiv.org/abs/2609.31256). The previously established exact planted size-bias, d-dimensional null first-moment/uniqueness and search-to-detection discussion is [#208, comment 6215551334](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6215551334). The genuinely *scoped addition here* is the entire intermediate-r first-moment hierarchy plus a quantitative relative-mean suppression bound; all ingredients are elementary standard finite-geometry counting, not a new hard mathematical assumption.
