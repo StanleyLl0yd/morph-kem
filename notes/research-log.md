@@ -2,6 +2,10 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-19 - Rank-sensitive adaptive bivector-oracle query lower bound
+
+[Source-first F0 adaptive linear-bivector query theorem](../docs/foundation/F0-planted-ti-adaptive-linear-bivector-probe-tv.md) strengthens the pair-query carrier result to oracle queries of arbitrary (even nondecomposable) bivectors. For any honest H-prior, full transcript TV <= Pr_null,H[L_null cap Lambda^2H != 0]. With uniform H, each projective query-space direction x of alternating rank s>=2 has containment probability [d choose s]_q/[n choose s]_q<=q^(-cs); rank-sensitive union bounds yield TV <= min(1,q^(Q-2c)) for <=Q adaptive m-vector queries. Thus constant oracle-only distinguishing advantage requires Q>=2c-O_q(1). Exact single-query TV=(1-q^(-m))*Pr_H(support(x)<=H). Independent toy GF(2),n=4,d=2,m=1 checks: rank-2 TV 1/70, rank-4 TV 0, two rank-2 directions joint TV 1/70. **Not** a theorem about an attacker given complete public matrices, any-witness inversion, or computational hardness; no actual attack corpus/code, new A-ID or N1 number. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.
+
 ## 2026-10-19 - Adaptive pair-oracle transcripts: null-carrier coupling and sparse TV bound
 
 [New F0 adaptive query-span theorem](../docs/foundation/F0-planted-ti-adaptive-oracle-span-tv.md): for any prior pi on the hidden d-plane H and any adaptive algorithm seeing **only queried** alternating pair evaluations, full transcript TV is bounded by the null-run probability that the span of all queried vectors intersects an independent H in dimension >=2. For uniform H, this is a Gaussian intersection probability even though the query carrier is selected adaptively from answers; if the carrier is always <=u<=c=n-d, TV<= [d choose2]_q*[u choose2]_q/[n choose2]_q <= (4/9)q^(-2(c-u)). Independent exact tiny GF(2),n=4,d=2,m=1 adaptive example has TV=3/140 and bound 1/5. **This excludes full-public-tensor preprocessing, tensor-derived public kernels, and any original-verifier inversion claim.** No code, source instance, N1/A-ID/F0-K or novel Field-15 basis. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.

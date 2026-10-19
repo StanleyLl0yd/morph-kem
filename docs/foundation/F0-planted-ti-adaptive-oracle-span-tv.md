@@ -1,5 +1,7 @@
 # MORPH-F0: adaptive pair-evaluation oracle transcripts and span-limited total variation
 
+**Follow-up, distinct resource bound:** [adaptive *linear-bivector* probe TV](F0-planted-ti-adaptive-linear-bivector-probe-tv.md) extends the oracle-only interface beyond decomposable pair queries and bounds total **query-space dimension** (rather than vector-carrier dimension). Both notes expressly exclude attackers given the full published matrices.
+
 **2026-10-19. Attack-first, analytic-only restricted-oracle theorem. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.** This follows the [precommitted random restriction](F0-planted-ti-random-restriction-exact-tv.md) and [precommitted joint-view span](F0-planted-ti-precommitted-multiview-span-tv.md) results, **without** claiming those results already covered adaptive selection. The new scope is a rigorously restricted *adaptive query oracle*, not the real full-public-tensor attacker. No candidate, new N1/F0-K/A-ID, executable inversion, cryptographic assumption, OWF/PKE/KEM/trapdoor or security claim.
 
 **Source and external priority.** Planted alternating-tensor problem: Liu, Qiao, Tang and Zhang, *The planted tensor problem over finite fields: algorithms and cryptography*, [arXiv:2609.31256v1](https://arxiv.org/abs/2609.31256). Gaussian-binomial subspace counting and deferred random-linear-map exposure are standard elementary methods, not a new mathematical hard relation.
