@@ -16,6 +16,8 @@ This file is the canonical **repository-implemented legacy attack ID index** for
 
 **Additional non-A-ID adaptive support attack (2026-10-16):** [all-m public image intersections](foundation/F0-adaptive-multislice-support-intersection.md) choose rank-`2c` alternating slices **without conditioning the generator**, intersect their covector images and verify the full original tuple. For the independent conditionally uniform planted source and **every d>c**, exact full-source attack success is a polynomial-bit finite sum from classical Gaussian-binomial Möbius inversion, with simple lower bound `max(0,1−((q^d−1)/(q−1))·(3/4)^m)`. The external `d<c` planted-TI conjectural regime is **not covered**. Analytical only; no A-ID, measured runs or security claim.
 
+**Additional non-A-ID Plücker kernel-plane screen (2026-10-16):** [binary-field wedge-nullity two](foundation/F0-plucker-two-dimensional-kernel-section.md) admits deterministic polynomial full-original-verifier decision/search for fixed codimension c using the quadratic equations of the Grassmannian restricted to the public kernel's projective line. The **exact** accepted d-subspace count is 0, 1, 2 or q+1, without enumerating `GF(2^e)`; arbitrary higher-dimensional kernels remain unresolved. Analytical only, no A-ID, code, generated experiments or crypto claims.
+
 Historical detail is preserved verbatim in:
 
 - `docs/05-cryptanalysis-through-a024.md` — original detailed records through A-024;
