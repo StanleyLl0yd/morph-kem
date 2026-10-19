@@ -2,6 +2,10 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-19 - Adaptive pair-oracle transcripts: null-carrier coupling and sparse TV bound
+
+[New F0 adaptive query-span theorem](../docs/foundation/F0-planted-ti-adaptive-oracle-span-tv.md): for any prior pi on the hidden d-plane H and any adaptive algorithm seeing **only queried** alternating pair evaluations, full transcript TV is bounded by the null-run probability that the span of all queried vectors intersects an independent H in dimension >=2. For uniform H, this is a Gaussian intersection probability even though the query carrier is selected adaptively from answers; if the carrier is always <=u<=c=n-d, TV<= [d choose2]_q*[u choose2]_q/[n choose2]_q <= (4/9)q^(-2(c-u)). Independent exact tiny GF(2),n=4,d=2,m=1 adaptive example has TV=3/140 and bound 1/5. **This excludes full-public-tensor preprocessing, tensor-derived public kernels, and any original-verifier inversion claim.** No code, source instance, N1/A-ID/F0-K or novel Field-15 basis. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.
+
 ## 2026-10-19 - Joint TV of precommitted GL-invariant local views via their span
 
 [Precommitted multi-view local-TV bound](../docs/foundation/F0-planted-ti-precommitted-multiview-span-tv.md) extends the prior exact one-random-T conditional law to a tuple of **GL-invariant** jointly sampled public subspaces independent of H and A. The entire joint list of restrictions is postprocessing of the full tensor restriction to their span S; conditional on dim S the span is uniform, so the **real** observation TV is at most the Gaussian-binomial augmented-H TV averaged over dim S. If dim S<=u<=c=n-d almost surely, TV<=(4/9)*q^(-2(c-u)), for any unconditional H-prior. In particular k independent uniform 2-plane probes are jointly quiet for 2k<=c-s, and arbitrary adaptive probing **within an initial independent random carrier S** is covered. This does **not** include selecting S from the published full tensor; a deterministic carrier equal to a known H can have TV near one. No full-tensor TV, original verifier inversion, new stage or crypto evidence. GLOBAL NO NOMINATION, H-A/H-B/H-C HOLD.
