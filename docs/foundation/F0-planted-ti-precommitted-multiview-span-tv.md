@@ -1,5 +1,7 @@
 # MORPH-F0: joint TV bound for precommitted random local views with a bounded linear span
 
+**Separate oracle-only extension:** [adaptive pair-query span TV](F0-planted-ti-adaptive-oracle-span-tv.md) removes precommitment for observers whose **only** tensor information is explicitly queried pair evaluations, under a uniform H-prior (or invariant null carrier). It does **not** remove precommitment for an attacker already holding the full public matrices.
+
 **2026-10-19. Analytical source-first follow-up to the [single random restricted tensor theorem](F0-planted-ti-random-restriction-exact-tv.md).** GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD. The new scoped result is a **joint observation** bound for multiple predetermined, GL-invariant local probes whose total linear span is small. The previously proved single-view exact conditional laws and t=2 exact TV retain priority. No novel hard relation, implemented attack, N1/F0-K stage, KEM/OWF/PKE/trapdoor or security claim.
 
 **External planted tensor setting:** Liu, Qiao, Tang and Zhang, *The planted tensor problem over finite fields: algorithms and cryptography*, [arXiv:2609.31256v1](https://arxiv.org/abs/2609.31256). All dimensions and conditional distributions below refer to the **unchanged full honest source and unrestricted null source**, not a filtered source or substitute verifier.
