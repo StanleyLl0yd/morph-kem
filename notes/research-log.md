@@ -2,6 +2,10 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-19 - Exact null third central moment for decomposable 2-plane counts
+
+[Higher-moment negative control](../docs/foundation/F0-dual-bivector-null-third-central-moment.md) proves the exact **third centered null moment** of X=Z2: T*p*(1-p)*(1-2p) + [n choose1]_q*[n-1 choose2]_q*(q+1)*q*(q-1)*p^2*(1-p), T=[n choose2]_q,p=q^(-m). Dependent triples correspond precisely to projective Plücker lines indexed by flags of dimensions (1,3), exposing genuine third-order dependencies despite pairwise independence. At fixed q,m=o(n), standardized null skew is Theta_q(q^(-m/2)); no Gaussian/TV inference. Independent tiny GF(2),n=4 exhaustive scratch arithmetic agrees for m=1 (315/4) and m=2 (525/16), not committed as an attack benchmark. Planted third moment, feasible public counting, full verifier inversion and security remain unresolved. NO NOMINATION; H-A/H-B/H-C HOLD; N1-60 free.
+
 ## 2026-10-19 - Exact null-orthogonal three-plane contrast and single-slice pointwise identity
 
 [New scoped F0 Z3-minus-Z2 analysis](../docs/foundation/F0-isotropic-three-plane-orthogonal-contrast.md) gives the exact null projection coefficient B=[n-2 choose1]_q*q^(-2m) for D3=Z3-B Z2. With p=q^(-m) and F=(1-p)(1-q p)(1+(q+1)p), proves Var_0(D3)=[n choose3]_q*p^3*F and E_pl(D3)-E_0(D3)=[d choose3]_q*F under the entire conditional-uniform planted source and any unconditional H-prior. For m=1, F=0 and the **pointwise** identity [n-2 choose1]_q*Z2=(q+1)*[n choose3]_q+q^2*Z3 holds for every alternating form; previously documented one-slice public inversion retains priority. For fixed q, d/n<1/2 and 2<=m=o(n), the standardized residual mean signal is q^(-Omega(n)), not TV closeness, hardness, or a public counter. Tiny GF(2),n=4,d=3,m=2 conditional/unconditional enumerations independently match exact fractions. No numbered stage or construction. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.

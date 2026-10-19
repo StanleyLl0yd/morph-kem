@@ -1,5 +1,7 @@
 # MORPH-F0: exact planted-vs-null moments of decomposable bivectors in the public dual kernel
 
+**Higher-order follow-up:** [exact null third centered moment via Grassmannian projective lines](F0-dual-bivector-null-third-central-moment.md) records dependencies beyond the pairwise independence used here; no planted third moment or cryptographic hardness follows.
+
 **Date:** 2026-10-19. **Status:** source-first, analytic-only **negative-control / statistics theorem**. **GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.** Not a new F0-K/N1 number, implemented attack, empirical corpus, novel independent foundation, crypto assumption, proof of average-case hardness, OWF/PQ/PKE/KEM or trapdoor.
 
 **Do not re-announce an existing result:** the polynomial inversion theorem when public uniform planted alternating forms span their *entire* compatible form space, with **arbitrary codimension**, was already proved in [#208, comment 6215130941](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6215130941) on 2026-10-16. It computes the common annihilator in \(\Lambda^2V\) and recovers the planted plane by contractions. Its exact source spanning probability is likewise already recorded there. The **new scoped result in this file** is an exact *first- and second-moment* calculation for the number of projective decomposable bivectors in that public annihilator, under both planted and null laws. The existence of this count does **not** make it polynomially computable on arbitrary inputs.
