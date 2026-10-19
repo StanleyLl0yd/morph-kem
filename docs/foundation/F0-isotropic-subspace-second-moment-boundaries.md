@@ -1,5 +1,7 @@
 # MORPH-F0: exact null variance and planted covariance of all-r isotropic-subspace counts
 
+**Mixed-dimensional follow-up:** [cross-(r,k) covariance and rank-one null fluctuations](F0-isotropic-subspace-mixed-covariance-rank-one.md) refine the joint null moment picture; they do not change the full original verifier or planted law.
+
 **2026-10-19. Source-first mathematical negative control; not a cryptographic construction.** GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD. This extends the [all-r first-moment hierarchy](F0-isotropic-subspace-first-moment-hierarchy.md) and is consistent with the [previous exact rank-two variance](F0-dual-bivector-kernel-exact-source-moments.md). No new N1/F0-K or attack ID, candidate, source experiments, OWF/PKE/KEM/trapdoor, or hardness claim.
 
 **Credit and scope.** The external planted alternating-tensor problem is attributed to Liu, Qiao, Tang and Zhang, *The planted tensor problem over finite fields: algorithms and cryptography*, [arXiv:2609.31256v1](https://arxiv.org/abs/2609.31256). Exact planted size-bias and d-witness rarity were previously recorded in [#208 comment 6215551334](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6215551334); the rank-two moment result was merged in PR #231. These are not rediscovered or re-nominated here. The scoped addition is an explicit Gaussian-binomial **null variance for every r**, a general exact **conditional planted covariance kernel**, and a fixed-r sparse asymptotic mean-shift-to-null-noise comparison.
