@@ -26,6 +26,8 @@ This file is the canonical **repository-implemented legacy attack ID index** for
 
 **Additional F0 arbitrary-rank GF(3) oracle inversion (2026-10-19):** [ternary chordless-cycle public section](foundation/F0-matroid-realization-boundaries.md#9-all-honest-ternary-matroids-polynomial-public-reconstruction-from-independence-queries) reconstructs a labelled GF(3) matrix of **any rank** with polynomial exact public independence-oracle queries. Fundamental replacement queries expose `[I|D]` support; induced-cycle determinant tests reveal edge-sign parities; binary cycle-space elimination recovers a representation differing from the planted only by rank-preserving gauges. This is established Seymour/Truemper ternary representability mathematics, **not** a new Field-15 candidate, a GF(q≥4) algorithm, code or any security claim.
 
+**Additional F0 planted-TI dual-kernel count moments (2026-10-19):** [exact null/planted first and second moments](foundation/F0-dual-bivector-kernel-exact-source-moments.md) for the number X of projective decomposable bivectors in the public linear annihilator. Under iid unrestricted null, E[X]=`[n choose2]_q*q^(−m)` and Var(X)=`[n choose2]_q*q^(−m)*(1−q^(−m))`; under uniform conditional planted source, exact mean and variance follow from quotient-line fibre sizes for 2-planes meeting planted H in dimensions 0/1/2. This is **not** a polynomial counting/inversion algorithm or TV-hardness theorem. The earlier arbitrary-c dense full-span public inverter remains attributed to [issue #208, 6215130941](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6215130941), not rediscovered here.
+
 Historical detail is preserved verbatim in:
 
 - `docs/05-cryptanalysis-through-a024.md` — original detailed records through A-024;
