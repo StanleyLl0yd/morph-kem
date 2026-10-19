@@ -8,7 +8,7 @@
 
 Work over any finite field F_q, including characteristic two. Let V=F_q^n, 2<=d<n, c=n-d, m>=1. Sample a planted d-plane H from **any unconditional** H-distribution and then independent **uniform** alternating bilinear forms A_1,...,A_m conditioned on A_i|_(H x H)=0. The null source has m independent unrestricted uniform alternating forms. No conditioning or discarding of published samples is permitted. The original full verifier accepts *any* n-by-d rank-d matrix Y if Y^T A_i Y=0 for **every** i. The subspace count below is a mathematical statistic, not an additional verifier restriction.
 
-For each 1<=r<=d define Z_r(A) as the number of labelled-by-their-position (not ordered-basis) r-dimensional subspaces J<=V such that A_i|_(J x J)=0 for all i. Let b_r=binom(r,2) and G_r=[n choose r]_q, using Gaussian-binomial coefficients.
+For each 1<=r<=d define Z_r(A) as the number of distinct r-dimensional subspaces J<=V (not ordered bases) such that A_i|_(J x J)=0 for all i. Let b_r=binom(r,2) and G_r=[n choose r]_q, using Gaussian-binomial coefficients.
 
 ## 2. Exact full-source means
 
@@ -37,7 +37,7 @@ gives exactly b_r-b_t independent constraints on a form uniformly drawn from the
 \]
 Indeed, select J intersect H as a t-plane of H, select its (r-t)-dimensional image in V/H, then choose its graph in H/(J intersect H), of which there are q^((d-t)(r-t)). Summing proves the theorem. The intersection counts also sum to [n choose r]_q. They depend only on dimensions, so averaging over **any** honest H-prior does not alter the result.
 
-For r=1, both sources have deterministic Z_1=[n choose1]_q. For r=2, the formula reduces exactly to the mean from [PR #231](../foundation/F0-dual-bivector-kernel-exact-source-moments.md), namely S+(G_2-S)q^(-m), S=[d choose2]_q. No higher-dimensional variance or TV assertion is smuggled into this first-moment identity.
+For r=1, both sources have deterministic Z_1=[n choose1]_q. For r=2, the formula reduces exactly to the mean from [PR #231](F0-dual-bivector-kernel-exact-source-moments.md), namely S+(G_2-S)q^(-m), S=[d choose2]_q. No higher-dimensional variance or TV assertion is smuggled into this first-moment identity.
 
 ## 3. A quantitative low-r relative-mean blind window
 
@@ -45,7 +45,7 @@ Define R_r=E_pl Z_r/E_0 Z_r and let T=dim(J intersect H), for uniform J in Gr(r,
 \[
  R_r-1=\sum_{t=2}^r \Pr[T=t]\big(q^{m\binom t2}-1\big)\ge0.
 \]
-The missing t=0,1 contributions are exactly zero, **not** neglected asymptotically. By a union bound over t-planes inside J,
+The missing t=0,1 contributions are exactly zero, **not** neglected asymptotically. By a union bound over the t-planes of fixed H that could lie inside uniform J,
 \[
  \Pr[T\ge t]\le {r\brack t}_q {d\brack t}_q/{n\brack t}_q.
 \]
