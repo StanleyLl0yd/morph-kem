@@ -1,5 +1,7 @@
 # MORPH-F0: exact TV bound for precommitted random subspace restrictions of planted TI forms
 
+**Bounded-span follow-up:** [joint precommitted random restrictions and adaptive queries inside an independent carrier](F0-planted-ti-precommitted-multiview-span-tv.md) extend the local-view bound only under explicit independence/invariance conditions. They do not establish TV bounds for public-dependent carrier selection.
+
 **2026-10-19. Narrow local-observation information-theoretic negative control.** GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD. This is **not** a full planted-vs-null tensor TV theorem, not an efficient public full-verifier inverse, not an independent cryptographic assumption, and not a KEM/OWF/PKE/trapdoor. It differs from the [all-r source moment counts](F0-isotropic-subspace-first-moment-hierarchy.md): the result is an actual exact conditional distribution and a quantitative TV bound for **one randomly preselected restricted observation**.
 
 **External problem and priority:** Liu, Qiao, Tang and Zhang, *The planted tensor problem over finite fields: algorithms and cryptography*, [arXiv:2609.31256v1](https://arxiv.org/abs/2609.31256). Standard Gaussian-binomial intersection counting, not a claimed novel foundation, supplies the probability.
