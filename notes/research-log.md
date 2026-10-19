@@ -2,6 +2,10 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-19 - Mixed-dimensional isotropic counts: exact covariance and rank-one null fluctuations
+
+[All-(r,k) finite-field covariance result](../docs/foundation/F0-isotropic-subspace-mixed-covariance-rank-one.md) extends the just-merged same-r source moments: under unrestricted iid alternating slices, Cov(Z_r,Z_k) is an exact Gaussian-binomial sum by s=dim(J cap K). Under fixed planted H, an exact nonnegative mixed covariance kernel uses quotient exterior-square ranks. For fixed field q and fixed r,k>=2 with m=o(n), the null covariance matrix is asymptotically rank one: Cov(Z_r,Z_k)~B_r B_k Var(Z_2), B_j=[n-2 choose j-2]_q*q^(-m*(binom(j,2)-1)), and Corr(Z_r,Z_k)->1. This describes **leading null fluctuations only**; planted covariance, residual linear contrasts, growing r, computability, TV, inversion and hardness remain open. Tiny GF(2),n=4,m=1 cross-covariance 105/16 checked independently. No source changes, N1 number, A-ID, implementation or crypto claim. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.
+
 ## 2026-10-19 - All-r isotropic-subspace null variance and planted covariance kernel
 
 [Source-first second-moment boundary](../docs/foundation/F0-isotropic-subspace-second-moment-boundaries.md) gives an exact Gaussian-binomial **null variance for every r** and an exact **fixed-H planted covariance kernel** via ranks of the images of Lambda^2 J and Lambda^2 K in (Lambda^2 V)/(Lambda^2 H). At fixed q,r, d/n -> alpha in (0,1/2), m=o(n), the planted-to-null mean shift divided by **null** standard deviation is Theta(q^(2d-n+m/2)) = q^(-Omega(n)), uniformly in the choice of unconditional planted H-prior. The s=2 intersection term dominates null variance for every fixed r>=2; no claim for growing r, TV closeness, efficient counting or inversion. Arithmetic cross-checked for q=2,n=4,m=1,r=2/3. No new A-ID or N1-60 allocation. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.
