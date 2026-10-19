@@ -2,6 +2,10 @@
 
 This is the active compact chronological research log.
 
+## 2026-10-19 - Sparse planted-TI individual rank-vector TV and high-corank MinRank null controls
+
+[Source-first F0 rank-profile note](../docs/foundation/F0-sparse-planted-ti-rank-profile-minrank-screen.md) extends [#208's coefficient-rank/common-radical exclusions](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6215891446) to the **complete vector of individual public alternating-slice ranks**, via exact conditioned-cross-block rank mixtures and classic Fulman–Goldstein random-alternating-rank counts. For fixed q, `m=ceil(n/log n)` and `d=ceil(n/C), C>=3`, its joint planted-vs-null rank-profile TV is negligible; additionally on **both laws**, with overwhelming probability **no** projective linear combination has corank `>=ceil(2 sqrt(m))+2`. This is a **narrow anti-overclaim** result: smaller-threshold adaptive MinRank and any-witness inversion remain unresolved, and there are zero experiments/code/new N1/F0-K cases or security claims. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.
+
 ## 2026-10-16 - Binary-field rank-two Plücker kernel: exact any-witness decision and fibre count
 
 [Unnumbered F0 Plücker kernel-plane proof](../docs/foundation/F0-plucker-two-dimensional-kernel-section.md) gives deterministic polynomial pointwise **decision and full-original-verifier search** over `GF(2^e)` at **fixed c=n−d**, whenever the public exterior wedge map has nullity ≤2. In the nullity-two case, restrict classical quadratic Grassmann–Plücker equations to the public projective kernel line. Either all restrictions vanish (all `q+1` projective points accepted), or one nonzero quadratic confines every witness to at most **two** rational roots. Solve degree-two/Artin–Schreier equations by deterministic binary linear algebra, verify every original form, and count exact accepted d-spaces (0,1,2 or q+1), times `|GL_d(q)|` bases. **No source probability or high-nullity inversion is inferred.** Classical projective geometry, no Field-15 novelty, code, new numbered stages or PQ claims; GLOBAL NO NOMINATION, H-A/H-B/H-C HOLD.

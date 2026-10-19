@@ -18,6 +18,8 @@ This file is the canonical **repository-implemented legacy attack ID index** for
 
 **Additional non-A-ID Plücker kernel-plane screen (2026-10-16):** [binary-field wedge-nullity two](foundation/F0-plucker-two-dimensional-kernel-section.md) admits deterministic polynomial full-original-verifier decision/search for fixed codimension c using the quadratic equations of the Grassmannian restricted to the public kernel's projective line. The **exact** accepted d-subspace count is 0, 1, 2 or q+1, without enumerating `GF(2^e)`; arbitrary higher-dimensional kernels remain unresolved. Analytical only, no A-ID, code, generated experiments or crypto claims.
 
+**Additional unnumbered F0 sparse-TI rank null controls (2026-10-19):** [exact individual-slice rank distributions and high-corank MinRank threshold exclusion](foundation/F0-sparse-planted-ti-rank-profile-minrank-screen.md). In the externally conjectural `m~n/log n,d~n/C,C>=3` regime, all individual ranks jointly have negligible planted-vs-unrestricted TV; on either source no projective linear combination typically has corank `>=ceil(2 sqrt(m))+2`. This does **not** exclude lower-threshold adaptive MinRank, solve original witness inversion, introduce an A-ID or provide crypto evidence.
+
 Historical detail is preserved verbatim in:
 
 - `docs/05-cryptanalysis-through-a024.md` — original detailed records through A-024;
