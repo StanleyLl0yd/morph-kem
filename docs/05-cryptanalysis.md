@@ -24,6 +24,8 @@ This file is the canonical **repository-implemented legacy attack ID index** for
 
 **Stronger F0 binary-matroid public inverter (2026-10-19):** [basis-exchange reconstruction for all honest GF(2) matroids](foundation/F0-matroid-realization-boundaries.md#8-all-honest-binary-matroids-exact-public-standard-representation-by-basis-exchanges) needs only `O(nr)` public rank **or independence** queries **even at growing rank**. Replacing one basis column and observing the rank reveals the corresponding normalized GF(2) bit. The output represents exactly the original matroid; a full rank-table verifier accepts. This **supersedes** the 5040-assignment GF(2), rank-three enumeration bound. Does not transfer to GF(q>2), adversarial nonrepresentable NO or a succinct polynomial verifier without separate evidence. Classical binary matroid theory, not a new A-ID or crypto candidate.
 
+**Additional F0 arbitrary-rank GF(3) oracle inversion (2026-10-19):** [ternary chordless-cycle public section](foundation/F0-matroid-realization-boundaries.md#9-all-honest-ternary-matroids-polynomial-public-reconstruction-from-independence-queries) reconstructs a labelled GF(3) matrix of **any rank** with polynomial exact public independence-oracle queries. Fundamental replacement queries expose `[I|D]` support; induced-cycle determinant tests reveal edge-sign parities; binary cycle-space elimination recovers a representation differing from the planted only by rank-preserving gauges. This is established Seymour/Truemper ternary representability mathematics, **not** a new Field-15 candidate, a GF(q≥4) algorithm, code or any security claim.
+
 Historical detail is preserved verbatim in:
 
 - `docs/05-cryptanalysis-through-a024.md` — original detailed records through A-024;
