@@ -136,11 +136,45 @@ For **fixed q and r** this is polynomial in n and L, with success probability **
 
 **Research disposition:** **ANALYTIC EASY** for **every** honest fixed-q/fixed-rank full-labelled-rank-table instance, with exact pointwise full-verifier success. **GLOBAL NO NOMINATION**, H-A/H-B/H-C HOLD, N1-60 unallocated; no new measured cases, PR-independent experiment, implementation or security claim.
 
-## 8. Decision and limits
+## 8. All honest binary matroids: exact public standard representation by basis exchanges
+
+The fixed-field finite-projective enumeration in §7 is **unnecessary for \(q=2\)**. The field \(\mathbb F_2\) has only one nonzero scalar, so a replacement-basis rank query exposes each column coordinate **exactly**, not merely whether it is nonzero modulo a hidden scalar. This is the **classical unique standard binary representation** via fundamental circuits, not a new theorem. Relevant prior art: [Truemper, *Matroid Decomposition*, §3.3](https://www2.math.ethz.ch/EMIS/monographs/md/matroiddecompositionbook.pdf); [Binary Spaces and Cutting Planes, standard representation \([I\mid A]\)](https://ir.cwi.nl/pub/21445/21445A.pdf).
+
+### Theorem: deterministic pointwise public reconstruction at arbitrary rank
+
+Let \(P\) be **any honest GF(2)-representable labelled rank function**, given either as (i) the exact rank table for all subsets of size at most a published row bound r, or (ii) an **exact public rank-query oracle** for the required subsets. Let its actual matroid rank be \(\rho\le r\), possibly growing with n. An attacker can recover an accepted \(\rho\times n\) binary representation, padding it to r rows if the original output interface requires r rows, with **\(O(n\rho+n)\) public rank queries** and polynomial binary arithmetic. **No fixed-rank or finite-projective-size assumption is required.**
+
+**Algorithm and proof.** Use the public rank function to greedily find a maximal independent labelled basis \(B=(b_1,\ldots,b_\rho)\). Since P is honest, this is a true basis; identifying it needs at most n incremental rank queries. If \(\rho=0\), output all-zero columns. Normalize the unknown planted representation by the unique invertible row change that sends its columns indexed by B to the standard unit columns \(e_1,\ldots,e_\rho\). This change does **not** alter any subset rank.
+
+For each *other* labelled column x and each basis index j, query the rank of the size-\(\rho\) set
+\[
+(B\setminus\{b_j\})\cup\{x\}.
+\]
+With the planted representation in the normalized basis, this rank equals \(\rho\) **if and only if** the jth coordinate of the column x is **nonzero**: all other \(\rho-1\) basis coordinates are still spanned, so the rank rises exactly when x has a component in the missing \(e_j\) direction. Over **GF(2)**, "nonzero" means **exactly 1**. Set
+\[
+Y_{jx}=\begin{cases}
+1,&\operatorname{rank}_P((B\setminus b_j)\cup x)=\rho,\\
+0,&\text{otherwise}.
+\end{cases}
+\]
+For the basis columns set \(Y_{b_j}=e_j\). Thus **every** output column agrees exactly with the planted representation after that single unknown global row normalization, even if loops or repeated parallel labels exist. The entire candidate is consequently rank-equivalent to the planted matrix on **all subsets**, including every original published rank test. The adversary never needs to know the original basis transformation and may run the complete original verifier as a final independent check.
+
+The total count is at most n basis-extension rank calls and \(\rho(n-\rho)\) replacement-basis calls, all on sets of size ≤r. With an explicit rank table, the algorithm is polynomial in its **actual public table bitlength** and in n and r. With an exact rank oracle, reconstruction needs only polynomially many queries **even when \(\rho\) grows**. An oracle by itself does **not** imply that the separate original all-subsets verifier is executable in polynomial time; the theorem establishes exact matroid equality mathematically and polynomial **reconstruction query complexity**, not an unjustified verifier-interface claim.
+
+**Decision:** every honestly generated binary matroid in the stated rank-access interface is **ANALYTIC EASY / PUBLIC ANY-WITNESS INVERSION**, irrespective of rank, n, secret gauge, number of repeated labelled columns or honest source distribution. In particular, the previous 5040-case exhaustive bound for GF(2), r=3 is superseded by this **linear-in-nr query** construction.
+
+### What changes for other fields
+
+For \(\mathbb F_q\) with \(q>2\), replacement-basis rank still reveals the **zero/nonzero support** of each normalized column coordinate but **not its actual nonzero value** (nor independent column scalings). Thus this proof does **not** establish full representation recovery over GF(3) or growing q. The complete fixed-q/r projective enumeration (§7), frame/closure and source-distribution gates remain separately valid. No reduction from arbitrary rank-oracle representability **decision** to a polynomial algorithm on adversarial NO instances is claimed: the theorem requires an **honest representable YES input**.
+
+**GLOBAL NO NOMINATION**, no samples, no implementation and no independent Field-15 novelty.
+
+## 9. Decision and limits
 
 | Public subclass | Original any-witness inverse | Research decision |
 | --- | --- | --- |
 | Rank ≤2, full labelled rank pattern | Pointwise polynomial, with effective field enumeration | **ANALYTIC EASY** |
+| All honest binary (GF(2)) rank-access matroids, even growing rank | Pointwise polynomial public basis-exchange recovery, `O(nr)` rank queries | **ANALYTIC EASY, no rank bound** |
 | All exact labelled rank tables over fixed finite q and fixed r | Complete pointwise projective-class enumeration, at most `M(q,r)!` trials | **ANALYTIC EASY (parameter-limited)** |
 | Simple rank 3 with frame-generated two-line closure | Pointwise polynomial; verify all ranks | **ANALYTIC EASY under closure hypothesis** |
 | Simple rank 3 with no four-point frame (near-pencil) | Pointwise polynomial for every finite field | **ANALYTIC EASY** |
