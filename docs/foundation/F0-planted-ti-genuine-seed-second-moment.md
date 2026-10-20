@@ -170,6 +170,8 @@ Independently exhaust all `2^{dc}=64` binary 3-by-2 cross-blocks. Exactly **22**
 
 **Both disjoint and intersecting 2-plane pairs:** take `q=2,d=4,c=2,m=1,t=2`. Here `L_t=[4 choose2]_2=35`, `p=3/8`; for a fixed T, there are exactly `M_0=16` disjoint T', `M_1=18` meeting T in a line, and `M_2=1` identical T. The joint probabilities are `p_0=9/64`, `p_1=3/16`, `p_2=3/8`, giving `EX_t=105/8` and `Var X_t=2415/64`. Independently enumerating all `2^(dc)=256` binary 4-by-2 cross-blocks yields exactly **46** with `X_t=0` and **210** with `X_t=16`; both rational moments agree. This third control directly exercises **all three intersection classes**, not just the marginal or intersecting-pair specialization.
 
+**Odd-characteristic independent check:** over `GF(3)`, take `d=3,c=2,m=1,t=2`. There are `L_t=[3 choose2]_3=13` true 2-planes, with completion probability `p=16/27`; any two distinct planes intersect in a line and have joint probability `p_1=32/81` (not `p²=256/729`). The exact formula predicts `EX_t=208/27`, `Var X_t=7280/729`. Independently exhaust all `3^(dc)=729` ordered 3-by-2 cross-blocks: exactly **105** yield `X_t=0`, and **624** yield `X_t=9`, matching both rational moments. This checks the theorem **outside characteristic two** without sampling any cryptographic instances.
+
 These are independent finite arithmetic controls, **not** a committed attack executable, generated source dataset, measured runtime, CI evidence or cryptographic parameter validation.
 
 ## 6. Scope and falsification priority
