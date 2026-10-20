@@ -96,7 +96,7 @@ Hence **the classical prior and quantum amplified upper bounds** are:
 \end{aligned}}
 \]
 
-For `\alpha=1/3`, the corresponding leading coefficients of `n^2/m` are `2/9` classical and **`1/9` quantum**. This is a strict **upper bound on an actual search attack**, not a novel generic quantum speedup, lower bound, tight security estimate, or comparison against the best unrelated quantum tensor algorithm. Both remain `q^{\Theta(n\log n)}` under these chosen sufficient budgets (we only prove an **upper** complexity bound, not a matching lower bound), and are superpolynomial in n.
+For `\alpha=1/3`, the corresponding leading coefficients of `n^2/m` are `2/9` classical and **`1/9` quantum**. This is a strict **upper bound on an actual search attack**, not a novel generic quantum speedup, lower bound, tight security estimate, or comparison against the best unrelated quantum tensor algorithm. Both **sufficient work budgets displayed above** scale as `q^{\Theta(n\log n)}` and are superpolynomial in n; this is **not** a lower bound on the best possible attack or on the actual work of an early-stopping implementation.
 
 ## 5. Explicit nonclaims and next attack-first work
 
