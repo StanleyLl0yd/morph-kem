@@ -116,6 +116,37 @@ For `Q>c` the displayed bound is replaced by the trivial 1.
 
 For fixed q, `d/n\to\alpha\in(0,1/2)`, `c=\Theta(n)`, and `Q=O(\log n)`, the bound is `q^{-\Omega(n)}`. This is a **strong full-covector-row restricted-transcript indistinguishability statement**, but **not** an information-theoretic or quantum lower bound for someone who sees the **whole public matrix tuple**. The attacker can simply read n independent full rows when it has complete public inputs, and the intersection bound then ceases to be small.
 
+### Restricted-oracle point extraction, H recovery and average posterior stability
+
+Keep the uniform-H assumption in this section. Write
+\[
+p_1=\frac{{d\brack1}_q}{{n\brack1}_q},\qquad
+\epsilon_Q=1-\frac{{c\brack Q}_q q^{dQ}}{{n\brack Q}_q},
+\quad 0\le Q\le c.
+\]
+
+**Corollary (a classical Q-row lower screen for recovering genuine hidden structure).** Any classical randomized algorithm using at most Q adaptive full-row queries, then reporting a public vector `\widehat v` or a public d-plane `\widehat H`, satisfies
+\[
+\boxed{
+\Pr_{\rm planted}[0\ne\widehat v\in H]\le p_1+\epsilon_Q,
+\qquad
+\Pr_{\rm planted}[\widehat H=H]
+\le {n\brack d}_q^{-1}+\epsilon_Q.}
+\]
+Furthermore, for the real planted transcript `τ` and its analytical posterior on H,
+\[
+\boxed{
+\mathbb E_{\tau\sim\mathrm{planted}}
+\operatorname{TV}(\pi(H\mid\tau),\pi(H))
+\le 2\epsilon_Q.}
+\]
+
+**Proof.** The *stronger augmented-H* form of Theorem 2, established before its final data-processing step, couples `(H,\tau)` under planted with `H\sim\pi` independent of a null-oracle transcript at TV at most `\epsilon_Q`. Under the latter null product experiment, any output vector/plane computed from the transcript and private coins is independent of uniform H, so its probability of lying in H is at most p_1, or of **equaling** H is at most `{n\brack d}_q^{-1}`. TV controls the difference for either event. For posterior stability, use the triangle inequality between the planted joint law, the uniform-H product with the null transcript marginal, and the uniform-H product with the planted transcript marginal; each difference is at most `\epsilon_Q`. The TV of the planted joint law from that latter product is exactly the displayed expected posterior TV. QED.
+
+If the point-finding probability is bounded below by a constant `a>p_1`, the elementary union bound `\epsilon_Q\le p_1{Q\brack1}_q<q^{Q-c}/(q-1)` forces `Q\ge c+\log_q((a-p_1)(q-1))`; thus **at least c−O_{q,a}(1) independent full-row queries** are necessary for constant true-hidden-point recovery in this restricted model. For `Q=O(\log n)`, c linear, both extraction bounds and average posterior shift are exponentially small.
+
+**Strict scope:** `\widehat H=H` is hidden planted-space recovery, **not** the original any-witness verifier event `A_i|_{L\times L}=0`, because a different d-plane can also be accepted. None of these query/posterior lower screens applies once the entire public tuple is handed to the attacker or to coherent quantum queries.
+
 ### An exact augmented-H fixed-carrier control
 
 If a **uniform k-plane** T is precommitted independently of H and A (not tensor-adapted) and the observer is *also* given the true H as an auxiliary analysis variable, the exact joint TV is
