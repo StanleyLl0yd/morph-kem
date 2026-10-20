@@ -119,6 +119,28 @@ For the binary scratch control of Section 5, `\mu_3=(1,21,42)/64` and `\mu_4=(1,
 
 **Scope:** the theorem covers a *single independent uniform point and its rank*. It does **not** bound total variation of the complete published tensor, multiple adaptive point queries, selection of an observable radical, full contraction vectors, or the accepted-witness search task.
 
+### Uniform-H refinement: full single-point contraction leaks no more than its rank
+
+For the **special case that H itself is uniform on Gr(d,V)**, suppose the local observation is enlarged from `(P,\rho_A(P))` to `(P,C_A(v))`, with a fixed deterministic representative `v\ne0` chosen for each independent uniform projective point `P`. Then
+
+\[
+\boxed{
+\operatorname{TV}\bigl(\mathcal L_{\rm planted}(P,C_A(v)),
+                         \mathcal L_{\rm null}(P,C_A(v))\bigr)
+={ {d\brack1}_q\over {n\brack1}_q}
+\,\operatorname{TV}(\mu_c,\mu_{n-1}).
+}
+\]
+
+**Proof.** Fix `P=[v]` and write `N=n-1`. Conditional on `P\subseteq H`, the annihilator `W=H^\perp` is a **uniform c-plane** of `v^\perp\simeq F_q^N`. The observed ordered m-tuple `X=C_A(v)` is uniform on `W^m`. If its row-span dimension is `k`, its planted conditional probability divided by the unrestricted-null probability equals
+\[
+q^{m(N-c)}
+\frac{{N-k\brack c-k}_q}{{N\brack c}_q},
+\]
+with the numerator interpreted as zero if `k>c`. This likelihood ratio depends **only** on the publicly computed row rank `k`, not on the orientation or other coefficients of `X`. Conditional on any fixed rank, the planted-inside and null row-tuple distributions therefore coincide. Their full-vector TV equals `\operatorname{TV}(\mu_c,\mu_N)`. Outside `H`, the point contraction is exactly null-distributed by Theorem 1. Under uniform `H`, the membership probability of any fixed `P` is `{d\brack1}_q/{n\brack1}_q`. Averaging gives the displayed exact joint TV. QED.
+
+**Scope:** this enlarged-observation equality **requires uniform H**. For an arbitrary H prior, the preceding *rank-only* equality holds, but the orientation of full contraction rows can carry additional information. Neither result addresses the **entire public tensor** or a tensor-adaptively chosen point.
+
 ## 7. Disposition and falsification priority
 
 - The rank-defect point selector is a **failed route to an authentic hidden seed** in the sparse regime. It is not an attack improvement, public inversion, or positive hard-distribution evidence.
