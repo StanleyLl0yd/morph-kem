@@ -1,5 +1,10 @@
 # MORPH-KEM research log
 
+## 2026-10-20 - Public isotropic-flag seed search: exact source-aware enumeration bound
+
+[Isotropic-flag full-tensor attack refinement](../docs/foundation/F0-planted-ti-isotropic-flag-search.md) traverses only public simultaneously isotropic subspace flags, extending U by lines of S_A(U)/U; every terminal completion is checked by the unchanged full any-witness verifier. For each dimension k the traversal has exactly F_k Z_k nodes, where Z_k counts valid k-planes and F_k is the number of internal complete flags. A finite Gaussian-intersection sum gives E_honest Z_k exactly for every hidden-H prior. Fixed-seed completion yields the same unconditional honest-source success bound as PR #243; the new expected-work bound is poly*sum_k F_k E Z_k. At fixed q,d/n->alpha<1/2,m~n/logn,t~c/m the **upper leading q-exponent** drops from cn/m to (cn-c²/2)/m, still q^(O(nlogn)), not a polynomial inverter or a new complexity class. Independent scratch GF(2) exact tuple enumeration checks (n,d,m)=(4,2,1),(4,2,2),(5,2,1); no committed code/tests/attack samples. No new candidate, N1/A-ID/F0-K or positive Field 15. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.
+
+
 
 ## 2026-10-20 - Full-public-tensor planted tangent rigidity and exact wrong-witness incidence
 
