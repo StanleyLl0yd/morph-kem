@@ -139,6 +139,53 @@ p_{\rm mix}={5073705\over8388608}
 \]
 This is a finite scratch **conditional true-seed** validation, not a test of the unseeded public attack, a source dataset, committed executable, runtime benchmark or evidence of a new hard primitive.
 
+### Exact one-trial probability for actual public greedy flags plus residual inversion
+
+The rank-adaptive residual algorithm also admits an exact finite **unconditional honest-source H-recovery probability** for the *real* public zero-abort greedy t-flag traversal (not merely the fixed-true-seed bound). It extends the [earlier one-trial full-linear greedy rank DP](F0-planted-ti-greedy-flag-exact-rank-dp.md) by replacing its terminal full-rank predicate with a residual-support success weight.
+
+Fix H and any **precommitted genuine complete flag** `0=T_0<T_1<\cdots<T_t\subseteq H`. Its nested pairing matrices have ranks `R_k`, `R_0=0`, and reveal m fresh independent uniform c-dimensional rows at every step, so
+\[
+\Pr[R_{k+1}=r+z\mid R_k=r]
+=\pi_{m,c-r}(z).
+\]
+Define finite weighted rank-state values
+\[
+w_0(0)=1,\qquad
+\boxed{w_{k+1}(r')=
+\sum_{r=0}^c w_k(r)\,q^r
+\pi_{m,c-r}(r'-r).}
+\]
+Let `F_t(q)=\prod_{i=1}^t {i\brack1}_q`, `N_H={d\brack t}_qF_t(q)`, and set `g(r)=p_{\rm supp}(d-t,c-r,m)`, where g(r)=1 when c-r=0 and 0 when c-r>=d-t.
+
+**Theorem (exact one-shot rank-adaptive greedy+residual H-recovery).**
+\[
+\boxed{
+P_H^{\rm greedy+residual}
+=N_H(q-1)^t q^{-tn+t(t-1)/2}
+\sum_{r=0}^c w_t(r)\,g(r).
+}
+\]
+This is exact under the **original unfiltered conditional-uniform planted law**, for every prior on H. The original any-witness success is **at least** this probability, and all outputs are checked by the original complete verifier.
+
+**Proof.** For any observed A, a prescribed genuine flag is followed by the public one-shot quotient-vector sampler with exact path probability
+\[
+(q-1)^t q^{-tn+t(t-1)/2}
+q^{\sum_{k=0}^{t-1}R_k}.
+\]
+Once the algorithm reaches the terminal T, its rank-adaptive residual solver returns H with probability **one or zero conditional on the full observed A**, according to its public certificate. Averaging over the source for the fixed precommitted flag, the unused H/T cross rows and complement alternating restrictions are independent of **all** the nested T cross blocks, so conditional on terminal rank R_t=r the residual certificate succeeds with probability exactly g(r), independently of the prefix rank path values. This gives the displayed weighted rank-chain expectation, represented by w_t. Distinct complete flags are disjoint actual algorithmic paths and every genuine flag has the same conditional-source rank-chain law; sum over all N_H true flags. No oracle is given to the attacker and no tensor-adaptively selected flag is assigned the fixed-source law. QED.
+
+The recurrence has O(t(c+1)) states and polynomially many finite rational transitions, so it is efficiently **evaluable as a source probability**, not a polynomial inverter. When terminal g(r) is replaced by the indicator `[r=c]`, it reduces exactly to the previous full-linear greedy DP. For `t=1`, its new result simplifies to `P_H=(q^d-1)q^{-n} p_{\rm mix}`.
+
+**Independent GF(2) one-shot arithmetic control:** in the preceding `n=8,d=4,c=4,m=3,t=1` case, one uniformly sampled V-vector is one of the 15 nonzero points in H with probability 15/256. The exact original greedy+residual H-recovery rate is therefore
+\[
+\boxed{
+P_H^{\rm greedy+residual}
+=\frac{15}{256}\frac{5073705}{8388608}
+=\frac{76105575}{2147483648}.
+}
+\]
+The full-row-only version yields `(15/256)(72765/131072)`, strictly smaller. This is an **analytic exact** honest-source value, *not* an exhaustive attack run or empirical security estimate.
+
 ## 4. Actual unseeded exhaustive public attack
 
 **Algorithm:** Enumerate **all public t-planes** T canonically, run the §1 residual support procedure on each, and return the first candidate passing the *entire original verifier*. No hidden-membership test or private chart is used.
