@@ -176,6 +176,43 @@ For fixed q, `d/n\to\alpha<1/2`, `m\asymp n/\log n`, the prior `\beta=q^{-\Omega
 
 The posterior restriction and size-bias mechanism are already implicit in the [earlier #208 posterior checkpoint](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6215551334); this section contributes a scoped quantified Shannon-entropy/mutual-information calibration, **not** a claim of priority for Bayes' rule or size-bias.
 
+### Exact planted/null KL and chi-square statistical fingerprints
+
+Under the **same uniform H prior** and with `Z,\nu,\beta` as above, the preceding likelihood ratio immediately determines two additional *full-tensor information-theoretic* divergences.
+
+**Theorem 5 (exact finite divergence identities).**
+\[
+\boxed{\begin{aligned}
+1+\chi^2(P_{\rm planted}\|P_{\rm null})
+&=\frac{1+\beta}{\nu},\\
+D_{\rm KL}(P_{\rm planted}\|P_{\rm null})
+&=-\ln\nu+\mathbb E_{\rm planted}[\ln Z(A)].
+\end{aligned}}
+\]
+In particular,
+\[
+\boxed{-\ln\nu
+\le D_{\rm KL}(P_{\rm planted}\|P_{\rm null})
+\le-\ln\nu+\ln(1+\beta)}
+\]
+(with the formal lower bound potentially negative for `\nu>1`; KL divergence remains nonnegative).
+
+**Proof.** The likelihood ratio `L(A)=Z(A)/\nu` implies `\mathbb E_{\rm null}L^2=\mathbb E_{\rm planted}L`. The exact honest first moment `\mathbb E_{\rm planted}Z=1+\beta` yields `\mathbb E_{\rm null}L^2=(1+\beta)/\nu` and the chi-square identity. By the definition of KL divergence, `D_{\rm KL}=\mathbb E_{\rm planted}\ln L=-\ln\nu+\mathbb E_{\rm planted}\ln Z`. Since `Z>=1` and Jensen gives `\mathbb E\ln Z\le\ln\mathbb EZ=\ln(1+\beta)`, the bounds follow. QED.
+
+There is also a direct **overlap interpretation**, useful for auditing without evaluating likelihood values:
+\[
+\mathbb E_{\rm null}[L^2]
+=\frac{q^{m{d\choose2}}}{{n\brack d}_q}
+ \sum_{r=0}^{\min(d,c)}{d\brack r}_q{c\brack r}_q
+ q^{r^2-m k_r}
+=\frac{1+\beta}{\nu}.
+\]
+The `r=0` term corresponds to identical independently planted d-planes; `r>0` terms count other planes through their intersection dimension. This is the **same incidence first moment already derived earlier**, not an independent new hardness argument.
+
+In the sparse `d/n\to\alpha<1/2,\ m\asymp n/\log n` regime, `\nu=q^{-\Theta(n^3/\log n)}` and `\beta=q^{-\Omega(n^2/\log n)}`, so KL and Rényi-2 divergences are of order `\Theta(n^3/\log n)` in natural logarithmic units. **Very large statistical distinguishability and a tiny hidden-H posterior entropy can coexist with the absence of a known polynomial-time original-verifier inverter.** No efficient detector or unconditional computational security inference follows.
+
+For the independent `GF(2),n=3,d=2,m=4` full-enumeration control above, `\nu=7/16,\beta=3/8`, giving exactly `\chi^2=(1+3/8)/(7/16)-1=15/7`. The likelihood-ratio second moment agrees with the unrestricted-null histogram's `\mathbb E_{\rm null}Z^2=77/128`. These are formula evaluations, **not** cryptanalytic benchmarks or evidence of novel cryptographic assumptions.
+
 ## 4. Sparse d<c regime: asymptotic equivalence of actual success events
 
 Fix q and let `d/n\to\alpha\in(0,1/2)`, `m\asymp n/\log n`, `c=n-d`. Set `\Delta=m(d-1)/2-(n-1)`. The established finite incidence estimate gives, for `\Delta>0`,
