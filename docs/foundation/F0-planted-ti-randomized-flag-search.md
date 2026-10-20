@@ -143,6 +143,8 @@ For `q=2,n=4,d=2,c=2,m=2,t=2`, fix `H=\langle e_1,e_2\rangle`, enumerate **all 1
 
 Independent enumeration of just the uniformly drawn cross-blocks, with irrelevant complement blocks summed out, gives the same rational result. This is a **scratch exact control of a toy event**, not a committed runnable attack, counted cryptographic sample, original-verifier attack benchmark, or empirical large-parameter result. Other accepted `d`-planes could increase the algorithm's success beyond this particular `H`-recovery event.
 
+**Independent exact-source audit:** the [finite nested rank dynamic program](F0-planted-ti-greedy-flag-exact-rank-dp.md) now proves the exact *average probability of recovering the sampled H* for any finite q,n,d,m,t. It confirms this section's one-shot `909/16384`, contrasts the separate resample-nonzero value `93/896`, and independently checks `1701/131072` at GF(2),n=5,d=2,m=2. The exact source average is **not** a per-public-tensor success guarantee and does not alter Theorems 1–2 or their work exponents.
+
 ## 7. Boundary and immediate next work
 
 - **The extractor is not polynomial.** One greedy trial is polynomial, but the necessary repeated trials retain a `q^{\Theta(n\log n)}` bound in the sparse parameter family. No average-case hardness lower bound or crypto candidate is established.
