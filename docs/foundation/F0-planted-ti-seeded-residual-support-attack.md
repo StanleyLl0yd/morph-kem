@@ -105,6 +105,40 @@ p_{\rm seed}
 \]
 clipped below at zero if the RHS is negative. These are unconditional-source *attack probabilities*, not security estimates.
 
+### Rank-deficiency-tolerant public completion: exact finite mixture
+
+The full-row branch above is an intentionally simple certificate, **not a necessary condition for residual inversion**. A stronger variant uses the observed public dimension of `S_A(T)` to **adapt to every rank** of the seed contraction, while still rejecting and reporting nothing unless the original full verifier accepts.
+
+Given any public isotropic t-plane T, compute `S=S_A(T)` and let `\ell=\dim S-d` and `u=d-t`. If `\ell<0` or `\ell\ge u`, reject this seed. If `\ell=0`, then verify and return S itself (when it is a d-plane). If `0<\ell<u`, descend all m original public forms to `W=S/T`, use the **same public eligible-image support-intersection solver** with observed codimension `\ell`, lift the recovered u-plane and verify all the original forms. This algorithm is polynomial for a supplied public T, with no hidden-H membership oracle and no precondition requiring `mt` independent seed rows.
+
+**Theorem (exact conditional rank-defect tolerance).** Fix H and a genuine t-plane `T\subseteq H` before drawing the original honest tensor. For **every fixed value of the full public T-cross block** `M_T`, whether full-row rank or deficient, let `r=\operatorname{rank} M_T`, `K=\ker M_T`, and `\ell=c-r`. Then
+\[
+\boxed{S_A(T)=H\oplus K,\quad
+S_A(T)/T\simeq (H/T)\oplus K}
+\]
+and the residual m alternating forms are still **independent uniform conditioned-planted forms on that quotient**, with planted dimension `u=d-t` and codimension `\ell=c-r`.
+
+**Proof.** The proof of Theorem 1 never uses *surjectivity* of M_T to establish independence: all unused H/T×C rows of B_i and all alternating C×C blocks D_i are independent of the **entire value** of M_T. Restricting these unused uniform blocks to `K=\ker M_T`, for any K including those arising from deficient M_T, produces independent uniform H/T×K and Alt(K) coefficients by surjectivity of these linear restriction maps. All forms vanish on T×S by the definition of S, so the quotient law holds. The **only reason** §1 used full row rank was to set the predetermined residual codimension `c-mt`; the public observable dimension instead supplies the actual `c-r`. QED.
+
+Let `\pi_{a,b}(r)` be the exact rank-r mass of a uniform a×b matrix from the [fixed-seed theorem](F0-planted-ti-public-seed-completion.md), and `p_{\rm supp}(u,\ell,m)` the earlier exact residual Gaussian Möbius success probability, with convention `p_{\rm supp}(u,0,m)=1` and `p_{\rm supp}(u,\ell,m)=0` if `\ell\ge u`. For the stronger publicly rank-adaptive variant its **exact precommitted true-seed probability** on the unfiltered honest source is
+\[
+\boxed{
+p_{\rm mix}=\sum_{r=0}^{\min(mt,c)}
+ \pi_{mt,c}(r)\,p_{\rm supp}(d-t,c-r,m).
+}
+\]
+The events of different r are disjoint and the conditional residual law above supplies the exact conditional success. In the original §1 range `mt<c`, the original full-row-only probability `p_{\rm seed}=p_{\rm row}p_{\rm supp}(d-t,c-mt,m)` is one **nonnegative summand** in this formula, so `p_{\rm mix}\ge p_{\rm seed}`. Exhaustive public enumeration and greedy public-flag search remain genuine original-verifier algorithms when the new variant replaces the terminal procedure. Their **existing** source-success lower bounds and leading upper work exponents remain valid by monotonicity, without any postselected-seed assumption.
+
+**Independent finite rank-mixture scratch check (GF(2)):** let `n=8,d=4,c=4,m=3,t=1`, so `u=3`. The rank-3 3×4 cross block occurs with probability `315/512`; its residual codimension 1 has `p_{\rm supp}(3,1,3)=231/256`, so the older gated probability is `72765/131072`. Deficient rank-2 occurs with probability `735/2048`, leaves `\ell=2<u=3` and has exact support-inversion probability `p_{\rm supp}(3,2,3)=567/4096`, verified independently by enumerating all `64^3=262144` ordered 2×3 binary cross-row triples: precisely **36288** pass the support-intersection criterion. (For `\ell=1`, exactly **462/512** ordered three 1×3 row triples pass.) Lower ranks give `\ell\ge u` and the variant rejects. Therefore
+\[
+\boxed{
+p_{\rm mix}={5073705\over8388608}
+={72765\over131072}+{416745\over8388608}
+>{72765\over131072}.
+}
+\]
+This is a finite scratch **conditional true-seed** validation, not a test of the unseeded public attack, a source dataset, committed executable, runtime benchmark or evidence of a new hard primitive.
+
 ## 4. Actual unseeded exhaustive public attack
 
 **Algorithm:** Enumerate **all public t-planes** T canonically, run the §1 residual support procedure on each, and return the first candidate passing the *entire original verifier*. No hidden-membership test or private chart is used.
