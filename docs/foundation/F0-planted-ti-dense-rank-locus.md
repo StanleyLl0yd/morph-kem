@@ -96,6 +96,8 @@ Evaluate the exact finite rank sum (not a source simulation) over GF(2) for `n=3
 
 These are exact-rational finite Gaussian-binomial evaluations displayed as decimals, **not** observed experiments, generated planted tensors, implementation benchmarks or security-bit estimates. They illustrate why a finite-n claim must use the actual bound, not only the asymptotic `h>1/\alpha` slogan.
 
+**Quantum boundary update (2026-10-20):** the separate [membership-only quantum hybrid theorem and dense full-public rank-locus quantum attack](F0-planted-ti-quantum-rank-locus-membership-separation.md) prove Ω(q^(c/2)) **only** for idealized hidden-H membership queries (uniform H), matched by standard Grover search. When this note's good rank-locus event holds, a reversible public rank predicate yields an original-verifier-accepted d-plane with O(poly*d*q^(c/2)*log(d/eta)) quantum work and unconditional honest-source probability at least 1-epsilon-eta. This is not polynomial for linear c, not novel amplitude amplification, and does **not** apply in the sparse m<=c regime where the predicate is vacuous.
+
 ## 6. Cryptanalytic meaning and next legitimate step
 
 - **New publicly decidable geometric fingerprint:** with sufficiently dense publication, the rational points of the rank-<=c determinantal locus are precisely those of H with high honest-source probability.
