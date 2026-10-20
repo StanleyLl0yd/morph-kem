@@ -168,6 +168,8 @@ Independently exhaust all `2^{dc}=64` binary 3-by-2 cross-blocks. Exactly **22**
 
 **Disjoint one-dimensional seeds:** take `q=2,d=2,c=2,m=2,t=1`. Then `L_t=3`, `p=3/8`, and distinct true projective points have **independent** completions. Hence `EX_t=9/8` and `\operatorname{Var}X_t=45/64`. All `2^{mdc}=256` ordered binary 2-by-2 cross-block pairs have exact histogram `X=0,1,2,3` with counts `64,108,72,12`, matching those moments. These three indicator events are **not asserted mutually independent**.
 
+**Both disjoint and intersecting 2-plane pairs:** take `q=2,d=4,c=2,m=1,t=2`. Here `L_t=[4 choose2]_2=35`, `p=3/8`; for a fixed T, there are exactly `M_0=16` disjoint T', `M_1=18` meeting T in a line, and `M_2=1` identical T. The joint probabilities are `p_0=9/64`, `p_1=3/16`, `p_2=3/8`, giving `EX_t=105/8` and `Var X_t=2415/64`. Independently enumerating all `2^(dc)=256` binary 4-by-2 cross-blocks yields exactly **46** with `X_t=0` and **210** with `X_t=16`; both rational moments agree. This third control directly exercises **all three intersection classes**, not just the marginal or intersecting-pair specialization.
+
 These are independent finite arithmetic controls, **not** a committed attack executable, generated source dataset, measured runtime, CI evidence or cryptographic parameter validation.
 
 ## 6. Scope and falsification priority
