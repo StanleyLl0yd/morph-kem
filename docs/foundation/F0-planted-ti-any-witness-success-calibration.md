@@ -96,6 +96,55 @@ The planted true-positive rate is `P_{\rm any}(B)` and the null false-positive r
 
 **Scope caveat:** the detector inherits its **actual runtime** from B, which in the externally conjectural sparse regime remains superpolynomial for the current greedy search and its amplified variants. A mathematical search-to-detection transformation is **not** a polynomial-time planted/null distinguisher without a polynomial-time search algorithm.
 
+### Exact null-support TV under a **uniform** hidden-H prior
+
+The general honest-prior results above do not require H to be uniform. For the following additional exact statistical identity only, assume **H uniform** over all `N={n\brack d}_q` d-planes. Let `Z(A)=|\mathcal E(A)|` and `\nu=N q^{-m{d\choose2}}`, as above.
+
+**Theorem 3 (exact size-biased source law and optimal *unbounded* detector).**
+\[
+\boxed{\frac{\Pr_{\rm planted}[A]}{\Pr_{\rm null}[A]}
+=\frac{Z(A)}{\nu}.}
+\]
+When `0<\nu\le1`, it follows *exactly* that
+\[
+\boxed{
+\operatorname{TV}(P_{\rm planted},P_{\rm null})
+=1-\Pr_{\rm null}[Z(A)>0]
+=1-\nu\,\mathbb E_{\rm planted}\!\left[{1\over Z(A)}\right].
+}
+\]
+The convention on `1/Z` is harmless: under the planted source `Z>=1` always. In particular,
+\[
+\boxed{
+\nu\max(0,1-\beta)
+\le \Pr_{\rm null}[Z>0]\le\nu,
+}
+\qquad
+\boxed{
+1-\nu\le \operatorname{TV}(P_{\rm planted},P_{\rm null})
+\le 1-\nu\max(0,1-\beta).
+}
+\]
+For `\nu\le1`, the **optimal information-theoretic likelihood-ratio test** distinguishes by the event `Z(A)>0`; this is an unbounded existence test and is **not** an efficient detector in the sparse setting.
+
+**Proof.** For every fixed H, conditioning m independent unrestricted uniform alternating forms to annihilate `H\times H` multiplies their null point mass by `q^{m{d\choose2}}` if H is accepted, and gives zero otherwise. Averaging uniformly over N possible H yields the displayed Radon–Nikodym ratio `q^{m{d\choose2}}Z/N=Z/\nu`. For `\nu\le1`, the likelihood ratio vanishes on `Z=0` and is at least one on `Z>=1`. The minimum common probability measure is therefore exactly the null mass on `Z>0`, proving the first TV equality. The size-bias identity implies
+\[
+\Pr_{\rm null}[Z>0]
+=\sum_{A:Z(A)>0}\Pr_{\rm planted}[A]\,{\nu\over Z(A)}
+=\nu\,\mathbb E_{\rm planted}[1/Z].
+\]
+Since `0<=1-1/Z<=(Z-1)` for positive integer Z, the prior exact first moment `\mathbb E_{\rm planted}(Z-1)=\beta` yields `1-\beta<=\mathbb E_{\rm planted}[1/Z]<=1`. Clip the lower bound at zero and multiply by `\nu`. QED.
+
+**Priority and limitation:** the underlying planted size-bias/posterior phenomenon was already analyzed in [issue #208's earlier uniqueness/size-bias checkpoint](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6215551334). This is a **scoped finite TV and null-support calibration consequence**, not a claim to a newly discovered general size-bias theorem. For nonuniform H priors, the likelihood is instead `q^{m{d\choose2}}\sum_H\pi(H)\mathbf 1_{\{H\in\mathcal E(A)\}}`, and neither the displayed uniform-H ratio nor the exact TV simplification follows automatically.
+
+An independent tiny exact GF(2) arithmetic control uses `n=3,d=2,m=4`, where `N=7`, `\nu=7/16`. Exhausting all `2^{m{n\choose2}}=4096` unrestricted full tuples gives the histogram `Z=0,1,3,7` with respective counts `2520,1470,105,1`. Thus
+\[
+\Pr_{\rm null}[Z>0]=\frac{197}{512},\quad
+\operatorname{TV}(P_{\rm planted},P_{\rm null})=\frac{315}{512},\quad
+\beta=\frac38,
+\]
+and the exact bounds `35/128 <= 197/512 <= 7/16` hold. This is **scratch arithmetic only**: no committed source data, benchmark, executable test or cryptographic security parameter.
+
 ## 4. Sparse d<c regime: asymptotic equivalence of actual success events
 
 Fix q and let `d/n\to\alpha\in(0,1/2)`, `m\asymp n/\log n`, `c=n-d`. Set `\Delta=m(d-1)/2-(n-1)`. The established finite incidence estimate gives, for `\Delta>0`,
