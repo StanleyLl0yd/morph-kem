@@ -62,6 +62,33 @@ For a deterministic oracle observer (fix its random tape), let `T_{\mathrm{null}
 
 **No illicit fixed-T argument:** the theorem does **not** assume that the attacker's adaptive T is statistically independent of the null or planted matrices. Rather, it compares probabilities of complete transcript cylinders, using their actual final linear constraints. Independence of `T_{\mathrm{null}}` and H is asserted only because the **null** response source does not sample or depend on H.
 
+### Exact adaptive transcript likelihood and hidden-H posterior
+
+The preceding safe-cylinder proof admits a useful, stronger **pointwise likelihood identity** for **every** adaptive transcript, including carriers that intersect H. Fix the observer's coins, and let `τ` be any algebraically consistent, fully recorded transcript with carrier `T=T(τ)`. Write `K_T=T\wedge V`, `j_H=\dim(T\cap H)`, `\kappa_H=j_Hd-j_H(j_H+1)/2`. Let `\mathrm{Compat}_H(τ)=1` exactly when every observed full-row functional, regarded as an element of `K_T^*`, annihilates `\Lambda^2H\cap K_T`; otherwise it is zero.
+
+**Theorem 3 (exact finite transcript likelihood, any prior).**
+\[
+\boxed{
+\frac{\Pr_{\rm planted}[\tau\mid H,\mathrm{coins}]}
+     {\Pr_{\rm null}[\tau\mid\mathrm{coins}]}
+=q^{m\kappa_H}\,\mathrm{Compat}_H(\tau).
+}
+\]
+Consequently for any discrete prior `\pi` on `Gr(d,V)`, the precise posterior in the oracle-only experiment is
+\[
+\boxed{
+\pi(H\mid\tau,\mathrm{coins})
+=
+\frac{\pi(H)\,q^{m\kappa_H}\,\mathrm{Compat}_H(\tau)}
+{\sum_{H'}\pi(H')\,q^{m\kappa_{H'}}\,\mathrm{Compat}_{H'}(\tau)}
+}
+\]
+whenever the denominator is positive.
+
+**Proof.** Consistency of `τ` forces a prescribed restriction of every alternating functional to K_T, a linear affine fibre; it also forces the adaptive query path, since future queries are already determined by the recorded previous rows. Under null this fibre has probability `q^{-m\dim K_T}`. Under the planted conditional-uniform source the fibre is empty unless all row constraints agree on the common subspace `\Lambda^2H\cap K_T`; if compatible, its probability is `q^{-m(\dim K_T-\kappa_H)}`. Their ratio is the displayed likelihood. Bayes' rule proves the posterior formula. QED.
+
+The posterior is an **analyst's exact identity**, not a polynomial algorithm to enumerate H or an information bound on an attacker holding the complete public tuple. In particular, `T\cap H=0` gives factor exactly one; **tensor-adaptively chosen** unsafe carriers may have likelihood factors above one and must never be treated as independent probes. The previous *whole-transcript* TV bound remains valid without computing the posterior.
+
 ## 4. Sharp Gaussian intersection bound under uniform H
 
 For this section only let H be **uniform** on `Gr(d,V)`. Conditional on any fixed `k`-plane T independent of H,
