@@ -145,6 +145,8 @@ Independent enumeration of just the uniformly drawn cross-blocks, with irrelevan
 
 **Independent exact-source audit:** the [finite nested rank dynamic program](F0-planted-ti-greedy-flag-exact-rank-dp.md) now proves the exact *average probability of recovering the sampled H* for any finite q,n,d,m,t. It confirms this section's one-shot `909/16384`, contrasts the separate resample-nonzero value `93/896`, and independently checks `1701/131072` at GF(2),n=5,d=2,m=2. The exact source average is **not** a per-public-tensor success guarantee and does not alter Theorems 1–2 or their work exponents.
 
+**No-terminal-slack improvement (2026-10-20):** the [exact true-seed joint completion/second-moment theorem](F0-planted-ti-genuine-seed-second-moment.md) proves strong concentration of full-rank genuine t-plane completions, even for `mt=c`. Intersecting this with good-prefix rank tails yields a full-original-verifier randomized greedy-flag success bound `1-sqrt(delta)-4(1-p)gamma/p-eta` after `O((1/p)q^(E_t+(r+1)t)log(1/eta))` public trials, where `gamma<=min(1,[t choose1]_q^2/[d choose1]_q)` and `delta=t*C_q*q^(-(r+1)^2)`. The prior theorem remains correct but its terminal slack requirement is no longer needed for high honest-source success in sparse d<c asymptotics. There is no new leading attack exponent or polynomial inverter.
+
 ## 7. Boundary and immediate next work
 
 - **The extractor is not polynomial.** One greedy trial is polynomial, but the necessary repeated trials retain a `q^{\Theta(n\log n)}` bound in the sparse parameter family. No average-case hardness lower bound or crypto candidate is established.
