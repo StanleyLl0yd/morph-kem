@@ -21,11 +21,11 @@ is computed by Gaussian elimination, and `U\subseteq S_A(U)`. Given a fixed `U\s
 For an integer `1<=t<=d`:
 
 1. Start with `U_0=0`.
-2. At depth `k<t`, compute `S_A(U_k)`. If `S_A(U_k)=U_k`, fail this trial. Otherwise choose a **uniform projective line** in the explicitly represented public quotient `S_A(U_k)/U_k` and let `U_{k+1}` be its preimage extension.
+2. At depth `k<t`, compute `S_A(U_k)`. If `S_A(U_k)=U_k`, fail this trial. Otherwise draw **one uniform vector** in the explicitly represented public quotient `S_A(U_k)/U_k`; if it is zero, fail this trial, and otherwise extend by its projective line (uniform conditional on nonzero). No rejection loop is used.
 3. At depth `t`, compute `S_A(U_t)`. Output its basis **only if** its dimension is exactly `d` and the **full original verifier** accepts it. Otherwise fail this trial.
 4. For amplification, repeat independent trials **on the same original public tensor**, each using fresh algorithmic randomness, until a verified witness is found or the fixed repetition budget ends.
 
-Every generated flag is simultaneously isotropic, since every quotient extension is orthogonal to the current plane and all forms are alternating. Sampling a uniform projective line from a known quotient basis uses expected polynomial field operations (one may sample a uniform nonzero quotient vector and normalize).
+Every generated flag is simultaneously isotropic, since every quotient extension is orthogonal to the current plane and all forms are alternating. One-shot uniform quotient-vector sampling uses a fixed polynomial number of field operations per trial; the zero-vector abort is included in all the path probabilities below.
 
 ## 3. Uniform finite rank-tail lemma for fixed genuine prefixes
 
@@ -86,9 +86,9 @@ Let
 =n-R_k-k
 \le d-k+(c-mk)_++r.
 \]
-The algorithm's uniform next-line choice assigns this prescribed child probability
+Since one uniform quotient vector is drawn, with zero causing abort, the probability of selecting the **prescribed nonzero projective child** is exactly
 \[
-1/{\dim S_A(T_k)-k\brack1}_q
+(q-1)q^{-(\dim S_A(T_k)-k)}
 \ge(q-1)q^{-d+k-(c-mk)_+-r}.
 \]
 The probability of the complete prescribed flag is at least the product over `k=0,...,t-1`. The terminal full-rank condition forces `S_A(T_t)=H`, and the **original verifier accepts**. Distinct complete flags are disjoint path events, so sum the lower bound over `G N_H` good genuine flags. Finally `[d choose t]_q>=q^{t(d-t)}`, `F_t(q)>=q^{t(t-1)/2}`, and `(q-1)^t>=1`; exponents cancel to `-E_t-(r+1)t`. Other successful paths only improve the bound. QED.
@@ -135,10 +135,10 @@ At `\alpha=1/3`, the respective coefficients of `n^2/m` are `2/3`, `4/9`, and **
 
 ## 6. Tiny independent exhaustive arithmetic control (not a benchmark)
 
-For `q=2,n=4,d=2,c=2,m=2,t=2`, fix `H=\langle e_1,e_2\rangle`, enumerate **all 1024** conditioned full alternating-form pairs, and exactly sum the random quotient-line transition probabilities over the 15 initial projective points and their isotropic extensions. The source-average probability that a **single trial reaches `H` and its public completion equals `H`** is
+For `q=2,n=4,d=2,c=2,m=2,t=2`, fix `H=\langle e_1,e_2\rangle`, enumerate **all 1024** conditioned full alternating-form pairs, and exactly sum the **one-shot quotient-vector** transition probabilities, including zero-vector aborts, over the 15 possible nonzero initial projective points and their isotropic extensions. The source-average probability that a **single trial reaches `H` and its public completion equals `H`** is
 
 \[
-\boxed{93/896\approx0.103794642857.}
+\boxed{909/16384\approx0.05548095703125.}
 \]
 
 Independent enumeration of just the uniformly drawn cross-blocks, with irrelevant complement blocks summed out, gives the same rational result. This is a **scratch exact control of a toy event**, not a committed runnable attack, counted cryptographic sample, original-verifier attack benchmark, or empirical large-parameter result. Other accepted `d`-planes could increase the algorithm's success beyond this particular `H`-recovery event.
