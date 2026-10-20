@@ -97,7 +97,29 @@ Fix `GF(2)`, `n=5`, `d=2`, `c=3`, `m=2`, and `H=\langle e_1,e_2\rangle`. One con
 
 All are finite exact scratch arithmetic, **not** committed executable code, measured attack trials, frozen sampler corpus or extrapolated numerical security levels.
 
-## 6. Disposition and falsification priority
+## 6. Exact one-random-point **rank-only** observation TV
+
+To avoid confusing an exceptional **tensor-adaptively selected** public radical with an informative **precommitted** test, draw a uniform public projective point `P=[v]` *independently* of both the planted/null form tuple and H. Publish only `(P,\rho_A(P))`, **not** all public matrices or complete contraction rows. Let `\mu_N` denote the explicit rank law in Theorem 1 for a uniform `m\times N` matrix.
+
+**Theorem 2 (exact real-observation TV for every H prior).**
+\[
+\boxed{
+\operatorname{TV}\bigl(\mathcal L_{\rm planted}(P,\rho_A(P)),
+                         \mathcal L_{\rm null}(P,\rho_A(P))\bigr)
+={ {d\brack1}_q\over {n\brack1}_q}
+\,\operatorname{TV}(\mu_c,\mu_{n-1})
+<q^{-c}.
+}
+\]
+The inner distance is an exact finite sum `\frac12\sum_{k=0}^{\min(m,n-1)}|\mu_c(k)-\mu_{n-1}(k)|`, interpreting out-of-range ranks as zero.
+
+**Proof.** Let `p_P=\Pr_H[P\subseteq H]` for the arbitrary hidden-H prior. Theorem 1, with no uniform-H assumption, gives `\mathcal L_{\rm planted}(\rho\mid P)=p_P\mu_c+(1-p_P)\mu_{n-1}` and `\mathcal L_{\rm null}(\rho\mid P)=\mu_{n-1}`. The same nonnegative scalar `p_P` multiplies their rank-law difference at each P. Therefore joint TV equals `(\sum_P p_P/{n\brack1}_q)\operatorname{TV}(\mu_c,\mu_{n-1})`. For every actual H, exactly `{d\brack1}_q` public projective points lie in H; averaging over any prior fixes the sum. Finally `{d\brack1}_q/{n\brack1}_q=(q^d-1)/(q^n-1)<q^{-c}`. QED.
+
+For the binary scratch control of Section 5, `\mu_3=(1,21,42)/64` and `\mu_4=(1,45,210)/256` at ranks `0,1,2`; the inner TV is `21/128`, so the exact **joint rank-only** observation TV is `(3/31)(21/128)=63/3968`. This is a pencil-and-paper finite arithmetic consequence, not a measured distinguishing run.
+
+**Scope:** the theorem covers a *single independent uniform point and its rank*. It does **not** bound total variation of the complete published tensor, multiple adaptive point queries, selection of an observable radical, full contraction vectors, or the accepted-witness search task.
+
+## 7. Disposition and falsification priority
 
 - The rank-defect point selector is a **failed route to an authentic hidden seed** in the sparse regime. It is not an attack improvement, public inversion, or positive hard-distribution evidence.
 - Its pointwise rank laws are **not valid after tensor-adaptive selection**. The stronger “no genuine deficient points” event is a uniform-over-all-H-points source theorem and **does** apply to every adaptively chosen public deficient point.
