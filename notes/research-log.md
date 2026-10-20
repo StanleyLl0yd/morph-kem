@@ -1,5 +1,9 @@
 # MORPH-KEM research log
 
+
+## 2026-10-20 - Full-public-tensor planted tangent rigidity and exact wrong-witness incidence
+
+[Full-source algebraic geometry screen](../docs/foundation/F0-planted-ti-global-incidence-and-tangent-rigidity.md) computes the exact conditional probability q^(-m r(2d-r-1)/2) that a fixed rank-r tangent deformation lies in the Jacobian kernel; the number of such maps is [d choose r]_q [c choose r]_q |GL_r(q)|. For each different d-plane meeting H in dimension d-r, the exact acceptance probability has **the same** exponent and there are [d choose r]_q [c choose r]_q q^(r²) such planes. Thus the exact wrong-witness first moment and tangent-kernel first moment share a rank-by-rank incidence penalty. If Delta=m(d-1)/2-(n-1)>0, both nonuniqueness and tangent degeneracy probabilities are at most O(q^(-Delta)); for fixed q, d~alpha*n< n/2, m~n/logn, this is q^(-Omega(n²/logn)). This refines earlier #208 uniqueness work; it is **not** a polynomial full-public-tensor inverter, hardness result, source benchmark or novel Field-15 basis. Exact tiny GF(2) arithmetic cross-check, no committed code. GLOBAL NO NOMINATION; H-A/H-B/H-C HOLD.
 This is the active compact chronological research log.
 
 ## 2026-10-19 - Rank-sensitive adaptive bivector-oracle query lower bound
