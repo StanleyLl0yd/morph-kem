@@ -145,6 +145,37 @@ An independent tiny exact GF(2) arithmetic control uses `n=3,d=2,m=4`, where `N=
 \]
 and the exact bounds `35/128 <= 197/512 <= 7/16` hold. This is **scratch arithmetic only**: no committed source data, benchmark, executable test or cryptographic security parameter.
 
+### Information-theoretic posterior entropy (not an efficient inverse)
+
+**Theorem 4 (exact Bayesian accepted-set posterior and entropy).** Under an **arbitrary prior** `\pi` on H independent of the honest form draws, the full-public source posterior is precisely the prior restricted to the original accepted set:
+\[
+\boxed{
+\Pr[H=h\mid A]
+=\frac{\pi(h)\,\mathbf1_{\{h\in\mathcal E(A)\}}}
+{\sum_{\ell\in\mathcal E(A)}\pi(\ell)}
+}
+\]
+whenever the denominator is nonzero, as it always is on the planted source with probability one. For **uniform H**, the posterior is uniform on the Z(A) accepted d-planes and therefore
+\[
+\boxed{\begin{aligned}
+H_{\rm Shannon}(H\mid A)
+&=\mathbb E_{\rm planted}\log_2 Z(A)
+ \ \le\ \log_2(1+\beta),\\
+I(H;A)
+&=\log_2{n\brack d}_q-\mathbb E_{\rm planted}\log_2 Z(A)
+ \ \ge\ \log_2{n\brack d}_q-\log_2(1+\beta),\\
+\Pr[\text{Bayes-optimal unbounded recovery of sampled }H]
+&=\mathbb E_{\rm planted}[1/Z(A)]
+ \ \ge\ {1\over1+\beta}.
+\end{aligned}}
+\]
+
+**Proof.** For any fixed h, the planted conditional likelihood `\Pr[A\mid H=h]` is the same positive multiple `q^{m{d\choose2}}\Pr_{\rm null}[A]` whenever h is accepted, and zero otherwise. Bayes therefore only reweights the prior by the indicator of `\mathcal E(A)`. Under a uniform prior all accepted planes have equal posterior mass 1/Z, giving the exact entropy, mutual-information and maximum-posterior-guess identities. The earlier exact wrong-witness first moment says `\mathbb E_{\rm planted}Z=1+\beta`, independent of the H prior. Jensen's inequalities for concave `\log` and convex `z\mapsto1/z` give the displayed explicit finite bounds. QED.
+
+For fixed q, `d/n\to\alpha<1/2`, `m\asymp n/\log n`, the prior `\beta=q^{-\Omega(n^2/\log n)}` makes `H_{\rm Shannon}(H\mid A)` exponentially small despite `\log_2{n\brack d}_q=\Theta(n^2)` bits of uniform prior entropy. This is **near-complete information-theoretic identification**, consistent with an apparently computationally difficult inverse task. The Bayes predictor requires potentially exhaustive enumeration of accepted subspaces. **Neither entropy collapse nor small Bayesian error establishes polynomial extraction, average-case hardness or IND-style cryptographic security.**
+
+The posterior restriction and size-bias mechanism are already implicit in the [earlier #208 posterior checkpoint](https://github.com/StanleyLl0yd/morph-kem/issues/208#issuecomment-6215551334); this section contributes a scoped quantified Shannon-entropy/mutual-information calibration, **not** a claim of priority for Bayes' rule or size-bias.
+
 ## 4. Sparse d<c regime: asymptotic equivalence of actual success events
 
 Fix q and let `d/n\to\alpha\in(0,1/2)`, `m\asymp n/\log n`, `c=n-d`. Set `\Delta=m(d-1)/2-(n-1)`. The established finite incidence estimate gives, for `\Delta>0`,
