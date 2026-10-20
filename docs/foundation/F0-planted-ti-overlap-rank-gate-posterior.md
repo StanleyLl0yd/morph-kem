@@ -172,6 +172,28 @@ In particular, the chance a **single independent gate-passing seed is genuinely 
 
 This exact posterior ratio is a **strictly marginalized single-seed event**. It is NOT a posterior conditioned on the complete public tuple, a visible nonuniform H prior at a specified T, an adversarially tensor-adaptive T, or the event that an algorithm has scanned all t-planes and selected one.
 
+### An exact single-independent-seed rank-gate **bit** planted/null TV
+
+There is a related, strictly **one-bit observation** theorem with no need to postulate an H prior: sample a uniform public t-plane T independently of the original source, then reveal **only** \(B=\mathbf1_{\mathcal G(T,A)}\), discarding T's coordinates and the full public tensor. Let \(E_{\rm pl}=\sum_j N_jP_j\) be the exact full planted count above and \(E_0={n\brack t}_q q^{-m{t\choose2}}F_{n-t}(mt)\tau_{D,\ell,q}^m\) the exact unrestricted-null count of the prior note. Since the observed B is Bernoulli with parameter \(E_{\rm pl}/{n\brack t}_q\) under planted and \(E_0/{n\brack t}_q\) under null,
+
+\[
+\boxed{
+\operatorname{TV}\bigl(\mathcal L_{\rm planted}(B),
+\mathcal L_{\rm null}(B)\bigr)
+=\frac{|E_{\rm pl}-E_0|}{{n\brack t}_q}.
+}
+\]
+
+This holds for **every independently drawn H prior**, since the source first moment is identical for each fixed H. If H is uniform on the whole Grassmannian, GL(V) invariance makes the fixed-T gate probability independent of T, so the **joint** observation (T,B) has the same TV; this stronger joint assertion is **not** justified for arbitrary nonuniform H priors. Neither result controls the complete tensor, adaptive seed selection, or the search task.
+
+In the GF(2),n10/d5/m2/t2 finite control below, the exact gate-bit TV is
+
+\[
+\boxed{\frac{595899358605}{55181739819008}\approx0.01079885.}
+\]
+
+Thus **one independent rank-gate bit has only about 1.08% planted/null advantage** in that toy case even though the event enriches true-seed probability by about 6.98 times conditional on success. These two statements condition on **different events** and cannot be substituted for a real multi-query public algorithm.
+
 ## 6. Independently checked finite controls
 
 Take GF(2), n=10, d=c=5, m=2, t=2. Then ell=1, u=3, D=4 and the possible overlaps are j=0,1,2. Exact independent Grassmann enumeration counts and block-law gate rates are:
