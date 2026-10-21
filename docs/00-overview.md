@@ -1,10 +1,12 @@
 # 00 - Overview
 
-## Current objective (2026-10-14)
+## Current objective (2026-10-21)
 
 MORPH-KEM is a **research-only, attack-first search for an independently motivated mathematical inversion relation** that is not just a renamed classical cryptographic assumption or a hard-looking encoding. Its original discrete Morse / topological KEM concepts are historical negative controls, **not an active candidate architecture**.
 
 **GLOBAL NO NOMINATION.** No OWF, PQ-security, trapdoor, PKE or KEM claim. No implementation is authorized until a mathematical relation survives the [MORPH-R0 15-field entry gate](97-morph-r0-cross-line-postmortem.md#11-re-entry-gate-for-any-new-morph-family).
+
+**Pivot 2026-10-21:** [decision, reopening gate and next milestones](foundation/F0-independent-foundation-pivot-2026-10-21.md). Existing planted-TI work is **FROZEN as an attack comparator**, not a nominated foundation. The first independent algebraic [finite-local-ring lifting no-go](foundation/F0-deformation-tower-public-lift-screen.md) proves a polynomial any-witness section given a public smooth residue section; its singular-obstruction frontier is **HOLD** and cannot be called new hardness. H-A/H-B/H-C HOLD, no candidate or new experiment.
 
 ## Current program
 
