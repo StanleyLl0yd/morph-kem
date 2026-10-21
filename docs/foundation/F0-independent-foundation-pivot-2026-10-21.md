@@ -1,0 +1,26 @@
+# F0: independent-foundation pivot and bounded retirement of planted-TI
+
+**2026-10-21; research governance, not a candidate.** Authorized continuation after [#260](https://github.com/StanleyLl0yd/morph-kem/pull/260). **GLOBAL NO NOMINATION**. H-A/H-B/H-C **HOLD**, HEPMR [#195](https://github.com/StanleyLl0yd/morph-kem/issues/195) **BENCHMARK ONLY** through AP103. N1-59 remains the last canonical N1, N1-60 unallocated.
+
+## Explicit decision and reason
+
+**Planted totally-isotropic finite-field tensors move from ACTIVE to FROZEN / comparator.** Preserve all current proofs, public attacks, false-seed laws and statistical caveats, but **do not** commission routine additional PRs improving constants, rank-mixture tails or a single random-greedy flag algorithm. Prior [Liu–Qiao–Tang–Zhang (2026)](https://arxiv.org/abs/2609.31256) introduced the relation and \(q^{O(n\log n)}\) attack class; the MORPH investigations [#254–#260](https://github.com/StanleyLl0yd/morph-kem/pull/260) refine public any-witness attack work but provide neither independent Field 15 nor a polynomial public attack in the sparse family. **Not proved broken for all parameters**, and **not proved secure**.
+
+**Reopening gate:** a substantially different full-public tensor-adaptive algorithm with a proved asymptotic improvement *beyond the existing algorithm class*, or a mathematically independent relation with a complete unconditional source/full-verifier specification and positive Field-15 prior-art differentiation. Reopening requires one explicit review checkpoint with falsifiable performance/comparison criterion, not automatic PR production. No KEM/PKE/trapdoor branch.
+
+**Research allocation:** roughly 80% independently motivated mathematical inversion relations and attack-first falsification, 20% existing bounded HEPMR. Do not equate an endless chain of easy no-go lemmas with positive progress. Stop a workstream that has no independently sourced mathematical object and no feasible original-source interface.
+
+## New frontier: obstruction-based algebraic lifting (working question D0; HOLD)
+
+**Concrete first deliverable:** [exact polynomial public lift attack for smooth finite-local-ring fibres](F0-deformation-tower-public-lift-screen.md). It kills a broad naive class of high-degree, high-entropy, noncommuting-looking observations when the residue fibre has a public section and full-row Jacobian. This is **classical Hensel/deformation theory**, **not** an independent source or a new hard problem.
+
+**Potentially different obstruction to investigate** (no proposal admitted): singular or non-split lifting where *all* efficiently selectable residue roots can have nontrivial public higher-order compatibility constraints. The attack target is still **any** full-ring accepted witness. Screen aggressively against polynomial systems over finite rings ([Kamche–Kalachi](https://link.springer.com/article/10.1007/s00200-024-00652-8)), smooth-lifting criteria ([Stacks Project](https://stacks.math.columbia.edu/tag/02GZ)), tensor/algebra isomorphism ([Qiao IAS overview](https://www.ias.edu/video/complexity-isomorphism-problems-tensors-groups-polynomials-and-algebras)), gauge reductions and all existing MORPH F0-K/N1 failures. No new candidate, conjecture of one-wayness or toy source is being asserted.
+
+## Serialized next math milestones
+
+1. **D0 literature and interface gate:** find a *specific* independent obstruction object with public bitlength, polynomial honest generator, full domain and full any-witness verifier, or explicitly mark D0 DEFER rather than inventing a ring encoding. Identify already published isomorphism, deformation, polynomial-solving and quantum algorithms; document known polynomial sections.
+2. **D0 boundary proof:** test whether public residue canonicalization, alternate residue branches, singular root selection, Hensel iteration or an exact quotient collapses the purported obstruction. Prove a negative gate before considering sample generation; preserve counterexamples.
+3. **Independent alternative screen:** only if D0 stalls, separately survey *different mathematical objects* with their own mature-algorithm and independent-novelty evidence (not renamed CSP, topology or tensor isomorphism). Do not create serial N1 variants just to fill the queue.
+4. **Admission checkpoint:** only a positive, fully supported MORPH-R0 15-field review can authorize a frozen validation protocol and then bounded code/measurements. Until then use analytical docs only.
+
+**Operational boundaries:** active [#208](https://github.com/StanleyLl0yd/morph-kem/issues/208) stays OPEN for this pivot; the [canonical registry](research-stage-registry.md) is deliberately unchanged. Historical N1-19 PARTIAL 19/30, N1-23 PARTIAL 9/12, N1-26 HOLD/BENCHMARK, [#199](https://github.com/StanleyLl0yd/morph-kem/issues/199) missing archive bytes and all legacy negative findings are unchanged. Root README remains a compact navigation/status landing page; each completed research pass updates durable GitHub documents and is merged only after exact-head CI, current-base and review reconciliation.

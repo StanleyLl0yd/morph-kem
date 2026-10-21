@@ -22,6 +22,12 @@ This repository is a cryptographic research project, not a production cryptograp
 9. Do not delete attack code or failed experiments merely because they weaken the proposal.
 10. Any external factual or literature claim added to research documents must include a source.
 
+## Independent-foundation pivot (2026-10-21)
+
+- [Decision record](docs/foundation/F0-independent-foundation-pivot-2026-10-21.md): planted-TI moves to **FROZEN/comparator**; do not extend its random-greedy rank/tail PR series by default. Reopen only for a qualitatively new full-public original-verifier algorithm or independent candidate clearing Field 15. This is not a claim the existing TI problem is polynomially easy.
+- Independent source-first mathematics takes active priority (~80%); bounded HEPMR remains ~20% benchmark only. First new analytic [deformation-lift NO-GO](docs/foundation/F0-deformation-tower-public-lift-screen.md) and singular-obstruction D0 **HOLD**; no new experiments/crypto implementation/N1 reservations.
+- Complete original any-witness verification, honest unconditional source law, proven-vs-known novelty boundaries and exact-head CI/branch hygiene remain mandatory. Historical findings are not overwritten.
+
 ## Current MORPH-N1 gate (2026-10-14)
 
 - Source of truth for active research: the latest numbered `docs/10*-morph-n1-*.md` outcome (currently `docs/107-morph-n1-59-hyperbolic-geodesic-no-go.md`), frozen N1-52 summary `docs/100-morph-n1-status-2026-10-14.md`, issue #196 and the complete 15-field gate in `docs/97-morph-r0-cross-line-postmortem.md`.
