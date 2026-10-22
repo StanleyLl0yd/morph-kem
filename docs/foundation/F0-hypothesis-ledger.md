@@ -12,6 +12,8 @@
 
 **Date:** 2026-10-15. **Tracker:** [#208](https://github.com/StanleyLl0yd/morph-kem/issues/208). **GLOBAL NO NOMINATION. Research-only.** This is a prioritized *research hypothesis ledger* after [failure map F0-K1..K9](F0-failure-mechanisms.md), not an OWF/KEM specification. There are **zero new source instances, tests, or empirical successes**. No hypothesis below passes full MORPH-R0 Field 15, so **none is authorized for coding, random sampling, parameter selection or a new canonical N1 number**. N1-60 remains available in the existing [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196), not claimed here.
 
+**2026-10-22 external source/novelty screen:** [Version-correct 2026 nonlinear-sheaf preprint and quantum harmonic-persistence intake](F0-2026-external-quantum-sheaf-literature-intake.md) distinguishes self-reported cipher breaks and unreviewed successor security claims from independent evidence, and distinguishes a published BQP algorithm for a specific topological decision problem from post-quantum search hardness. Neither supplies complete unconditional MORPH source/any-witness verifier/positive Field-15 grounds. Existing H-A/H-B/H-C HOLD unchanged, no admitted candidate or new experiment.
+
 ## Decision method
 
 For each family, first define an unconditional polynomial sampler of \((P,s)\) and an exact polynomial verifier \(V(P,y)\) including the entire admissible domain, and state \(E(P)=\{y:V(P,y)=1\}\). Then independently attempt public sections, algebraic quotients/gauge removal, mature problem reductions, finite-width CSP DP, degree/character-sum leakage, and arbitrary accepted-witness search. Only afterward consider any pre-registered bounded computation.
