@@ -24,6 +24,8 @@ MORPH-KEM is a **research-only, attack-first search for an independently motivat
 
 **2026-10-22 external literature provenance:** [Nonlinear-sheaf cipher versioning / quantum Harmonic Persistence intake](foundation/F0-2026-external-quantum-sheaf-literature-intake.md) records author-reported earlier cipher breaks (not independently validated), a successor preprint's unverified security claims, and a peer-reviewed BQP algorithm for a specific topological promise decision (not a general search inverter). None passes the MORPH original-source / positive Field-15 gate; NO NOMINATION.
 
+**2026-10-22 public tensor-action linear-decomposition risk:** [Shared-tensor completion public section](foundation/F0-public-linear-action-shared-tensor-section.md) recovers a commuting public finitely-generated linear-action shared value from a public orbit-pair basis, without recovering hidden group words. This is established Myasnikov–Roman'kov and Chen–Wang 2026 cryptanalysis, not an independent crypto hardness assumption. Full source/verifier caveats preserved; NO NOMINATION.
+
 ## Current program
 
 - ~80% genuinely new mathematics and public any-witness inversion attacks, recorded in [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
