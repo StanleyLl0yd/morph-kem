@@ -18,6 +18,8 @@
 
 **Bounded D0 continuation (2026-10-21):** [Complete singular dual-number accepted-witness fibre](F0-dual-number-singular-fibre.md) is a disjoint sum of public Jacobian-affine residue lifts; complete polynomial-size public residue-root listing gives original-verifier inversion even for singular roots. This and the preceding smooth-tower result end the **current bounded D0 screen**. D0 **HOLD / DEFER** until a specific independently sourced obstruction object appears; do not create iterative nilpotent-depth variants. [Grochow–Qiao–Stange–Sun (STOC 2025)](https://doi.org/10.1145/3717823.3718286) already cover isomorphism over commutative rings.
 
+**Independent H-B screen (2026-10-22):** [Exact explicit-cochain gluing public section](F0-cochain-public-section-null-distinction.md) rejects uniform or otherwise unconditionally planted **linear** face-coboundary inversion even on high-cohomology complexes; the original accepted witness is found by row reduction. The only remaining H-B frontier is genuinely nonlinear with separately sourced mathematics; there is no Field-15 novelty from a topological wrapper, and no automatic experiments.
+
 ## Serialized next math milestones
 
 1. **D0 literature and interface gate:** find a *specific* independent obstruction object with public bitlength, polynomial honest generator, full domain and full any-witness verifier, or explicitly mark D0 DEFER rather than inventing a ring encoding. Identify already published isomorphism, deformation, polynomial-solving and quantum algorithms; document known polynomial sections.
