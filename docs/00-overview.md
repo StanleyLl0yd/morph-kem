@@ -8,6 +8,8 @@ MORPH-KEM is a **research-only, attack-first search for an independently motivat
 
 **Pivot 2026-10-21:** [decision, reopening gate and next milestones](foundation/F0-independent-foundation-pivot-2026-10-21.md). Existing planted-TI work is **FROZEN as an attack comparator**, not a nominated foundation. The first independent algebraic [finite-local-ring lifting no-go](foundation/F0-deformation-tower-public-lift-screen.md) proves a polynomial any-witness section given a public smooth residue section; its singular-obstruction frontier is **HOLD** and cannot be called new hardness. H-A/H-B/H-C HOLD, no candidate or new experiment.
 
+**2026-10-22 independent H-B boundary:** [Explicit cellular-cochain public-section theorem](foundation/F0-cochain-public-section-null-distinction.md) rejects affine face-coboundary inversion even for complexes with large H²; this is standard linear algebra, not positive Field 15. Broad nonlinear H-B remains HOLD, D0 deferred, planted-TI frozen.
+
 ## Current program
 
 - ~80% genuinely new mathematics and public any-witness inversion attacks, recorded in [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
