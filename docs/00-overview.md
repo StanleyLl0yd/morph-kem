@@ -20,6 +20,8 @@ MORPH-KEM is a **research-only, attack-first search for an independently motivat
 
 **2026-10-22 D3 literature intake:** [High-dimensional-expander code original-verifier fork](foundation/F0-hdx-syndrome-original-verifier-fork.md) distinguishes Gaussian any-syndrome inversion from known bounded-weight syndrome decoding. New HDX coding constructions (CCC 2025; Annals 2026) are genuine mathematical prior art, not automatically an independently new crypto assumption; fixed weight is polynomially invertible, growing weight remains unadmitted code-based research. No Field-15 nomination.
 
+**2026-10-22 independent D4 attack-first boundary:** [Synchronizing DFA any-reset public reconstruction](foundation/F0-synchronizing-automata-public-any-reset-section.md) is deterministic polynomial through a state-pair BFS and greedy merging, even though shortest reset word is a hard *different* verifier. Classical automata prior art, D4 original any-reset ANALYTIC REJECT, H-C broad HOLD and NO NOMINATION.
+
 ## Current program
 
 - ~80% genuinely new mathematics and public any-witness inversion attacks, recorded in [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
