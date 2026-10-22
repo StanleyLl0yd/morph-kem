@@ -18,6 +18,8 @@ MORPH-KEM is a **research-only, attack-first search for an independently motivat
 
 **2026-10-22 stronger D2 attack:** [Random complete-base 2-lift public common-neighbor recovery](foundation/F0-random-two-lift-codegree-recovery.md) is high-probability original any-cover inversion even though 1-WL sees no vertex distinctions. For arbitrary bases, recovered fibre matching is **not** itself a labeled accepted projection without quotient isomorphism. No positive Field 15, D2 K_n ANALYTIC REJECT.
 
+**2026-10-22 D3 literature intake:** [High-dimensional-expander code original-verifier fork](foundation/F0-hdx-syndrome-original-verifier-fork.md) distinguishes Gaussian any-syndrome inversion from known bounded-weight syndrome decoding. New HDX coding constructions (CCC 2025; Annals 2026) are genuine mathematical prior art, not automatically an independently new crypto assumption; fixed weight is polynomially invertible, growing weight remains unadmitted code-based research. No Field-15 nomination.
+
 ## Current program
 
 - ~80% genuinely new mathematics and public any-witness inversion attacks, recorded in [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
