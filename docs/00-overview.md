@@ -26,6 +26,8 @@ MORPH-KEM is a **research-only, attack-first search for an independently motivat
 
 **2026-10-22 public tensor-action linear-decomposition risk:** [Shared-tensor completion public section](foundation/F0-public-linear-action-shared-tensor-section.md) recovers a commuting public finitely-generated linear-action shared value from a public orbit-pair basis, without recovering hidden group words. This is established Myasnikov–Roman'kov and Chen–Wang 2026 cryptanalysis, not an independent crypto hardness assumption. Full source/verifier caveats preserved; NO NOMINATION.
 
+**2026-10-22 literature-to-source intake:** [Quantum stabilizer / symplectic-noise and multivariate exponential equations](foundation/F0-external-symplectic-noise-exponential-intake.md) provide higher-quality **independent published comparators**, not novel MORPH hardness. SympLPN decision differs sharply from unrestricted any-error verification; a rigorous generic low-noise (2^{O(sqrt nlog n)}) error-support distinguisher/search upper bound is recorded. No Field-15 admission or candidate; source/quantifier/quantum/bitlength review remains mandatory.
+
 ## Current program
 
 - ~80% genuinely new mathematics and public any-witness inversion attacks, recorded in [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
