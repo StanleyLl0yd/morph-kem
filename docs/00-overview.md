@@ -10,6 +10,8 @@ MORPH-KEM is a **research-only, attack-first search for an independently motivat
 
 **2026-10-22 independent H-B boundary:** [Explicit cellular-cochain public-section theorem](foundation/F0-cochain-public-section-null-distinction.md) rejects affine face-coboundary inversion even for complexes with large H²; this is standard linear algebra, not positive Field 15. Broad nonlinear H-B remains HOLD, D0 deferred, planted-TI frozen.
 
+**2026-10-22 independent D1 boundary:** [Univariate permutation-polynomial dynamical inversion](foundation/F0-iterated-permutation-polynomial-public-section.md) is deterministically polynomial, even for many public iterations and a uniform planted/null public target law; expanding the iterate's algebraic degree is not a hardness argument. Nonpermutation dynamics remain unadmitted HOLD, not a candidate.
+
 ## Current program
 
 - ~80% genuinely new mathematics and public any-witness inversion attacks, recorded in [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
