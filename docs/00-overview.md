@@ -16,6 +16,8 @@ MORPH-KEM is a **research-only, attack-first search for an independently motivat
 
 **2026-10-22 independent D2 screening:** [Graph-cover public 1-WL reconstruction](foundation/F0-graph-cover-color-refinement-section.md) inverts all honest lifts over color-discrete public base graphs, including unconditional dense random G(n,1/2) bases with high probability. Established graph covering/Weisfeiler-Leman prior art; non-discrete bases not yet eligible as a crypto candidate; D2 discrete-base ANALYTIC REJECT, global NO NOMINATION.
 
+**2026-10-22 stronger D2 attack:** [Random complete-base 2-lift public common-neighbor recovery](foundation/F0-random-two-lift-codegree-recovery.md) is high-probability original any-cover inversion even though 1-WL sees no vertex distinctions. For arbitrary bases, recovered fibre matching is **not** itself a labeled accepted projection without quotient isomorphism. No positive Field 15, D2 K_n ANALYTIC REJECT.
+
 ## Current program
 
 - ~80% genuinely new mathematics and public any-witness inversion attacks, recorded in [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
