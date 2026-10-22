@@ -14,6 +14,8 @@ MORPH-KEM is a **research-only, attack-first search for an independently motivat
 
 **2026-10-22 nonpermutation D1 boundary:** [Uniform iterated-fibre posterior and null TV](foundation/F0-dynamical-fibre-posterior-and-galois-boundary.md) are exact information-theoretic counts, not polynomial inversion or independent Field 15; fixed finite-field Galois tree action is Frobenius-generated and must not be confused with generic number-field arboreal automorphisms. D1 nonpermutation remains HOLD.
 
+**2026-10-22 independent D2 screening:** [Graph-cover public 1-WL reconstruction](foundation/F0-graph-cover-color-refinement-section.md) inverts all honest lifts over color-discrete public base graphs, including unconditional dense random G(n,1/2) bases with high probability. Established graph covering/Weisfeiler-Leman prior art; non-discrete bases not yet eligible as a crypto candidate; D2 discrete-base ANALYTIC REJECT, global NO NOMINATION.
+
 ## Current program
 
 - ~80% genuinely new mathematics and public any-witness inversion attacks, recorded in [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
