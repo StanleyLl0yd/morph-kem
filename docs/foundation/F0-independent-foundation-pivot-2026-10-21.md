@@ -32,6 +32,8 @@
 
 **D4 independent automata screen (2026-10-22):** [Full public any-reset inversion of synchronizing DFAs](F0-synchronizing-automata-public-any-reset-section.md) constructs an accepted word by BFS in the public pair automaton and at most n−1 subset compressions, length bounded by (n−1)C(n,2). The underlying shortest/reset-threshold problem is established hard optimization, but this different any-witness task is deterministically polynomial for every honest synchronizing source. Established Volkov/Pin–Frankl/Szykuła automata theory, not new Field-15 mathematics; D4 any-reset ANALYTIC REJECT, H-C broad HOLD.
 
+**D4 bounded target follow-up (2026-10-22):** [Exact prescribed-terminal-state public reset criterion](F0-synchronizing-target-state-public-reachability.md) closes an obvious false strengthening of hidden history: after publicly finding any reset word to r, a target t is resettable iff it is reachable from r by the public transition graph, with a further ≤n−1 symbols. Full original target-verifier any-witness success remains one on every honestly reachable instance under the explicit budget. This ends the bounded D4 automata screen; no further state/letter/target parameter variants without separate positive independent Field 15.
+
 ## Serialized next math milestones
 
 1. **D0 literature and interface gate:** find a *specific* independent obstruction object with public bitlength, polynomial honest generator, full domain and full any-witness verifier, or explicitly mark D0 DEFER rather than inventing a ring encoding. Identify already published isomorphism, deformation, polynomial-solving and quantum algorithms; document known polynomial sections.
