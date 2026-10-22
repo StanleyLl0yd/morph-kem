@@ -20,6 +20,8 @@
 
 **Independent H-B screen (2026-10-22):** [Exact explicit-cochain gluing public section](F0-cochain-public-section-null-distinction.md) rejects uniform or otherwise unconditionally planted **linear** face-coboundary inversion even on high-cohomology complexes; the original accepted witness is found by row reduction. The only remaining H-B frontier is genuinely nonlinear with separately sourced mathematics; there is no Field-15 novelty from a topological wrapper, and no automatic experiments.
 
+**Independent D1 arithmetic-dynamics screen (2026-10-22):** [Deterministic public inversion of univariate finite-field permutation-polynomial iterations](F0-iterated-permutation-polynomial-public-section.md) uses a degree-one gcd with \(X^q-X\) and polynomially many reverse steps even when the expanded iterate has exponential degree. Conditional uniform honest secret yields exactly uniform public targets (TV zero against an equally sampled uniform null) **while any-witness inversion is trivial**. This is established finite-field algorithmics, not a Field-15 claim. Permutation subfamily ANALYTIC REJECT; genuinely nonpermutation honest-source branching HOLD pending independent theory.
+
 ## Serialized next math milestones
 
 1. **D0 literature and interface gate:** find a *specific* independent obstruction object with public bitlength, polynomial honest generator, full domain and full any-witness verifier, or explicitly mark D0 DEFER rather than inventing a ring encoding. Identify already published isomorphism, deformation, polynomial-solving and quantum algorithms; document known polynomial sections.
