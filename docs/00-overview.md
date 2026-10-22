@@ -12,6 +12,8 @@ MORPH-KEM is a **research-only, attack-first search for an independently motivat
 
 **2026-10-22 independent D1 boundary:** [Univariate permutation-polynomial dynamical inversion](foundation/F0-iterated-permutation-polynomial-public-section.md) is deterministically polynomial, even for many public iterations and a uniform planted/null public target law; expanding the iterate's algebraic degree is not a hardness argument. Nonpermutation dynamics remain unadmitted HOLD, not a candidate.
 
+**2026-10-22 nonpermutation D1 boundary:** [Uniform iterated-fibre posterior and null TV](foundation/F0-dynamical-fibre-posterior-and-galois-boundary.md) are exact information-theoretic counts, not polynomial inversion or independent Field 15; fixed finite-field Galois tree action is Frobenius-generated and must not be confused with generic number-field arboreal automorphisms. D1 nonpermutation remains HOLD.
+
 ## Current program
 
 - ~80% genuinely new mathematics and public any-witness inversion attacks, recorded in [#196](https://github.com/StanleyLl0yd/morph-kem/issues/196).
